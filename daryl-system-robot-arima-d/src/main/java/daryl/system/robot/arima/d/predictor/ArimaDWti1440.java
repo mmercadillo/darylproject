@@ -174,30 +174,26 @@ public class ArimaDWti1440  extends ArimaPredictor{
 	    	for(int i = 0; i < aux.size(); i++) {
 	    		observations[i] = aux.get(i).doubleValue();
 	    	}
-
 	    	ArimaForecaster arimaForecaster = null;
         	try {
         		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
+        		
+        		double forecast = arimaForecaster.next();			
+    	        double ultimoDato = datos.get(datos.size()-1);
+    	        
+    	        if(prediccionArimaAnterior != 0.0) {
+    	        	ultimoDato = prediccionArimaAnterior;
+    	        }
+    	        if(forecast > ultimoDato) {
+    	        	prediccion = 1.0;
+    	        }
+    	        if(forecast < ultimoDato) {
+    	        	prediccion = -1.0;
+    	        }
+    	        prediccionArimaAnterior = forecast;
+        		
         	}catch (Exception e) {
         	}
-	        double forecast = arimaForecaster.next();			
-			
-	        //Chequeamos el resultado
-	        double ultimoDato = datos.get(datos.size()-1);
-	        if(prediccionArimaAnterior != 0.0) {
-	        	ultimoDato = prediccionArimaAnterior;
-	        }
-	        
-	        if(ultimoDato > forecast) {
-	        	//Bajista
-	        	prediccion = -1.0;
-	        }
-	        //if(prediccionAnterior > 0.0 && prediccionAnterior < prediccion) {
-	        if(ultimoDato < forecast) {
-	        	//Alcista
-	        	prediccion = 1.0;
-	        }
-	        prediccionArimaAnterior = forecast;
 		}catch (Exception e) {
 			
 		}
