@@ -41,6 +41,7 @@ public class ArimaBGdaxi1440  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 
 	private final String robot = "ARIMA_B_GDAXI_1440";
+	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
 	public void load() {
@@ -60,7 +61,7 @@ public class ArimaBGdaxi1440  extends ArimaPredictor{
 		//logger.info("Nueva predicción para el GDAXI D1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
+		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 		
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBGdaxiD1Controller.orden = orden.getTipoOrden();

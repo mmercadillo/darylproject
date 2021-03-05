@@ -41,6 +41,7 @@ public class ArimaBXauUsd1440  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	
 	private final String robot = "ARIMA_B_XAUUSD_1440";
+	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
 	public void load() {
@@ -59,7 +60,7 @@ public class ArimaBXauUsd1440  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
+		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 		
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBXauUsdD1Controller.orden = orden.getTipoOrden();

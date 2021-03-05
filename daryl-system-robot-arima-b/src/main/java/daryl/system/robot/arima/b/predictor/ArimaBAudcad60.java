@@ -41,13 +41,13 @@ public class ArimaBAudcad60  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	
 	private final String robot = "ARIMA_B_AUDCAD_60";
+	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
 	public void load() {
 		
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-		//List<Datos> datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
 
 	@Override
@@ -59,10 +59,8 @@ public class ArimaBAudcad60  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
-		
-		//Enviamos al controlador para q esté disponible lo antes posible
-		//ArimaBAudCadController.orden = orden.getTipoOrden();
+		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
+
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
