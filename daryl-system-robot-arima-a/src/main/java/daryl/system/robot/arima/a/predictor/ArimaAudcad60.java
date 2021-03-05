@@ -84,7 +84,6 @@ public class ArimaAudcad60  extends ArimaPredictor{
 		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_H1);
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
 		
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
@@ -101,31 +100,21 @@ public class ArimaAudcad60  extends ArimaPredictor{
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());
 			
 			int []model=arima.getARIMAmodel();
-			//System.out.println("Best model is [p,q]="+"["+model[0]+" "+model[1]+"]");
-			//System.out.println("Predict value="+arima.aftDeal(arima.predictValue(model[0],model[1])));
-			//System.out.println("Predict error="+(arima.aftDeal(arima.predictValue(model[0],model[1]))-datos.get(datos.size()-1))/datos.get(datos.size()-1)*100+"%");
-		
+
 			Double media = media(7, datos);
-			//prediccion = arima.aftDeal(arima.predictValue(model[0],model[1])) - datos.get(datos.size()-1);
 			prediccion = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
 			
-//			System.out.println("MEDIA -> " + media);
-//			System.out.println("DATO -> " + datos.get(datos.size()-1));
-//			System.out.println("PREDICCION -> " + prediccion);
-			
-			if(prediccion < datos.get(datos.size()-1) && datos.get(datos.size()-1) > media && media > 0) {
+			if(prediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
 				prediccion = 1.0;
-			}else if(prediccion > datos.get(datos.size()-1) && datos.get(datos.size()-1) < media && media > 0) {
+			}else if(prediccion < datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) < media && media > 0*/) {
 				prediccion = -1.0;
 			}else {
 				prediccion = 0.0;
 			}
 			
-			
 		}catch (Exception e) {
 			
 		}
-
 		
 		return prediccion;
 	
