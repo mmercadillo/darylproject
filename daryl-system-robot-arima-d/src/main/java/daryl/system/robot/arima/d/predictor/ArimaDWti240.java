@@ -50,6 +50,7 @@ public class ArimaDWti240  extends ArimaPredictor{
 	private Integer inicio;
 	
 	private final String robot= "ARIMA_D_WTI_240";
+	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
 	public void load() {
@@ -116,7 +117,7 @@ public class ArimaDWti240  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
+		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 		
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBAudCadH4Controller.orden = orden.getTipoOrden();
