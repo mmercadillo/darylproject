@@ -82,7 +82,7 @@ public abstract class ArimaPredictor {
 		}
 	}
 	
-	protected final Orden calcularOperacion(Activo activo, String estrategia, Double prediccion, String robot) {
+	protected final Orden calcularOperacion(Activo activo, String estrategia, Double prediccion, String robot, Boolean inv) {
 		
 		long millis = System.currentTimeMillis();
 		Orden orden = new Orden();
@@ -96,8 +96,10 @@ public abstract class ArimaPredictor {
 			orden.setHora(config.getHoraInString(millis));
 		if(prediccion < 0.0) {
 			orden.setTipoOrden(TipoOrden.SELL);
+			if(inv == Boolean.TRUE) orden.setTipoOrden(TipoOrden.BUY);
 		}else if(prediccion > 0.0) {
 			orden.setTipoOrden(TipoOrden.BUY);
+			if(inv == Boolean.TRUE) orden.setTipoOrden(TipoOrden.SELL);
 		}else {
 			orden.setTipoOrden(TipoOrden.CLOSE);	
 		}
