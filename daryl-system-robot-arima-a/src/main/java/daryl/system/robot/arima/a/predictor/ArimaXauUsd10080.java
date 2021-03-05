@@ -47,7 +47,7 @@ public class ArimaXauUsd10080  extends ArimaPredictor{
 		
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-		//List<Datos> datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
+
 	}
 
 	@Override
@@ -60,9 +60,7 @@ public class ArimaXauUsd10080  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
-		
-		//Enviamos al controlador para q esté disponible lo antes posible
-		//ArimaXauUsdW1Controller.orden = orden.getTipoOrden();
+
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
@@ -85,7 +83,6 @@ public class ArimaXauUsd10080  extends ArimaPredictor{
 		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
 		
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
@@ -96,21 +93,14 @@ public class ArimaXauUsd10080  extends ArimaPredictor{
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());
 			
 			int []model=arima.getARIMAmodel();
-			//System.out.println("Best model is [p,q]="+"["+model[0]+" "+model[1]+"]");
-			//System.out.println("Predict value="+arima.aftDeal(arima.predictValue(model[0],model[1])));
-			//System.out.println("Predict error="+(arima.aftDeal(arima.predictValue(model[0],model[1]))-datos.get(datos.size()-1))/datos.get(datos.size()-1)*100+"%");
-		
-			Double media = media(7, datos);
-			//prediccion = arima.aftDeal(arima.predictValue(model[0],model[1])) - datos.get(datos.size()-1);
+
+			//Double media = media(7, datos);
 			prediccion = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
+
 			
-//			System.out.println("MEDIA -> " + media);
-//			System.out.println("DATO -> " + datos.get(datos.size()-1));
-//			System.out.println("PREDICCION -> " + prediccion);
-			
-			if(prediccion < datos.get(datos.size()-1) && datos.get(datos.size()-1) > media && media > 0) {
+			if(prediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
 				prediccion = 1.0;
-			}else if(prediccion > datos.get(datos.size()-1) && datos.get(datos.size()-1) < media && media > 0) {
+			}else if(prediccion < datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) < media && media > 0*/) {
 				prediccion = -1.0;
 			}else {
 				prediccion = 0.0;

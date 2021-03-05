@@ -47,7 +47,6 @@ public class ArimaAudcad60  extends ArimaPredictor{
 		
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-		//List<Datos> datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
 
 	@Override
@@ -60,9 +59,6 @@ public class ArimaAudcad60  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
-		
-		//Enviamos al controlador para q esté disponible lo antes posible
-		//ArimaAudCadController.orden = orden.getTipoOrden();
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
@@ -101,7 +97,7 @@ public class ArimaAudcad60  extends ArimaPredictor{
 			
 			int []model=arima.getARIMAmodel();
 
-			Double media = media(7, datos);
+			//Double media = media(7, datos);
 			prediccion = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
 			
 			if(prediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
