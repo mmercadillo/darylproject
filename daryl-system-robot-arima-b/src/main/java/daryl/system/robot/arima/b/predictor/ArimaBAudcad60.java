@@ -100,13 +100,27 @@ public class ArimaBAudcad60  extends ArimaPredictor{
 			
 			int []model=arima.getARIMAmodel();
 			System.out.println("Best model is [p,q]="+"["+model[0]+" "+model[1]+"]");
-			System.out.println("Predict value="+arima.aftDeal(arima.predictValue(model[0],model[1])));
-			System.out.println("Predict error="+(arima.aftDeal(arima.predictValue(model[0],model[1]))-datos.get(datos.size()-1))/datos.get(datos.size()-1)*100+"%");
 		
-			if(prediccionArimaAnterior == 0 || prediccionArimaAnterior == null) {
-				prediccion = arima.aftDeal(arima.predictValue(model[0],model[1])) - datos.get(datos.size()-1);
+			if(prediccionArimaAnterior == 0) {
+				
+				if(arima.aftDeal(arima.predictValue(model[0],model[1])) > datos.get(datos.size()-1)) {
+					prediccion = 1.0;
+				}else if(arima.aftDeal(arima.predictValue(model[0],model[1])) < datos.get(datos.size()-1)) {
+					prediccion = -1.0;
+				}else {
+					prediccion = 0.0;
+				}
+
 			}else {
-				prediccion = (double)(arima.aftDeal(arima.predictValue(model[0],model[1])) - prediccionArimaAnterior);
+				
+				if(arima.aftDeal(arima.predictValue(model[0],model[1])) > prediccionArimaAnterior) {
+					prediccion = 1.0;
+				}else if(arima.aftDeal(arima.predictValue(model[0],model[1])) < prediccionArimaAnterior) {
+					prediccion = -1.0;
+				}else {
+					prediccion = 0.0;
+				}
+
 			}
 			prediccionArimaAnterior = arima.aftDeal(arima.predictValue(model[0],model[1]));
 			
