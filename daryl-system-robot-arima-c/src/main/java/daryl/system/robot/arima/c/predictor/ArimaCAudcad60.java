@@ -158,16 +158,7 @@ public class ArimaCAudcad60  extends ArimaPredictor{
 			try {
 
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess();
-		    	/*
-				DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
-		        if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
-		        if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
-		        arimaProcess.setIntegrationOrder(1);
-		        arimaProcess.setStd(configuracion.getStd());
-		        //arimaProcess.setShockExpectation(-100);
-		        //arimaProcess.setConstant(10.0);
-		        //arimaProcess.setShockVariation(10.0);
-		         */
+
 		        
 		    	List<Double> aux = datos;
 		    	if(datos.size() > this.inicio) {
@@ -184,27 +175,17 @@ public class ArimaCAudcad60  extends ArimaPredictor{
 	
 		    	ArimaForecaster arimaForecaster = null;
 	        	try {
-	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
+	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
+			        double forecast = arimaForecaster.next();			
+			        double ultimoDato = datos.get(datos.size()-1);	        
+			        if(forecast > ultimoDato) {
+			        	prediccion = 1.0;
+			        }
+			        if(forecast < ultimoDato) {
+			        	prediccion = -1.0;
+			        }
 	        	}catch (Exception e) {
 	        	}
-		        double forecast = arimaForecaster.next();			
-				
-		        //Chequeamos el resultado
-		        double ultimoDato = datos.get(datos.size()-1);
-		        prediccion = forecast;
-		        
-		        System.out.println("PREDICCION: " + prediccion + " ULT DATO: " + ultimoDato);
-		        System.out.println(arimaProcess.toString());
-		        
-		        if(ultimoDato > prediccion) {
-		        	//Bajista
-		        	prediccion = -1.0;
-		        }
-		        //if(prediccionAnterior > 0.0 && prediccionAnterior < prediccion) {
-		        if(ultimoDato < prediccion) {
-		        	//Alcista
-		        	prediccion = 1.0;
-		        }
 	
 			}catch (Exception e) {
 				e.printStackTrace();
