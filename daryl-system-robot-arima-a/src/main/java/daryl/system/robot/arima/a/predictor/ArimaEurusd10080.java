@@ -41,6 +41,7 @@ public class ArimaEurusd10080  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	
 	private static final String robot = "ARIMA_EURUSD_10080";
+	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
 	public void load() {
@@ -58,7 +59,7 @@ public class ArimaEurusd10080  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
+		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
