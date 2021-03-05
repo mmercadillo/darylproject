@@ -50,6 +50,7 @@ public class ArimaCEurusd60  extends ArimaPredictor{
 	private Integer inicio;
 	
 	private final String robot= "ARIMA_C_EURUSD_60";
+	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
 	public void load() {
@@ -116,7 +117,7 @@ public class ArimaCEurusd60  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
+		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 		
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBEurUsdController.orden = orden.getTipoOrden();

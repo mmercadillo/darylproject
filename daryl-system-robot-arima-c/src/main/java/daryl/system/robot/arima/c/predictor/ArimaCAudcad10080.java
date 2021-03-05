@@ -48,6 +48,7 @@ public class ArimaCAudcad10080  extends ArimaPredictor{
 	private Integer inicio;
 	
 	private final String robot= "ARIMA_C_AUDCAD_10080";
+	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
 	public void load() {
@@ -115,7 +116,7 @@ public class ArimaCAudcad10080  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
+		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 		
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBAudCadW1Controller.orden = orden.getTipoOrden();

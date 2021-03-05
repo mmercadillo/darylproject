@@ -50,6 +50,7 @@ public class ArimaCNdx10080  extends ArimaPredictor{
 	private Integer inicio;
 	
 	private final String robot= "ARIMA_C_NDX_10080";
+	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
 	public void load() {
@@ -115,7 +116,7 @@ public class ArimaCNdx10080  extends ArimaPredictor{
 		//logger.info("Nueva predicción para el ROBOT " + robot + " : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
+		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 		
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBNdxW1Controller.orden = orden.getTipoOrden();

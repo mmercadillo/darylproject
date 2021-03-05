@@ -50,6 +50,7 @@ public class ArimaCWti1440  extends ArimaPredictor{
 	private Integer inicio;
 	
 	private final String robot= "ARIMA_C_WTI_1440";
+	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
 	public void load() {
@@ -117,7 +118,7 @@ public class ArimaCWti1440  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot);
+		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 		
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBAudCadD1Controller.orden = orden.getTipoOrden();
