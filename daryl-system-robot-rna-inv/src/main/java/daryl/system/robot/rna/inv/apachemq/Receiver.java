@@ -16,6 +16,7 @@ public class Receiver {
 	
 	@Autowired
 	Logger logger;
+	
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
 	
@@ -51,8 +52,7 @@ public class Receiver {
 	@Autowired
 	@Qualifier(value = "rnaInvAudcad10080")
 	RnaPredictor rnaInvAudCad10080;
-	
-	//ndx
+
 	@Autowired
 	@Qualifier(value = "rnaInvNdx60")
 	RnaPredictor rnaInvNdx60;
@@ -68,9 +68,7 @@ public class Receiver {
 	@Autowired
 	@Qualifier(value = "rnaInvNdx10080")
 	RnaPredictor rnaInvNdx10080;
-	///////////////////////////////////////
-	
-	//Gdaxi
+
 	@Autowired
 	@Qualifier(value = "rnaInvGdaxi60")
 	RnaPredictor rnaInvGdaxi60;
@@ -88,10 +86,10 @@ public class Receiver {
 	RnaPredictor rnaInvGdaxi10080;
 	
 
-
 	@JmsListener(destination = "CHNL_RNA_INV")
 	public void receiveMessage(Robot robot) {
 		
+		logger.info("Invocación de ", robot);
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {

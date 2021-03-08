@@ -1,5 +1,7 @@
 package daryl.system.robot.rna.inv;
 
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -31,6 +33,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:rna-gdaxi-w1.properties")
 public class DarylSystemRobotRnaInvApplication {
 
+	
 	public static void main(String[] args) {
 		
         SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemRobotRnaInvApplication.class);

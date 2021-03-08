@@ -16,6 +16,7 @@ public class Receiver {
 	
 	@Autowired
 	Logger logger;
+	
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
 	

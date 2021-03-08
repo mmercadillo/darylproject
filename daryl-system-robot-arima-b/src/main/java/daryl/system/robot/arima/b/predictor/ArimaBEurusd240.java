@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +28,9 @@ import lombok.ToString;
 @Component(value = "arimaBEurusd240")
 @ToString
 public class ArimaBEurusd240  extends ArimaPredictor{
+	
+	@Autowired
+	Logger logger;
 	
 	@Autowired(required = true)
 	ConfiguracionArimaEurUsd240 configuracion;

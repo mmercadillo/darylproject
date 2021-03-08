@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.neuroph.core.NeuralNetwork;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,9 @@ import lombok.ToString;
 @Component(value = "rnaInvGdaxi240")
 @ToString
 public class RnaInvGdaxi240  extends RnaPredictor{
+	
+	@Autowired
+	Logger logger;
 	
 	@Autowired(required = true)
 	ConfiguracionRnaGdaxi240 configuracion;

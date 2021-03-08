@@ -9,6 +9,7 @@ import org.espy.arima.ArimaForecaster;
 import org.espy.arima.ArimaProcess;
 import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,9 @@ import lombok.ToString;
 @Component(value = "arimaCAudcad60")
 @ToString
 public class ArimaCAudcad60  extends ArimaPredictor{
+	
+	@Autowired
+	Logger logger;
 	
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;

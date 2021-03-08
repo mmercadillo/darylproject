@@ -1,5 +1,6 @@
 package daryl.system.robot.arima.b.inv.apachemq;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.annotation.JmsListener;
@@ -13,6 +14,8 @@ import daryl.system.robot.arima.b.inv.predictor.base.ArimaPredictor;
 @Component
 public class Receiver {
 	
+	@Autowired
+	Logger logger;
 
 	@Autowired
 	JmsListenerContainerFactory<?> factory;

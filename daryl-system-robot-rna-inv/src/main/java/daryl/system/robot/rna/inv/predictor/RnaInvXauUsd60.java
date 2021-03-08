@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.neuroph.core.NeuralNetwork;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,9 @@ import lombok.ToString;
 @Component(value = "rnaInvXauusd60")
 @ToString
 public class RnaInvXauUsd60  extends RnaPredictor{
+	
+	@Autowired
+	Logger logger;
 	
 	@Autowired(required = true)
 	ConfiguracionRnaXauUsd60 configuracion;
@@ -63,9 +67,7 @@ public class RnaInvXauUsd60  extends RnaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		
-		//Enviamos al controlador para q esté disponible lo antes posible
-		//XauUsd60Controller.orden = orden.getTipoOrden();
+
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
@@ -171,11 +173,7 @@ public class RnaInvXauUsd60  extends RnaPredictor{
         }else {
         	prediccion = 0.0;
         }
-        
-        System.out.println("XAUUSD PRED - " + prediccionAnterior);
-        System.out.println("XAUUSD NUEVA PRED - " + nuevaPrediccion);
-        System.out.println("XAUUSD MEDIA - " + media);
-        System.out.println("XAUUSD DATO - " + datos.get(datos.size()-1));
+
 
 
 		return prediccion;
