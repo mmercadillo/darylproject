@@ -47,6 +47,7 @@ public class RnaInvNdx1440  extends RnaPredictor{
 	
 	public final String robot = "RNA_I_NDX_1440";
 	public final Boolean inv = Boolean.TRUE;
+	public final Timeframes timeframe = Timeframes.PERIOD_D1;
 	
 	@PostConstruct
 	public void load() {
@@ -65,7 +66,7 @@ public class RnaInvNdx1440  extends RnaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//Ndx1440Controller.orden = orden.getTipoOrden();
 
@@ -88,7 +89,7 @@ public class RnaInvNdx1440  extends RnaPredictor{
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_D1);
+		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

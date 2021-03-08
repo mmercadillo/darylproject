@@ -46,6 +46,7 @@ public class ArimaAudcad10080  extends ArimaPredictor{
 	
 	private static final String robot = "ARIMA_AUDCAD_10080";
 	private final Boolean inv = Boolean.FALSE;
+	private static final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
 	public void load() {
@@ -64,7 +65,7 @@ public class ArimaAudcad10080  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		System.out.println("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name());
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
@@ -82,7 +83,7 @@ public class ArimaAudcad10080  extends ArimaPredictor{
 		
 		Double prediccion = 0.0;
 		
-		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);
+		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 		
 		List<Datos> datosForecast = toDatosList(historico);
 

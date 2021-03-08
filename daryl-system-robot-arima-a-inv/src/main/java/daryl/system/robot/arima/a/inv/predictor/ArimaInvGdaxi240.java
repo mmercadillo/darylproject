@@ -46,7 +46,7 @@ public class ArimaInvGdaxi240  extends ArimaPredictor{
 
 	private final String robot = "ARIMA_I_GDAXI_240";
 	private final Boolean inv = Boolean.TRUE;
-	
+	private final Timeframes timeframe = Timeframes.PERIOD_H4;
 	@PostConstruct
 	public void load() {
 		
@@ -66,7 +66,7 @@ public class ArimaInvGdaxi240  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
@@ -84,7 +84,7 @@ public class ArimaInvGdaxi240  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_H4);
+		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 
 		List<Datos> datosForecast = toDatosList(historico);
 		

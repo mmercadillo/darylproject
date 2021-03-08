@@ -47,7 +47,7 @@ public class RnaInvXauUsd60  extends RnaPredictor{
 	
 	public final String robot = "RNA_I_XAUUSD_60";
 	public final Boolean inv = Boolean.TRUE;
-	
+	public final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {
@@ -67,7 +67,7 @@ public class RnaInvXauUsd60  extends RnaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
@@ -89,7 +89,7 @@ public class RnaInvXauUsd60  extends RnaPredictor{
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_H1);
+		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

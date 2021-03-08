@@ -55,6 +55,7 @@ public class ArimaCWti60  extends ArimaPredictor{
 	
 	private final String robot= "ARIMA_C_WTI_60";
 	private final Boolean inv = Boolean.FALSE;
+	private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {
@@ -122,7 +123,7 @@ public class ArimaCWti60  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBAudCadController.orden = orden.getTipoOrden();
 
@@ -144,7 +145,7 @@ public class ArimaCWti60  extends ArimaPredictor{
 		try {
 			
 			
-			historico = histWtiRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_H1);
+			historico = histWtiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 			
 			List<Datos> datosForecast = toDatosList(historico);
 			//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

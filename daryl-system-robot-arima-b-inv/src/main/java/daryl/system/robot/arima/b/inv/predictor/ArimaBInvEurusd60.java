@@ -46,7 +46,7 @@ public class ArimaBInvEurusd60  extends ArimaPredictor{
 	
 	private final String robot = "ARIMA_I_B_EURUSD_60";
 	private final Boolean inv = Boolean.TRUE;
-	
+	private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	@PostConstruct
 	public void load() {
 		
@@ -65,7 +65,7 @@ public class ArimaBInvEurusd60  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBEurUsdController.orden = orden.getTipoOrden();
 
@@ -87,7 +87,7 @@ public class ArimaBInvEurusd60  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_H1);
+		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

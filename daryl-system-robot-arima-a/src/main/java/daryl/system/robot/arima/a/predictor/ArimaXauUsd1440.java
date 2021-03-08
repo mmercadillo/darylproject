@@ -46,6 +46,7 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 	
 	private static final String robot = "ARIMA_XAUUSD_1440";
 	private final Boolean inv = Boolean.FALSE;
+	private static final Timeframes timeframe = Timeframes.PERIOD_D1;
 	
 	@PostConstruct
 	public void load() {
@@ -64,7 +65,7 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		System.out.println("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name());
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
@@ -84,7 +85,7 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_D1);
+		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		

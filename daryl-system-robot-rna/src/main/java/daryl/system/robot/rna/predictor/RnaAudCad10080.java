@@ -47,7 +47,7 @@ public class RnaAudCad10080  extends RnaPredictor{
 
 	public final String robot = "RNA_AUDCAD_10080";
 	public final Boolean inv = Boolean.FALSE;
-	
+	public final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
 	public void load() {
@@ -67,7 +67,7 @@ public class RnaAudCad10080  extends RnaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//AudCad10080Controller.orden = orden.getTipoOrden();
 
@@ -91,7 +91,7 @@ public class RnaAudCad10080  extends RnaPredictor{
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);
+		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		

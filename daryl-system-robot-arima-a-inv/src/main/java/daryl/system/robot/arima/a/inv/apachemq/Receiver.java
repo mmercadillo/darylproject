@@ -118,7 +118,7 @@ public class Receiver {
 
 	@JmsListener(destination = "CHNL_ARIMA_A_INV")
 	public void receiveMessage(Robot robot) {
-		logger.info("\"MENSAJE RECIBIDO POR CANAL -> CHNL_ARIMA_A -> Robot -> " + robot);
+		logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_ARIMA_A_INV -> Robot -> " + robot);
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {

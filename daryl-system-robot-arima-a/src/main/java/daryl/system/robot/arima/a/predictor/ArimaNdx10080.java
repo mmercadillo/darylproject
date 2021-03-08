@@ -46,6 +46,7 @@ public class ArimaNdx10080  extends ArimaPredictor{
 	
 	private static final String robot = "ARIMA_NDX_10080";
 	private final Boolean inv = Boolean.FALSE;
+	private static final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
 	public void load() {
@@ -63,7 +64,7 @@ public class ArimaNdx10080  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		System.out.println("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name());
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
@@ -81,7 +82,7 @@ public class ArimaNdx10080  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);
+		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 		
 		List<Datos> datosForecast = toDatosList(historico);
 
