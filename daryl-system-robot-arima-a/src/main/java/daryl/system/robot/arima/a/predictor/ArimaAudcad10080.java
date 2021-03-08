@@ -60,7 +60,7 @@ public class ArimaAudcad10080  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-
+		System.out.println("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name());
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
@@ -76,7 +76,6 @@ public class ArimaAudcad10080  extends ArimaPredictor{
 	@Override
 	protected Double calcularPrediccion() {
 		
-		Double prediccionAnterior = null;
 		Double prediccion = 0.0;
 		
 		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);
@@ -106,7 +105,7 @@ public class ArimaAudcad10080  extends ArimaPredictor{
 			prediccion = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
 
 			
-			if(prediccion < datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
+			if(prediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
 				prediccion = 1.0;
 			}else if(prediccion < datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) < media && media > 0*/) {
 				prediccion = -1.0;

@@ -40,7 +40,7 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
 	
-	private static final String robot = "ARIMA_GDAXI_1440";
+	private static final String robot = "ARIMA_XAUUSD_1440";
 	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
@@ -60,7 +60,7 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-	
+		System.out.println("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name());
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
@@ -77,7 +77,7 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 	@Override
 	protected Double calcularPrediccion() {
 		
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_D1);
@@ -99,9 +99,9 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 			
 
 			
-			if(prediccion < datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
+			if(prediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
 				prediccion = 1.0;
-			}else if(prediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) < media && media > 0*/) {
+			}else if(prediccion < datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) < media && media > 0*/) {
 				prediccion = -1.0;
 			}else {
 				prediccion = 0.0;

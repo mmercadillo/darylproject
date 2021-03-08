@@ -61,7 +61,7 @@ public class ArimaGdaxi10080  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-
+		System.out.println("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name());
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
@@ -76,7 +76,7 @@ public class ArimaGdaxi10080  extends ArimaPredictor{
 
 	@Override
 	protected Double calcularPrediccion() {
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);

@@ -40,7 +40,7 @@ public class ArimaXauUsd60  extends ArimaPredictor{
 	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
 	
-	private static final String robot = "ARIMA_GDAXI_60";
+	private static final String robot = "ARIMA_XAUUSD_60";
 	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
@@ -60,7 +60,7 @@ public class ArimaXauUsd60  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		
+		System.out.println("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name());
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
@@ -76,7 +76,7 @@ public class ArimaXauUsd60  extends ArimaPredictor{
 	@Override
 	protected Double calcularPrediccion() {
 		
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_H1);

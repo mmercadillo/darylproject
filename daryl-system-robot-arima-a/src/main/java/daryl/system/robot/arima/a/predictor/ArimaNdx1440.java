@@ -40,7 +40,7 @@ public class ArimaNdx1440  extends ArimaPredictor{
 	private List<HistNdx> historico;
 	private List<Datos> datosTotal;
 	
-	private static final String robot = "ARIMA_GDAXI_1440";
+	private static final String robot = "ARIMA_NDX_1440";
 	private final Boolean inv = Boolean.FALSE;
 	
 	@PostConstruct
@@ -59,7 +59,7 @@ public class ArimaNdx1440  extends ArimaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-
+		System.out.println("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name());
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
@@ -75,7 +75,7 @@ public class ArimaNdx1440  extends ArimaPredictor{
 
 	@Override
 	protected Double calcularPrediccion() {
-		Double prediccionAnterior = null;
+	
 		Double prediccion = 0.0;
 
 		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_D1);
