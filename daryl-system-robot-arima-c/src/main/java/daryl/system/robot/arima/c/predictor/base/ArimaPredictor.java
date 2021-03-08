@@ -2,14 +2,19 @@ package daryl.system.robot.arima.c.predictor.base;
 
 import java.util.List;
 
+import org.espy.arima.ArimaProcess;
+import org.espy.arima.DefaultArimaProcess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.TipoOrden;
+import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
+import daryl.system.model.Robot;
+import daryl.system.robot.arima.c.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.c.repository.IOrdenRepository;
 import daryl.system.robot.arima.c.repository.IPrediccionRepository;
 
@@ -122,6 +127,55 @@ public abstract class ArimaPredictor {
 		}
 		return media;
 	}
+	
+	
+	protected ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
+
+		
+		double[] coefficentsAr = null;
+		try {
+			
+			String arTxt = arimaConfig.getArCoefficients();
+			arTxt = arTxt.substring(1, arTxt.length()-1);
+			
+			String[] optionsAr = arTxt.trim().split(",");
+			coefficentsAr = new double[optionsAr.length];
+			for(int j = 0; j < optionsAr.length; j++) {
+				coefficentsAr[j] = Double.parseDouble(optionsAr[j]);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		double[] coefficentsMa = null;
+		try {
+			
+			String maTxt = arimaConfig.getMaCoefficients();
+			maTxt = maTxt.substring(1, maTxt.length()-1);
+			
+			String[] optionsMa = maTxt.trim().split(",");
+			coefficentsMa = new double[optionsMa.length];
+			for(int j = 0; j < optionsMa.length; j++) {
+				coefficentsMa[j] = Double.parseDouble(optionsMa[j]);
+			}				
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+    	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
+        if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
+        if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
+        arimaProcess.setIntegrationOrder(arimaConfig.getIntegrationOrder());
+        arimaProcess.setStd(arimaConfig.getStandarDeviation());
+        arimaProcess.setShockExpectation(arimaConfig.getShockExpectation());
+        arimaProcess.setConstant(arimaConfig.getConstant());
+        arimaProcess.setShockVariation(arimaConfig.getShockVariation());
+        
+        return arimaProcess;
+		
+		
+	}
+	
 
 	
 }

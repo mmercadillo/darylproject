@@ -66,53 +66,6 @@ public class ArimaDInvEurusd240  extends ArimaPredictor{
 		//List<Datos> datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
 	
-	private ArimaProcess getArimaProcess() {
-		ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
-		this.inicio = arimaConfig.getInicio();
-		double[] coefficentsAr = null;
-		try {
-			
-			String arTxt = arimaConfig.getArCoefficients();
-			arTxt = arTxt.substring(1, arTxt.length()-1);
-			
-			String[] optionsAr = arTxt.trim().split(",");
-			coefficentsAr = new double[optionsAr.length];
-			for(int j = 0; j < optionsAr.length; j++) {
-				coefficentsAr[j] = Double.parseDouble(optionsAr[j]);
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		double[] coefficentsMa = null;
-		try {
-			
-			String maTxt = arimaConfig.getMaCoefficients();
-			maTxt = maTxt.substring(1, maTxt.length()-1);
-			
-			String[] optionsMa = maTxt.trim().split(",");
-			coefficentsMa = new double[optionsMa.length];
-			for(int j = 0; j < optionsMa.length; j++) {
-				coefficentsMa[j] = Double.parseDouble(optionsMa[j]);
-			}				
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		
-    	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
-        if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
-        if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
-        arimaProcess.setIntegrationOrder(arimaConfig.getIntegrationOrder());
-        arimaProcess.setStd(arimaConfig.getStandarDeviation());
-        arimaProcess.setShockExpectation(arimaConfig.getShockExpectation());
-        arimaProcess.setConstant(arimaConfig.getConstant());
-        arimaProcess.setShockVariation(arimaConfig.getShockVariation());
-        
-        System.out.println(arimaProcess);
-        return arimaProcess;
-		
-		
-	}
 
 	@Override
 	public void calculate(Activo activo, String estrategia) {
@@ -164,7 +117,9 @@ public class ArimaDInvEurusd240  extends ArimaPredictor{
 		try {
 
 
-			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess();
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			this.inicio = arimaConfig.getInicio();
+			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 
 	        
 	    	List<Double> aux = datos;
