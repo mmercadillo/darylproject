@@ -11,7 +11,8 @@ public enum TipoRobot {
 	ARIMA_B_I,
 	ARIMA_C,
 	ARIMA_C_I,
-	RNA;
+	RNA,
+	RNA_I;
 
 
 }
