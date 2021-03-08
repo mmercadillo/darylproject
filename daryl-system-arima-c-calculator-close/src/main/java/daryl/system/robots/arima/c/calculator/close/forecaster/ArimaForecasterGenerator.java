@@ -12,6 +12,7 @@ import java.util.List;
 import org.espy.arima.ArimaForecaster;
 import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,8 @@ import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigRepos
 @Scope(value = "prototype")
 public class ArimaForecasterGenerator implements Runnable{
 	
+	@Autowired
+	Logger logger;
 	@Autowired
 	private IArimaConfigRepository arimaConfigRepository;
 	@Autowired

@@ -3,6 +3,8 @@ package daryl.system.robots.arima.c.calculator.close;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,6 +18,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan("daryl.system.model")
 public class DarylSystemArimaCCalculatoCloseApplication {
 
+	@Autowired
+	Logger logger;
+	
 	public static void main(String[] args) {
 		
         SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemArimaCCalculatoCloseApplication.class);
