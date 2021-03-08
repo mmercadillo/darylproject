@@ -1,8 +1,5 @@
 package daryl.system.comun.enums;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public enum TipoRobot {
 	
 	ARIMA_A,
@@ -11,6 +8,8 @@ public enum TipoRobot {
 	ARIMA_B_I,
 	ARIMA_C,
 	ARIMA_C_I,
+	ARIMA_D,
+	ARIMA_D_I,
 	RNA,
 	RNA_I;
 
