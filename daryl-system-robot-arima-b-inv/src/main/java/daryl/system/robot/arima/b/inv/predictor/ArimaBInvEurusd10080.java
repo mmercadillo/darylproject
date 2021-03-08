@@ -1,3 +1,4 @@
+
 package daryl.system.robot.arima.b.inv.predictor;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class ArimaBInvEurusd10080  extends ArimaPredictor{
 	@Override
 	protected Double calcularPrediccion() {
 		
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);
