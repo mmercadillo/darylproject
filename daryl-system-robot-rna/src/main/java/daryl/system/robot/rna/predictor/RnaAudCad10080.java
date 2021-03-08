@@ -79,6 +79,7 @@ public class RnaAudCad10080  extends RnaPredictor{
 		
 	}
 
+	
 	@Override
 	protected Double calcularPrediccion() {
 		Double prediccionAnterior = null;
@@ -149,7 +150,6 @@ public class RnaAudCad10080  extends RnaPredictor{
 			}			
 		}while(index < configuracion.getNeuronasEntrada());
 
-		System.out.println(inputs);
 		Collections.reverse(inputs);
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 		neuralNetwork.calculate();
