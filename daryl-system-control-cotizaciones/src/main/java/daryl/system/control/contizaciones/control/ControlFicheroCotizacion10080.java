@@ -42,6 +42,7 @@ public class ControlFicheroCotizacion10080 extends Control{
 	public void run() {
     	//System.out.println("---------------------------------");
     	for (Activo activo : Activo.values()) {
+    		//System.out.println("ACTUALIZANDO COTIZACIÓN " + activo + " TF= " + timeframe.name());
     		if(activo == Activo.XTIUSD) continue;
 			//logger.info("Control de cotizaciones para {} INCIADO a las: {} ", activo.name(), config.getActualDateFormattedInString());
 			try {
@@ -56,7 +57,8 @@ public class ControlFicheroCotizacion10080 extends Control{
 							//sender.send(config.getCanalAmq(activo, timeframe).name(), "Hay nueva cotización");
 							List<Robot> robots = robotsRepository.findRobotsByActivoAndTimeframe(activo, timeframe);
 							for(Robot robot : robots) {
-								sender.send(robot.getCanal().name(), robot);
+								System.out.println("SE ENVIA SEÑAL AL ROBOT " + robot.getRobot() + " TF= " + timeframe.name());
+								//sender.send(robot.getCanal().name(), robot);
 							}
 						}catch (Exception e) {
 							// TODO: handle exception
@@ -94,7 +96,7 @@ public class ControlFicheroCotizacion10080 extends Control{
 					noExiste = this.checkNuevaCotizacion(activo, nuevaCotizacion, timeframe);
 					if(noExiste) {
 						//logger.info("Cotizacion nueva para el activo {} detectada: {} en {}", activo.name(), nuevaCotizacion, timeframe);
-						
+						System.out.println("NUEVA COTIZACIÓN " + activo.name() + " TF= " + timeframe.name() + " VALOR= " + nuevaCotizacion);
 						//Guardamos en la tabla correspondiente la nueva cotizaion
 						try {
 							String[] tokens = nuevaCotizacion.split(",");
