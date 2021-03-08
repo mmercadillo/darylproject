@@ -77,7 +77,7 @@ public class ArimaInvXauUsd10080  extends ArimaPredictor{
 	@Override
 	protected Double calcularPrediccion() {
 		
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);

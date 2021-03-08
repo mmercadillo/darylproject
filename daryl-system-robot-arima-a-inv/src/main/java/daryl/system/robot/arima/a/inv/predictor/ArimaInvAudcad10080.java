@@ -77,7 +77,6 @@ public class ArimaInvAudcad10080  extends ArimaPredictor{
 	@Override
 	protected Double calcularPrediccion() {
 		
-		Double prediccionAnterior = null;
 		Double prediccion = 0.0;
 		
 		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);

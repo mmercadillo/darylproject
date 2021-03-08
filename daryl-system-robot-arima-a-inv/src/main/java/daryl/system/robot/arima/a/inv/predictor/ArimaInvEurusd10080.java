@@ -79,7 +79,6 @@ public class ArimaInvEurusd10080  extends ArimaPredictor{
 	@Override
 	protected Double calcularPrediccion() {
 		
-		Double prediccionAnterior = null;
 		Double prediccion = 0.0;
 		
 		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_W1);
