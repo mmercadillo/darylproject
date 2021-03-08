@@ -79,8 +79,7 @@ public class ArimaBEurusd60  extends ArimaPredictor{
 	static Integer prediccionArimaAnterior = 0;
 	@Override
 	protected Double calcularPrediccion() {
-		
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_H1);

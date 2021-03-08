@@ -81,7 +81,7 @@ public class ArimaBGdaxi240  extends ArimaPredictor{
 	static Integer prediccionArimaAnterior = 0;
 	@Override
 	protected Double calcularPrediccion() {
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(Timeframes.PERIOD_H4);

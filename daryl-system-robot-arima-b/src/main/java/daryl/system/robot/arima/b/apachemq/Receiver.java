@@ -108,7 +108,7 @@ public class Receiver {
 	
 
 	@JmsListener(destination = "CHNL_ARIMA_B")
-	public void receiveMessageGdaxi(Robot robot) {
+	public void receiveMessage(Robot robot) {
 		
 		Timeframes timeframe = robot.getTimeframe();
 
