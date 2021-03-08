@@ -133,7 +133,7 @@ public class ArimaCWti60  extends ArimaPredictor{
 		///// 
 		
 	}
-	static Integer prediccionArimaAnterior = 0;
+
 	@Override
 	protected Double calcularPrediccion() {
 		Double prediccion = 0.0;
@@ -149,11 +149,7 @@ public class ArimaCWti60  extends ArimaPredictor{
 			darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 			
 			List<Double> datos = darylNormalizer.getDatos();
-			
-			datos.stream().forEach(dato -> {
-				int pos = datos.indexOf(dato);
-				datos.set(pos, dato * 10000);
-			});
+
 			
 			try {
 
