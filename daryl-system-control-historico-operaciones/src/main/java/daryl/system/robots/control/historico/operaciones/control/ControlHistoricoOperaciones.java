@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,9 @@ import daryl.system.robots.control.historico.operaciones.repository.IRobotsRepos
 @Component
 public class ControlHistoricoOperaciones {
 
+	@Autowired
+	Logger logger;
+	
 	@Autowired
 	private ConfigData config;
 	@Autowired

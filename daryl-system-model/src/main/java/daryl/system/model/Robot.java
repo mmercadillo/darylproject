@@ -17,7 +17,9 @@ import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoRobot;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @Entity
 @Table
 public class Robot implements Serializable{

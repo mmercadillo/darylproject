@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -28,6 +29,9 @@ import daryl.system.model.historicos.HistXauUsd;
 @EnableAsync
 public class ControlFicheroCotizacion10080 extends Control{
 
+	@Autowired
+	Logger logger;
+	
 	@Autowired
 	private ConfigData config;
 	@Autowired
