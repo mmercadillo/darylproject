@@ -20,8 +20,6 @@ public class Receiver {
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
 
-	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDXauusd60")
 	ArimaPredictor arimaDXauUsd60;
@@ -38,7 +36,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDXauusd10080")
 	ArimaPredictor arimaDXauUsd10080;	
 	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDNdx60")
 	ArimaPredictor arimaDNdx60;
@@ -55,7 +52,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDNdx10080")
 	ArimaPredictor arimaDNdx10080;
 	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDGdaxi60")
 	ArimaPredictor arimaDGdaxi60;
@@ -72,8 +68,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDGdaxi10080")
 	ArimaPredictor arimaDGdaxi10080;	
 
-	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDAudcad60")
 	ArimaPredictor arimaDAudcad60;
@@ -90,7 +84,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDAudcad10080")
 	ArimaPredictor arimaDAudcad10080;
 	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDEurusd60")
 	ArimaPredictor arimaDEurusd60;
@@ -107,8 +100,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDEurusd10080")
 	ArimaPredictor arimaDEurusd10080;
 
-	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDWti60")
 	ArimaPredictor arimaDWti60;
@@ -121,8 +112,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDWti1440")
 	ArimaPredictor arimaDWti1440;
 
-	
-	
 	@JmsListener(destination = "CHNL_ARIMA_D")
 	public void receiveMessage(Robot robot) {
 		logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_ARIMA_D -> Robot -> " + robot.getRobot());

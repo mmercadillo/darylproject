@@ -61,8 +61,7 @@ public class ArimaBAudcad60  extends ArimaPredictor{
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
 		Double prediccion = calcularPrediccion();
 		//logger.info("Nueva predicción para el AUDCAD 1H : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
-		
-				
+	
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
@@ -129,16 +128,13 @@ public class ArimaBAudcad60  extends ArimaPredictor{
 			}
 			prediccionArimaAnterior = arima.aftDeal(arima.predictValue(model[0],model[1]));
 			
-			
 		}catch (Exception e) {
 			
 		}
 
-		
 		return prediccion;
 	
 	}
-
 	
 	private List<Datos> toDatosList(List<HistAudCad> historico){
 		
@@ -159,8 +155,7 @@ public class ArimaBAudcad60  extends ArimaPredictor{
 		}
 		
 		return datos;
-		
-		
+				
 	}
 	
 	protected void verInputs(List<Double> inputs) {
@@ -170,6 +165,5 @@ public class ArimaBAudcad60  extends ArimaPredictor{
 		}
 		System.out.println(buffer.toString());
 	}
-	
 	
 }

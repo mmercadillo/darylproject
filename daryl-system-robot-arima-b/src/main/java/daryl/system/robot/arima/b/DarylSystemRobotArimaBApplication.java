@@ -42,7 +42,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:arima-wti-h4.properties")
 @PropertySource("classpath:arima-wti-d1.properties")
 public class DarylSystemRobotArimaBApplication {
-
+	
 	@Autowired
 	Logger logger;
 	
