@@ -165,11 +165,9 @@ public class RnaInvXauUsd1440  extends RnaPredictor{
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
         
-		
-        Double media = media(configuracion.getPeriodosMedia(), datos);
-        if(nuevaPrediccion > prediccionAnterior /*&& datos.get(datos.size()-1) > media && media > 0*/) {
+		if(nuevaPrediccion > prediccionAnterior ) {
         	prediccion = 1.0;
-        }else if(nuevaPrediccion < prediccionAnterior /*&& datos.get(datos.size()-1) < media && media > 0*/) {
+        }else if(nuevaPrediccion < prediccionAnterior ) {
         	prediccion = -1.0;
         }else {
         	prediccion = 0.0;

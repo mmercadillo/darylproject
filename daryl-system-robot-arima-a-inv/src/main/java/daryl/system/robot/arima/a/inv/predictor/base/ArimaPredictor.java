@@ -105,22 +105,7 @@ public abstract class ArimaPredictor {
 		
 		return orden;
 	}
-	
-	protected Double media(int periodo, List<Double> hist) {
-		
-		Double media = 0.0;
-		try {
-			List<Double> lista =  hist.subList(hist.size()-periodo, hist.size());
-			Double sum = 0.0;
-			for (Double d : lista) {
-				sum += d;
-			}
-			media = (double)sum/periodo;
-		}catch (Exception e) {
-		
-		}
-		return media;
-	}
+
 
 	
 }
