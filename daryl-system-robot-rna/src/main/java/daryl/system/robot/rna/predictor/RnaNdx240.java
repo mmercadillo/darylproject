@@ -164,22 +164,14 @@ public class RnaNdx240  extends RnaPredictor{
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
 		
-        double media = media(configuracion.getPeriodosMedia(), datos);
-       if(nuevaPrediccion > prediccionAnterior /*&& datos.get(datos.size()-1) > media && media > 0*/) {
-    	   prediccion = 1.0;
-       }else if(nuevaPrediccion < prediccionAnterior /*&& datos.get(datos.size()-1) < media && media > 0*/) {
-    	   prediccion = -1.0;
-       }else {
-    	   prediccion = 0.0;
-       }
         
-        //prediccion = nuevaPrediccion - prediccionAnterior;
-       
-        try {
-			//System.out.println("PRED NDX H4 ANT -> " + prediccionAnterior + " PRED NDX H4 NUEVA -> " + nuevaPrediccion);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
+        if(nuevaPrediccion > prediccionAnterior ) {
+    	   prediccion = 1.0;
+        }else if(nuevaPrediccion < prediccionAnterior ) {
+    	   prediccion = -1.0;
+        }else {
+    	   prediccion = 0.0;
+        }
 
 		return prediccion;
 	

@@ -164,48 +164,20 @@ public class RnaGdaxi60  extends RnaPredictor{
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
 		
-        double media = media(configuracion.getPeriodosMedia(), datos);
-
-        if(nuevaPrediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
+        
+        if(nuevaPrediccion > datos.get(datos.size()-1) ) {
         	//B
         	prediccion = 1.0;
-        }else if(nuevaPrediccion < datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) < media && media > 0*/) {
+        }else if(nuevaPrediccion < datos.get(datos.size()-1) ) {
         	prediccion = -1.0;
         }else {
         	prediccion = 0.0;
         }
-        //prediccion = nuevaPrediccion - prediccionAnterior;
-        
-        try {
-			//System.out.println("PRED NDX ANT -> " + prediccionAnterior + " PRED NDX NUEVA -> " + nuevaPrediccion);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
+
         
 		return prediccion;
 	}
 
-	/*
-	@Override
-	protected Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion) {
-		
-		Orden orden = new Orden();
-			orden.setFAlta(System.currentTimeMillis());
-			orden.setFBaja(null);
-			orden.setEstrategia(Estrategia.RNA_GDAXI_1H);
-			orden.setTipoActivo(TipoActivo.GDAXI);
-			orden.setTipoOrden(TipoOrden.CLOSE);
-		if(prediccion < 0.0) {
-			orden.setTipoOrden(TipoOrden.SELL);
-		}else if(prediccion > 0.0) {
-			orden.setTipoOrden(TipoOrden.BUY);
-		}else {
-			orden.setTipoOrden(TipoOrden.CLOSE);	
-		}
-		
-		return orden;
-	}
-	*/
 	private List<Datos> toDatosList(List<HistGdaxi> historico){
 		
 		List<Datos> datos = new ArrayList<Datos>();

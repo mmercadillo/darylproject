@@ -164,42 +164,11 @@ public class RnaAudCad60  extends RnaPredictor{
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
 		
-        double media = media(configuracion.getPeriodosMedia(), datos);
-		
-        
-        //prediccion = nuevaPrediccion - prediccionAnterior;
-
-        try {
-			//System.out.println("PRED AUDCAD H1 ANT -> " + prediccionAnterior + " PRED AUDCAD H1 NUEVA -> " + nuevaPrediccion);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
-		return prediccion;
+        return prediccion;
 	
 	}
 
-	
-	/*
-	@Override
-	protected Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion) {
-		
-		Orden orden = new Orden();
-			orden.setFAlta(System.currentTimeMillis());
-			orden.setFBaja(null);
-			orden.setEstrategia(Estrategia.RNA_AUDCAD_1H);
-			orden.setTipoActivo(TipoActivo.AUDCAD);
-			orden.setTipoOrden(TipoOrden.CLOSE);
-		if(prediccion < 0.0) {
-			orden.setTipoOrden(TipoOrden.SELL);
-		}else if(prediccion > 0.0) {
-			orden.setTipoOrden(TipoOrden.BUY);
-		}else {
-			orden.setTipoOrden(TipoOrden.CLOSE);	
-		}
-		
-		return orden;
-	}
-	*/
+
 	private List<Datos> toDatosList(List<HistAudCad> historico){
 		
 		List<Datos> datos = new ArrayList<Datos>();
