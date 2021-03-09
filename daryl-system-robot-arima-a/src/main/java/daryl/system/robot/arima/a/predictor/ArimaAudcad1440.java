@@ -46,7 +46,7 @@ public class ArimaAudcad1440  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	
 	//private static final String robot = "ARIMA_AUDCAD_1440";
-	private final Boolean inv = Boolean.FALSE;
+	//private final Boolean inv = Boolean.FALSE;
 	private static final Timeframes timeframe = Timeframes.PERIOD_D1;
 	
 	@PostConstruct
@@ -65,7 +65,7 @@ public class ArimaAudcad1440  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot );
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera

@@ -46,7 +46,7 @@ public class ArimaXauUsd10080  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	
 	//private static final String robot = "ARIMA_XAUUSD_10080";
-	private final Boolean inv = Boolean.FALSE;
+	//private final Boolean inv = Boolean.FALSE;
 	private static final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
@@ -66,7 +66,7 @@ public class ArimaXauUsd10080  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot );
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
