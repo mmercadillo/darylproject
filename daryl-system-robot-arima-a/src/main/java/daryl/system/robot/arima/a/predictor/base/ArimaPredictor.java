@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Async;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
+import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
@@ -26,7 +27,7 @@ public abstract class ArimaPredictor {
 	
 	//protected abstract void calculate(Activo activo, String estrategia);	
 	public abstract void calculate(Robot robot);
-	protected abstract Double calcularPrediccion();
+	protected abstract Double calcularPrediccion(Robot robot);
 
 
 	//@Async

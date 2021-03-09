@@ -28,7 +28,7 @@ public abstract class ArimaPredictor {
 	
 	//public abstract void calculate(Activo activo, String estrategia);	
 	public abstract void calculate(Robot robot);
-	protected abstract Double calcularPrediccion();
+	protected abstract Double calcularPrediccion(Robot robot);
 	//protected abstract Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion);
 
 	//@Async
