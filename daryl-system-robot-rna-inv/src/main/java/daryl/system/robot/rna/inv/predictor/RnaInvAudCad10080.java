@@ -47,7 +47,7 @@ public class RnaInvAudCad10080  extends RnaPredictor{
 	private List<Datos> datosTotal;
 
 	//public final String robot = "RNA_I_AUDCAD_10080";
-	public final Boolean inv = Boolean.TRUE;
+	//public final Boolean inv = Boolean.TRUE;
 	public final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
@@ -64,7 +64,7 @@ public class RnaInvAudCad10080  extends RnaPredictor{
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
 		Double prediccion = calcularPrediccion();
 				
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		

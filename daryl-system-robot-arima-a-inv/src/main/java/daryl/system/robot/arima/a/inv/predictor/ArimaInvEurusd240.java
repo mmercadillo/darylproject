@@ -46,7 +46,7 @@ public class ArimaInvEurusd240  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	
 	//private final String robot = "ARIMA_I_EURUSD_240";
-	private final Boolean inv = Boolean.TRUE;
+	//private final Boolean inv = Boolean.TRUE;
 	private final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
@@ -65,7 +65,7 @@ public class ArimaInvEurusd240  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		

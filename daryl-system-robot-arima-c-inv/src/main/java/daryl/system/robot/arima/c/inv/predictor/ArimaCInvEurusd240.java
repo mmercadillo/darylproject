@@ -56,7 +56,7 @@ public class ArimaCInvEurusd240  extends ArimaPredictor{
 	
 	private final String robot= "ARIMA_I_C_EURUSD_240";
 	private final String robot_config= "ARIMA_C_EURUSD_240";
-	private final Boolean inv = Boolean.TRUE;
+	//private final Boolean inv = Boolean.TRUE;
 	private final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
@@ -78,7 +78,7 @@ public class ArimaCInvEurusd240  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBEurUsdH4Controller.orden = orden.getTipoOrden();

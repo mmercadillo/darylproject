@@ -48,7 +48,7 @@ public class RnaInvXauUsd10080  extends RnaPredictor{
 	
 	
 	//public final String robot = "RNA_I_XAUUSD_10080";
-	public final Boolean inv = Boolean.TRUE;
+	//public final Boolean inv = Boolean.TRUE;
 	public final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
@@ -68,7 +68,7 @@ public class RnaInvXauUsd10080  extends RnaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//XauUsdController10080.orden = orden.getTipoOrden();

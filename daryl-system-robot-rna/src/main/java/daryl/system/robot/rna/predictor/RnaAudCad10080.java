@@ -45,7 +45,7 @@ public class RnaAudCad10080  extends RnaPredictor{
 	private List<Datos> datosTotal;
 
 	//public final String robot = "RNA_AUDCAD_10080";
-	public final Boolean inv = Boolean.FALSE;
+	//public final Boolean inv = Boolean.FALSE;
 	public final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
@@ -65,7 +65,7 @@ public class RnaAudCad10080  extends RnaPredictor{
 		//logger.info("Nueva predicción para el AUDCAD W1: {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//AudCad10080Controller.orden = orden.getTipoOrden();

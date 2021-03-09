@@ -46,7 +46,7 @@ public class ArimaBEurusd60  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	
 	//private final String robot = "ARIMA_B_EURUSD_60";
-	private final Boolean inv = Boolean.FALSE;
+	//private final Boolean inv = Boolean.FALSE;
 	private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
@@ -66,7 +66,7 @@ public class ArimaBEurusd60  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBEurUsdController.orden = orden.getTipoOrden();

@@ -46,7 +46,7 @@ public class ArimaBInvNdx60  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	
 	//private final String robot = "ARIMA_I_B_NDX_60";
-	private final Boolean inv = Boolean.TRUE;
+	//private final Boolean inv = Boolean.TRUE;
 	private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
@@ -65,7 +65,7 @@ public class ArimaBInvNdx60  extends ArimaPredictor{
 		//logger.info("Nueva predicción para el NDX H1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBNdxController.orden = orden.getTipoOrden();

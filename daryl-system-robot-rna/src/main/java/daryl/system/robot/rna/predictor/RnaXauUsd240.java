@@ -47,7 +47,7 @@ public class RnaXauUsd240  extends RnaPredictor{
 	private List<Datos> datosTotal;
 	
 	//public final String robot = "RNA_XAUUSD_240";
-	public final Boolean inv = Boolean.FALSE;
+	//public final Boolean inv = Boolean.FALSE;
 	public final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
@@ -67,7 +67,7 @@ public class RnaXauUsd240  extends RnaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//XauUsdController240.orden = orden.getTipoOrden();

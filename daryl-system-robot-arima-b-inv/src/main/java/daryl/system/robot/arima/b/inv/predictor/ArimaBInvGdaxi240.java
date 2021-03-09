@@ -46,7 +46,7 @@ public class ArimaBInvGdaxi240  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 
 	//private final String robot = "ARIMA_I_B_GDAXI_240";
-	private final Boolean inv = Boolean.TRUE;
+	//private final Boolean inv = Boolean.TRUE;
 	private final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
@@ -67,7 +67,7 @@ public class ArimaBInvGdaxi240  extends ArimaPredictor{
 		//logger.info("Nueva predicción para el GDAXI H4 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBGdaxiH4Controller.orden = orden.getTipoOrden();

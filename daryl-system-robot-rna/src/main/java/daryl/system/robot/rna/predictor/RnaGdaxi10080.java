@@ -48,7 +48,7 @@ public class RnaGdaxi10080  extends RnaPredictor{
 	private static Double prediccionAnterior = null;
 
 	//public final String robot = "RNA_GDAXI_10080";
-	public final Boolean inv = Boolean.FALSE;
+	//public final Boolean inv = Boolean.FALSE;
 	public final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
@@ -68,7 +68,7 @@ public class RnaGdaxi10080  extends RnaPredictor{
 		//logger.info("Nueva predicción para el GDAXI W1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//Gdaxi10080Controller.orden = orden.getTipoOrden();

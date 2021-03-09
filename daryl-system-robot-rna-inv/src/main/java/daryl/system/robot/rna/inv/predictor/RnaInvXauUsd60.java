@@ -47,7 +47,7 @@ public class RnaInvXauUsd60  extends RnaPredictor{
 	private List<Datos> datosTotal;
 	
 	//public final String robot = "RNA_I_XAUUSD_60";
-	public final Boolean inv = Boolean.TRUE;
+	//public final Boolean inv = Boolean.TRUE;
 	public final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
@@ -67,7 +67,7 @@ public class RnaInvXauUsd60  extends RnaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		

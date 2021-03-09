@@ -56,7 +56,7 @@ public class ArimaCInvGdaxi10080  extends ArimaPredictor{
 
 	private final String robot= "ARIMA_I_C_GDAXI_10080";
 	private final String robot_config= "ARIMA_C_GDAXI_10080";
-	private final Boolean inv = Boolean.TRUE;
+	//private final Boolean inv = Boolean.TRUE;
 	private final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
@@ -79,7 +79,7 @@ public class ArimaCInvGdaxi10080  extends ArimaPredictor{
 		//logger.info("Nueva predicción para el ROBOT " + robot + " : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBGdaxiW1Controller.orden = orden.getTipoOrden();
