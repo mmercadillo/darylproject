@@ -20,8 +20,6 @@ public class Receiver {
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
 
-	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvXauusd60")
 	ArimaPredictor arimaDInvXauUsd60;
@@ -38,7 +36,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvXauusd10080")
 	ArimaPredictor arimaDInvXauUsd10080;	
 	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvNdx60")
 	ArimaPredictor arimaDInvNdx60;
@@ -55,7 +52,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvNdx10080")
 	ArimaPredictor arimaDInvNdx10080;
 	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvGdaxi60")
 	ArimaPredictor arimaDInvGdaxi60;
@@ -72,8 +68,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvGdaxi10080")
 	ArimaPredictor arimaDInvGdaxi10080;	
 
-	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvAudcad60")
 	ArimaPredictor arimaDInvAudcad60;
@@ -90,7 +84,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvAudcad10080")
 	ArimaPredictor arimaDInvAudcad10080;
 	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvEurusd60")
 	ArimaPredictor arimaDInvEurusd60;
@@ -107,8 +100,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvEurusd10080")
 	ArimaPredictor arimaDInvEurusd10080;
 
-	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvWti60")
 	ArimaPredictor arimaDInvWti60;
@@ -121,37 +112,35 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvWti1440")
 	ArimaPredictor arimaDInvWti1440;
 
-	
-	
 	@JmsListener(destination = "CHNL_ARIMA_D_INV")
 	public void receiveMessage(Robot robot) {
 		
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			arimaDInvGdaxi60.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvNdx60.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvXauUsd60.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvAudcad60.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvEurusd60.calculate(robot.getActivo(), robot.getRobot());
+			arimaDInvGdaxi60.calculate(robot);
+			arimaDInvNdx60.calculate(robot);
+			arimaDInvXauUsd60.calculate(robot);
+			arimaDInvAudcad60.calculate(robot);
+			arimaDInvEurusd60.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_H4) {
-			arimaDInvGdaxi240.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvNdx240.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvXauUsd240.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvAudcad240.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvEurusd240.calculate(robot.getActivo(), robot.getRobot());
+			arimaDInvGdaxi240.calculate(robot);
+			arimaDInvNdx240.calculate(robot);
+			arimaDInvXauUsd240.calculate(robot);
+			arimaDInvAudcad240.calculate(robot);
+			arimaDInvEurusd240.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_D1) {
-			arimaDInvGdaxi1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvNdx1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvXauUsd1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvAudcad1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvEurusd1440.calculate(robot.getActivo(), robot.getRobot());
+			arimaDInvGdaxi1440.calculate(robot);
+			arimaDInvNdx1440.calculate(robot);
+			arimaDInvXauUsd1440.calculate(robot);
+			arimaDInvAudcad1440.calculate(robot);
+			arimaDInvEurusd1440.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_W1) {
-			arimaDInvGdaxi10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvNdx10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvXauUsd10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvAudcad10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvEurusd10080.calculate(robot.getActivo(), robot.getRobot());
+			arimaDInvGdaxi10080.calculate(robot);
+			arimaDInvNdx10080.calculate(robot);
+			arimaDInvXauUsd10080.calculate(robot);
+			arimaDInvAudcad10080.calculate(robot);
+			arimaDInvEurusd10080.calculate(robot);
 		}
 		
 	}

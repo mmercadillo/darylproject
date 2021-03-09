@@ -91,20 +91,20 @@ public class Receiver {
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			rnaInvGdaxi60.calculate(robot.getActivo(), robot.getRobot());
-			rnaInvNdx60.calculate(robot.getActivo(), robot.getRobot());
-			rnaInvXauUsd60.calculate(robot.getActivo(), robot.getRobot());
+			rnaInvGdaxi60.calculate(robot);
+			rnaInvNdx60.calculate(robot);
+			rnaInvXauUsd60.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_H4) {
-			rnaInvGdaxi240.calculate(robot.getActivo(), robot.getRobot());
-			rnaInvNdx240.calculate(robot.getActivo(), robot.getRobot());
-			rnaInvXauUsd240.calculate(robot.getActivo(), robot.getRobot());
+			rnaInvGdaxi240.calculate(robot);
+			rnaInvNdx240.calculate(robot);
+			rnaInvXauUsd240.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_D1) {
-			rnaInvNdx1440.calculate(robot.getActivo(), robot.getRobot());
-			rnaInvXauUsd1440.calculate(robot.getActivo(), robot.getRobot());
+			rnaInvNdx1440.calculate(robot);
+			rnaInvXauUsd1440.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_W1) {
-			rnaInvGdaxi10080.calculate(robot.getActivo(), robot.getRobot());
-			rnaInvNdx10080.calculate(robot.getActivo(), robot.getRobot());
-			rnaInvXauUsd10080.calculate(robot.getActivo(), robot.getRobot());
+			rnaInvGdaxi10080.calculate(robot);
+			rnaInvNdx10080.calculate(robot);
+			rnaInvXauUsd10080.calculate(robot);
 		}
 		
 	}
