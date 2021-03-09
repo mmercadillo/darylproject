@@ -20,6 +20,7 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistGdaxi;
 import daryl.system.robot.rna.inv.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.inv.predictor.config.ConfiguracionRnaGdaxi240;
@@ -47,7 +48,7 @@ public class RnaInvGdaxi240  extends RnaPredictor{
 	private static Double prediccionAnterior = null;
 	
 
-	public final String robot = "RNA_I_GDAXI_240";
+	//public final String robot = "RNA_I_GDAXI_240";
 	public final Boolean inv = Boolean.TRUE;
 	public final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
@@ -59,21 +60,21 @@ public class RnaInvGdaxi240  extends RnaPredictor{
 	}
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		
 		Double prediccion = calcularPrediccion();
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
