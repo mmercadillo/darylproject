@@ -19,6 +19,7 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistGdaxi;
 import daryl.system.robot.arima.a.inv.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.a.inv.predictor.config.ConfiguracionArimaGdaxi10080;
@@ -44,7 +45,7 @@ public class ArimaInvGdaxi10080  extends ArimaPredictor{
 	private List<HistGdaxi> historico;
 	private List<Datos> datosTotal;
 
-	private final String robot = "ARIMA_I_GDAXI_10080";
+	//private final String robot = "ARIMA_I_GDAXI_10080";
 	private final Boolean inv = Boolean.TRUE;
 	private final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
@@ -56,7 +57,7 @@ public class ArimaInvGdaxi10080  extends ArimaPredictor{
 	}
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		
 		//Calcular la predicción		//Calcular la predicción
 		//System.out.println("-----------------------------------------------------------------------------------------------------------------");
@@ -65,16 +66,16 @@ public class ArimaInvGdaxi10080  extends ArimaPredictor{
 		//logger.info("Nueva predicción para el GDAXI W1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
@@ -99,12 +100,10 @@ public class ArimaInvGdaxi10080  extends ArimaPredictor{
 			
 			int []model=arima.getARIMAmodel();
 
-			//Double media = media(7, datos);
 			prediccion = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
-
-			if(prediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
+			if(prediccion > datos.get(datos.size()-1)) {
 				prediccion = 1.0;
-			}else if(prediccion < datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) < media && media > 0*/) {
+			}else if(prediccion < datos.get(datos.size()-1)) {
 				prediccion = -1.0;
 			}else {
 				prediccion = 0.0;
