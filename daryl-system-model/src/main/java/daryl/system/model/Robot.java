@@ -59,4 +59,7 @@ public class Robot implements Serializable{
 	@Getter @Setter
 	private Boolean robotActivo;
 	
+	@Getter @Setter
+	private Boolean inverso;
+	
 }
