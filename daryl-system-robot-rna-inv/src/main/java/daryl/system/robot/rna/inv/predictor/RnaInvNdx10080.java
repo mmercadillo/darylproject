@@ -171,13 +171,7 @@ public class RnaInvNdx10080  extends RnaPredictor{
         }else {
      	   prediccion = 0.0;
         }
-        
-        //prediccion = nuevaPrediccion - prediccionAnterior;
-		try {
-			//System.out.println("PRED NDX W1 ANT -> " + prediccionAnterior + " PRED NDX W1 NUEVA -> " + nuevaPrediccion);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
+
 
 		return prediccion;
 	

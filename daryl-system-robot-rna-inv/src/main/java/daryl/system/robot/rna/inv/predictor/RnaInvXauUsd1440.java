@@ -174,11 +174,6 @@ public class RnaInvXauUsd1440  extends RnaPredictor{
         }else {
         	prediccion = 0.0;
         }
-        
-        System.out.println("XAUUSD PRED - " + prediccionAnterior);
-        System.out.println("XAUUSD NUEVA PRED - " + nuevaPrediccion);
-        System.out.println("XAUUSD MEDIA - " + media);
-        System.out.println("XAUUSD DATO - " + datos.get(datos.size()-1));
 
 
 		return prediccion;

@@ -55,23 +55,16 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
 		
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-		//List<Datos> datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
 
 	@Override
 	public void calculate(Activo activo, String estrategia) {
-		//Calcular la predicción		
-		//Calcular la predicción
-		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		//System.out.println("PREDICCION ANTERIOR GDAXI D1 -> " + prediccionAnterior);		
+		
 		Double prediccion = calcularPrediccion();
-		//logger.info("Nueva predicción para el GDAXI D1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
-		//Enviamos al controlador para q esté disponible lo antes posible
-		//Gdaxi1440Controller.orden = orden.getTipoOrden();
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
@@ -95,13 +88,11 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
 		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
 
 		List<Datos> datosForecast = toDatosList(historico);
-		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
 		
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		
 		List<Double> datos = darylNormalizer.getDatos();
-		//Double anteAnterior = 0.0, anterior = 0.0, ultimo = 0.0;
 		List<Double> inputs = null;
 		
 		if(prediccionAnterior == null) {
@@ -132,7 +123,6 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
 			
 	        // get network output
 	        double[] networkOutput = neuralNetwork.getOutput();
-	        //double predicted = interpretOutput(networkOutput);
 	        prediccionAnterior = darylNormalizer.denormData(networkOutput[0]);
 			
 		}
@@ -163,10 +153,9 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
 		
         // get network output
         double[] networkOutput = neuralNetwork.getOutput();
-        //double predicted = interpretOutput(networkOutput);
+       
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
 		
-        double media = media(configuracion.getPeriodosMedia(), datos);
         if(nuevaPrediccion > prediccionAnterior /*datos.get(datos.size()-1) && datos.get(datos.size()-1) > media && media > 0*/) {
         	//B
         	prediccion = 1.0;
@@ -175,37 +164,10 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
         }else {
         	prediccion = 0.0;
         }
-        //prediccion = nuevaPrediccion - prediccionAnterior;
-        try {
-			//System.out.println("PRED GDAXI D1 ANT -> " + prediccionAnterior + " PRED GDAXI D1 NUEVA -> " + nuevaPrediccion);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
-        this.prediccionAnterior = nuevaPrediccion;
+        prediccionAnterior = nuevaPrediccion;
 		return prediccion;
 	}
 
-	/*
-	@Override
-	protected Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion) {
-		
-		Orden orden = new Orden();
-			orden.setFAlta(System.currentTimeMillis());
-			orden.setFBaja(null);
-			orden.setEstrategia(Estrategia.RNA_GDAXI_1H);
-			orden.setTipoActivo(TipoActivo.GDAXI);
-			orden.setTipoOrden(TipoOrden.CLOSE);
-		if(prediccion < 0.0) {
-			orden.setTipoOrden(TipoOrden.SELL);
-		}else if(prediccion > 0.0) {
-			orden.setTipoOrden(TipoOrden.BUY);
-		}else {
-			orden.setTipoOrden(TipoOrden.CLOSE);	
-		}
-		
-		return orden;
-	}
-	*/
 	private List<Datos> toDatosList(List<HistGdaxi> historico){
 		
 		List<Datos> datos = new ArrayList<Datos>();

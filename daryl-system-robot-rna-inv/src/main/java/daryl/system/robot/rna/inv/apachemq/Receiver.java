@@ -32,7 +32,6 @@ public class Receiver {
 	@Qualifier(value = "rnaInvXauusd1440")
 	RnaPredictor rnaInvXauUsd1440;
 	
-	
 	@Autowired
 	@Qualifier(value = "rnaInvXauusd10080")
 	RnaPredictor rnaInvXauUsd10080;
@@ -85,7 +84,6 @@ public class Receiver {
 	@Qualifier(value = "rnaInvGdaxi10080")
 	RnaPredictor rnaInvGdaxi10080;
 	
-
 	@JmsListener(destination = "CHNL_RNA_INV")
 	public void receiveMessage(Robot robot) {
 		
