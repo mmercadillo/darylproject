@@ -19,6 +19,7 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.b.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.b.predictor.config.ConfiguracionArimaXauUsd240;
@@ -44,7 +45,7 @@ public class ArimaBXauUsd240  extends ArimaPredictor{
 	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
 	
-	private final String robot = "ARIMA_B_XAUUSD_240";
+	//private final String robot = "ARIMA_B_XAUUSD_240";
 	private final Boolean inv = Boolean.FALSE;
 	private final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
@@ -57,7 +58,7 @@ public class ArimaBXauUsd240  extends ArimaPredictor{
 	}
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
 		Double prediccion = calcularPrediccion();
@@ -65,8 +66,8 @@ public class ArimaBXauUsd240  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), inv);
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBXauUsdH4Controller.orden = orden.getTipoOrden();
 
@@ -75,8 +76,8 @@ public class ArimaBXauUsd240  extends ArimaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
