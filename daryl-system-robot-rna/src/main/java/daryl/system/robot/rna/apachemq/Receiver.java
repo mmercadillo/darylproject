@@ -91,20 +91,42 @@ public class Receiver {
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			if(robot.getActivo() == Activo.GDAXI) rnaGdaxi60.calculate(robot);
-			if(robot.getActivo() == Activo.NDX) rnaNdx60.calculate(robot);
-			if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd60.calculate(robot);
+			try{if(robot.getActivo() == Activo.GDAXI) rnaGdaxi60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) rnaNdx60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_H4) {
-			if(robot.getActivo() == Activo.GDAXI) rnaGdaxi240.calculate(robot);
-			if(robot.getActivo() == Activo.NDX) rnaNdx240.calculate(robot);
-			if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd240.calculate(robot);
+			try{if(robot.getActivo() == Activo.GDAXI) rnaGdaxi240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) rnaNdx240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_D1) {
-			if(robot.getActivo() == Activo.NDX) rnaNdx1440.calculate(robot);
-			if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd1440.calculate(robot);
+			try{if(robot.getActivo() == Activo.NDX) rnaNdx1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_W1) {
-			if(robot.getActivo() == Activo.GDAXI) rnaGdaxi10080.calculate(robot);
-			if(robot.getActivo() == Activo.NDX) rnaNdx10080.calculate(robot);
-			if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd10080.calculate(robot);
+			try{if(robot.getActivo() == Activo.GDAXI) rnaGdaxi10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) rnaNdx10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}
 		
 	}

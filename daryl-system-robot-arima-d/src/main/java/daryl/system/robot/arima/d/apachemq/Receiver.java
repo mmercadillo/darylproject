@@ -120,29 +120,69 @@ public class Receiver {
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			if(robot.getActivo() == Activo.GDAXI) arimaDGdaxi60.calculate(robot);
-			if(robot.getActivo() == Activo.NDX) arimaDNdx60.calculate(robot);
-			if(robot.getActivo() == Activo.XAUUSD) arimaDXauUsd60.calculate(robot);
-			if(robot.getActivo() == Activo.AUDCAD) arimaDAudcad60.calculate(robot);
-			if(robot.getActivo() == Activo.EURUSD) arimaDEurusd60.calculate(robot);
+			try{if(robot.getActivo() == Activo.GDAXI) arimaDGdaxi60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaDNdx60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaDXauUsd60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaDAudcad60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaDEurusd60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_H4) {
-			if(robot.getActivo() == Activo.GDAXI) arimaDGdaxi240.calculate(robot);
-			if(robot.getActivo() == Activo.NDX) arimaDNdx240.calculate(robot);
-			if(robot.getActivo() == Activo.XAUUSD) arimaDXauUsd240.calculate(robot);
-			if(robot.getActivo() == Activo.AUDCAD) arimaDAudcad240.calculate(robot);
-			if(robot.getActivo() == Activo.EURUSD) arimaDEurusd240.calculate(robot);
+			try{if(robot.getActivo() == Activo.GDAXI) arimaDGdaxi240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaDNdx240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaDXauUsd240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaDAudcad240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaDEurusd240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_D1) {
-			if(robot.getActivo() == Activo.GDAXI) arimaDGdaxi1440.calculate(robot);
-			if(robot.getActivo() == Activo.NDX) arimaDNdx1440.calculate(robot);
-			if(robot.getActivo() == Activo.XAUUSD) arimaDXauUsd1440.calculate(robot);
-			if(robot.getActivo() == Activo.AUDCAD) arimaDAudcad1440.calculate(robot);
-			if(robot.getActivo() == Activo.EURUSD) arimaDEurusd1440.calculate(robot);
+			try{if(robot.getActivo() == Activo.GDAXI) arimaDGdaxi1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaDNdx1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaDXauUsd1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaDAudcad1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaDEurusd1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_W1) {
-			if(robot.getActivo() == Activo.GDAXI) arimaDGdaxi10080.calculate(robot);
-			if(robot.getActivo() == Activo.NDX) arimaDNdx10080.calculate(robot);
-			if(robot.getActivo() == Activo.XAUUSD) arimaDXauUsd10080.calculate(robot);
-			if(robot.getActivo() == Activo.AUDCAD) arimaDAudcad10080.calculate(robot);
-			if(robot.getActivo() == Activo.EURUSD) arimaDEurusd10080.calculate(robot);
+			try{if(robot.getActivo() == Activo.GDAXI) arimaDGdaxi10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaDNdx10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaDXauUsd10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaDAudcad10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaDEurusd10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}
 		
 	}
