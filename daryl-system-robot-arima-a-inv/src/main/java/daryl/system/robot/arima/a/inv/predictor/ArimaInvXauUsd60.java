@@ -60,7 +60,7 @@ public class ArimaInvXauUsd60  extends ArimaPredictor{
 	@Override
 	public void calculate(Robot bot) {
 		//Calcular la predicción
-		//System.out.println("-----------------------------------------------------------------------------------------------------------------");
+		
 		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el XAUUSD 1H : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
