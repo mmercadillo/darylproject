@@ -47,7 +47,7 @@ public class ArimaXauUsd240  extends ArimaPredictor{
 	
 	//private static final String robot = "ARIMA_XAUUSD_240";
 	//private final Boolean inv = Boolean.FALSE;
-	private static final Timeframes timeframe = Timeframes.PERIOD_H4;
+	//private static final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
 	public void load() {
@@ -85,7 +85,7 @@ public class ArimaXauUsd240  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 

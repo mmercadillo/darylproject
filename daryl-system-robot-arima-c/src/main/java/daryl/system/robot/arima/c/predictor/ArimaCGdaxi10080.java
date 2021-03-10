@@ -54,9 +54,9 @@ public class ArimaCGdaxi10080  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 
-	private final String robot= "ARIMA_C_GDAXI_10080";
+	//private final String robot= "ARIMA_C_GDAXI_10080";
 	//private final Boolean inv = Boolean.FALSE;
-	private final Timeframes timeframe = Timeframes.PERIOD_W1;
+	//private final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
 	public void load() {
@@ -117,7 +117,7 @@ public class ArimaCGdaxi10080  extends ArimaPredictor{
 
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getRobot());
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

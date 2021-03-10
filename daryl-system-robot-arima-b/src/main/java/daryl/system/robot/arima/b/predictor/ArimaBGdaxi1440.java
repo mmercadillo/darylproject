@@ -47,7 +47,7 @@ public class ArimaBGdaxi1440  extends ArimaPredictor{
 
 	//private final String robot = "ARIMA_B_GDAXI_1440";
 	//private final Boolean inv = Boolean.FALSE;
-	private final Timeframes timeframe = Timeframes.PERIOD_D1;
+	//private final Timeframes timeframe = Timeframes.PERIOD_D1;
 	
 	@PostConstruct
 	public void load() {

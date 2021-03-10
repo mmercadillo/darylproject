@@ -1,4 +1,4 @@
-package daryl.system.robot.arima.c.predictor;
+ package daryl.system.robot.arima.c.predictor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +54,9 @@ public class ArimaCNdx60  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 	
-	private final String robot= "ARIMA_C_NDX_60";
+	//private final String robot= "ARIMA_C_NDX_60";
 	//private final Boolean inv = Boolean.FALSE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H1;
+	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {
@@ -111,7 +111,7 @@ public class ArimaCNdx60  extends ArimaPredictor{
 		try {
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getRobot());
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

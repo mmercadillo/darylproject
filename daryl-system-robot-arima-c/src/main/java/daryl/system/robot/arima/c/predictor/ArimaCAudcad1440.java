@@ -54,9 +54,9 @@ public class ArimaCAudcad1440  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 	
-	private final String robot= "ARIMA_C_AUDCAD_1440";
+	//private final String robot= "ARIMA_C_AUDCAD_1440";
 	//private final Boolean inv = Boolean.FALSE;
-	private final Timeframes timeframe = Timeframes.PERIOD_D1;
+	//private final Timeframes timeframe = Timeframes.PERIOD_D1;
 	
 	@PostConstruct
 	public void load() {
@@ -75,7 +75,7 @@ public class ArimaCAudcad1440  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, robot, bot.getInverso());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBAudCadD1Controller.orden = orden.getTipoOrden();
@@ -114,7 +114,7 @@ public class ArimaCAudcad1440  extends ArimaPredictor{
 
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getRobot());
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

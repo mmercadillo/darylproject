@@ -47,7 +47,7 @@ public class ArimaEurusd60  extends ArimaPredictor{
 	
 	//private static final String robot = "ARIMA_EURUSD_60";
 	//private final Boolean inv = Boolean.FALSE;
-	private static final Timeframes timeframe = Timeframes.PERIOD_H1;
+	//private static final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {
@@ -83,7 +83,7 @@ public class ArimaEurusd60  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 

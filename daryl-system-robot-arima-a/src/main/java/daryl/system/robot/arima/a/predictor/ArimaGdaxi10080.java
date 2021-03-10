@@ -47,7 +47,7 @@ public class ArimaGdaxi10080  extends ArimaPredictor{
 
 	//private static final String robot = "ARIMA_GDAXI_10080";
 	//private final Boolean inv = Boolean.FALSE;
-	private static final Timeframes timeframe = Timeframes.PERIOD_W1;
+	//private static final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
 	public void load() {
@@ -85,7 +85,7 @@ public class ArimaGdaxi10080  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
 		

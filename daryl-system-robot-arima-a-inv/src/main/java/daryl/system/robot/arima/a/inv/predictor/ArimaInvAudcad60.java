@@ -47,7 +47,7 @@ public class ArimaInvAudcad60  extends ArimaPredictor{
 	
 	//private final String robot = "ARIMA_I_AUDCAD_60";
 	//private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H1;
+	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {

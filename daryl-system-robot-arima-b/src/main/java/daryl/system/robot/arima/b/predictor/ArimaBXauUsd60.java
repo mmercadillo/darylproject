@@ -47,7 +47,7 @@ public class ArimaBXauUsd60  extends ArimaPredictor{
 	
 	//private final String robot = "ARIMA_B_XAUUSD_60";
 	//private final Boolean inv = Boolean.FALSE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H1;
+	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {

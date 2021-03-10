@@ -52,9 +52,9 @@ public class ArimaCAudcad10080  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 	
-	private final String robot= "ARIMA_C_AUDCAD_10080";
+	//private final String robot= "ARIMA_C_AUDCAD_10080";
 	//private final Boolean inv = Boolean.FALSE;
-	private final Timeframes timeframe = Timeframes.PERIOD_W1;
+	//private final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
 	public void load() {
@@ -110,7 +110,7 @@ public class ArimaCAudcad10080  extends ArimaPredictor{
 		
 		try {
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getRobot());
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

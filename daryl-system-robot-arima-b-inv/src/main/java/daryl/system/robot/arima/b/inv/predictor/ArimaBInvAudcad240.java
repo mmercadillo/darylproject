@@ -45,9 +45,9 @@ public class ArimaBInvAudcad240  extends ArimaPredictor{
 	private List<HistAudCad> historico;
 	private List<Datos> datosTotal;
 	
-	private final String robot = "ARIMA_I_B_AUDCAD_240";
+	//private final String robot = "ARIMA_I_B_AUDCAD_240";
 	//private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H4;
+	//private final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
 	public void load() {
@@ -66,7 +66,7 @@ public class ArimaBInvAudcad240  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, robot, bot.getInverso());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBAudCadH4Controller.orden = orden.getTipoOrden();

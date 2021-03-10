@@ -47,7 +47,7 @@ public class ArimaAudcad1440  extends ArimaPredictor{
 	
 	//private static final String robot = "ARIMA_AUDCAD_1440";
 	//private final Boolean inv = Boolean.FALSE;
-	private static final Timeframes timeframe = Timeframes.PERIOD_D1;
+	//private static final Timeframes timeframe = Timeframes.PERIOD_D1;
 	
 	@PostConstruct
 	public void load() {
@@ -84,7 +84,7 @@ public class ArimaAudcad1440  extends ArimaPredictor{
 		
 		Double prediccion = 0.0;
 		
-		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 

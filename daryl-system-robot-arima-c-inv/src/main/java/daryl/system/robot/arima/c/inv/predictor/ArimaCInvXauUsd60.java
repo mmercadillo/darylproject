@@ -52,10 +52,10 @@ public class ArimaCInvXauUsd60  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 	
-	private final String robot= "ARIMA_I_C_XAUUSD_60";
+	//private final String robot= "ARIMA_I_C_XAUUSD_60";
 	private final String robot_config= "ARIMA_C_XAUUSD_60";
 	//private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H1;
+	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {
@@ -113,7 +113,7 @@ public class ArimaCInvXauUsd60  extends ArimaPredictor{
 
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 	        
