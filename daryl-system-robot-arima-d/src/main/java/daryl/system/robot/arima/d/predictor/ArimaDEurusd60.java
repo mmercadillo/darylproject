@@ -53,10 +53,7 @@ public class ArimaDEurusd60  extends ArimaPredictor{
 	private List<HistEurUsd> historico;
 	private List<Datos> datosTotal;
 	private Integer inicio;
-	
-	//private final String robot= "ARIMA_D_EURUSD_60";
-	//private final Boolean inv = Boolean.FALSE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
+
 	
 	@PostConstruct
 	public void load() {

@@ -44,10 +44,7 @@ public class ArimaBInvAudcad240  extends ArimaPredictor{
 	
 	private List<HistAudCad> historico;
 	private List<Datos> datosTotal;
-	
-	//private final String robot = "ARIMA_I_B_AUDCAD_240";
-	//private final Boolean inv = Boolean.TRUE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_H4;
+
 	
 	@PostConstruct
 	public void load() {

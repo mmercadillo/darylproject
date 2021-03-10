@@ -45,10 +45,6 @@ public class ArimaBInvXauUsd60  extends ArimaPredictor{
 	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
 	
-	//private final String robot = "ARIMA_I_B_XAUUSD_60";
-	//private final Boolean inv = Boolean.TRUE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
-	
 	@PostConstruct
 	public void load() {
 		

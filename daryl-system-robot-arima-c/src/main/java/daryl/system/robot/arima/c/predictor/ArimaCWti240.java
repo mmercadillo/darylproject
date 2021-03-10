@@ -54,9 +54,7 @@ public class ArimaCWti240  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 	
-	//private final String robot= "ARIMA_C_WTI_240";
-	//private final Boolean inv = Boolean.FALSE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_H4;
+	
 	
 	@PostConstruct
 	public void load() {

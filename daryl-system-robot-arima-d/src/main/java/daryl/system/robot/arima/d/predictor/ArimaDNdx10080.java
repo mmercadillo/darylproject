@@ -54,9 +54,7 @@ public class ArimaDNdx10080  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 	
-	//private final String robot= "ARIMA_D_NDX_10080";
-	//private final Boolean inv = Boolean.FALSE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_W1;
+
 	
 	@PostConstruct
 	public void load() {

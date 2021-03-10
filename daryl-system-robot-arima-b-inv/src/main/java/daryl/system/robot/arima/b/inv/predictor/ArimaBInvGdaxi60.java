@@ -45,9 +45,6 @@ public class ArimaBInvGdaxi60  extends ArimaPredictor{
 	private List<HistGdaxi> historico;
 	private List<Datos> datosTotal;
 
-	//private final String robot = "ARIMA_I_B_GDAXI_60";
-	//private final Boolean inv = Boolean.TRUE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {

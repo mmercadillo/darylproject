@@ -54,10 +54,9 @@ public class ArimaDInvEurusd10080  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 	
-	//private final String robot= "ARIMA_I_D_EURUSD_10080";
+
 	private final String robot_config= "ARIMA_D_EURUSD_10080";
-	//private final Boolean inv = Boolean.TRUE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_W1;
+
 	
 	@PostConstruct
 	public void load() {

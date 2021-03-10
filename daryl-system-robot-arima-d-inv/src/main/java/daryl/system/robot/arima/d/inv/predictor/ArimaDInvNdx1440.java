@@ -55,10 +55,9 @@ public class ArimaDInvNdx1440  extends ArimaPredictor{
 	private Integer inicio;
 	
 
-	//private final String robot= "ARIMA_I_D_NDX_1440";
+
 	private final String robot_config= "ARIMA_D_NDX_1440";
-	//private final Boolean inv = Boolean.TRUE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_D1;
+
 	
 	@PostConstruct
 	public void load() {

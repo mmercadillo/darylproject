@@ -46,9 +46,7 @@ public class RnaXauUsd1440  extends RnaPredictor{
 	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
 	
-	//public final String robot = "RNA_XAUUSD_1440";
-	//public final Boolean inv = Boolean.FALSE;
-	//public final Timeframes timeframe = Timeframes.PERIOD_D1;
+
 	
 	@PostConstruct
 	public void load() {

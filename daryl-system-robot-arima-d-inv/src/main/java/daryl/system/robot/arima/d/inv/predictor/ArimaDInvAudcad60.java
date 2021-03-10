@@ -54,10 +54,9 @@ public class ArimaDInvAudcad60  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 
-	//private final String robot= "ARIMA_I_D_AUDCAD_60";
+
 	private final String robot_config= "ARIMA_D_AUDCAD_60";
-	//private final Boolean inv = Boolean.TRUE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
+
 	
 	@PostConstruct
 	public void load() {

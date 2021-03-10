@@ -46,10 +46,7 @@ public class RnaNdx240  extends RnaPredictor{
 	private List<HistNdx> historico;
 	private List<Datos> datosTotal;
 	
-	
-	//public final String robot = "RNA_NDX_240";
-	//public final Boolean inv = Boolean.FALSE;
-	//public final Timeframes timeframe = Timeframes.PERIOD_H4;
+
 	
 	@PostConstruct
 	public void load() {

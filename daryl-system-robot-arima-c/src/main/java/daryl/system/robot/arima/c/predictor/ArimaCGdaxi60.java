@@ -54,9 +54,6 @@ public class ArimaCGdaxi60  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 
-	//private final String robot= "ARIMA_C_GDAXI_60";
-	//private final Boolean inv = Boolean.FALSE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {

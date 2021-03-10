@@ -53,10 +53,7 @@ public class ArimaCWti60  extends ArimaPredictor{
 	private List<HistWti> historico;
 	private List<Datos> datosTotal;
 	private Integer inicio;
-	
-	//private final String robot= "ARIMA_C_WTI_60";
-	//private final Boolean inv = Boolean.FALSE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
+
 	
 	@PostConstruct
 	public void load() {

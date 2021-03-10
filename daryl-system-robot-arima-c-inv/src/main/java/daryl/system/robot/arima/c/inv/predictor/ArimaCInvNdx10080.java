@@ -53,11 +53,9 @@ public class ArimaCInvNdx10080  extends ArimaPredictor{
 	private List<HistNdx> historico;
 	private List<Datos> datosTotal;
 	private Integer inicio;
-	
-	//private final String robot= "ARIMA_I_C_NDX_10080";
+
 	private final String robot_config= "ARIMA_C_NDX_10080";
-	//private final Boolean inv = Boolean.TRUE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_W1;
+
 	
 	@PostConstruct
 	public void load() {

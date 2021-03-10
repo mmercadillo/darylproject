@@ -48,9 +48,6 @@ public class RnaGdaxi240  extends RnaPredictor{
 	private static Double prediccionAnterior = null;
 	
 
-	//public final String robot = "RNA_GDAXI_240";
-	//public final Boolean inv = Boolean.FALSE;
-	//public final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
 	public void load() {

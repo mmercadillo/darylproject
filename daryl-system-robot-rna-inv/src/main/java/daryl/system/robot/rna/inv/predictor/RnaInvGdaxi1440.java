@@ -47,9 +47,7 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
 	private List<Datos> datosTotal;
 	private static Double prediccionAnterior = null;
 
-	//public final String robot = "RNA_I_GDAXI_1440";
-	//public final Boolean inv = Boolean.TRUE;
-	//public final Timeframes timeframe = Timeframes.PERIOD_D1;
+
 	
 	@PostConstruct
 	public void load() {
