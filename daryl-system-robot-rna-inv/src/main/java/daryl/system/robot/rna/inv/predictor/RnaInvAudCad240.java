@@ -49,7 +49,7 @@ public class RnaInvAudCad240  extends RnaPredictor{
 
 	//public final String robot = "RNA_I_AUDCAD_240";
 	//public final Boolean inv = Boolean.TRUE;
-	public final Timeframes timeframe = Timeframes.PERIOD_H4;
+	//public final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
 	public void load() {

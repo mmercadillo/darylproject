@@ -48,7 +48,7 @@ public class RnaXauUsd10080  extends RnaPredictor{
 	
 	//public final String robot = "RNA_XAUUSD_10080";
 	//public final Boolean inv = Boolean.FALSE;
-	public final Timeframes timeframe = Timeframes.PERIOD_W1;
+	//public final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
 	public void load() {

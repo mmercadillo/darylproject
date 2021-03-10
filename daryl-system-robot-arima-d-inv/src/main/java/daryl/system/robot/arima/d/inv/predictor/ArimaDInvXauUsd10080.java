@@ -54,10 +54,10 @@ public class ArimaDInvXauUsd10080  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 
-	private final String robot= "ARIMA_I_D_XAUUSD_10080";
+	//private final String robot= "ARIMA_I_D_XAUUSD_10080";
 	private final String robot_config= "ARIMA_D_XAUUSD_10080";
 	//private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_W1;
+	//private final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
 	public void load() {
@@ -78,7 +78,7 @@ public class ArimaDInvXauUsd10080  extends ArimaPredictor{
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, robot, bot.getInverso());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBXauUsdW1Controller.orden = orden.getTipoOrden();
@@ -119,7 +119,7 @@ public class ArimaDInvXauUsd10080  extends ArimaPredictor{
 		try {
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

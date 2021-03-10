@@ -49,7 +49,7 @@ public class RnaNdx60  extends RnaPredictor{
 	
 	//public final String robot = "RNA_NDX_60";
 	//public final Boolean inv = Boolean.FALSE;
-	public final Timeframes timeframe = Timeframes.PERIOD_H1;
+	//public final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {

@@ -47,8 +47,8 @@ public class RnaGdaxi60  extends RnaPredictor{
 	private List<Datos> datosTotal;
 
 	//public final String robot = "RNA_GDAXI_60";
-	public final Boolean inv = Boolean.FALSE;
-	public final Timeframes timeframe = Timeframes.PERIOD_H1;
+	//public final Boolean inv = Boolean.FALSE;
+	//public final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {
