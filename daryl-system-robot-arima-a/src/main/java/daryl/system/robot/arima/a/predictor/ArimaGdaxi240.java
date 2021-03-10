@@ -30,8 +30,6 @@ import lombok.ToString;
 @ToString
 public class ArimaGdaxi240  extends ArimaPredictor{
 	
-	@Autowired
-	Logger logger;
 	
 	@Autowired(required = true)
 	ConfiguracionArimaGdaxi240 configuracion;
@@ -45,9 +43,7 @@ public class ArimaGdaxi240  extends ArimaPredictor{
 	private List<HistGdaxi> historico;
 	private List<Datos> datosTotal;
 
-	//private static final String robot = "ARIMA_GDAXI_240";
-	//private final Boolean inv = Boolean.FALSE;
-	//private static final Timeframes timeframe = Timeframes.PERIOD_H4;
+
 	
 	@PostConstruct
 	public void load() {

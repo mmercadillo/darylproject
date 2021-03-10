@@ -44,10 +44,7 @@ public class ArimaInvNdx60  extends ArimaPredictor{
 	
 	private List<HistNdx> historico;
 	private List<Datos> datosTotal;
-	
-	//private final String robot = "ARIMA_I_NDX_60";
-	//private final Boolean inv = Boolean.TRUE;
-	//private final Timeframes timeframe = Timeframes.PERIOD_H1;
+
 	
 	@PostConstruct
 	public void load() {

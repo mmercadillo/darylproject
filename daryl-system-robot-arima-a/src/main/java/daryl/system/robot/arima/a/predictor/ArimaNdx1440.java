@@ -28,9 +28,7 @@ import lombok.ToString;
 @Component(value = "arimaNdx1440")
 @ToString
 public class ArimaNdx1440  extends ArimaPredictor{
-	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired(required = true)
 	ConfiguracionArimaNdx1440 configuracion;
@@ -43,11 +41,7 @@ public class ArimaNdx1440  extends ArimaPredictor{
 	
 	private List<HistNdx> historico;
 	private List<Datos> datosTotal;
-	
-	//private static final String robot = "ARIMA_NDX_1440";
-	//private final Boolean inv = Boolean.FALSE;
-	//private static final Timeframes timeframe = Timeframes.PERIOD_D1;
-	
+
 	@PostConstruct
 	public void load() {
 		
