@@ -7,6 +7,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.stereotype.Component;
 
+import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Robot;
 import daryl.system.robot.arima.b.predictor.base.ArimaPredictor;
@@ -20,7 +21,6 @@ public class Receiver {
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
 
-	//B
 	@Autowired
 	@Qualifier(value = "arimaBXauusd60")
 	ArimaPredictor arimaBXauUsd60;
@@ -108,29 +108,29 @@ public class Receiver {
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			arimaBGdaxi60.calculate(robot);
-			arimaBNdx60.calculate(robot);
-			arimaBXauUsd60.calculate(robot);
-			arimaBAudcad60.calculate(robot);
-			arimaBEurusd60.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) arimaBGdaxi60.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) arimaBNdx60.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) arimaBXauUsd60.calculate(robot);
+			if(robot.getActivo() == Activo.AUDCAD) arimaBAudcad60.calculate(robot);
+			if(robot.getActivo() == Activo.EURUSD) arimaBEurusd60.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_H4) {
-			arimaBGdaxi240.calculate(robot);
-			arimaBNdx240.calculate(robot);
-			arimaBXauUsd240.calculate(robot);
-			arimaBAudcad240.calculate(robot);
-			arimaBEurusd240.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) arimaBGdaxi240.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) arimaBNdx240.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) arimaBXauUsd240.calculate(robot);
+			if(robot.getActivo() == Activo.AUDCAD) arimaBAudcad240.calculate(robot);
+			if(robot.getActivo() == Activo.EURUSD) arimaBEurusd240.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_D1) {
-			arimaBGdaxi1440.calculate(robot);
-			arimaBNdx1440.calculate(robot);
-			arimaBXauUsd1440.calculate(robot);
-			arimaBAudcad1440.calculate(robot);
-			arimaBEurusd1440.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) arimaBGdaxi1440.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) arimaBNdx1440.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) arimaBXauUsd1440.calculate(robot);
+			if(robot.getActivo() == Activo.AUDCAD) arimaBAudcad1440.calculate(robot);
+			if(robot.getActivo() == Activo.EURUSD) arimaBEurusd1440.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_W1) {
-			arimaBGdaxi10080.calculate(robot);
-			arimaBNdx10080.calculate(robot);
-			arimaBXauUsd10080.calculate(robot);
-			arimaBAudcad10080.calculate(robot);
-			arimaBEurusd10080.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) arimaBGdaxi10080.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) arimaBNdx10080.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) arimaBXauUsd10080.calculate(robot);
+			if(robot.getActivo() == Activo.AUDCAD) arimaBAudcad10080.calculate(robot);
+			if(robot.getActivo() == Activo.EURUSD) arimaBEurusd10080.calculate(robot);
 		}
 		
 	}

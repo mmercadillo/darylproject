@@ -7,6 +7,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.stereotype.Component;
 
+import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Robot;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
@@ -90,20 +91,20 @@ public class Receiver {
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			rnaGdaxi60.calculate(robot);
-			rnaNdx60.calculate(robot);
-			rnaXauUsd60.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) rnaGdaxi60.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) rnaNdx60.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd60.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_H4) {
-			rnaGdaxi240.calculate(robot);
-			rnaNdx240.calculate(robot);
-			rnaXauUsd240.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) rnaGdaxi240.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) rnaNdx240.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd240.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_D1) {
-			rnaNdx1440.calculate(robot);
-			rnaXauUsd1440.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) rnaNdx1440.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd1440.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_W1) {
-			rnaGdaxi10080.calculate(robot);
-			rnaNdx10080.calculate(robot);
-			rnaXauUsd10080.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) rnaGdaxi10080.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) rnaNdx10080.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) rnaXauUsd10080.calculate(robot);
 		}
 		
 	}

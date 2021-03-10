@@ -7,6 +7,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.stereotype.Component;
 
+import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Robot;
 import daryl.system.robot.arima.a.inv.predictor.base.ArimaPredictor;
@@ -107,29 +108,29 @@ public class Receiver {
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			arimaInvGdaxi60.calculate(robot);
-			arimaInvNdx60.calculate(robot);
-			arimaInvXauUsd60.calculate(robot);
-			arimaInvAudcad60.calculate(robot);
-			arimaInvEurusd60.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) arimaInvGdaxi60.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) arimaInvNdx60.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) arimaInvXauUsd60.calculate(robot);
+			if(robot.getActivo() == Activo.AUDCAD) arimaInvAudcad60.calculate(robot);
+			if(robot.getActivo() == Activo.EURUSD) arimaInvEurusd60.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_H1) {
-			arimaInvGdaxi240.calculate(robot);
-			arimaInvNdx240.calculate(robot);
-			arimaInvXauUsd240.calculate(robot);
-			arimaInvAudcad240.calculate(robot);
-			arimaInvEurusd240.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) arimaInvGdaxi240.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) arimaInvNdx240.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) arimaInvXauUsd240.calculate(robot);
+			if(robot.getActivo() == Activo.AUDCAD) arimaInvAudcad240.calculate(robot);
+			if(robot.getActivo() == Activo.EURUSD) arimaInvEurusd240.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_H1) {
-			arimaInvGdaxi1440.calculate(robot);
-			arimaInvNdx1440.calculate(robot);
-			arimaInvXauUsd1440.calculate(robot);
-			arimaInvAudcad1440.calculate(robot);
-			arimaInvEurusd1440.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) arimaInvGdaxi1440.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) arimaInvNdx1440.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) arimaInvXauUsd1440.calculate(robot);
+			if(robot.getActivo() == Activo.AUDCAD) arimaInvAudcad1440.calculate(robot);
+			if(robot.getActivo() == Activo.EURUSD) arimaInvEurusd1440.calculate(robot);
 		}else if(timeframe == Timeframes.PERIOD_H1) {
-			arimaInvGdaxi10080.calculate(robot);
-			arimaInvNdx10080.calculate(robot);
-			arimaInvXauUsd10080.calculate(robot);
-			arimaInvAudcad10080.calculate(robot);
-			arimaInvEurusd10080.calculate(robot);
+			if(robot.getActivo() == Activo.GDAXI) arimaInvGdaxi10080.calculate(robot);
+			if(robot.getActivo() == Activo.NDX) arimaInvNdx10080.calculate(robot);
+			if(robot.getActivo() == Activo.XAUUSD) arimaInvXauUsd10080.calculate(robot);
+			if(robot.getActivo() == Activo.AUDCAD) arimaInvAudcad10080.calculate(robot);
+			if(robot.getActivo() == Activo.EURUSD) arimaInvEurusd10080.calculate(robot);
 		}
 		
 	}
