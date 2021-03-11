@@ -45,10 +45,7 @@ public class RnaInvXauUsd60  extends RnaPredictor{
 	
 	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
-	
-	//public final String robot = "RNA_I_XAUUSD_60";
-	//public final Boolean inv = Boolean.TRUE;
-	public final Timeframes timeframe = Timeframes.PERIOD_H1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -62,7 +59,7 @@ public class RnaInvXauUsd60  extends RnaPredictor{
 	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el XAUUSD 1H : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
@@ -83,14 +80,14 @@ public class RnaInvXauUsd60  extends RnaPredictor{
 	}
 
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 		Double prediccionAnterior = null;
 		Double prediccion = 0.0;
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

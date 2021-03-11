@@ -54,10 +54,9 @@ public class ArimaDInvGdaxi10080  extends ArimaPredictor{
 	private List<Datos> datosTotal;
 	private Integer inicio;
 
-	private final String robot= "ARIMA_I_D_GDAXI_10080";
+
 	private final String robot_config= "ARIMA_D_GDAXI_10080";
-	//private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_W1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -74,11 +73,11 @@ public class ArimaDInvGdaxi10080  extends ArimaPredictor{
 		//Calcular la predicción		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
 		//System.out.println("PREDICCION ANTERIOR -> " + prediccionAnterior);		
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el ROBOT " + robot + " : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, robot, bot.getInverso());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBGdaxiW1Controller.orden = orden.getTipoOrden();
@@ -96,11 +95,11 @@ public class ArimaDInvGdaxi10080  extends ArimaPredictor{
 	}
 	static Double prediccionArimaAnterior = 0.0;
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 
 		Double prediccion = 0.0;
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
@@ -118,7 +117,7 @@ public class ArimaDInvGdaxi10080  extends ArimaPredictor{
 		try {
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

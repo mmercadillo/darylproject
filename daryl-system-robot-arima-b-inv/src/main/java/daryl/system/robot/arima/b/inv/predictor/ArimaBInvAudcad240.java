@@ -44,10 +44,7 @@ public class ArimaBInvAudcad240  extends ArimaPredictor{
 	
 	private List<HistAudCad> historico;
 	private List<Datos> datosTotal;
-	
-	private final String robot = "ARIMA_I_B_AUDCAD_240";
-	//private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H4;
+
 	
 	@PostConstruct
 	public void load() {
@@ -61,12 +58,12 @@ public class ArimaBInvAudcad240  extends ArimaPredictor{
 	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el AUDCAD H4 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, robot, bot.getInverso());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
 		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBAudCadH4Controller.orden = orden.getTipoOrden();
@@ -84,12 +81,12 @@ public class ArimaBInvAudcad240  extends ArimaPredictor{
 	}
 	static Integer prediccionArimaAnterior = 0;
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 
 		Double prediccion = 0.0;
 		
-		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

@@ -30,8 +30,7 @@ import lombok.ToString;
 @ToString
 public class ArimaXauUsd1440  extends ArimaPredictor{
 	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired(required = true)
 	ConfiguracionArimaXauUsd1440 configuracion;
@@ -45,9 +44,7 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
 	
-	//private static final String robot = "ARIMA_XAUUSD_1440";
-	//private final Boolean inv = Boolean.FALSE;
-	private static final Timeframes timeframe = Timeframes.PERIOD_D1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -86,7 +83,7 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		

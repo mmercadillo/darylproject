@@ -46,9 +46,6 @@ public class RnaInvGdaxi60  extends RnaPredictor{
 	private List<HistGdaxi> historico;
 	private List<Datos> datosTotal;
 
-	//public final String robot = "RNA_I_GDAXI_60";
-	public final Boolean inv = Boolean.TRUE;
-	public final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {
@@ -60,7 +57,7 @@ public class RnaInvGdaxi60  extends RnaPredictor{
 	@Override
 	public void calculate(Robot bot) {
 				
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
@@ -79,13 +76,13 @@ public class RnaInvGdaxi60  extends RnaPredictor{
 	}
 
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		Double prediccionAnterior = null;
 		Double prediccion = 0.0;
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.load(configuracion.getRutaRNA());
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
 		

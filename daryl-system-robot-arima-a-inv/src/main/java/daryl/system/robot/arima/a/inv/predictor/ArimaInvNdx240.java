@@ -45,9 +45,6 @@ public class ArimaInvNdx240  extends ArimaPredictor{
 	private List<HistNdx> historico;
 	private List<Datos> datosTotal;
 	
-	//private final String robot = "ARIMA_I_NDX_240";
-	//private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
 	public void load() {
@@ -60,7 +57,7 @@ public class ArimaInvNdx240  extends ArimaPredictor{
 	public void calculate(Robot bot) {
 		//Calcular la predicción
 		//System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el NDX H4 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
@@ -80,11 +77,11 @@ public class ArimaInvNdx240  extends ArimaPredictor{
 	}
 
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 
 		Double prediccion = 0.0;
 
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		

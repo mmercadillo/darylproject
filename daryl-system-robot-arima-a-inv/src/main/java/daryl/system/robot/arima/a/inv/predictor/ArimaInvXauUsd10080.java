@@ -44,10 +44,7 @@ public class ArimaInvXauUsd10080  extends ArimaPredictor{
 	
 	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
-	
-	//private final String robot = "ARIMA_I_XAUUSD_10080";
-	//private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_W1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -60,7 +57,7 @@ public class ArimaInvXauUsd10080  extends ArimaPredictor{
 	public void calculate(Robot bot) {
 		//Calcular la predicción
 		//System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el XAUUSD W1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
@@ -81,12 +78,12 @@ public class ArimaInvXauUsd10080  extends ArimaPredictor{
 	}
 
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 
 		Double prediccion = 0.0;
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		

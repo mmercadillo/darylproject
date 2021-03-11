@@ -45,10 +45,7 @@ public class RnaInvNdx1440  extends RnaPredictor{
 	
 	private List<HistNdx> historico;
 	private List<Datos> datosTotal;
-	
-	//public final String robot = "RNA_I_NDX_1440";
-	//public final Boolean inv = Boolean.TRUE;
-	public final Timeframes timeframe = Timeframes.PERIOD_D1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -62,7 +59,7 @@ public class RnaInvNdx1440  extends RnaPredictor{
 	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el NDX D1: {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
@@ -84,13 +81,13 @@ public class RnaInvNdx1440  extends RnaPredictor{
 	}
 
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		Double prediccionAnterior = null;
 		Double prediccion = 0.0;
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

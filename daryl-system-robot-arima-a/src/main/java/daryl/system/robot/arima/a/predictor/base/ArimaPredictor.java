@@ -1,6 +1,8 @@
 package daryl.system.robot.arima.a.predictor.base;
 
 import java.util.List;
+
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
@@ -17,6 +19,9 @@ import daryl.system.robot.arima.a.repository.IPrediccionRepository;
 public abstract class ArimaPredictor {
 
 	@Autowired
+	protected Logger logger;
+	
+	@Autowired
 	protected ConfigData config;
 		
 	@Autowired
@@ -25,7 +30,6 @@ public abstract class ArimaPredictor {
 	protected IPrediccionRepository prediccionRepository;
 
 	
-	//protected abstract void calculate(Activo activo, String estrategia);	
 	public abstract void calculate(Robot robot);
 	protected abstract Double calcularPrediccion(Robot robot);
 

@@ -45,9 +45,7 @@ public class ArimaBInvEurusd1440  extends ArimaPredictor{
 	private List<HistEurUsd> historico;
 	private List<Datos> datosTotal;
 	
-	//private final String robot = "ARIMA_I_B_EURUSD_1440";
-	//private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_D1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -61,7 +59,7 @@ public class ArimaBInvEurusd1440  extends ArimaPredictor{
 	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el EURUSD D1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
@@ -84,11 +82,11 @@ public class ArimaBInvEurusd1440  extends ArimaPredictor{
 	}
 	static Integer prediccionArimaAnterior = 0;
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
-		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

@@ -29,8 +29,7 @@ import lombok.ToString;
 @ToString
 public class ArimaNdx240  extends ArimaPredictor{
 	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired(required = true)
 	ConfiguracionArimaNdx240 configuracion;
@@ -43,10 +42,7 @@ public class ArimaNdx240  extends ArimaPredictor{
 	
 	private List<HistNdx> historico;
 	private List<Datos> datosTotal;
-	
-	//private static final String robot = "ARIMA_NDX_240";
-	//private final Boolean inv = Boolean.FALSE;
-	private static final Timeframes timeframe = Timeframes.PERIOD_H4;
+
 	
 	@PostConstruct
 	public void load() {
@@ -83,7 +79,7 @@ public class ArimaNdx240  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		

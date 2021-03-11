@@ -29,8 +29,7 @@ import lombok.ToString;
 @ToString
 public class ArimaAudcad10080  extends ArimaPredictor{
 	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired(required = true)
 	ConfiguracionArimaAudCad10080 configuracion;
@@ -44,9 +43,7 @@ public class ArimaAudcad10080  extends ArimaPredictor{
 	private List<HistAudCad> historico;
 	private List<Datos> datosTotal;
 	
-	//private static final String robot = "ARIMA_AUDCAD_10080";
-	//private final Boolean inv = Boolean.FALSE;
-	//private static final Timeframes timeframe = Timeframes.PERIOD_W1;
+
 	
 	@PostConstruct
 	public void load() {

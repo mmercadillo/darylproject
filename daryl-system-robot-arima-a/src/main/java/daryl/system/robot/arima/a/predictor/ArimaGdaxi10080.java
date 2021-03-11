@@ -30,9 +30,7 @@ import lombok.ToString;
 @ToString
 public class ArimaGdaxi10080  extends ArimaPredictor{
 	
-	@Autowired
-	Logger logger;
-	
+
 	@Autowired(required = true)
 	ConfiguracionArimaGdaxi10080 configuracion;
 	@Autowired
@@ -45,9 +43,6 @@ public class ArimaGdaxi10080  extends ArimaPredictor{
 	private List<HistGdaxi> historico;
 	private List<Datos> datosTotal;
 
-	//private static final String robot = "ARIMA_GDAXI_10080";
-	//private final Boolean inv = Boolean.FALSE;
-	private static final Timeframes timeframe = Timeframes.PERIOD_W1;
 	
 	@PostConstruct
 	public void load() {
@@ -85,7 +80,7 @@ public class ArimaGdaxi10080  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
 		

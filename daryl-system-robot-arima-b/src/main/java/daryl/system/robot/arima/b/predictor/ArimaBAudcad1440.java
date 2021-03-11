@@ -44,10 +44,7 @@ public class ArimaBAudcad1440  extends ArimaPredictor{
 	
 	private List<HistAudCad> historico;
 	private List<Datos> datosTotal;
-	
-	//private final String robot = "ARIMA_B_AUDCAD_1440";
-	//private final Boolean inv = Boolean.FALSE;
-	private final Timeframes timeframe = Timeframes.PERIOD_D1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -61,7 +58,7 @@ public class ArimaBAudcad1440  extends ArimaPredictor{
 	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el AUDCAD D1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
@@ -85,12 +82,12 @@ public class ArimaBAudcad1440  extends ArimaPredictor{
 
 	static Integer prediccionArimaAnterior = 0;
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 
 		Double prediccion = 0.0;
 		
-		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

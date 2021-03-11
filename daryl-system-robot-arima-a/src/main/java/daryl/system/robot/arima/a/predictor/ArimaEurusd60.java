@@ -29,10 +29,7 @@ import lombok.ToString;
 @Component(value = "arimaEurusd60")
 @ToString
 public class ArimaEurusd60  extends ArimaPredictor{
-	
-	@Autowired
-	Logger logger;
-	
+
 	@Autowired(required = true)
 	ConfiguracionArimaEurUsd60 configuracion;
 	@Autowired
@@ -45,9 +42,7 @@ public class ArimaEurusd60  extends ArimaPredictor{
 	private List<HistEurUsd> historico;
 	private List<Datos> datosTotal;
 	
-	//private static final String robot = "ARIMA_EURUSD_60";
-	//private final Boolean inv = Boolean.FALSE;
-	private static final Timeframes timeframe = Timeframes.PERIOD_H1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -83,7 +78,7 @@ public class ArimaEurusd60  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 
