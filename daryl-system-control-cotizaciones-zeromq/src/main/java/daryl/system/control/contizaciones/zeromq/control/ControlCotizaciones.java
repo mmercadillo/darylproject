@@ -100,6 +100,9 @@ public class ControlCotizaciones extends Thread {
 				//logger.info("Nueva cotización {} - {} : SE ENV�?A A LA COLA", activo.name(), timeframe);
 				try {
 					//sender.send(config.getCanalAmq(activo, timeframe).name(), "Hay nueva cotizaci�n");
+					
+					
+					
 					List<Robot> robots = robotsRepository.findRobotsByActivoAndTimeframe(ctzcn.getActivo(), ctzcn.getTimeframe());
 					for(Robot robot : robots) {
 						System.out.println("SE ENVIA SE�AL AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
