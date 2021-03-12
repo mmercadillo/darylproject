@@ -21,8 +21,9 @@ const string FILE_BASE = "Daryl//";
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
 
+
 int OnInit(){
-   EventSetTimer(10);
+   //EventSetTimer(10);
    return(INIT_SUCCEEDED);
 }
 //+------------------------------------------------------------------+
@@ -213,5 +214,6 @@ void handleW1(string symbol, int posicion, int period){
 }
                  
 void OnTick(){   
+   OnTimer();
 }
 //+------------------------------------------------------------------+
