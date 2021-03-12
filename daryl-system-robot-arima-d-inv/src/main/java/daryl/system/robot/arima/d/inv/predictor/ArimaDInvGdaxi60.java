@@ -23,6 +23,7 @@ import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistGdaxi;
 import daryl.system.robot.arima.d.inv.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.d.inv.predictor.config.ConfiguracionArimaGdaxi;
@@ -54,10 +55,9 @@ public class ArimaDInvGdaxi60  extends ArimaPredictor{
 	private Integer inicio;
 
 
-	private final String robot= "ARIMA_I_D_GDAXI_60";
+
 	private final String robot_config= "ARIMA_D_GDAXI_60";
-	private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -69,17 +69,17 @@ public class ArimaDInvGdaxi60  extends ArimaPredictor{
 	
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		
 		//Calcular la predicción		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
 		//System.out.println("PREDICCION ANTERIOR -> " + prediccionAnterior);		
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el ROBOT " + robot + " : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBGdaxiController.orden = orden.getTipoOrden();
 
@@ -88,19 +88,19 @@ public class ArimaDInvGdaxi60  extends ArimaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
 	}
 	static Double prediccionArimaAnterior = 0.0;
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
@@ -118,7 +118,7 @@ public class ArimaDInvGdaxi60  extends ArimaPredictor{
 		try {
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

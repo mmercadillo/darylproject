@@ -20,6 +20,7 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistAudCad;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.predictor.config.ConfiguracionRnaAudCad60;
@@ -44,11 +45,7 @@ public class RnaAudCad60  extends RnaPredictor{
 	
 	private List<HistAudCad> historico;
 	private List<Datos> datosTotal;
-	
 
-	public final String robot = "RNA_AUDCAD_60";
-	public final Boolean inv = Boolean.FALSE;
-	public final Timeframes timeframe = Timeframes.PERIOD_H1;
 	
 	@PostConstruct
 	public void load() {
@@ -59,16 +56,16 @@ public class RnaAudCad60  extends RnaPredictor{
 	}
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
 		//System.out.println("PREDICCION ANTERIOR -> " + prediccionAnterior);
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el AUDCAD H1: {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//AudCad60Controller.orden = orden.getTipoOrden();
 
@@ -77,21 +74,21 @@ public class RnaAudCad60  extends RnaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
 	}
 
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		Double prediccionAnterior = null;
 		Double prediccion = 0.0;
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
@@ -164,42 +161,11 @@ public class RnaAudCad60  extends RnaPredictor{
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
 		
-        double media = media(configuracion.getPeriodosMedia(), datos);
-		
-        
-        //prediccion = nuevaPrediccion - prediccionAnterior;
-
-        try {
-			//System.out.println("PRED AUDCAD H1 ANT -> " + prediccionAnterior + " PRED AUDCAD H1 NUEVA -> " + nuevaPrediccion);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
-		return prediccion;
+        return prediccion;
 	
 	}
 
-	
-	/*
-	@Override
-	protected Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion) {
-		
-		Orden orden = new Orden();
-			orden.setFAlta(System.currentTimeMillis());
-			orden.setFBaja(null);
-			orden.setEstrategia(Estrategia.RNA_AUDCAD_1H);
-			orden.setTipoActivo(TipoActivo.AUDCAD);
-			orden.setTipoOrden(TipoOrden.CLOSE);
-		if(prediccion < 0.0) {
-			orden.setTipoOrden(TipoOrden.SELL);
-		}else if(prediccion > 0.0) {
-			orden.setTipoOrden(TipoOrden.BUY);
-		}else {
-			orden.setTipoOrden(TipoOrden.CLOSE);	
-		}
-		
-		return orden;
-	}
-	*/
+
 	private List<Datos> toDatosList(List<HistAudCad> historico){
 		
 		List<Datos> datos = new ArrayList<Datos>();

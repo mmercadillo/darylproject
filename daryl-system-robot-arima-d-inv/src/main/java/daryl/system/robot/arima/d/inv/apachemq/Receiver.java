@@ -7,6 +7,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.stereotype.Component;
 
+import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Robot;
 import daryl.system.robot.arima.d.inv.predictor.base.ArimaPredictor;
@@ -20,8 +21,6 @@ public class Receiver {
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
 
-	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvXauusd60")
 	ArimaPredictor arimaDInvXauUsd60;
@@ -38,7 +37,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvXauusd10080")
 	ArimaPredictor arimaDInvXauUsd10080;	
 	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvNdx60")
 	ArimaPredictor arimaDInvNdx60;
@@ -55,7 +53,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvNdx10080")
 	ArimaPredictor arimaDInvNdx10080;
 	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvGdaxi60")
 	ArimaPredictor arimaDInvGdaxi60;
@@ -72,8 +69,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvGdaxi10080")
 	ArimaPredictor arimaDInvGdaxi10080;	
 
-	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvAudcad60")
 	ArimaPredictor arimaDInvAudcad60;
@@ -90,7 +85,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvAudcad10080")
 	ArimaPredictor arimaDInvAudcad10080;
 	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvEurusd60")
 	ArimaPredictor arimaDInvEurusd60;
@@ -107,8 +101,6 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvEurusd10080")
 	ArimaPredictor arimaDInvEurusd10080;
 
-	
-	//C
 	@Autowired
 	@Qualifier(value = "arimaDInvWti60")
 	ArimaPredictor arimaDInvWti60;
@@ -121,37 +113,75 @@ public class Receiver {
 	@Qualifier(value = "arimaDInvWti1440")
 	ArimaPredictor arimaDInvWti1440;
 
-	
-	
 	@JmsListener(destination = "CHNL_ARIMA_D_INV")
 	public void receiveMessage(Robot robot) {
 		
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			arimaDInvGdaxi60.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvNdx60.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvXauUsd60.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvAudcad60.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvEurusd60.calculate(robot.getActivo(), robot.getRobot());
+			try{if(robot.getActivo() == Activo.GDAXI) arimaDInvGdaxi60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaDInvNdx60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaDInvXauUsd60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaDInvAudcad60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaDInvEurusd60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_H4) {
-			arimaDInvGdaxi240.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvNdx240.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvXauUsd240.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvAudcad240.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvEurusd240.calculate(robot.getActivo(), robot.getRobot());
+			try{if(robot.getActivo() == Activo.GDAXI) arimaDInvGdaxi240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaDInvNdx240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaDInvXauUsd240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaDInvAudcad240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaDInvEurusd240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_D1) {
-			arimaDInvGdaxi1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvNdx1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvXauUsd1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvAudcad1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvEurusd1440.calculate(robot.getActivo(), robot.getRobot());
+			try{if(robot.getActivo() == Activo.GDAXI) arimaDInvGdaxi1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaDInvNdx1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaDInvXauUsd1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaDInvAudcad1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaDInvEurusd1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_W1) {
-			arimaDInvGdaxi10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvNdx10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvXauUsd10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvAudcad10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaDInvEurusd10080.calculate(robot.getActivo(), robot.getRobot());
+			try{if(robot.getActivo() == Activo.GDAXI) arimaDInvGdaxi10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaDInvNdx10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaDInvXauUsd10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaDInvAudcad10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaDInvEurusd10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}
 		
 	}

@@ -13,6 +13,7 @@ import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
+import daryl.system.model.Robot;
 import daryl.system.robot.arima.d.inv.repository.IOrdenRepository;
 import daryl.system.robot.arima.d.inv.repository.IPrediccionRepository;
 
@@ -28,8 +29,9 @@ public abstract class ArimaPredictor {
 	protected IPrediccionRepository prediccionRepository;
 
 	
-	public abstract void calculate(Activo activo, String estrategia);	
-	protected abstract Double calcularPrediccion();
+	//public abstract void calculate(Activo activo, String estrategia);	
+	public abstract void calculate(Robot robot);
+	protected abstract Double calcularPrediccion(Robot robot);
 	//protected abstract Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion);
 
 	//@Async
@@ -108,22 +110,6 @@ public abstract class ArimaPredictor {
 		}
 		
 		return orden;
-	}
-	
-	protected Double media(int periodo, List<Double> hist) {
-		
-		Double media = 0.0;
-		try {
-			List<Double> lista =  hist.subList(hist.size()-periodo, hist.size());
-			Double sum = 0.0;
-			for (Double d : lista) {
-				sum += d;
-			}
-			media = (double)sum/periodo;
-		}catch (Exception e) {
-		
-		}
-		return media;
 	}
 	
 	protected ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {

@@ -20,6 +20,7 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.rna.inv.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.inv.predictor.config.ConfiguracionRnaXauUsd10080;
@@ -45,10 +46,7 @@ public class RnaInvXauUsd10080  extends RnaPredictor{
 	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
 	
-	
-	public final String robot = "RNA_I_XAUUSD_10080";
-	public final Boolean inv = Boolean.TRUE;
-	public final Timeframes timeframe = Timeframes.PERIOD_W1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -59,16 +57,16 @@ public class RnaInvXauUsd10080  extends RnaPredictor{
 	}
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el XAUUSD 1W : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
+		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//XauUsdController10080.orden = orden.getTipoOrden();
 
@@ -77,22 +75,22 @@ public class RnaInvXauUsd10080  extends RnaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
 	}
 
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 		Double prediccionAnterior = null;
 		Double prediccion = 0.0;
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
@@ -167,19 +165,13 @@ public class RnaInvXauUsd10080  extends RnaPredictor{
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
         
 		
-        Double media = media(configuracion.getPeriodosMedia(), datos);
-        if(nuevaPrediccion > prediccionAnterior /*&& datos.get(datos.size()-1) > media && media > 0*/) {
+        if(nuevaPrediccion > prediccionAnterior ) {
         	prediccion = 1.0;
-        }else if(nuevaPrediccion < prediccionAnterior /*&& datos.get(datos.size()-1) < media && media > 0*/) {
+        }else if(nuevaPrediccion < prediccionAnterior ) {
         	prediccion = -1.0;
         }else {
         	prediccion = 0.0;
         }
-        
-        System.out.println("XAUUSD PRED - " + prediccionAnterior);
-        System.out.println("XAUUSD NUEVA PRED - " + nuevaPrediccion);
-        System.out.println("XAUUSD MEDIA - " + media);
-        System.out.println("XAUUSD DATO - " + datos.get(datos.size()-1));
 
 
 		return prediccion;

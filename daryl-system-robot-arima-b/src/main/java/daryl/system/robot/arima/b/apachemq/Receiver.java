@@ -7,6 +7,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.stereotype.Component;
 
+import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Robot;
 import daryl.system.robot.arima.b.predictor.base.ArimaPredictor;
@@ -20,7 +21,6 @@ public class Receiver {
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
 
-	//B
 	@Autowired
 	@Qualifier(value = "arimaBXauusd60")
 	ArimaPredictor arimaBXauUsd60;
@@ -37,8 +37,6 @@ public class Receiver {
 	@Qualifier(value = "arimaBXauusd10080")
 	ArimaPredictor arimaBXauUsd10080;
 
-	
-	//B
 	@Autowired
 	@Qualifier(value = "arimaBNdx60")
 	ArimaPredictor arimaBNdx60;
@@ -55,8 +53,6 @@ public class Receiver {
 	@Qualifier(value = "arimaBNdx10080")
 	ArimaPredictor arimaBNdx10080;
 
-	
-	//B
 	@Autowired
 	@Qualifier(value = "arimaBGdaxi60")
 	ArimaPredictor arimaBGdaxi60;
@@ -73,7 +69,6 @@ public class Receiver {
 	@Qualifier(value = "arimaBGdaxi10080")
 	ArimaPredictor arimaBGdaxi10080;
 
-	//B
 	@Autowired
 	@Qualifier(value = "arimaBAudcad60")
 	ArimaPredictor arimaBAudcad60;
@@ -90,7 +85,6 @@ public class Receiver {
 	@Qualifier(value = "arimaBAudcad10080")
 	ArimaPredictor arimaBAudcad10080;
 
-	//B
 	@Autowired
 	@Qualifier(value = "arimaBEurusd60")
 	ArimaPredictor arimaBEurusd60;
@@ -107,7 +101,6 @@ public class Receiver {
 	@Qualifier(value = "arimaBEurusd10080")
 	ArimaPredictor arimaBEurusd10080;
 
-	
 
 	@JmsListener(destination = "CHNL_ARIMA_B")
 	public void receiveMessage(Robot robot) {
@@ -115,29 +108,69 @@ public class Receiver {
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			arimaBGdaxi60.calculate(robot.getActivo(), robot.getRobot());
-			arimaBNdx60.calculate(robot.getActivo(), robot.getRobot());
-			arimaBXauUsd60.calculate(robot.getActivo(), robot.getRobot());
-			arimaBAudcad60.calculate(robot.getActivo(), robot.getRobot());
-			arimaBEurusd60.calculate(robot.getActivo(), robot.getRobot());
+			try{if(robot.getActivo() == Activo.GDAXI) arimaBGdaxi60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaBNdx60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaBXauUsd60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaBAudcad60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaBEurusd60.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_H4) {
-			arimaBGdaxi240.calculate(robot.getActivo(), robot.getRobot());
-			arimaBNdx240.calculate(robot.getActivo(), robot.getRobot());
-			arimaBXauUsd240.calculate(robot.getActivo(), robot.getRobot());
-			arimaBAudcad240.calculate(robot.getActivo(), robot.getRobot());
-			arimaBEurusd240.calculate(robot.getActivo(), robot.getRobot());
+			try{if(robot.getActivo() == Activo.GDAXI) arimaBGdaxi240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaBNdx240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaBXauUsd240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaBAudcad240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaBEurusd240.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_D1) {
-			arimaBGdaxi1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaBNdx1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaBXauUsd1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaBAudcad1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaBEurusd1440.calculate(robot.getActivo(), robot.getRobot());
+			try{if(robot.getActivo() == Activo.GDAXI) arimaBGdaxi1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaBNdx1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaBXauUsd1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaBAudcad1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaBEurusd1440.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_W1) {
-			arimaBGdaxi10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaBNdx10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaBXauUsd10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaBAudcad10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaBEurusd10080.calculate(robot.getActivo(), robot.getRobot());
+			try{if(robot.getActivo() == Activo.GDAXI) arimaBGdaxi10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.NDX) arimaBNdx10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.XAUUSD) arimaBXauUsd10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.AUDCAD) arimaBAudcad10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+			try{if(robot.getActivo() == Activo.EURUSD) arimaBEurusd10080.calculate(robot);}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
 		}
 		
 	}
