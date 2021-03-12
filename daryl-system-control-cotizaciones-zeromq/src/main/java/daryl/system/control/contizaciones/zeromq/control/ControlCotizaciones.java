@@ -95,7 +95,8 @@ public class ControlCotizaciones extends Thread {
 			Cotizacion ctzcn = Cotizacion.getCotizacionFromZeroMQ(linea);
 			Boolean noExiste = checkNuevaCotizacion(ctzcn);
 			if(noExiste == Boolean.TRUE) {
-				
+				//Guardamos la nueva cotizacón
+				guardarCotizacion(ctzcn);
 				//logger.info("Nueva cotización {} - {} : SE ENV�?A A LA COLA", activo.name(), timeframe);
 				try {
 					//sender.send(config.getCanalAmq(activo, timeframe).name(), "Hay nueva cotizaci�n");
@@ -112,6 +113,107 @@ public class ControlCotizaciones extends Thread {
 			e.printStackTrace();
 		}
     	
+	}
+	
+	private void guardarCotizacion(Cotizacion ctzcn) throws SistemaException {
+		//Guardamos en la tabla correspondiente la nueva cotizaion
+		try {
+
+			if(ctzcn.getActivo() == Activo.XAUUSD) {
+				HistXauUsd historico = new HistXauUsd();
+					historico.setFecha(ctzcn.getFecha());
+					historico.setHora(ctzcn.getHora());
+					historico.setApertura(new Double(ctzcn.getApertura()));
+					historico.setMaximo(new Double(ctzcn.getMaximo()));
+					historico.setMinimo(new Double(ctzcn.getMinimo()));
+					historico.setCierre(new Double(ctzcn.getCierre()));
+					historico.setVolumen(new Double(ctzcn.getVolumen()));
+					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
+					historico.setTimeframe(ctzcn.getTimeframe());
+					
+				histXauUsdRepository.save(historico);
+				//logger.info("Cotizacion para el activo {} guardada: {}", activo.name(), nuevaCotizacion);
+			}							
+			if(ctzcn.getActivo() == Activo.AUDCAD) {
+				HistAudCad historico = new HistAudCad();
+					historico.setFecha(ctzcn.getFecha());
+					historico.setHora(ctzcn.getHora());
+					historico.setApertura(new Double(ctzcn.getApertura()));
+					historico.setMaximo(new Double(ctzcn.getMaximo()));
+					historico.setMinimo(new Double(ctzcn.getMinimo()));
+					historico.setCierre(new Double(ctzcn.getCierre()));
+					historico.setVolumen(new Double(ctzcn.getVolumen()));
+					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
+					historico.setTimeframe(ctzcn.getTimeframe());
+				
+				histAudCadRepository.save(historico);
+				//logger.info("Cotizacion para el activo {} guardada: {}", activo.name(), nuevaCotizacion);
+			}
+			if(ctzcn.getActivo() == Activo.XTIUSD) {
+				HistWti historico = new HistWti();
+					historico.setFecha(ctzcn.getFecha());
+					historico.setHora(ctzcn.getHora());
+					historico.setApertura(new Double(ctzcn.getApertura()));
+					historico.setMaximo(new Double(ctzcn.getMaximo()));
+					historico.setMinimo(new Double(ctzcn.getMinimo()));
+					historico.setCierre(new Double(ctzcn.getCierre()));
+					historico.setVolumen(new Double(ctzcn.getVolumen()));
+					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
+					historico.setTimeframe(ctzcn.getTimeframe());
+				
+				histWtiRepository.save(historico);
+				//logger.info("Cotizacion para el activo {} guardada: {}", activo.name(), nuevaCotizacion);
+			}
+			if(ctzcn.getActivo() == Activo.GDAXI) {
+				HistGdaxi historico = new HistGdaxi();
+					historico.setFecha(ctzcn.getFecha());
+					historico.setHora(ctzcn.getHora());
+					historico.setApertura(new Double(ctzcn.getApertura()));
+					historico.setMaximo(new Double(ctzcn.getMaximo()));
+					historico.setMinimo(new Double(ctzcn.getMinimo()));
+					historico.setCierre(new Double(ctzcn.getCierre()));
+					historico.setVolumen(new Double(ctzcn.getVolumen()));
+					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
+					historico.setTimeframe(ctzcn.getTimeframe());
+					
+				histGdaxiRepository.save(historico);
+				//logger.info("Cotizacion para el activo {} guardada: {}", activo.name(), nuevaCotizacion);
+			}
+			if(ctzcn.getActivo() == Activo.NDX) {
+				HistNdx historico = new HistNdx();
+					historico.setFecha(ctzcn.getFecha());
+					historico.setHora(ctzcn.getHora());
+					historico.setApertura(new Double(ctzcn.getApertura()));
+					historico.setMaximo(new Double(ctzcn.getMaximo()));
+					historico.setMinimo(new Double(ctzcn.getMinimo()));
+					historico.setCierre(new Double(ctzcn.getCierre()));
+					historico.setVolumen(new Double(ctzcn.getVolumen()));
+					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
+					historico.setTimeframe(ctzcn.getTimeframe());
+					
+				histNdxRepository.save(historico);
+				//logger.info("Cotizacion para el activo {} guardada: {}", activo.name(), nuevaCotizacion);
+			}
+			if(ctzcn.getActivo() == Activo.EURUSD) {
+				HistEurUsd historico = new HistEurUsd();
+					historico.setFecha(ctzcn.getFecha());
+					historico.setHora(ctzcn.getHora());
+					historico.setApertura(new Double(ctzcn.getApertura()));
+					historico.setMaximo(new Double(ctzcn.getMaximo()));
+					historico.setMinimo(new Double(ctzcn.getMinimo()));
+					historico.setCierre(new Double(ctzcn.getCierre()));
+					historico.setVolumen(new Double(ctzcn.getVolumen()));
+					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
+					historico.setTimeframe(ctzcn.getTimeframe());
+					
+				histEurUsdRepository.save(historico);
+				//logger.info("Cotizacion para el activo {} guardada: {}", activo.name(), nuevaCotizacion);
+			}
+			System.out.println("DATOS GUARDADOS -> " + ctzcn);
+		}catch (Exception e) {
+			//logger.error("\"No se ha podido actualizar el historico del activo: {}", activo.name(), e);
+			throw new SistemaException("No se ha podido actualizar el historico del activo " + ctzcn.getActivo());
+		}
 	}
 
 	
