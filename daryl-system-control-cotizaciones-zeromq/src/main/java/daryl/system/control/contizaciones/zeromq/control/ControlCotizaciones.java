@@ -9,6 +9,8 @@ import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+import com.google.gson.Gson;
+
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
@@ -99,14 +101,15 @@ public class ControlCotizaciones extends Thread {
 				guardarCotizacion(ctzcn);
 				//logger.info("Nueva cotización {} - {} : SE ENV�?A A LA COLA", activo.name(), timeframe);
 				try {
-					//sender.send(config.getCanalAmq(activo, timeframe).name(), "Hay nueva cotizaci�n");
-					
-					
-					
+
 					List<Robot> robots = robotsRepository.findRobotsByActivoAndTimeframe(ctzcn.getActivo(), ctzcn.getTimeframe());
 					for(Robot robot : robots) {
-						System.out.println("SE ENVIA SE�AL AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
-						//sender.send(robot.getCanal().name(), robot);
+						
+						if(robot.getRobotActivo() == Boolean.TRUE) {
+							System.out.println("SE ENVIA SEÑAL AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
+							sender.send(robot.getCanal().name(), new Gson().toJson(robot));
+						}
+						
 					}
 				}catch (Exception e) {
 					e.printStackTrace();

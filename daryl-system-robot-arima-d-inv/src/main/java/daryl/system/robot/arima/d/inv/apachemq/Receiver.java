@@ -7,6 +7,8 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
+
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Robot;
@@ -114,7 +116,11 @@ public class Receiver {
 	ArimaPredictor arimaDInvWti1440;
 
 	@JmsListener(destination = "CHNL_ARIMA_D_INV")
-	public void receiveMessage(Robot robot) {
+	public void receiveMessage(String robotJson) {
+		
+		
+		Robot robot = new Gson().fromJson(robotJson, Robot.class);
+		System.out.println("Solicitud recibida en el canal CHNL_ARIMA_D_INV -> " + robot.getRobot());
 		
 		Timeframes timeframe = robot.getTimeframe();
 

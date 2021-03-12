@@ -1,14 +1,10 @@
 package daryl.system.robot.arima.a.predictor.base;
 
-import java.util.List;
-
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
@@ -18,8 +14,6 @@ import daryl.system.robot.arima.a.repository.IPrediccionRepository;
 
 public abstract class ArimaPredictor {
 
-	@Autowired
-	protected Logger logger;
 	
 	@Autowired
 	protected ConfigData config;

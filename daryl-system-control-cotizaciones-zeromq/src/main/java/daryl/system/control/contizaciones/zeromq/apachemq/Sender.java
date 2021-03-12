@@ -13,7 +13,7 @@ public class Sender{
 	@Autowired
 	JmsTemplate jmsTemplate;
 	
-    public void send(String destination, Robot robot) {
+    public void send(String destination, String robot) {
     	
         jmsTemplate.convertAndSend(destination, robot);
     }

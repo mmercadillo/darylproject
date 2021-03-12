@@ -1,7 +1,5 @@
 package daryl.system.robot.arima.a.inv.predictor.base;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 

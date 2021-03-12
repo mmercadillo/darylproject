@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
+//logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +16,6 @@ import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.loader.DatosLoader;
 import daryl.system.comun.dataset.loader.DatosLoaderOHLC;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
-import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistXauUsd;
@@ -58,12 +56,12 @@ public class ArimaXauUsd1440  extends ArimaPredictor{
 		//Calcular la predicción
 		//System.out.println("-----------------------------------------------------------------------------------------------------------------");
 		Double prediccion = calcularPrediccion(bot);
-		//logger.info("Nueva predicción para el XAUUSD D1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
+		////logger.info("Nueva predicción para el XAUUSD D1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
+		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
