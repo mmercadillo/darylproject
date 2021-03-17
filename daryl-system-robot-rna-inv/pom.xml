@@ -9,7 +9,7 @@
 	</parent>
   
   <groupId>daryl.system.robots</groupId>
-  <artifactId>robot-rna</artifactId>
+  <artifactId>robot-rna-inv</artifactId>
   <version>1.0.0</version>
   <name>daryl-system-robot-rna-inv</name>
   <description>Microservicio que calcula la orden del robot Arima C</description>
