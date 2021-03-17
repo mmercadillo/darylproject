@@ -15,8 +15,7 @@ import daryl.system.robot.rna.repository.IPrediccionRepository;
 
 public abstract class RnaPredictor {
 
-	@Autowired
-	Logger logger;
+
 	@Autowired
 	protected ConfigData config;
 		
@@ -49,7 +48,7 @@ public abstract class RnaPredictor {
 			prediccionRepository.save(prediccion);
 			////logger.info("Guardamos la prediccion para {} es {}", activo.name(), prediccion);
 		} catch (Exception e) {
-			logger.error("No se ha podido guardar la prediccion para el activo: {}", activo, e);
+			//logger.error("No se ha podido guardar la prediccion para el activo: {}", activo, e);
 		}
 	}
 	
@@ -70,7 +69,7 @@ public abstract class RnaPredictor {
 				//logger.info("No hay orden para {} para actualziar", activo.name());
 			}
 		}catch (Exception e) {
-			logger.error("No se ha recuperado el valor de la última orden del activo: {}", activo, e);
+			//logger.error("No se ha recuperado el valor de la última orden del activo: {}", activo, e);
 		}
 	}
 	
@@ -81,7 +80,7 @@ public abstract class RnaPredictor {
 			ordenRepository.save(orden);
 			//logger.info("Guardamos la orden para {} es {}", orden.getTipoActivo().name(), orden.getTipoOrden());
 		}catch (Exception e) {
-			logger.error("No se ha podido guardar la nueva orden para el activo: {}", orden.getTipoActivo(), e);
+			//logger.error("No se ha podido guardar la nueva orden para el activo: {}", orden.getTipoActivo(), e);
 		}
 	}
 	
