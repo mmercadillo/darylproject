@@ -33,8 +33,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:rna-gdaxi-w1.properties")
 public class DarylSystemRobotRnaApplication {
 
-	@Autowired
-	Logger logger;
+
 	
 	public static void main(String[] args) {
 		

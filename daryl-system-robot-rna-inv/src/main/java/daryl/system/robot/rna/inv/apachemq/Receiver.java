@@ -1,6 +1,8 @@
 package daryl.system.robot.rna.inv.apachemq;
 
-import org.slf4j.Logger;
+
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.annotation.JmsListener;
@@ -16,9 +18,7 @@ import daryl.system.robot.rna.inv.predictor.base.RnaPredictor;
 
 @Component
 public class Receiver {
-	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
@@ -91,47 +91,47 @@ public class Receiver {
 	public void receiveMessage(String robotJson) {
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
-		System.out.println("Solicitud recibida en el canal CHNL_RNA_INV -> " + robot.getRobot());
+		System.out.println("Solicitud recibida en el canal CHNL_RNA_INV -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 		
-		logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_RNA_INV -> Robot -> " + robot.getRobot());
+		//logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_RNA_INV -> Robot -> " + robot.getRobot());
 		Timeframes timeframe = robot.getTimeframe();
 
 		if(timeframe == Timeframes.PERIOD_H1) {
 			try{if(robot.getActivo() == Activo.GDAXI) rnaInvGdaxi60.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 			try{if(robot.getActivo() == Activo.NDX) rnaInvNdx60.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 			try{if(robot.getActivo() == Activo.XAUUSD) rnaInvXauUsd60.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 		}else if(timeframe == Timeframes.PERIOD_H4) {
 			try{if(robot.getActivo() == Activo.GDAXI) rnaInvGdaxi240.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 			try{if(robot.getActivo() == Activo.NDX) rnaInvNdx240.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 			try{if(robot.getActivo() == Activo.XAUUSD) rnaInvXauUsd240.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 		}else if(timeframe == Timeframes.PERIOD_D1) {
 			try{if(robot.getActivo() == Activo.NDX) rnaInvNdx1440.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 			try{if(robot.getActivo() == Activo.XAUUSD) rnaInvXauUsd1440.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 		}else if(timeframe == Timeframes.PERIOD_W1) {
 			try{if(robot.getActivo() == Activo.GDAXI) rnaInvGdaxi10080.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 			try{if(robot.getActivo() == Activo.NDX) rnaInvNdx10080.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 			try{if(robot.getActivo() == Activo.XAUUSD) rnaInvXauUsd10080.calculate(robot);}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
+				//logger.error(e.getMessage(), e);		
 			}
 		}
 		

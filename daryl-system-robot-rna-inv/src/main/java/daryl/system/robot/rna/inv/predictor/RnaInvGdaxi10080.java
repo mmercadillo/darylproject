@@ -30,9 +30,8 @@ import lombok.ToString;
 @Component(value = "rnaInvGdaxi10080")
 @ToString
 public class RnaInvGdaxi10080  extends RnaPredictor{
-	
-	@Autowired
-	Logger logger;
+
+
 	
 	@Autowired(required = true)
 	ConfiguracionRnaGdaxi10080 configuracion;
@@ -63,14 +62,14 @@ public class RnaInvGdaxi10080  extends RnaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
+		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
 		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 

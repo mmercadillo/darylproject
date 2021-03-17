@@ -34,7 +34,7 @@ public abstract class RnaPredictor {
 	//protected abstract Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion);
 
 	//@Async
-	protected void actualizarPrediccionBDs(Activo activo, String estrategia, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
+	protected void actualizarPrediccionBDs(Activo activo, String estrategia, String robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			
 			//Creamos el bean prediccion
@@ -46,6 +46,7 @@ public abstract class RnaPredictor {
 				prediccion.setFechaHora(fechaHoraMillis);
 				prediccion.setFecha(config.getFechaInString(fechaHoraMillis));
 				prediccion.setHora(config.getHoraInString(fechaHoraMillis));
+				prediccion.setRobot(robot);
 				
 			prediccionRepository.save(prediccion);
 			////logger.info("Guardamos la prediccion para {} es {}", activo.name(), prediccion);

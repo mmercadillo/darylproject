@@ -66,7 +66,7 @@ public class ArimaInvXauUsd10080  extends ArimaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
 		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 

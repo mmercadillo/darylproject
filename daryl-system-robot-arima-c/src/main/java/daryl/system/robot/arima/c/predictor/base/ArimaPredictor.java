@@ -1,7 +1,5 @@
 package daryl.system.robot.arima.c.predictor.base;
 
-import java.util.List;
-
 import org.espy.arima.ArimaProcess;
 import org.espy.arima.DefaultArimaProcess;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
 import daryl.system.model.Robot;
-import daryl.system.robot.arima.c.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.c.repository.IOrdenRepository;
 import daryl.system.robot.arima.c.repository.IPrediccionRepository;
 
@@ -36,7 +33,7 @@ public abstract class ArimaPredictor {
 	//protected abstract Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion);
 
 	//@Async
-	protected void actualizarPrediccionBDs(Activo activo, String estrategia, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
+	protected void actualizarPrediccionBDs(Activo activo, String estrategia, String robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			
 			//Creamos el bean prediccion
@@ -48,6 +45,7 @@ public abstract class ArimaPredictor {
 				prediccion.setFechaHora(fechaHoraMillis);
 				prediccion.setFecha(config.getFechaInString(fechaHoraMillis));
 				prediccion.setHora(config.getHoraInString(fechaHoraMillis));
+				prediccion.setRobot(robot);
 				
 			prediccionRepository.save(prediccion);
 			////logger.info("Guardamos la prediccion para {} es {}", activo.name(), prediccion);

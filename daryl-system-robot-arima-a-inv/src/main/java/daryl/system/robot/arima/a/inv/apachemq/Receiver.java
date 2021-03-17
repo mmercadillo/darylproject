@@ -1,6 +1,8 @@
 package daryl.system.robot.arima.a.inv.apachemq;
 
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.annotation.JmsListener;
@@ -107,7 +109,7 @@ public class Receiver {
 	public void receiveMessage(String robotJson) {
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
-		System.out.println("Solicitud recibida en el canal CHNL_ARIMA_A_INV -> " + robot.getRobot());
+		System.out.println("Solicitud recibida en el canal CHNL_ARIMA_A_INV -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 		
 		//logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_ARIMA_A_INV -> Robot -> " + robot);
 		Timeframes timeframe = robot.getTimeframe();

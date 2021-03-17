@@ -29,7 +29,7 @@ public abstract class ArimaPredictor {
 	//protected abstract Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion);
 
 	//@Async
-	protected void actualizarPrediccionBDs(Activo activo, String estrategia, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
+	protected void actualizarPrediccionBDs(Activo activo, String estrategia, String robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			
 			//Creamos el bean prediccion
@@ -41,6 +41,7 @@ public abstract class ArimaPredictor {
 				prediccion.setFechaHora(fechaHoraMillis);
 				prediccion.setFecha(config.getFechaInString(fechaHoraMillis));
 				prediccion.setHora(config.getHoraInString(fechaHoraMillis));
+				prediccion.setRobot(robot);
 				
 			prediccionRepository.save(prediccion);
 			//////logger.info("Guardamos la prediccion para {} es {}", activo.name(), prediccion);
@@ -78,6 +79,8 @@ public abstract class ArimaPredictor {
 			////logger.info("Guardamos la orden para {} es {}", orden.getTipoActivo().name(), orden.getTipoOrden());
 		}catch (Exception e) {
 			//logger.error("No se ha podido guardar la nueva orden para el activo: {}", orden.getTipoActivo().name(), e);
+			System.out.println("Error al dar de alta la orden -> " + orden);
+			e.printStackTrace();
 		}
 	}
 	

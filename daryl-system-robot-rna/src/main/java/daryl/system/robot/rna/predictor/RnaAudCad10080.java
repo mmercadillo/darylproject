@@ -30,8 +30,7 @@ import lombok.ToString;
 @ToString
 public class RnaAudCad10080  extends RnaPredictor{
 	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired(required = true)
 	ConfiguracionRnaAudCad10080 configuracion;
@@ -65,7 +64,7 @@ public class RnaAudCad10080  extends RnaPredictor{
 				
 		//actualizamos el fichero de ordenes
 		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
+		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//AudCad10080Controller.orden = orden.getTipoOrden();
 
@@ -74,7 +73,7 @@ public class RnaAudCad10080  extends RnaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
 		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
