@@ -38,7 +38,6 @@ public class ArimaInvXauUsd10080  extends ArimaPredictor{
 	@Autowired
 	private IHistXauUsdRepository histXauUsdRepository;
 	
-	private List<HistXauUsd> historico;
 	private List<Datos> datosTotal;
 
 	
@@ -79,7 +78,7 @@ public class ArimaInvXauUsd10080  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistXauUsd> historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
