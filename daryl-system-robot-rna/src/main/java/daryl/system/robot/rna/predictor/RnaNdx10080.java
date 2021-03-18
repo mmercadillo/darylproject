@@ -29,7 +29,7 @@ import daryl.system.robot.rna.predictor.config.ConfiguracionRnaNdx10080;
 import daryl.system.robot.rna.repository.IHistNdxRepository;
 import lombok.ToString;
 
-@Component(value = "rnaNdx10080")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaNdx10080  extends RnaPredictor{

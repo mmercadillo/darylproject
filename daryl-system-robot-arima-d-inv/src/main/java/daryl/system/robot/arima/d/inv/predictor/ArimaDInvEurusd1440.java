@@ -34,7 +34,7 @@ import daryl.system.robot.arima.d.inv.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.d.inv.repository.IHistEurUsdRepository;
 import lombok.ToString;
 
-@Component(value = "arimaDInvEurusd1440")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaDInvEurusd1440  extends ArimaPredictor{

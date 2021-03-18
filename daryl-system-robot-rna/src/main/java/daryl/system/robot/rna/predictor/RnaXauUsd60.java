@@ -30,7 +30,7 @@ import daryl.system.robot.rna.predictor.config.ConfiguracionRnaXauUsd60;
 import daryl.system.robot.rna.repository.IHistXauUsdRepository;
 import lombok.ToString;
 
-@Component(value = "rnaXauusd60")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaXauUsd60  extends RnaPredictor{

@@ -29,7 +29,7 @@ import daryl.system.robot.rna.inv.predictor.config.ConfiguracionRnaNdx240;
 import daryl.system.robot.rna.inv.repository.IHistNdxRepository;
 import lombok.ToString;
 
-@Component(value = "rnaInvNdx240")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaInvNdx240  extends RnaPredictor{

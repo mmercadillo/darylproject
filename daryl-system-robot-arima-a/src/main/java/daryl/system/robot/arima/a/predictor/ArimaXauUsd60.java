@@ -26,7 +26,7 @@ import daryl.system.robot.arima.a.predictor.config.ConfiguracionArimaXauUsd60;
 import daryl.system.robot.arima.a.repository.IHistXauUsdRepository;
 import lombok.ToString;
 
-@Component(value = "arimaXauusd60")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaXauUsd60  extends ArimaPredictor{

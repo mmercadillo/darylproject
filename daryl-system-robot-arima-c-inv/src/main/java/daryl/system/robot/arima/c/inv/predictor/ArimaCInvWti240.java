@@ -34,7 +34,7 @@ import daryl.system.robot.arima.c.inv.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.c.inv.repository.IHistWtiRepository;
 import lombok.ToString;
 
-@Component(value = "arimaCInvWti240")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaCInvWti240  extends ArimaPredictor{

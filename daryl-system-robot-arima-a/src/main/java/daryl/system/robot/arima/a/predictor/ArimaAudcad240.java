@@ -27,7 +27,7 @@ import daryl.system.robot.arima.a.predictor.config.ConfiguracionArimaAudCad240;
 import daryl.system.robot.arima.a.repository.IHistAudCadRepository;
 import lombok.ToString;
 
-@Component(value = "arimaAudcad240")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaAudcad240  extends ArimaPredictor{

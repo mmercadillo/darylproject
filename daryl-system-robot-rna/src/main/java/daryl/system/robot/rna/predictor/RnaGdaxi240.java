@@ -30,7 +30,7 @@ import daryl.system.robot.rna.predictor.config.ConfiguracionRnaGdaxi240;
 import daryl.system.robot.rna.repository.IHistGdaxiRepository;
 import lombok.ToString;
 
-@Component(value = "rnaGdaxi240")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaGdaxi240  extends RnaPredictor{

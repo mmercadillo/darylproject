@@ -33,7 +33,7 @@ import daryl.system.robot.arima.c.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.c.repository.IHistNdxRepository;
 import lombok.ToString;
 
-@Component(value = "arimaCNdx60")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaCNdx60  extends ArimaPredictor{

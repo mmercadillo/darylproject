@@ -29,7 +29,7 @@ import daryl.system.robot.arima.b.predictor.config.ConfiguracionArimaNdx240;
 import daryl.system.robot.arima.b.repository.IHistNdxRepository;
 import lombok.ToString;
 
-@Component(value = "arimaBNdx240")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaBNdx240  extends ArimaPredictor{

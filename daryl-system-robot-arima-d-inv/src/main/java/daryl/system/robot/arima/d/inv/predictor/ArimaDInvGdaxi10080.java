@@ -34,7 +34,7 @@ import daryl.system.robot.arima.d.inv.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.d.inv.repository.IHistGdaxiRepository;
 import lombok.ToString;
 
-@Component(value = "arimaDInvGdaxi10080")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaDInvGdaxi10080  extends ArimaPredictor{

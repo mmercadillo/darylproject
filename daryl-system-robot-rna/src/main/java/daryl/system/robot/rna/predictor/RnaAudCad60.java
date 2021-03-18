@@ -30,7 +30,7 @@ import daryl.system.robot.rna.predictor.config.ConfiguracionRnaAudCad60;
 import daryl.system.robot.rna.repository.IHistAudCadRepository;
 import lombok.ToString;
 
-@Component(value = "rnaAudcad60")
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaAudCad60  extends RnaPredictor{
