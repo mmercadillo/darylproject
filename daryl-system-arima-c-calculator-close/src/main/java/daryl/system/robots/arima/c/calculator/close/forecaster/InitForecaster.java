@@ -1,8 +1,5 @@
 package daryl.system.robots.arima.c.calculator.close.forecaster;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class InitForecaster {
 	
 	//int inicio = 480;//60
@@ -17,7 +14,7 @@ public class InitForecaster {
 	//DEUIDXEUR
 	public static void main(String[] args) {
 		
-		ExecutorService servicio = Executors.newFixedThreadPool(20);
+		//ExecutorService servicio = Executors.newFixedThreadPool(20);
 		
 		//XAUUSD
 		/*

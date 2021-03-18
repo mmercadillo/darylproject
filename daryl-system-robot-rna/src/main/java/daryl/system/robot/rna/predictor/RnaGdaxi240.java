@@ -9,6 +9,8 @@ import javax.annotation.PostConstruct;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.DataSetLoader;
@@ -20,36 +22,34 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistGdaxi;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.predictor.config.ConfiguracionRnaGdaxi240;
 import daryl.system.robot.rna.repository.IHistGdaxiRepository;
 import lombok.ToString;
 
-@Component(value = "rnaGdaxi240")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaGdaxi240  extends RnaPredictor{
 	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired(required = true)
 	ConfiguracionRnaGdaxi240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistGdaxiRepository histGdaxiRepository;
 	
-	private List<HistGdaxi> historico;
+
 	private List<Datos> datosTotal;
 	private static Double prediccionAnterior = null;
 	
 
-	public final String robot = "RNA_GDAXI_240";
-	public final Boolean inv = Boolean.FALSE;
-	public final Timeframes timeframe = Timeframes.PERIOD_H4;
 	
 	@PostConstruct
 	public void load() {
@@ -60,16 +60,16 @@ public class RnaGdaxi240  extends RnaPredictor{
 	}
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
-		//Calcular la predicción		//Calcular la predicción
+	public void calculate(Robot bot) {
+		//Calcular la predicción	
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
 		//System.out.println("PREDICCION ANTERIOR GDAXI H4 -> " + prediccionAnterior);		
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el GDAXI H4 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
+		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//Gdaxi240Controller.orden = orden.getTipoOrden();
 
@@ -78,21 +78,21 @@ public class RnaGdaxi240  extends RnaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
 	}
 
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.load(configuracion.getRutaRNA());
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
@@ -166,48 +166,20 @@ public class RnaGdaxi240  extends RnaPredictor{
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
 		
-        double media = media(configuracion.getPeriodosMedia(), datos);
         
-        if(nuevaPrediccion > prediccionAnterior /*datos.get(datos.size()-1) && datos.get(datos.size()-1) > media && media > 0*/) {
+        
+        if(nuevaPrediccion > prediccionAnterior ) {
         	//B
         	prediccion = 1.0;
-        }else if(nuevaPrediccion < prediccionAnterior /*datos.get(datos.size()-1) && datos.get(datos.size()-1) < media && media > 0*/) {
+        }else if(nuevaPrediccion < prediccionAnterior ) {
         	prediccion = -1.0;
         }else {
         	prediccion = 0.0;
         }
-        //prediccion = nuevaPrediccion - prediccionAnterior;
-        
-        try {
-			//System.out.println("PRED GDAXI H4 ANT -> " + prediccionAnterior + " PRED GDAXI H4 NUEVA -> " + nuevaPrediccion);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
-        this.prediccionAnterior = nuevaPrediccion;
+        prediccionAnterior = nuevaPrediccion;
 		return prediccion;
 	}
 
-	/*
-	@Override
-	protected Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion) {
-		
-		Orden orden = new Orden();
-			orden.setFAlta(System.currentTimeMillis());
-			orden.setFBaja(null);
-			orden.setEstrategia(Estrategia.RNA_GDAXI_1H);
-			orden.setTipoActivo(TipoActivo.GDAXI);
-			orden.setTipoOrden(TipoOrden.CLOSE);
-		if(prediccion < 0.0) {
-			orden.setTipoOrden(TipoOrden.SELL);
-		}else if(prediccion > 0.0) {
-			orden.setTipoOrden(TipoOrden.BUY);
-		}else {
-			orden.setTipoOrden(TipoOrden.CLOSE);	
-		}
-		
-		return orden;
-	}
-	*/
 	private List<Datos> toDatosList(List<HistGdaxi> historico){
 		
 		List<Datos> datos = new ArrayList<Datos>();

@@ -11,6 +11,8 @@ import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.DataSetLoader;
@@ -23,6 +25,7 @@ import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.arima.c.inv.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.c.inv.predictor.config.ConfiguracionArimaNdx240;
@@ -30,33 +33,30 @@ import daryl.system.robot.arima.c.inv.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.c.inv.repository.IHistNdxRepository;
 import lombok.ToString;
 
-@Component(value = "arimaCInvNdx240")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaCInvNdx240  extends ArimaPredictor{
 	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
 	
 	@Autowired(required = true)
 	ConfiguracionArimaNdx240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
 	
-	private List<HistNdx> historico;
+
 	private List<Datos> datosTotal;
 	private Integer inicio;
-	
-	private final String robot= "ARIMA_I_C_NDX_240";
+
 	private final String robot_config= "ARIMA_C_NDX_240";
-	private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H4;
+
 	
 	@PostConstruct
 	public void load() {
@@ -69,15 +69,15 @@ public class ArimaCInvNdx240  extends ArimaPredictor{
 
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el ROBOT " + robot + " : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
+		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBNdxH4Controller.orden = orden.getTipoOrden();
 
@@ -86,18 +86,18 @@ public class ArimaCInvNdx240  extends ArimaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
 	}
 	static Double prediccionArimaAnterior = 0.0;
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		Double prediccionAnterior = null;		Double prediccion = 0.0;
 
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		
 		List<Datos> datosForecast = toDatosList(historico);
@@ -111,7 +111,7 @@ public class ArimaCInvNdx240  extends ArimaPredictor{
 		try {
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

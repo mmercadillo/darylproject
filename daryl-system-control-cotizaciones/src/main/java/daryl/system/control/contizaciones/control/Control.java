@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.exceptions.SistemaException;
+import daryl.system.control.contizaciones.control.model.HistoricosUtil;
 import daryl.system.control.contizaciones.control.repository.IHistAudCadRepository;
 import daryl.system.control.contizaciones.control.repository.IHistEurUsdRepository;
 import daryl.system.control.contizaciones.control.repository.IHistGdaxiRepository;
@@ -19,7 +20,6 @@ import daryl.system.model.historicos.HistGdaxi;
 import daryl.system.model.historicos.HistNdx;
 import daryl.system.model.historicos.HistWti;
 import daryl.system.model.historicos.HistXauUsd;
-import daryl.system.model.historicos.HistoricosUtil;
 
 public class Control {
 

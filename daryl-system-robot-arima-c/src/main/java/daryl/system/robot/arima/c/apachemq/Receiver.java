@@ -1,156 +1,226 @@
 package daryl.system.robot.arima.c.apachemq;
 
-import org.slf4j.Logger;
+
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
+
+import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Robot;
+import daryl.system.robot.arima.c.predictor.ArimaCAudcad10080;
+import daryl.system.robot.arima.c.predictor.ArimaCAudcad1440;
+import daryl.system.robot.arima.c.predictor.ArimaCAudcad240;
+import daryl.system.robot.arima.c.predictor.ArimaCAudcad60;
+import daryl.system.robot.arima.c.predictor.ArimaCEurusd10080;
+import daryl.system.robot.arima.c.predictor.ArimaCEurusd1440;
+import daryl.system.robot.arima.c.predictor.ArimaCEurusd240;
+import daryl.system.robot.arima.c.predictor.ArimaCEurusd60;
+import daryl.system.robot.arima.c.predictor.ArimaCGdaxi10080;
+import daryl.system.robot.arima.c.predictor.ArimaCGdaxi1440;
+import daryl.system.robot.arima.c.predictor.ArimaCGdaxi240;
+import daryl.system.robot.arima.c.predictor.ArimaCGdaxi60;
+import daryl.system.robot.arima.c.predictor.ArimaCNdx10080;
+import daryl.system.robot.arima.c.predictor.ArimaCNdx1440;
+import daryl.system.robot.arima.c.predictor.ArimaCNdx240;
+import daryl.system.robot.arima.c.predictor.ArimaCNdx60;
+import daryl.system.robot.arima.c.predictor.ArimaCXauUsd10080;
+import daryl.system.robot.arima.c.predictor.ArimaCXauUsd1440;
+import daryl.system.robot.arima.c.predictor.ArimaCXauUsd240;
+import daryl.system.robot.arima.c.predictor.ArimaCXauUsd60;
 import daryl.system.robot.arima.c.predictor.base.ArimaPredictor;
 
 @Component
 public class Receiver {
 
 	@Autowired
-	Logger logger;
-	
-	@Autowired
 	JmsListenerContainerFactory<?> factory;
 
-	
-	//C
 	@Autowired
-	@Qualifier(value = "arimaCXauusd60")
-	ArimaPredictor arimaCXauUsd60;
+	private ApplicationContext applicationContext;
 
-	@Autowired
-	@Qualifier(value = "arimaCXauusd240")
-	ArimaPredictor arimaCXauUsd240;
-	
-	@Autowired
-	@Qualifier(value = "arimaCXauusd1440")
-	ArimaPredictor arimaCXauUsd1440;
-	
-	@Autowired
-	@Qualifier(value = "arimaCXauusd10080")
-	ArimaPredictor arimaCXauUsd10080;	
-	
-	//C
-	@Autowired
-	@Qualifier(value = "arimaCNdx60")
-	ArimaPredictor arimaCNdx60;
-	
-	@Autowired
-	@Qualifier(value = "arimaCNdx240")
-	ArimaPredictor arimaCNdx240;
-
-	@Autowired
-	@Qualifier(value = "arimaCNdx1440")
-	ArimaPredictor arimaCNdx1440;
-	
-	@Autowired
-	@Qualifier(value = "arimaCNdx10080")
-	ArimaPredictor arimaCNdx10080;
-	
-	//C
-	@Autowired
-	@Qualifier(value = "arimaCGdaxi60")
-	ArimaPredictor arimaCGdaxi60;
-
-	@Autowired
-	@Qualifier(value = "arimaCGdaxi240")
-	ArimaPredictor arimaCGdaxi240;
-	
-	@Autowired
-	@Qualifier(value = "arimaCGdaxi1440")
-	ArimaPredictor arimaCGdaxi1440;
-	
-	@Autowired
-	@Qualifier(value = "arimaCGdaxi10080")
-	ArimaPredictor arimaCGdaxi10080;	
-
-	
-	//C
-	@Autowired
-	@Qualifier(value = "arimaCAudcad60")
-	ArimaPredictor arimaCAudcad60;
-
-	@Autowired
-	@Qualifier(value = "arimaCAudcad240")
-	ArimaPredictor arimaCAudcad240;
-	
-	@Autowired
-	@Qualifier(value = "arimaCAudcad1440")
-	ArimaPredictor arimaCAudcad1440;
-	
-	@Autowired
-	@Qualifier(value = "arimaCAudcad10080")
-	ArimaPredictor arimaCAudcad10080;
-	
-	//C
-	@Autowired
-	@Qualifier(value = "arimaCEurusd60")
-	ArimaPredictor arimaCEurusd60;
-
-	@Autowired
-	@Qualifier(value = "arimaCEurusd240")
-	ArimaPredictor arimaCEurusd240;
-	
-	@Autowired
-	@Qualifier(value = "arimaCEurusd1440")
-	ArimaPredictor arimaCEurusd1440;
-	
-	@Autowired
-	@Qualifier(value = "arimaCEurusd10080")
-	ArimaPredictor arimaCEurusd10080;
-
-	
-	//C
-	@Autowired
-	@Qualifier(value = "arimaCWti60")
-	ArimaPredictor arimaCWti60;
-
-	@Autowired
-	@Qualifier(value = "arimaCWti240")
-	ArimaPredictor arimaCWti240;
-	
-	@Autowired
-	@Qualifier(value = "arimaCWti1440")
-	ArimaPredictor arimaCWti1440;
-
-	
 	@JmsListener(destination = "CHNL_ARIMA_C")
-	public void receiveMessage(Robot robot) {
-		logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_ARIMA_C -> Robot -> " + robot.getRobot());
+	public void receiveMessage(String robotJson) {
+		
+		
+		
+		Robot robot = new Gson().fromJson(robotJson, Robot.class);
+		System.out.println("Solicitud recibida en el canal CHNL_ARIMA_C -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+		
+		//logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_ARIMA_C -> Robot -> " + robot.getRobot());
 		Timeframes timeframe = robot.getTimeframe();
+		ArimaPredictor predictor = null;
 
 		if(timeframe == Timeframes.PERIOD_H1) {
-			arimaCGdaxi60.calculate(robot.getActivo(), robot.getRobot());
-			arimaCNdx60.calculate(robot.getActivo(), robot.getRobot());
-			arimaCXauUsd60.calculate(robot.getActivo(), robot.getRobot());
-			arimaCAudcad60.calculate(robot.getActivo(), robot.getRobot());
-			arimaCEurusd60.calculate(robot.getActivo(), robot.getRobot());
+			try{
+				if(robot.getActivo() == Activo.GDAXI) {
+					predictor = applicationContext.getBean(ArimaCGdaxi60.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.NDX) {
+					predictor = applicationContext.getBean(ArimaCNdx60.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.XAUUSD) {
+					predictor = applicationContext.getBean(ArimaCXauUsd60.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.AUDCAD) {
+					predictor = applicationContext.getBean(ArimaCAudcad60.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.EURUSD) {
+					predictor = applicationContext.getBean(ArimaCEurusd60.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_H4) {
-			arimaCGdaxi240.calculate(robot.getActivo(), robot.getRobot());
-			arimaCNdx240.calculate(robot.getActivo(), robot.getRobot());
-			arimaCXauUsd240.calculate(robot.getActivo(), robot.getRobot());
-			arimaCAudcad240.calculate(robot.getActivo(), robot.getRobot());
-			arimaCEurusd240.calculate(robot.getActivo(), robot.getRobot());
+			try{
+				if(robot.getActivo() == Activo.GDAXI) {
+					predictor = applicationContext.getBean(ArimaCGdaxi240.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.NDX) {
+					predictor = applicationContext.getBean(ArimaCNdx240.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.XAUUSD) {
+					predictor = applicationContext.getBean(ArimaCXauUsd240.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.AUDCAD) {
+					predictor = applicationContext.getBean(ArimaCAudcad240.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.EURUSD) {
+					predictor = applicationContext.getBean(ArimaCEurusd240.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_D1) {
-			arimaCGdaxi1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaCNdx1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaCXauUsd1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaCAudcad1440.calculate(robot.getActivo(), robot.getRobot());
-			arimaCEurusd1440.calculate(robot.getActivo(), robot.getRobot());
+			try{
+				if(robot.getActivo() == Activo.GDAXI) {
+					predictor = applicationContext.getBean(ArimaCGdaxi1440.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.NDX) {
+					predictor = applicationContext.getBean(ArimaCNdx1440.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.XAUUSD) {
+					predictor = applicationContext.getBean(ArimaCXauUsd1440.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.AUDCAD) {
+					predictor = applicationContext.getBean(ArimaCAudcad1440.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.EURUSD) {
+					predictor = applicationContext.getBean(ArimaCEurusd1440.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
 		}else if(timeframe == Timeframes.PERIOD_W1) {
-			arimaCGdaxi10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaCNdx10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaCXauUsd10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaCAudcad10080.calculate(robot.getActivo(), robot.getRobot());
-			arimaCEurusd10080.calculate(robot.getActivo(), robot.getRobot());
+			try{
+				if(robot.getActivo() == Activo.GDAXI) {
+					predictor = applicationContext.getBean(ArimaCGdaxi10080.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.NDX) {
+					predictor = applicationContext.getBean(ArimaCNdx10080.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.XAUUSD) {
+					predictor = applicationContext.getBean(ArimaCXauUsd10080.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.AUDCAD) {
+					predictor = applicationContext.getBean(ArimaCAudcad10080.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
+			try{
+				if(robot.getActivo() == Activo.EURUSD) {
+					predictor = applicationContext.getBean(ArimaCEurusd10080.class);
+					predictor.calculate(robot);
+				}
+			}catch (Exception e) {
+				//logger.error(e.getMessage(), e);		
+			}
 		}
 		
 	}

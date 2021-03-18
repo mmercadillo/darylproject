@@ -1,5 +1,7 @@
 package daryl.system.robot.arima.a;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +13,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import daryl.system.comun.dataset.Datos;
 
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
@@ -43,8 +47,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:arima-wti-d1.properties")
 public class DarylSystemRobotArimaApplication {
 
-	@Autowired
-	Logger logger;
 	
 	public static void main(String[] args) {
 		
@@ -53,6 +55,8 @@ public class DarylSystemRobotArimaApplication {
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
 	}
+	
+
 
 	
 }

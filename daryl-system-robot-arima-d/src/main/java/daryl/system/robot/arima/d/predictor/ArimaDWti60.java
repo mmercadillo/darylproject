@@ -11,6 +11,8 @@ import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.DataSetLoader;
@@ -23,6 +25,8 @@ import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.model.historicos.HistWti;
 import daryl.system.robot.arima.d.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.d.predictor.config.ConfiguracionArimaWti60;
@@ -30,32 +34,27 @@ import daryl.system.robot.arima.d.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.d.repository.IHistWtiRepository;
 import lombok.ToString;
 
-@Component(value = "arimaDWti60")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaDWti60  extends ArimaPredictor{
 	
-	@Autowired
-	Logger logger;
-	
+
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
 	
 	@Autowired(required = true)
 	ConfiguracionArimaWti60 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistWtiRepository histWtiRepository;
 	
-	private List<HistWti> historico;
+
 	private List<Datos> datosTotal;
 	private Integer inicio;
-	
-	private final String robot= "ARIMA_D_WTI_60";
-	private final Boolean inv = Boolean.FALSE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -67,16 +66,16 @@ public class ArimaDWti60  extends ArimaPredictor{
 
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el ROBOT " + robot + " : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
+		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBAudCadController.orden = orden.getTipoOrden();
 
@@ -85,20 +84,20 @@ public class ArimaDWti60  extends ArimaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
 	}
 	static Double prediccionArimaAnterior = 0.0;
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		Double prediccion = 0.0;
 		try {
 			
 			
-			historico = histWtiRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+			List<HistWti> historico = histWtiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 			
 			List<Datos> datosForecast = toDatosList(historico);
 			//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
@@ -116,7 +115,7 @@ public class ArimaDWti60  extends ArimaPredictor{
 			try {
 
 
-				ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+				ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getRobot());
 				this.inicio = arimaConfig.getInicio();
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

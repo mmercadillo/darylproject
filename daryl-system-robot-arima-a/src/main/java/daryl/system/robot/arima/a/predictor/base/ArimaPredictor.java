@@ -1,14 +1,19 @@
 package daryl.system.robot.arima.a.predictor.base;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 import daryl.system.comun.configuration.ConfigData;
+import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.Activo;
+import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
+import daryl.system.model.Robot;
 import daryl.system.robot.arima.a.repository.IOrdenRepository;
 import daryl.system.robot.arima.a.repository.IPrediccionRepository;
 
@@ -21,14 +26,13 @@ public abstract class ArimaPredictor {
 	protected IOrdenRepository ordenRepository;
 	@Autowired
 	protected IPrediccionRepository prediccionRepository;
+		
+	public abstract void calculate(Robot robot);
+	protected abstract Double calcularPrediccion(Robot robot);
 
-	
-	public abstract void calculate(Activo activo, String estrategia);	
-	protected abstract Double calcularPrediccion();
-	//protected abstract Orden calcularOperacion(TipoActivo activo, Estrategia estrategia, Double prediccion);
 
 	//@Async
-	protected void actualizarPrediccionBDs(Activo activo, String estrategia, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
+	protected void actualizarPrediccionBDs(Activo activo, String estrategia, String robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			
 			//Creamos el bean prediccion
@@ -40,6 +44,7 @@ public abstract class ArimaPredictor {
 				prediccion.setFechaHora(fechaHoraMillis);
 				prediccion.setFecha(config.getFechaInString(fechaHoraMillis));
 				prediccion.setHora(config.getHoraInString(fechaHoraMillis));
+				prediccion.setRobot(robot);
 				
 			prediccionRepository.save(prediccion);
 			//////logger.info("Guardamos la prediccion para {} es {}", activo.name(), prediccion);
@@ -77,6 +82,8 @@ public abstract class ArimaPredictor {
 			////logger.info("Guardamos la orden para {} es {}", orden.getTipoActivo().name(), orden.getTipoOrden());
 		}catch (Exception e) {
 			//logger.error("No se ha podido guardar la nueva orden para el activo: {}", orden.getTipoActivo().name(), e);
+			System.out.println("Error al dar de alta la orden -> " + orden);
+			e.printStackTrace();
 		}
 	}
 	
@@ -104,22 +111,7 @@ public abstract class ArimaPredictor {
 		
 		return orden;
 	}
-	
-	protected Double media(int periodo, List<Double> hist) {
-		
-		Double media = 0.0;
-		try {
-			List<Double> lista =  hist.subList(hist.size()-periodo, hist.size());
-			Double sum = 0.0;
-			for (Double d : lista) {
-				sum += d;
-			}
-			media = (double)sum/periodo;
-		}catch (Exception e) {
-		
-		}
-		return media;
-	}
+
 
 	
 }

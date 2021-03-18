@@ -1,7 +1,5 @@
 package daryl.system.robot.arima.b;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -42,9 +40,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:arima-wti-h4.properties")
 @PropertySource("classpath:arima-wti-d1.properties")
 public class DarylSystemRobotArimaBApplication {
-	
-	@Autowired
-	Logger logger;
+
 	
 	public static void main(String[] args) {
 		

@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
+//logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
@@ -16,37 +18,31 @@ import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.loader.DatosLoader;
 import daryl.system.comun.dataset.loader.DatosLoaderOHLC;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
-import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.a.inv.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.a.inv.predictor.config.ConfiguracionArimaXauUsd60;
 import daryl.system.robot.arima.a.inv.repository.IHistXauUsdRepository;
 import lombok.ToString;
 
-@Component(value = "arimaInvXauusd60")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaInvXauUsd60  extends ArimaPredictor{
 	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired(required = true)
 	ConfiguracionArimaXauUsd60 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistXauUsdRepository histXauUsdRepository;
-	
-	private List<HistXauUsd> historico;
+
 	private List<Datos> datosTotal;
-	
-	private final String robot =  "ARIMA_I_XAUUSD_60";
-	private final Boolean inv = Boolean.TRUE;
-	private final Timeframes timeframe = Timeframes.PERIOD_H1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -57,35 +53,35 @@ public class ArimaInvXauUsd60  extends ArimaPredictor{
 	}
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		//Calcular la predicción
-		//System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
-		//logger.info("Nueva predicción para el XAUUSD 1H : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
+		
+		Double prediccion = calcularPrediccion(bot);
+		////logger.info("Nueva predicción para el XAUUSD 1H : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
+		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		//Cerramos la operacion anterior en caso q hubiera
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
 	}
 
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		List<HistXauUsd> historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
@@ -99,13 +95,10 @@ public class ArimaInvXauUsd60  extends ArimaPredictor{
 			
 			int []model=arima.getARIMAmodel();
 
-			//Double media = media(7, datos);
 			prediccion = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
-			
-			
-			if(prediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
+			if(prediccion > datos.get(datos.size()-1)) {
 				prediccion = 1.0;
-			}else if(prediccion < datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) < media && media > 0*/) {
+			}else if(prediccion < datos.get(datos.size()-1)) {
 				prediccion = -1.0;
 			}else {
 				prediccion = 0.0;

@@ -8,6 +8,8 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
@@ -20,34 +22,31 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
+import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistEurUsd;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.arima.b.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.b.predictor.config.ConfiguracionArimaEurUsd1440;
 import daryl.system.robot.arima.b.repository.IHistEurUsdRepository;
 import lombok.ToString;
 
-@Component(value = "arimaBEurusd1440")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaBEurusd1440  extends ArimaPredictor{
 	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired(required = true)
 	ConfiguracionArimaEurUsd1440 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
 	
-	private List<HistEurUsd> historico;
 	private List<Datos> datosTotal;
-	
-	private final String robot = "ARIMA_B_EURUSD_1440";
-	private final Boolean inv = Boolean.FALSE;
-	private final Timeframes timeframe = Timeframes.PERIOD_D1;
+
 	
 	@PostConstruct
 	public void load() {
@@ -58,16 +57,16 @@ public class ArimaBEurusd1440  extends ArimaPredictor{
 	}
 
 	@Override
-	public void calculate(Activo activo, String estrategia) {
+	public void calculate(Robot bot) {
 		//Calcular la predicción
 		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion();
+		Double prediccion = calcularPrediccion(bot);
 		//logger.info("Nueva predicción para el EURUSD D1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
 		
 				
 		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(activo, estrategia, prediccion, robot, inv);
-		logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + estrategia + " ACTIVO -> " + activo.name() + " TF -> " + timeframe.name());
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
+		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 		//Enviamos al controlador para q esté disponible lo antes posible
 		//ArimaBEurUsdD1Controller.orden = orden.getTipoOrden();
 
@@ -76,20 +75,20 @@ public class ArimaBEurusd1440  extends ArimaPredictor{
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(activo, estrategia, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(activo, estrategia, orden, fechaHoraMillis);
+		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
 		super.guardarNuevaOrden(orden, fechaHoraMillis);
 		///// 
 		
 	}
 	static Integer prediccionArimaAnterior = 0;
 	@Override
-	protected Double calcularPrediccion() {
+	protected Double calcularPrediccion(Robot bot) {
 		
 
 		Double prediccion = 0.0;
 		
-		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(timeframe);
+		List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
