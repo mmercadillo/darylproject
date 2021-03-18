@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 
 //logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
@@ -25,6 +27,7 @@ import daryl.system.robot.arima.a.inv.repository.IHistXauUsdRepository;
 import lombok.ToString;
 
 @Component(value = "arimaInvXauusd10080")
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaInvXauUsd10080  extends ArimaPredictor{
 

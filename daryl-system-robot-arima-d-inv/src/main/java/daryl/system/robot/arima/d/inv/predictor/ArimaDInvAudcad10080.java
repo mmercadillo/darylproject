@@ -11,6 +11,8 @@ import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.Datos;
@@ -32,6 +34,7 @@ import daryl.system.robot.arima.d.inv.repository.IHistAudCadRepository;
 import lombok.ToString;
 
 @Component(value = "arimaDInvAudcad10080")
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaDInvAudcad10080  extends ArimaPredictor{
 	

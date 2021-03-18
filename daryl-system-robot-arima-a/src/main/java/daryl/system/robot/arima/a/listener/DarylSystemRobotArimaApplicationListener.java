@@ -13,9 +13,6 @@ public class DarylSystemRobotArimaApplicationListener implements ApplicationList
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		
 		
-		//Cargamos las colecciones correspondientes
-		
-		
 	}
 
 	

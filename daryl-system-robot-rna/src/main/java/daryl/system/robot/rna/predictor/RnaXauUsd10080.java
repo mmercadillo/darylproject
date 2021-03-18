@@ -9,6 +9,8 @@ import javax.annotation.PostConstruct;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.DataSetLoader;
@@ -29,6 +31,7 @@ import daryl.system.robot.rna.repository.IHistXauUsdRepository;
 import lombok.ToString;
 
 @Component(value = "rnaXauusd10080")
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaXauUsd10080  extends RnaPredictor{
 	
