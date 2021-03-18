@@ -42,7 +42,7 @@ public class RnaInvNdx1440  extends RnaPredictor{
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
 	
-	private List<HistNdx> historico;
+
 	private List<Datos> datosTotal;
 
 	
@@ -86,7 +86,7 @@ public class RnaInvNdx1440  extends RnaPredictor{
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

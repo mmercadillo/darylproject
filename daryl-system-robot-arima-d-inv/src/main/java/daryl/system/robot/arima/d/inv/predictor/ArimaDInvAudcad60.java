@@ -25,6 +25,7 @@ import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistAudCad;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.arima.d.inv.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.d.inv.predictor.config.ConfiguracionArimaAudCad60;
 import daryl.system.robot.arima.d.inv.repository.IArimaConfigRepository;
@@ -48,7 +49,7 @@ public class ArimaDInvAudcad60  extends ArimaPredictor{
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 	
-	private List<HistAudCad> historico;
+
 	private List<Datos> datosTotal;
 	private Integer inicio;
 
@@ -97,7 +98,7 @@ public class ArimaDInvAudcad60  extends ArimaPredictor{
 		try {
 			
 			
-			historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+			List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 			
 			List<Datos> datosForecast = toDatosList(historico);
 			//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

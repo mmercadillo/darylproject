@@ -24,6 +24,7 @@ import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.model.historicos.HistWti;
 import daryl.system.robot.arima.d.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.d.predictor.config.ConfiguracionArimaWti240;
@@ -48,7 +49,7 @@ public class ArimaDWti240  extends ArimaPredictor{
 	@Autowired
 	private IHistWtiRepository histWtiRepository;
 	
-	private List<HistWti> historico;
+
 	private List<Datos> datosTotal;
 	private Integer inicio;
 	
@@ -96,7 +97,7 @@ public class ArimaDWti240  extends ArimaPredictor{
 		
 		Double prediccion = 0.0;
 		
-		historico = histWtiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistWti> historico = histWtiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		
 		List<Datos> datosForecast = toDatosList(historico);

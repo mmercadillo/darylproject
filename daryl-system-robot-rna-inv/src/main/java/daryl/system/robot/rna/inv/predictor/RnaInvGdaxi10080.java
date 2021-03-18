@@ -22,6 +22,7 @@ import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistGdaxi;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.rna.inv.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.inv.predictor.config.ConfiguracionRnaGdaxi10080;
 import daryl.system.robot.rna.inv.repository.IHistGdaxiRepository;
@@ -42,7 +43,7 @@ public class RnaInvGdaxi10080  extends RnaPredictor{
 	@Autowired
 	private IHistGdaxiRepository histGdaxiRepository;
 	
-	private List<HistGdaxi> historico;
+
 	private List<Datos> datosTotal;
 	private static Double prediccionAnterior = null;
 
@@ -83,7 +84,7 @@ public class RnaInvGdaxi10080  extends RnaPredictor{
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.load(configuracion.getRutaRNA());
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
 		

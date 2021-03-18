@@ -48,7 +48,7 @@ public class ArimaCNdx10080  extends ArimaPredictor{
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
 	
-	private List<HistNdx> historico;
+
 	private List<Datos> datosTotal;
 	private Integer inicio;
 	
@@ -92,7 +92,7 @@ public class ArimaCNdx10080  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		
 		List<Datos> datosForecast = toDatosList(historico);

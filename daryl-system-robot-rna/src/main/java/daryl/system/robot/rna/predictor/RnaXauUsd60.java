@@ -21,6 +21,7 @@ import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.predictor.config.ConfiguracionRnaXauUsd60;
@@ -42,7 +43,7 @@ public class RnaXauUsd60  extends RnaPredictor{
 	@Autowired
 	private IHistXauUsdRepository histXauUsdRepository;
 	
-	private List<HistXauUsd> historico;
+
 	private List<Datos> datosTotal;
 
 	
@@ -88,7 +89,7 @@ public class RnaXauUsd60  extends RnaPredictor{
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistXauUsd> historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
