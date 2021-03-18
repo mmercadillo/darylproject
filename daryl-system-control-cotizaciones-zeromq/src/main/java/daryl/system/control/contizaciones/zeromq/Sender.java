@@ -1,4 +1,4 @@
-package daryl.system.control.contizaciones.zeromq.apachemq;
+package daryl.system.control.contizaciones.zeromq;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;

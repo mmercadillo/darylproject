@@ -1,4 +1,4 @@
-package daryl.system.control.contizaciones.zeromq;
+package daryl.system.control.contizaciones;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
