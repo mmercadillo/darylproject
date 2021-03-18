@@ -44,7 +44,7 @@ public class RnaInvNdx60  extends RnaPredictor{
 	
 
 	private List<Datos> datosTotal;
-	
+	private static Double prediccionAnterior = null;
 
 	@PostConstruct
 	public void load() {
@@ -81,7 +81,7 @@ public class RnaInvNdx60  extends RnaPredictor{
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
