@@ -1,14 +1,10 @@
 package daryl.system.robot.arima.a.predictor.base;
 
-import java.util.List;
-
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
@@ -18,8 +14,6 @@ import daryl.system.robot.arima.a.repository.IPrediccionRepository;
 
 public abstract class ArimaPredictor {
 
-	@Autowired
-	protected Logger logger;
 	
 	@Autowired
 	protected ConfigData config;
@@ -35,7 +29,7 @@ public abstract class ArimaPredictor {
 
 
 	//@Async
-	protected void actualizarPrediccionBDs(Activo activo, String estrategia, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
+	protected void actualizarPrediccionBDs(Activo activo, String estrategia, String robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			
 			//Creamos el bean prediccion
@@ -47,6 +41,7 @@ public abstract class ArimaPredictor {
 				prediccion.setFechaHora(fechaHoraMillis);
 				prediccion.setFecha(config.getFechaInString(fechaHoraMillis));
 				prediccion.setHora(config.getHoraInString(fechaHoraMillis));
+				prediccion.setRobot(robot);
 				
 			prediccionRepository.save(prediccion);
 			//////logger.info("Guardamos la prediccion para {} es {}", activo.name(), prediccion);
@@ -84,6 +79,8 @@ public abstract class ArimaPredictor {
 			////logger.info("Guardamos la orden para {} es {}", orden.getTipoActivo().name(), orden.getTipoOrden());
 		}catch (Exception e) {
 			//logger.error("No se ha podido guardar la nueva orden para el activo: {}", orden.getTipoActivo().name(), e);
+			System.out.println("Error al dar de alta la orden -> " + orden);
+			e.printStackTrace();
 		}
 	}
 	
