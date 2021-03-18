@@ -43,8 +43,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:arima-wti-d1.properties")
 public class DarylSystemRobotArimaCInvApplication {
 
-	@Autowired
-	Logger logger;
+
 	
 	public static void main(String[] args) {
 		
@@ -53,6 +52,8 @@ public class DarylSystemRobotArimaCInvApplication {
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
 	}
+	
+	
 
 	
 }
