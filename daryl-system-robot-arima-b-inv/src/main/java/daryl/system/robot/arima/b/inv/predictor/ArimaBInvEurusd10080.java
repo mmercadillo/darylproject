@@ -39,8 +39,7 @@ public class ArimaBInvEurusd10080  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaEurUsd10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

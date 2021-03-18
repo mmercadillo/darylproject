@@ -38,8 +38,7 @@ public class ArimaBInvXauUsd1440  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaXauUsd1440 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

@@ -34,8 +34,7 @@ public class ArimaInvAudcad10080  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaAudCad10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

@@ -38,8 +38,7 @@ public class ArimaBInvGdaxi10080  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaGdaxi10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

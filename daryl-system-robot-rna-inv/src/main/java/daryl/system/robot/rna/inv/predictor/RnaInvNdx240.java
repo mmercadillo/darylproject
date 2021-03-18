@@ -36,8 +36,7 @@ public class RnaInvNdx240  extends RnaPredictor{
 
 	@Autowired(required = true)
 	ConfiguracionRnaNdx240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

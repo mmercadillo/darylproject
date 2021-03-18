@@ -44,8 +44,7 @@ public class ArimaDEurusd240  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaEurUsd240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

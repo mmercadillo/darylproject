@@ -38,8 +38,7 @@ public class RnaNdx10080  extends RnaPredictor{
 
 	@Autowired(required = true)
 	ConfiguracionRnaNdx10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

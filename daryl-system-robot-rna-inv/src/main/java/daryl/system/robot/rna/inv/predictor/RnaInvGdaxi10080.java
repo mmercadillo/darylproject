@@ -39,8 +39,7 @@ public class RnaInvGdaxi10080  extends RnaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionRnaGdaxi10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

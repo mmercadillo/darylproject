@@ -38,8 +38,7 @@ public class ArimaBNdx240  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaNdx240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

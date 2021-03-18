@@ -39,8 +39,7 @@ public class RnaXauUsd240  extends RnaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionRnaXauUsd240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

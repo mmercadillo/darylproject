@@ -38,8 +38,7 @@ public class ArimaBAudcad240  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaAudCad240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

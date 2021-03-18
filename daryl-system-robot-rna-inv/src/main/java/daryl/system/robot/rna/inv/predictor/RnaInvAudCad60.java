@@ -38,8 +38,7 @@ public class RnaInvAudCad60  extends RnaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionRnaAudCad60 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

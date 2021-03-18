@@ -33,19 +33,14 @@ import lombok.ToString;
 public class ArimaAudcad10080  extends ArimaPredictor{
 	
 
-	
 	@Autowired(required = true)
 	ConfiguracionArimaAudCad10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 	
 	private List<Datos> datosTotal;
-	
-
 	
 	@PostConstruct
 	public void load() {

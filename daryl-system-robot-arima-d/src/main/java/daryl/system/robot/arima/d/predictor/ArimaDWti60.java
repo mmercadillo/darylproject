@@ -45,8 +45,7 @@ public class ArimaDWti60  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaWti60 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

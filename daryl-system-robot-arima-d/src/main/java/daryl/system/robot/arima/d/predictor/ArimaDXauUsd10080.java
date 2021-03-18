@@ -45,8 +45,7 @@ public class ArimaDXauUsd10080  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaXauUsd10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired

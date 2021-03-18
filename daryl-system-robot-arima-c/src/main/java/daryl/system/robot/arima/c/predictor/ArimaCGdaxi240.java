@@ -45,8 +45,7 @@ public class ArimaCGdaxi240  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaGdaxi240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
