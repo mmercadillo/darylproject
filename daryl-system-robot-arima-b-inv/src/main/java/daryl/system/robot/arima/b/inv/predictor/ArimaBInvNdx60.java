@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
@@ -26,21 +28,20 @@ import daryl.system.robot.arima.b.inv.predictor.config.ConfiguracionArimaNdx60;
 import daryl.system.robot.arima.b.inv.repository.IHistNdxRepository;
 import lombok.ToString;
 
-@Component(value = "arimaBInvNdx60")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaBInvNdx60  extends ArimaPredictor{
 	
 	
 	@Autowired(required = true)
 	ConfiguracionArimaNdx60 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
 	
-	private List<HistNdx> historico;
 	private List<Datos> datosTotal;
 
 	@PostConstruct
@@ -81,7 +82,7 @@ public class ArimaBInvNdx60  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

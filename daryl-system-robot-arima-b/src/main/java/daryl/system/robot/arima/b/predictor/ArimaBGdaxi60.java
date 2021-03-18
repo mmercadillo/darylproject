@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
@@ -21,12 +23,14 @@ import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistGdaxi;
+import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.b.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.b.predictor.config.ConfiguracionArimaGdaxi;
 import daryl.system.robot.arima.b.repository.IHistGdaxiRepository;
 import lombok.ToString;
 
-@Component(value = "arimaBGdaxi60")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaBGdaxi60  extends ArimaPredictor{
 	
@@ -34,14 +38,13 @@ public class ArimaBGdaxi60  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaGdaxi configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistGdaxiRepository histGdaxiRepository;
 	
-	private List<HistGdaxi> historico;
+
 	private List<Datos> datosTotal;
 
 
@@ -86,7 +89,7 @@ public class ArimaBGdaxi60  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

@@ -11,6 +11,8 @@ import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.DataSetLoader;
@@ -25,13 +27,15 @@ import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistGdaxi;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.arima.d.inv.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.d.inv.predictor.config.ConfiguracionArimaGdaxi10080;
 import daryl.system.robot.arima.d.inv.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.d.inv.repository.IHistGdaxiRepository;
 import lombok.ToString;
 
-@Component(value = "arimaDInvGdaxi10080")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaDInvGdaxi10080  extends ArimaPredictor{
 	
@@ -40,14 +44,12 @@ public class ArimaDInvGdaxi10080  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaGdaxi10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistGdaxiRepository histGdaxiRepository;
-	
-	private List<HistGdaxi> historico;
+
 	private List<Datos> datosTotal;
 	private Integer inicio;
 
@@ -96,7 +98,7 @@ public class ArimaDInvGdaxi10080  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

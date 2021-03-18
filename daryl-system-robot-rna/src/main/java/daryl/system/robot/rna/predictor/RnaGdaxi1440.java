@@ -9,6 +9,8 @@ import javax.annotation.PostConstruct;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.DataSetLoader;
@@ -22,26 +24,27 @@ import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistGdaxi;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.predictor.config.ConfiguracionRnaGdaxi1440;
 import daryl.system.robot.rna.repository.IHistGdaxiRepository;
 import lombok.ToString;
 
-@Component(value = "rnaGdaxi1440")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaGdaxi1440  extends RnaPredictor{
 	
 
 	@Autowired(required = true)
 	ConfiguracionRnaGdaxi1440 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistGdaxiRepository histGdaxiRepository;
 	
-	private List<HistGdaxi> historico;
+
 	private List<Datos> datosTotal;
 	private static Double prediccionAnterior = null;
 
@@ -88,7 +91,7 @@ public class RnaGdaxi1440  extends RnaPredictor{
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.load(configuracion.getRutaRNA());
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

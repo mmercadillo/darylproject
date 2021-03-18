@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 
 //logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
@@ -19,26 +21,26 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistEurUsd;
+import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.a.inv.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.a.inv.predictor.config.ConfiguracionArimaEurUsd10080;
 import daryl.system.robot.arima.a.inv.repository.IHistEurUsdRepository;
 import lombok.ToString;
 
-@Component(value = "arimaInvEurusd10080")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaInvEurusd10080  extends ArimaPredictor{
 
 	
 	@Autowired(required = true)
 	ConfiguracionArimaEurUsd10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
 	
-	private List<HistEurUsd> historico;
 	private List<Datos> datosTotal;
 	
 
@@ -79,7 +81,7 @@ public class ArimaInvEurusd10080  extends ArimaPredictor{
 		
 		Double prediccion = 0.0;
 		
-		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		

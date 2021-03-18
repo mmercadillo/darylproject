@@ -1,10 +1,15 @@
 package daryl.system.robot.arima.a.predictor.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 import daryl.system.comun.configuration.ConfigData;
+import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.Activo;
+import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
@@ -14,7 +19,6 @@ import daryl.system.robot.arima.a.repository.IPrediccionRepository;
 
 public abstract class ArimaPredictor {
 
-	
 	@Autowired
 	protected ConfigData config;
 		
@@ -22,8 +26,7 @@ public abstract class ArimaPredictor {
 	protected IOrdenRepository ordenRepository;
 	@Autowired
 	protected IPrediccionRepository prediccionRepository;
-
-	
+		
 	public abstract void calculate(Robot robot);
 	protected abstract Double calcularPrediccion(Robot robot);
 

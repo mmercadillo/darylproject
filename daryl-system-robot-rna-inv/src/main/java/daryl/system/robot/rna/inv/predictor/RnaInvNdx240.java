@@ -9,6 +9,8 @@ import javax.annotation.PostConstruct;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.DataSetLoader;
@@ -27,22 +29,22 @@ import daryl.system.robot.rna.inv.predictor.config.ConfiguracionRnaNdx240;
 import daryl.system.robot.rna.inv.repository.IHistNdxRepository;
 import lombok.ToString;
 
-@Component(value = "rnaInvNdx240")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaInvNdx240  extends RnaPredictor{
 
 	@Autowired(required = true)
 	ConfiguracionRnaNdx240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
 	
-	private List<HistNdx> historico;
+
 	private List<Datos> datosTotal;
-	
+	private static Double prediccionAnterior = null;
 
 	
 	@PostConstruct
@@ -81,12 +83,12 @@ public class RnaInvNdx240  extends RnaPredictor{
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
 		
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());

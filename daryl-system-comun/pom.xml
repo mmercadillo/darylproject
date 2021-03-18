@@ -10,7 +10,7 @@
   
   <groupId>daryl.system</groupId>
   <artifactId>comun</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   
   	<properties>
 		<java.version>1.8</java.version>

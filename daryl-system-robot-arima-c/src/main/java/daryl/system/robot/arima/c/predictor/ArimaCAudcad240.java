@@ -11,6 +11,8 @@ import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.DataSetLoader;
@@ -25,13 +27,15 @@ import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistAudCad;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.arima.c.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.c.predictor.config.ConfiguracionArimaAudCad240;
 import daryl.system.robot.arima.c.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.c.repository.IHistAudCadRepository;
 import lombok.ToString;
 
-@Component(value = "arimaCAudcad240")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaCAudcad240  extends ArimaPredictor{
 	
@@ -42,14 +46,13 @@ public class ArimaCAudcad240  extends ArimaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionArimaAudCad240 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 	
-	private List<HistAudCad> historico;
+
 	private List<Datos> datosTotal;
 	private Integer inicio;
 
@@ -93,7 +96,7 @@ public class ArimaCAudcad240  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		
 		List<Datos> datosForecast = toDatosList(historico);

@@ -9,6 +9,8 @@ import javax.annotation.PostConstruct;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.DataSetLoader;
@@ -22,12 +24,14 @@ import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistAudCad;
+import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.rna.inv.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.inv.predictor.config.ConfiguracionRnaAudCad10080;
 import daryl.system.robot.rna.inv.repository.IHistAudCadRepository;
 import lombok.ToString;
 
-@Component(value = "rnaInvAudcad10080")
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaInvAudCad10080  extends RnaPredictor{
 	
@@ -35,16 +39,15 @@ public class RnaInvAudCad10080  extends RnaPredictor{
 	
 	@Autowired(required = true)
 	ConfiguracionRnaAudCad10080 configuracion;
-	@Autowired
-	private DataSetLoader dataSetLoader;
+
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 	
-	private List<HistAudCad> historico;
-	private List<Datos> datosTotal;
 
+	private List<Datos> datosTotal;
+	private static Double prediccionAnterior = null;
 	
 	@PostConstruct
 	public void load() {
@@ -78,12 +81,12 @@ public class RnaInvAudCad10080  extends RnaPredictor{
 	
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
-		Double prediccionAnterior = null;
+
 		Double prediccion = 0.0;
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
-		historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
