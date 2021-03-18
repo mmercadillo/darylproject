@@ -46,7 +46,6 @@ public class RnaInvNdx60  extends RnaPredictor{
 	private List<Datos> datosTotal;
 	
 
-	
 	@PostConstruct
 	public void load() {
 		

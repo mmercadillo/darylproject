@@ -18,7 +18,9 @@ import daryl.system.comun.dataset.loader.DatosLoaderOHLC;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
+import daryl.system.model.historicos.HistAudCad;
 import daryl.system.model.historicos.HistEurUsd;
+import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.a.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.a.predictor.config.ConfiguracionArimaEurUsd10080;
 import daryl.system.robot.arima.a.repository.IHistEurUsdRepository;
@@ -38,7 +40,6 @@ public class ArimaEurusd10080  extends ArimaPredictor{
 	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
 	
-	private List<HistEurUsd> historico;
 	private List<Datos> datosTotal;
 
 	
@@ -77,7 +78,7 @@ public class ArimaEurusd10080  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		

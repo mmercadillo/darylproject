@@ -19,6 +19,7 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistGdaxi;
+import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.a.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.a.predictor.config.ConfiguracionArimaGdaxi10080;
 import daryl.system.robot.arima.a.repository.IHistGdaxiRepository;
@@ -78,7 +79,7 @@ public class ArimaGdaxi10080  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
 		

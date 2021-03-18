@@ -36,8 +36,7 @@ public class ArimaXauUsd60  extends ArimaPredictor{
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistXauUsdRepository histXauUsdRepository;
-	
-	private List<HistXauUsd> historico;
+
 	private List<Datos> datosTotal;
 
 	
@@ -77,7 +76,7 @@ public class ArimaXauUsd60  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 		
-		historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<HistXauUsd> historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
