@@ -53,7 +53,7 @@ public class ArimaDEurusd1440  extends ArimaPredictor{
 
 	private List<Datos> datosTotal;
 	private Integer inicio;
-	
+	private final String robot_config= "ARIMA_C_EURUSD_1440";
 
 	
 	@PostConstruct
@@ -116,7 +116,7 @@ public class ArimaDEurusd1440  extends ArimaPredictor{
 
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getRobot());
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 
