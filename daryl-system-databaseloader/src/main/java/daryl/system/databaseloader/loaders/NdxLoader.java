@@ -52,7 +52,13 @@ public class NdxLoader {
 			BufferedReader reader = new BufferedReader(fr);
 			
 			String leido;
+			Boolean encabezado = Boolean.TRUE;
 			while( (leido = reader.readLine()) != null ) {
+				
+				if(encabezado == Boolean.TRUE) {
+					encabezado = Boolean.FALSE;
+					continue;
+				}
 				
 				String[] partes = leido.split(",");
 				Date fecha = sdfOrigen.parse(partes[0]+partes[1]);
