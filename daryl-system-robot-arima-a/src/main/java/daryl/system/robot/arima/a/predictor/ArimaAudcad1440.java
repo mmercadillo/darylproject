@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
-import daryl.system.comun.dataset.DataSetLoader;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.loader.DatosLoader;
@@ -21,7 +20,6 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistAudCad;
-import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.a.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.a.predictor.config.ConfiguracionArimaAudCad1440;
 import daryl.system.robot.arima.a.repository.IHistAudCadRepository;
@@ -100,14 +98,8 @@ public class ArimaAudcad1440  extends ArimaPredictor{
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());
 			
 			int []model=arima.getARIMAmodel();
-			System.out.println("Best model is [p,q]="+"["+model[0]+" "+model[1]+"]");
-			System.out.println("Predict value="+arima.aftDeal(arima.predictValue(model[0],model[1])));
-			System.out.println("Predict error="+(arima.aftDeal(arima.predictValue(model[0],model[1]))-datos.get(datos.size()-1))/datos.get(datos.size()-1)*100+"%");
-		
-			//Double media = media(7, datos);
 	
 			prediccion = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
-
 			
 			if(prediccion > datos.get(datos.size()-1) /*&& datos.get(datos.size()-1) > media && media > 0*/) {
 				prediccion = 1.0;
