@@ -79,7 +79,7 @@ public class NdxLoader {
 				System.out.println("Guardado -> " + h.toString());
 				
 			}
-			
+			reader.close();
 			
 		}
 		

@@ -79,7 +79,7 @@ public class WtiLoader {
 				System.out.println("Guardado -> " + h.toString());
 				
 			}
-			
+			reader.close();
 			
 		}
 		

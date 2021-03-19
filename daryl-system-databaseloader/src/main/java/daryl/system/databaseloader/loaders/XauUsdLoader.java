@@ -79,7 +79,7 @@ public class XauUsdLoader {
 				System.out.println("Guardado -> " + h.toString());
 				
 			}
-			
+			reader.close();
 			
 		}
 		

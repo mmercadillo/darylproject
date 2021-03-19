@@ -79,7 +79,7 @@ public class EurUsdLoader {
 				System.out.println("Guardado -> " + h.toString());
 				
 			}
-			
+			reader.close();
 			
 		}
 		

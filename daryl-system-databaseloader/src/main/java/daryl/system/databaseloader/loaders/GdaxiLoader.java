@@ -79,7 +79,7 @@ public class GdaxiLoader {
 				System.out.println("Guardado -> " + h.toString());
 				
 			}
-			
+			reader.close();
 			
 		}
 		

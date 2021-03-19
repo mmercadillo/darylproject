@@ -79,8 +79,7 @@ public class AudCadLoader {
 				System.out.println("Guardado -> " + h.toString());
 				
 			}
-			
-			
+			reader.close();
 		}
 		
 		
