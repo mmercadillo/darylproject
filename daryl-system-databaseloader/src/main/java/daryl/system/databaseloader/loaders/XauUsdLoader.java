@@ -67,6 +67,7 @@ public class XauUsdLoader {
 					h.setMinimo(new Double(partes[4]));
 					h.setCierre(new Double(partes[5]));
 					h.setVolumen(new Double(partes[6]));
+					h.setTimeframe(timeframe);
 					
 				repository.save(h);
 				System.out.println("Guardado -> " + h.toString());

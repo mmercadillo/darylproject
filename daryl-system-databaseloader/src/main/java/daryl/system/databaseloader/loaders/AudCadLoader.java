@@ -45,8 +45,8 @@ public class AudCadLoader {
 		if(ficheroHistorico != null) {
 			
 			SimpleDateFormat sdfOrigen = new SimpleDateFormat("yyyyMMddHH:mm:ss");
-			SimpleDateFormat sdfDestinoFecha = new SimpleDateFormat("yyyyMMddHH:mm:ss");
-			SimpleDateFormat sdfDestinoHora = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+			SimpleDateFormat sdfDestinoFecha = new SimpleDateFormat("yyyy.MM.dd");
+			SimpleDateFormat sdfDestinoHora = new SimpleDateFormat("HH:mm:ss");
 			
 			FileReader fr = new FileReader(ficheroHistorico);
 			BufferedReader reader = new BufferedReader(fr);
@@ -67,6 +67,7 @@ public class AudCadLoader {
 					h.setMinimo(new Double(partes[4]));
 					h.setCierre(new Double(partes[5]));
 					h.setVolumen(new Double(partes[6]));
+					h.setTimeframe(timeframe);
 					
 				repository.save(h);
 				System.out.println("Guardado -> " + h.toString());
