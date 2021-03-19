@@ -23,6 +23,7 @@ import daryl.system.comun.enums.Estrategia;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoRobot;
 import daryl.system.model.ArimaConfig;
+import daryl.system.model.Robot;
 import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigRepository;
 
 
@@ -40,7 +41,7 @@ public class ArimaForecasterGenerator implements Runnable{
 	final String BASE_PATH = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\"; 
 	final String COMBINACIONES = "COMBINACIONES.csv";
 	
-	private TipoRobot robot;
+	private Robot robot;
 	private Activo tipoActivo;
 	private Estrategia estrategia;
 	private Timeframes timeframe;
@@ -57,7 +58,7 @@ public class ArimaForecasterGenerator implements Runnable{
 		// TODO Auto-generated constructor stu
 	}
 	
-	public void init(Estrategia estrategia, TipoRobot robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio) {
+	public void init(Estrategia estrategia, Robot robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio) {
 		this.robot = robot;
 		
 		this.DATA = "h\\" + tipoActivo.name() + "_" + timeframe.valor + ".csv"; //EURUSD_60.csv
@@ -168,7 +169,7 @@ public class ArimaForecasterGenerator implements Runnable{
 	public void run() {
 		totalCombinaciones = combinacionesFile.size() * combinacionesFile.size();
 		
-		ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+		ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot.getRobot());
 		
 		int iAux = 0;
 		int iiAux = 0;
@@ -318,7 +319,7 @@ public class ArimaForecasterGenerator implements Runnable{
         
         //System.out.println(numCombinacion + " de " + totalCombinaciones +  " - Resultado " + this.tipoActivo.name() + "_" + this.timeframe.valor + " -> " + resultado + " - " + arimaProcess.toString());
     	//Recuperamos el anterior
-    	ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+    	ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot.getRobot());
         if(resultado > 0 && resAnt < resultado) {
         	resAnt = resultado;
         	
@@ -326,7 +327,7 @@ public class ArimaForecasterGenerator implements Runnable{
         	if(arimaConfig == null) {
         		
         		arimaConfig = new ArimaConfig();
-        		arimaConfig.setRobot(robot);
+        		arimaConfig.setRobot(robot.getRobot());
         		arimaConfig.setEstrategia(estrategia);
         		arimaConfig.setTipoActivo(tipoActivo);
         		

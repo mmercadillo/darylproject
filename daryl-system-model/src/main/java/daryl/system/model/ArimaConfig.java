@@ -33,9 +33,8 @@ public class ArimaConfig implements Serializable{
 	@Getter @Setter
 	private Long id;
 	
-	@Enumerated(EnumType.STRING)
 	@Getter @Setter
-	private TipoRobot robot;
+	private String robot;
 	
 	@Enumerated(EnumType.STRING)
 	@Getter @Setter
