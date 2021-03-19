@@ -160,7 +160,7 @@ public class ArimaDInvWti1440  extends ArimaPredictor{
 				System.out.println("No existe config para " + bot.getRobot());
 			}
 		}catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 
 		return prediccion;

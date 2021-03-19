@@ -162,7 +162,7 @@ public class ArimaDInvAudcad10080  extends ArimaPredictor{
 			}
 
 		}catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 
 		return prediccion;
