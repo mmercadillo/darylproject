@@ -45,17 +45,18 @@ public class RnaXauUsd1440  extends RnaPredictor{
 	private IHistXauUsdRepository histXauUsdRepository;
 	
 
-	private List<Datos> datosTotal;
 	private static Double prediccionAnterior = null;
 
+	/*
+	private List<Datos> datosTotal;
 	
 	@PostConstruct
 	public void load() {
 		
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-		//List<Datos> datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
+	*/
 
 	@Override
 	public void calculate(Robot bot) {
@@ -95,7 +96,7 @@ public class RnaXauUsd1440  extends RnaPredictor{
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
-		
+		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		

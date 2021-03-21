@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
   
-  <groupId>daryl-system-robots</groupId>
+  <groupId>daryl.system.robots</groupId>
   <artifactId>control-historico-operaciones</artifactId>
   <version>1.0.2</version>
   <name>daryl-system-control-historico-operaciones</name>

@@ -52,20 +52,21 @@ public class ArimaDInvAudcad10080  extends ArimaPredictor{
 	private IHistAudCadRepository histAudCadRepository;
 	
 
-	private List<Datos> datosTotal;
 	private Integer inicio;
 	
 
 	private final String robot_config= "ARIMA_C_AUDCAD_10080";
 
+	/*
+	private List<Datos> datosTotal;
 	
 	@PostConstruct
 	public void load() {
 		
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-		//List<Datos> datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
+	*/
 	
 
 	@Override
@@ -103,7 +104,7 @@ public class ArimaDInvAudcad10080  extends ArimaPredictor{
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
-		
+		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		

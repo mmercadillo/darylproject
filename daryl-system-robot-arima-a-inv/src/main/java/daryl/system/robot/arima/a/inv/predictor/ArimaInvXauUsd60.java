@@ -41,16 +41,16 @@ public class ArimaInvXauUsd60  extends ArimaPredictor{
 	@Autowired
 	private IHistXauUsdRepository histXauUsdRepository;
 
+	/*
 	private List<Datos> datosTotal;
-
 	
 	@PostConstruct
 	public void load() {
 		
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-		
 	}
+	*/
 
 	@Override
 	public void calculate(Robot bot) {
@@ -84,7 +84,7 @@ public class ArimaInvXauUsd60  extends ArimaPredictor{
 		List<HistXauUsd> historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		
+		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		

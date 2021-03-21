@@ -41,6 +41,7 @@ public class ArimaInvXauUsd240  extends ArimaPredictor{
 	@Autowired
 	private IHistXauUsdRepository histXauUsdRepository;
 
+	/*
 	private List<Datos> datosTotal;
 	
 	@PostConstruct
@@ -49,6 +50,7 @@ public class ArimaInvXauUsd240  extends ArimaPredictor{
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
+	*/
 
 	@Override
 	public void calculate(Robot bot) {
@@ -83,6 +85,7 @@ public class ArimaInvXauUsd240  extends ArimaPredictor{
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
+		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		

@@ -52,22 +52,22 @@ public class ArimaDInvNdx1440  extends ArimaPredictor{
 	private IHistNdxRepository histNdxRepository;
 	
 
-	private List<Datos> datosTotal;
 	private Integer inicio;
 	
 
 
 	private final String robot_config= "ARIMA_C_NDX_1440";
 
+	/*
+	private List<Datos> datosTotal;
 	
 	@PostConstruct
 	public void load() {
 		
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-		//List<Datos> datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
-	
+	*/
 
 
 	@Override
@@ -105,7 +105,7 @@ public class ArimaDInvNdx1440  extends ArimaPredictor{
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
-		
+		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		

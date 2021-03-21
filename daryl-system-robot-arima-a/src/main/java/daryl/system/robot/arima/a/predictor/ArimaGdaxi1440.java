@@ -43,9 +43,8 @@ public class ArimaGdaxi1440  extends ArimaPredictor{
 	private IHistGdaxiRepository histGdaxiRepository;
 	
 	private List<HistGdaxi> historico;
+	/*
 	private List<Datos> datosTotal;
-
-
 	
 	@PostConstruct
 	public void load() {
@@ -53,6 +52,7 @@ public class ArimaGdaxi1440  extends ArimaPredictor{
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
+	*/
 
 	@Override
 	public void calculate(Robot bot) {
@@ -88,6 +88,7 @@ public class ArimaGdaxi1440  extends ArimaPredictor{
 
 		List<Datos> datosForecast = toDatosList(historico);
 		
+		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		

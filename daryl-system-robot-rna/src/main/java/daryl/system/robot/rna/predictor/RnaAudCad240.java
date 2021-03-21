@@ -44,18 +44,19 @@ public class RnaAudCad240  extends RnaPredictor{
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 	
-	
-	private List<Datos> datosTotal;
+
 	private static Double prediccionAnterior = null;
 
+	/*
+	private List<Datos> datosTotal;
 	
 	@PostConstruct
 	public void load() {
 		
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-		//List<Datos> datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
+	*/
 
 	@Override
 	public void calculate(Robot bot) {

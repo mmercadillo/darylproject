@@ -44,9 +44,10 @@ public class RnaInvAudCad240  extends RnaPredictor{
 	private IHistAudCadRepository histAudCadRepository;
 	
 
-	private List<Datos> datosTotal;
 	private static Double prediccionAnterior = null;
 
+	/*
+	private List<Datos> datosTotal;
 	
 	@PostConstruct
 	public void load() {
@@ -54,6 +55,7 @@ public class RnaInvAudCad240  extends RnaPredictor{
 		DatosLoader loader = DatosLoaderOHLC.getInstance();
 		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
 	}
+	*/
 
 	@Override
 	public void calculate(Robot bot) {
@@ -87,6 +89,7 @@ public class RnaInvAudCad240  extends RnaPredictor{
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
+		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		
