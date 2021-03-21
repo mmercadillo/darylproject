@@ -19,7 +19,7 @@ import daryl.system.model.historicos.HistAudCad;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AudCadLoader {
+public class AudCadLoader extends Loader{
 	
 	@Autowired
 	IHistAudCadRepository repository;

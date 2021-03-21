@@ -19,7 +19,7 @@ import daryl.system.model.historicos.HistWti;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WtiLoader {
+public class WtiLoader extends Loader {
 
 	@Autowired
 	IHistWtiRepository repository;

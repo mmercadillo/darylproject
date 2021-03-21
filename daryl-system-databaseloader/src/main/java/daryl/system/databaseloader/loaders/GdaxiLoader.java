@@ -19,7 +19,7 @@ import daryl.system.model.historicos.HistGdaxi;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GdaxiLoader {
+public class GdaxiLoader extends Loader {
 	
 	@Autowired
 	IHistGdaxiRepository repository;

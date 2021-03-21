@@ -19,7 +19,7 @@ import daryl.system.model.historicos.HistXauUsd;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class XauUsdLoader {
+public class XauUsdLoader extends Loader {
 	
 	@Autowired
 	IHistXauUsdRepository repository;
@@ -63,7 +63,6 @@ public class XauUsdLoader {
 				String[] partes = leido.split(",");
 				Date fecha = sdfOrigen.parse(partes[0]+partes[1]);
 				
-				
 				HistXauUsd h = new HistXauUsd();
 					h.setFecha(sdfDestinoFecha.format(fecha));
 					h.setHora(sdfDestinoHora.format(fecha));
@@ -82,7 +81,6 @@ public class XauUsdLoader {
 			reader.close();
 			
 		}
-		
 		
 	}
 	

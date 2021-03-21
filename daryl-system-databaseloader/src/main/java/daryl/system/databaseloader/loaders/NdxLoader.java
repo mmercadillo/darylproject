@@ -19,7 +19,7 @@ import daryl.system.model.historicos.HistNdx;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class NdxLoader {
+public class NdxLoader extends Loader {
 	
 	@Autowired
 	IHistNdxRepository repository;

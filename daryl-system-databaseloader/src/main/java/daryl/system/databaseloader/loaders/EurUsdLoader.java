@@ -19,7 +19,7 @@ import daryl.system.model.historicos.HistEurUsd;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class EurUsdLoader {
+public class EurUsdLoader extends Loader {
 	
 	@Autowired
 	IHistEurUsdRepository repository;

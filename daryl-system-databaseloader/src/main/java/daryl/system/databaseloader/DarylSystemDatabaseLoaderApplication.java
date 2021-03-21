@@ -1,16 +1,23 @@
 package daryl.system.databaseloader;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.IOException;
+import java.text.ParseException;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import daryl.system.comun.enums.Timeframes;
+import daryl.system.databaseloader.loaders.AudCadLoader;
+import daryl.system.databaseloader.loaders.EurUsdLoader;
+import daryl.system.databaseloader.loaders.GdaxiLoader;
+import daryl.system.databaseloader.loaders.NdxLoader;
+import daryl.system.databaseloader.loaders.WtiLoader;
+import daryl.system.databaseloader.loaders.XauUsdLoader;
 
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
@@ -18,8 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan("daryl.system.model")
 public class DarylSystemDatabaseLoaderApplication {
 
-	@Autowired
-	Logger logger;
+
 	
 	public static void main(String[] args) {
 		
@@ -27,113 +33,95 @@ public class DarylSystemDatabaseLoaderApplication {
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
-	    startForecaster(context);
+	    loadAudCad(context);
+	    loadEurUsd(context);
+	    loadGdaxi(context);
+	    loadNdx(context);
+	    loadWti(context);
+	    loadXauUsd(context);
 	}
 
-    private static void startForecaster(ConfigurableApplicationContext context) {
-    	
-    	ExecutorService servicio = Executors.newFixedThreadPool(30);
+	static void loadAudCad(ApplicationContext context) {
+	    AudCadLoader loader = context.getBean(AudCadLoader.class);
+	    try {
+	    	loader.load(Timeframes.PERIOD_H1);
+	    	loader.load(Timeframes.PERIOD_H4);
+			loader.load(Timeframes.PERIOD_D1);
+			loader.load(Timeframes.PERIOD_W1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 
-	    
-	    /*
-	    ArimaForecasterGenerator afgXAUUSD_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    afgXAUUSD_10080.init(Estrategia.ARIMA_C_XAUUSD_10080, TipoRobot.ARIMA_C_XAUUSD_10080, TipoActivo.XAUUSD, Timeframes.PERIOD_W1, 4, 4); // <-- here
-		servicio.submit(afgXAUUSD_10080);
-		
-	    ArimaForecasterGenerator afgXAUUSD_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgXAUUSD_1440.init(Estrategia.ARIMA_C_XAUUSD_1440, TipoRobot.ARIMA_C_XAUUSD_1440, TipoActivo.XAUUSD, Timeframes.PERIOD_D1, 3, 20); // <-- here
-		servicio.submit(afgXAUUSD_1440);	
-		
-	    ArimaForecasterGenerator afgXAUUSD_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgXAUUSD_240.init(Estrategia.ARIMA_C_XAUUSD_240, TipoRobot.ARIMA_C_XAUUSD_240, TipoActivo.XAUUSD, Timeframes.PERIOD_H4, 2, 120); // <-- here
-		servicio.submit(afgXAUUSD_240);
-		
-	    ArimaForecasterGenerator afgXAUUSD_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgXAUUSD_60.init(Estrategia.ARIMA_C_XAUUSD_60, TipoRobot.ARIMA_C_XAUUSD_60, TipoActivo.XAUUSD, Timeframes.PERIOD_H1, 0, 480); // <-- here
-		servicio.submit(afgXAUUSD_60);
-		
-		
-	    ArimaForecasterGenerator afgNDX_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    afgNDX_10080.init(Estrategia.ARIMA_C_NDX_10080, TipoRobot.ARIMA_C_NDX_10080, TipoActivo.NDX, Timeframes.PERIOD_W1, 4, 4); // <-- here
-		servicio.submit(afgNDX_10080);
-		
-	    ArimaForecasterGenerator afgNDX_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgNDX_1440.init(Estrategia.ARIMA_C_NDX_1440, TipoRobot.ARIMA_C_NDX_1440, TipoActivo.NDX, Timeframes.PERIOD_D1, 3, 20); // <-- here
-		servicio.submit(afgNDX_1440);	
-		
-	    ArimaForecasterGenerator afgNDX_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgNDX_240.init(Estrategia.ARIMA_C_NDX_240, TipoRobot.ARIMA_C_NDX_240, TipoActivo.NDX, Timeframes.PERIOD_H4, 2, 120); // <-- here
-		servicio.submit(afgNDX_240);
-		
-	    ArimaForecasterGenerator afgNDX_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgNDX_60.init(Estrategia.ARIMA_C_NDX_60, TipoRobot.ARIMA_C_NDX_60, TipoActivo.NDX, Timeframes.PERIOD_H1, 0, 480); // <-- here
-		servicio.submit(afgNDX_60);
-		
-	    ArimaForecasterGenerator afgGDAXI_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    afgGDAXI_10080.init(Estrategia.ARIMA_C_GDAXI_10080, TipoRobot.ARIMA_C_GDAXI_10080, TipoActivo.GDAXI, Timeframes.PERIOD_W1, 4, 4); // <-- here
-	    servicio.submit(afgGDAXI_10080);
-		
-	    ArimaForecasterGenerator afgGDAXI_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgGDAXI_1440.init(Estrategia.ARIMA_C_GDAXI_1440, TipoRobot.ARIMA_C_GDAXI_1440, TipoActivo.GDAXI, Timeframes.PERIOD_D1, 3, 20); // <-- here
-		servicio.submit(afgGDAXI_1440);	
-		
-	    ArimaForecasterGenerator afgGDAXI_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgGDAXI_240.init(Estrategia.ARIMA_C_GDAXI_240, TipoRobot.ARIMA_C_GDAXI_240, TipoActivo.GDAXI, Timeframes.PERIOD_H4, 2, 120); // <-- here
-		servicio.submit(afgGDAXI_240);
-		
-	    ArimaForecasterGenerator afgGDAXI_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgGDAXI_60.init(Estrategia.ARIMA_C_GDAXI_60, TipoRobot.ARIMA_C_GDAXI_60, TipoActivo.GDAXI, Timeframes.PERIOD_H1, 0, 480); // <-- here
-		servicio.submit(afgGDAXI_60);
-		
-	    ArimaForecasterGenerator afgEURUSD_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    afgEURUSD_10080.init(Estrategia.ARIMA_C_EURUSD_10080, TipoRobot.ARIMA_C_EURUSD_10080, TipoActivo.EURUSD, Timeframes.PERIOD_W1, 4, 4); // <-- here
-		servicio.submit(afgEURUSD_10080);
-		
-	    ArimaForecasterGenerator afgEURUSD_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgEURUSD_1440.init(Estrategia.ARIMA_C_EURUSD_1440, TipoRobot.ARIMA_C_EURUSD_1440, TipoActivo.EURUSD, Timeframes.PERIOD_D1, 3, 20); // <-- here
-		servicio.submit(afgEURUSD_1440);	
-		
-	    ArimaForecasterGenerator afgEURUSD_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgEURUSD_240.init(Estrategia.ARIMA_C_EURUSD_240, TipoRobot.ARIMA_C_EURUSD_240, TipoActivo.EURUSD, Timeframes.PERIOD_H4, 2, 120); // <-- here
-		servicio.submit(afgEURUSD_240);
-		
-	    ArimaForecasterGenerator afgEURUSD_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgEURUSD_60.init(Estrategia.ARIMA_C_EURUSD_60, TipoRobot.ARIMA_C_EURUSD_60, TipoActivo.EURUSD, Timeframes.PERIOD_H1, 0, 480); // <-- here
-		servicio.submit(afgEURUSD_60);
-		
-		
-	    //ArimaForecasterGenerator afgAUDCAD_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    //afgAUDCAD_10080.init(Estrategia.ARIMA_C_AUDCAD_10080, Robot.ARIMA_C_AUDCAD_10080, TipoActivo.AUDCAD, Timeframes.PERIOD_W1, 4, 4); // <-- here
-		//servicio.submit(afgAUDCAD_10080);
-		
-	    ArimaForecasterGenerator afgAUDCAD_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgAUDCAD_1440.init(Estrategia.ARIMA_C_AUDCAD_1440, TipoRobot.ARIMA_C_AUDCAD_1440, TipoActivo.AUDCAD, Timeframes.PERIOD_D1, 3, 20); // <-- here
-		//servicio.submit(afgAUDCAD_1440);	
-		
-	    ArimaForecasterGenerator afgAUDCAD_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgAUDCAD_240.init(Estrategia.ARIMA_C_AUDCAD_240, TipoRobot.ARIMA_C_AUDCAD_240, TipoActivo.AUDCAD, Timeframes.PERIOD_H4, 2, 120); // <-- here
-		//servicio.submit(afgAUDCAD_240);
-		
-	    ArimaForecasterGenerator afgAUDCAD_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgAUDCAD_60.init(Estrategia.ARIMA_C_AUDCAD_60, TipoRobot.ARIMA_C_AUDCAD_60, TipoActivo.AUDCAD, Timeframes.PERIOD_H1, 0, 480); // <-- here
-		//servicio.submit(afgAUDCAD_60);
-		
-		
-	    ArimaForecasterGenerator afgWTI_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgWTI_1440.init(Estrategia.ARIMA_C_WTI_1440, TipoRobot.ARIMA_C_WTI_1440, TipoActivo.XTIUSD, Timeframes.PERIOD_D1, 3, 20); // <-- here
-		servicio.submit(afgWTI_1440);	
-		
-	    ArimaForecasterGenerator afgWTI_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgWTI_240.init(Estrategia.ARIMA_C_WTI_240, TipoRobot.ARIMA_C_WTI_240, TipoActivo.XTIUSD, Timeframes.PERIOD_H4, 2, 120); // <-- here
-		servicio.submit(afgWTI_240);
-		
-	    ArimaForecasterGenerator afgWTI_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgWTI_60.init(Estrategia.ARIMA_C_WTI_60, TipoRobot.ARIMA_C_WTI_60, TipoActivo.XTIUSD, Timeframes.PERIOD_H1, 0, 480); // <-- here
-		servicio.submit(afgWTI_60);
-    	
-		servicio.shutdown();
-    	*/
-    }
+	static void loadEurUsd(ApplicationContext context) {
+	    EurUsdLoader loader = context.getBean(EurUsdLoader.class);
+	    try {
+	    	loader.load(Timeframes.PERIOD_H1);
+	    	loader.load(Timeframes.PERIOD_H4);
+			loader.load(Timeframes.PERIOD_D1);
+			loader.load(Timeframes.PERIOD_W1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	static void loadXauUsd(ApplicationContext context) {
+	    XauUsdLoader loader = context.getBean(XauUsdLoader.class);
+	    try {
+	    	loader.load(Timeframes.PERIOD_H1);
+	    	loader.load(Timeframes.PERIOD_H4);
+			loader.load(Timeframes.PERIOD_D1);
+			loader.load(Timeframes.PERIOD_W1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	static void loadGdaxi(ApplicationContext context) {
+	    GdaxiLoader loader = context.getBean(GdaxiLoader.class);
+	    try {
+	    	loader.load(Timeframes.PERIOD_H1);
+	    	loader.load(Timeframes.PERIOD_H4);
+			loader.load(Timeframes.PERIOD_D1);
+			loader.load(Timeframes.PERIOD_W1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	static void loadNdx(ApplicationContext context) {
+	    NdxLoader loader = context.getBean(NdxLoader.class);
+	    try {
+	    	loader.load(Timeframes.PERIOD_H1);
+	    	loader.load(Timeframes.PERIOD_H4);
+			loader.load(Timeframes.PERIOD_D1);
+			loader.load(Timeframes.PERIOD_W1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	static void loadWti(ApplicationContext context) {
+	    WtiLoader loader = context.getBean(WtiLoader.class);
+	    try {
+	    	loader.load(Timeframes.PERIOD_H1);
+	    	loader.load(Timeframes.PERIOD_H4);
+			loader.load(Timeframes.PERIOD_D1);
+			loader.load(Timeframes.PERIOD_W1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 }
