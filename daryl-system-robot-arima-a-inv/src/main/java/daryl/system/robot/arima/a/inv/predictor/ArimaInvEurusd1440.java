@@ -69,7 +69,7 @@ public class ArimaInvEurusd1440  extends ArimaPredictor{
 			}
 			
 		}catch (Exception e) {
-			
+			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}
 
 		

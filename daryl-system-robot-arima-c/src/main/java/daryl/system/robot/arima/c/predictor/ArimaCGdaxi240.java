@@ -95,10 +95,11 @@ public class ArimaCGdaxi240  extends ArimaPredictor{
 		        	prediccion = -1.0;
 		        }
         	}catch (Exception e) {
+        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
         	}
 
 		}catch (Exception e) {
-			
+			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}
 
 		return prediccion;

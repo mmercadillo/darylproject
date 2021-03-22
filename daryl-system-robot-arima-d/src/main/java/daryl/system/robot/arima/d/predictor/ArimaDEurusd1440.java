@@ -71,45 +71,50 @@ public class ArimaDEurusd1440  extends ArimaPredictor{
 
 
 			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
-			this.inicio = arimaConfig.getInicio();
-			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
-
-	        
-	    	List<Double> aux = datos;
-	    	if(datos.size() > this.inicio) {
-	    		aux = datos.subList((datos.size()-this.inicio), datos.size());
-	    	}else {
-	    		
-	    	}
-	    	
-	    	//List<Double> aux = data.subList((data.size()-inicio), data.size())
-	    	double[] observations = new double[aux.size()];
-	    	for(int i = 0; i < aux.size(); i++) {
-	    		observations[i] = aux.get(i).doubleValue();
-	    	}
-
-	    	ArimaForecaster arimaForecaster = null;
-        	try {
-        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
-        		
-        		double forecast = arimaForecaster.next();			
-    	        double ultimoDato = datos.get(datos.size()-1);
-    	        
-    	        if(prediccionArimaAnterior != 0.0) {
-    	        	ultimoDato = prediccionArimaAnterior;
-    	        }
-    	        if(forecast > ultimoDato) {
-    	        	prediccion = 1.0;
-    	        }
-    	        if(forecast < ultimoDato) {
-    	        	prediccion = -1.0;
-    	        }
-    	        prediccionArimaAnterior = forecast;
-        		
-        	}catch (Exception e) {
-        	}
+			if(arimaConfig != null) {
+				this.inicio = arimaConfig.getInicio();
+				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
+	
+		        
+		    	List<Double> aux = datos;
+		    	if(datos.size() > this.inicio) {
+		    		aux = datos.subList((datos.size()-this.inicio), datos.size());
+		    	}else {
+		    		
+		    	}
+		    	
+		    	//List<Double> aux = data.subList((data.size()-inicio), data.size())
+		    	double[] observations = new double[aux.size()];
+		    	for(int i = 0; i < aux.size(); i++) {
+		    		observations[i] = aux.get(i).doubleValue();
+		    	}
+	
+		    	ArimaForecaster arimaForecaster = null;
+	        	try {
+	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
+	        		
+	        		double forecast = arimaForecaster.next();			
+	    	        double ultimoDato = datos.get(datos.size()-1);
+	    	        
+	    	        if(prediccionArimaAnterior != 0.0) {
+	    	        	ultimoDato = prediccionArimaAnterior;
+	    	        }
+	    	        if(forecast > ultimoDato) {
+	    	        	prediccion = 1.0;
+	    	        }
+	    	        if(forecast < ultimoDato) {
+	    	        	prediccion = -1.0;
+	    	        }
+	    	        prediccionArimaAnterior = forecast;
+	        		
+	        	}catch (Exception e) {
+	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
+	        	}
+			}else {
+				logger.info("No existe config para el robot: {}", bot.getRobot());
+			}
 		}catch (Exception e) {
-			
+			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}
 
 		return prediccion;

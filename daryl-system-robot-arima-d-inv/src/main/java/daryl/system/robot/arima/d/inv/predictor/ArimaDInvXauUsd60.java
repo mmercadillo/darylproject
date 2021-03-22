@@ -111,12 +111,14 @@ public class ArimaDInvXauUsd60  extends ArimaPredictor{
 	    	        prediccionArimaAnterior = forecast;
 	        		
 	        	}catch (Exception e) {
+	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 	        	}
 			}else {
-				System.out.println("No existe config para " + bot.getRobot());
+				logger.info("No existe config para el robot: {}", bot.getRobot());
+
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}
 
 		return prediccion;

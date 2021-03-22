@@ -78,7 +78,7 @@ public class ArimaBInvXauUsd240  extends ArimaPredictor{
 			prediccionArimaAnterior = arima.aftDeal(arima.predictValue(model[0],model[1]));
 			
 		}catch (Exception e) {
-			
+			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}
 
 		
