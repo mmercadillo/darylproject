@@ -55,8 +55,7 @@ public class Receiver {
 		
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
-		//System.out.println("Solicitud recibida en el canal CHNL_ARIMA_C -> " + robot.getRobot() + " - " + new Date().toLocaleString());
-		logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_ARIMA_C -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal()+ " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 		
 		Timeframes timeframe = robot.getTimeframe();
 		ArimaPredictor predictor = null;

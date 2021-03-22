@@ -44,8 +44,7 @@ public class Receiver {
 	public void receiveMessage(String robotJson) {
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
-		//System.out.println("Solicitud recibida en el canal CHNL_RNA_INV -> " + robot.getRobot() + " - " + new Date().toLocaleString());
-		logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_RNA_INV -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 		
 		Timeframes timeframe = robot.getTimeframe();
 		RnaPredictor predictor = null;
