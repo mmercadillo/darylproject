@@ -90,7 +90,7 @@ public class RnaNdx10080  extends RnaPredictor{
 			}while(index < configuracion.getNeuronasEntrada()+1);			
 			
 			Collections.reverse(inputs);
-			verInputs(inputs);
+
 			neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 			neuralNetwork.calculate();
 			
@@ -121,7 +121,7 @@ public class RnaNdx10080  extends RnaPredictor{
 
 		
 		Collections.reverse(inputs);
-		verInputs(inputs);
+
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 		neuralNetwork.calculate();
 		
@@ -165,14 +165,6 @@ public class RnaNdx10080  extends RnaPredictor{
 		
 		
 	}
-	
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		for (Double input : inputs) {
-			buffer.append(darylNormalizer.denormData(input)).append("-");
-		}
-		System.out.println(buffer.toString());
-	}
-	
+
 	
 }

@@ -140,14 +140,7 @@ public class ArimaDEurusd1440  extends ArimaPredictor{
 		
 		
 	}
-	
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		for (Double input : inputs) {
-			buffer.append(darylNormalizer.denormData(input)).append("-");
-		}
-		System.out.println(buffer.toString());
-	}
+
 	
 	
 }

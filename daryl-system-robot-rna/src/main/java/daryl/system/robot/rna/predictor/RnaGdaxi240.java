@@ -170,13 +170,5 @@ public class RnaGdaxi240  extends RnaPredictor{
 		
 	}
 	
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		for (Double input : inputs) {
-			buffer.append(darylNormalizer.denormData(input)).append("-");
-		}
-		System.out.println(buffer.toString());
-	}
-	
-	
+
 }

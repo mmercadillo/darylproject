@@ -1,3 +1,4 @@
+
 package daryl.system.robot.arima.d.predictor;
 
 import java.util.ArrayList;
@@ -143,13 +144,6 @@ public class ArimaDXauUsd60  extends ArimaPredictor{
 		
 	}
 	
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		for (Double input : inputs) {
-			buffer.append(darylNormalizer.denormData(input)).append("-");
-		}
-		System.out.println(buffer.toString());
-	}
-	
+
 	
 }
