@@ -22,6 +22,9 @@ import daryl.system.robots.control.historico.operaciones.repository.IRobotsRepos
 public class ControlHistoricoOperaciones {
 
 	@Autowired
+	Logger logger;
+	
+	@Autowired
 	private ConfigData config;
 	@Autowired
 	IHistoricoOperacionesRepository historicoOperacionesRepository;

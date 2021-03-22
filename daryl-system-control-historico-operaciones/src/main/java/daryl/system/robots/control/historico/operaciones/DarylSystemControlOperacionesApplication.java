@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class DarylSystemControlOperacionesApplication {
 
-
+	@Autowired
+	Logger logger;
 	
 	public static void main(String[] args) {
 		
