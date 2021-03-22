@@ -116,10 +116,6 @@ public class ArimaCAudcad  extends ArimaPredictor{
 		
 		return datos;
 		
-		
 	}
-	
-
-	
 	
 }
