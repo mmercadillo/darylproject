@@ -3,8 +3,6 @@ package daryl.system.robot.arima.a.predictor;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 //logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,18 +10,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
-import daryl.system.comun.dataset.DataSetLoader;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.loader.DatosLoader;
-import daryl.system.comun.dataset.loader.DatosLoaderOHLC;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistEurUsd;
-import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.a.predictor.base.ArimaPredictor;
-import daryl.system.robot.arima.a.predictor.config.ConfiguracionArimaEurUsd1440;
 import daryl.system.robot.arima.a.repository.IHistEurUsdRepository;
 import lombok.ToString;
 
@@ -32,10 +25,6 @@ import lombok.ToString;
 @ToString
 public class ArimaEurusd1440  extends ArimaPredictor{
 	
-
-	
-	@Autowired(required = true)
-	ConfiguracionArimaEurUsd1440 configuracion;
 
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
@@ -87,7 +76,7 @@ public class ArimaEurusd1440  extends ArimaPredictor{
 		
 		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
-		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
+		darylNormalizer.setDatos(datosTotal, Mode.CLOSE);
 		
 		List<Double> datos = darylNormalizer.getDatos();
 		
