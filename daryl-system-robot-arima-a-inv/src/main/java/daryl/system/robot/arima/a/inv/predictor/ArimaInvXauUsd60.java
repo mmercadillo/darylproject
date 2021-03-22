@@ -3,8 +3,6 @@ package daryl.system.robot.arima.a.inv.predictor;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 //logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,17 +10,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
-import daryl.system.comun.dataset.DataSetLoader;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.loader.DatosLoader;
-import daryl.system.comun.dataset.loader.DatosLoaderOHLC;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.a.inv.predictor.base.ArimaPredictor;
-import daryl.system.robot.arima.a.inv.predictor.config.ConfiguracionArimaXauUsd60;
 import daryl.system.robot.arima.a.inv.repository.IHistXauUsdRepository;
 import lombok.ToString;
 
@@ -32,9 +26,6 @@ import lombok.ToString;
 public class ArimaInvXauUsd60  extends ArimaPredictor{
 	
 
-	
-	@Autowired(required = true)
-	ConfiguracionArimaXauUsd60 configuracion;
 
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
@@ -86,7 +77,7 @@ public class ArimaInvXauUsd60  extends ArimaPredictor{
 		List<Datos> datosForecast = toDatosList(historico);
 		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
-		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
+		darylNormalizer.setDatos(datosTotal, Mode.CLOSE);
 		
 		List<Double> datos = darylNormalizer.getDatos();
 		try {
