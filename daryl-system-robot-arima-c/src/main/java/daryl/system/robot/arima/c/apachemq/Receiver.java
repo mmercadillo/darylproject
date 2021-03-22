@@ -36,8 +36,6 @@ public class Receiver {
 	@JmsListener(destination = "CHNL_ARIMA_C")
 	public void receiveMessage(String robotJson) {
 		
-		
-		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal()+ " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 		
