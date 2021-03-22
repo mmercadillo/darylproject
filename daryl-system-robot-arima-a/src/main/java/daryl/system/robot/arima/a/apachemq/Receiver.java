@@ -54,8 +54,8 @@ public class Receiver {
 		
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
-		System.out.println("Solicitud recibida en el canal CHNL_ARIMA_A -> " + robot.getRobot() + " - " + new Date().toLocaleString());
-		//logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_ARIMA_A -> Robot -> " + robot);		
+		//System.out.println("Solicitud recibida en el canal CHNL_ARIMA_A -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+		logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_ARIMA_A -> Robot -> " + robot + " - " + new Date().toLocaleString());		
 		
 		Timeframes timeframe = robot.getTimeframe();
 		ArimaPredictor predictor = null;
@@ -67,7 +67,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.NDX) {
@@ -75,7 +75,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.XAUUSD) {
@@ -83,7 +83,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.AUDCAD) {
@@ -91,7 +91,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.EURUSD) {
@@ -99,7 +99,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 		}else if(timeframe == Timeframes.PERIOD_H4) {
 			try{
@@ -108,7 +108,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.NDX) {
@@ -132,7 +132,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.EURUSD) {
@@ -140,7 +140,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 		}else if(timeframe == Timeframes.PERIOD_D1) {
 			try{
@@ -165,7 +165,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.AUDCAD) {
@@ -173,7 +173,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.EURUSD) {
@@ -191,7 +191,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.NDX) {
@@ -199,7 +199,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.XAUUSD) {
@@ -207,7 +207,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.AUDCAD) {
@@ -215,7 +215,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.EURUSD) {
@@ -223,7 +223,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 		}
 		
