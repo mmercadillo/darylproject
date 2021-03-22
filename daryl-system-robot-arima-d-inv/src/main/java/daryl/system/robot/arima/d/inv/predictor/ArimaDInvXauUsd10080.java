@@ -44,17 +44,6 @@ public class ArimaDInvXauUsd10080  extends ArimaPredictor{
 
 	private final String robot_config= "ARIMA_C_XAUUSD_10080";
 
-	/*
-	private List<Datos> datosTotal;
-	
-	@PostConstruct
-	public void load() {
-		
-		DatosLoader loader = DatosLoaderOHLC.getInstance();
-		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-	}
-	*/
-	
 
 	@Override
 	public void calculate(Robot bot) {

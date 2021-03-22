@@ -45,16 +45,6 @@ public class RnaInvNdx240  extends RnaPredictor{
 
 	private static Double prediccionAnterior = null;
 
-	/*
-	private List<Datos> datosTotal;
-	
-	@PostConstruct
-	public void load() {
-		
-		DatosLoader loader = DatosLoaderOHLC.getInstance();
-		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-	}
-	*/
 
 	@Override
 	public void calculate(Robot bot) {

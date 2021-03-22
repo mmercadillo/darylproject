@@ -32,16 +32,6 @@ public class ArimaBAudcad1440  extends ArimaPredictor{
 	private IHistAudCadRepository histAudCadRepository;
 	
 
-	/*
-	private List<Datos> datosTotal;
-	
-	@PostConstruct
-	public void load() {
-		
-		DatosLoader loader = DatosLoaderOHLC.getInstance();
-		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-	}
-	*/
 
 	@Override
 	public void calculate(Robot bot) {

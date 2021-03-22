@@ -30,17 +30,7 @@ public class ArimaInvEurusd10080  extends ArimaPredictor{
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
-	
-	/*
-	private List<Datos> datosTotal;
-	
-	@PostConstruct
-	public void load() {
-		
-		DatosLoader loader = DatosLoaderOHLC.getInstance();
-		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-	}
-	*/
+
 
 	@Override
 	public void calculate(Robot bot) {
