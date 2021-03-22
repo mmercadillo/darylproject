@@ -3,6 +3,7 @@ package daryl.system.robot.rna.inv.apachemq;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jms.annotation.JmsListener;
@@ -30,6 +31,8 @@ import daryl.system.robot.rna.inv.predictor.base.RnaPredictor;
 @Component
 public class Receiver {
 
+	@Autowired
+	Logger logger;
 	
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
@@ -41,9 +44,8 @@ public class Receiver {
 	public void receiveMessage(String robotJson) {
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
-		System.out.println("Solicitud recibida en el canal CHNL_RNA_INV -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 		
-		//logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_RNA_INV -> Robot -> " + robot.getRobot());
 		Timeframes timeframe = robot.getTimeframe();
 		RnaPredictor predictor = null;
 		
@@ -54,7 +56,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.NDX) {
@@ -62,7 +64,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.XAUUSD) {
@@ -70,7 +72,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 		}else if(timeframe == Timeframes.PERIOD_H4) {
 			
@@ -80,7 +82,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.NDX) {
@@ -88,7 +90,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.XAUUSD) {
@@ -96,7 +98,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 		}else if(timeframe == Timeframes.PERIOD_D1) {
 			try{
@@ -105,7 +107,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.XAUUSD) {
@@ -113,7 +115,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 		}else if(timeframe == Timeframes.PERIOD_W1) {
 			try{
@@ -122,7 +124,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.NDX) {
@@ -130,7 +132,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 			try{
 				if(robot.getActivo() == Activo.XAUUSD) {
@@ -138,7 +140,7 @@ public class Receiver {
 					predictor.calculate(robot);
 				}
 			}catch (Exception e) {
-				//logger.error(e.getMessage(), e);		
+				logger.error(e.getMessage(), e);		
 			}
 		}
 		

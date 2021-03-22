@@ -36,7 +36,6 @@ import lombok.ToString;
 public class RnaInvAudCad10080  extends RnaPredictor{
 	
 
-	
 	@Autowired(required = true)
 	ConfiguracionRnaAudCad10080 configuracion;
 
@@ -47,38 +46,7 @@ public class RnaInvAudCad10080  extends RnaPredictor{
 	
 
 	private static Double prediccionAnterior = null;
-	
-	/*
-	private List<Datos> datosTotal;
-	
-	@PostConstruct
-	public void load() {
-		
-		DatosLoader loader = DatosLoaderOHLC.getInstance();
-		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-	}
-	*/
 
-	@Override
-	public void calculate(Robot bot) {
-
-		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion(bot);
-				
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 
 	
 	@Override
@@ -195,11 +163,5 @@ public class RnaInvAudCad10080  extends RnaPredictor{
 		
 	}
 	
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		for (Double input : inputs) {
-			buffer.append(darylNormalizer.denormData(input)).append("-");
-		}
-		System.out.println(buffer.toString());
-	}
+
 }

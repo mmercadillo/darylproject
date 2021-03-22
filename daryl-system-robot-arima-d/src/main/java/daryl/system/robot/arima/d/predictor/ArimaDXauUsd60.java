@@ -1,12 +1,10 @@
+
 package daryl.system.robot.arima.d.predictor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.espy.arima.ArimaForecaster;
-import org.espy.arima.ArimaProcess;
 import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
@@ -15,21 +13,14 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import daryl.system.comun.dataset.DataSetLoader;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.loader.DatosLoader;
-import daryl.system.comun.dataset.loader.DatosLoaderOHLC;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
-import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.HistNdx;
 import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.d.predictor.base.ArimaPredictor;
-import daryl.system.robot.arima.d.predictor.config.ConfiguracionArimaXauUsd60;
 import daryl.system.robot.arima.d.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.d.repository.IHistXauUsdRepository;
 import lombok.ToString;
@@ -38,14 +29,9 @@ import lombok.ToString;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaDXauUsd60  extends ArimaPredictor{
-	
 
-	
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
-	
-	@Autowired(required = true)
-	ConfiguracionArimaXauUsd60 configuracion;
 
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
@@ -56,43 +42,7 @@ public class ArimaDXauUsd60  extends ArimaPredictor{
 	private Integer inicio;
 	private final String robot_config= "ARIMA_C_XAUUSD_60";
 
-	/*
-	private List<Datos> datosTotal;
-	
-	@PostConstruct
-	public void load() {
-		
-		DatosLoader loader = DatosLoaderOHLC.getInstance();
-		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-	}
-	*/
 
-
-	@Override
-	public void calculate(Robot bot) {
-		//Calcular la predicción
-		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion(bot);
-		//logger.info("Nueva predicción para el ROBOT " + robot + " : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
-		
-				
-		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
-		//Enviamos al controlador para q esté disponible lo antes posible
-		//ArimaBXauUsdController.orden = orden.getTipoOrden();
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 	static Double prediccionArimaAnterior = 0.0;
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
@@ -107,7 +57,7 @@ public class ArimaDXauUsd60  extends ArimaPredictor{
 		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
 		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
-		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
+		darylNormalizer.setDatos(datosTotal, Mode.CLOSE);
 		
 		List<Double> datos = darylNormalizer.getDatos();
 		
@@ -157,12 +107,13 @@ public class ArimaDXauUsd60  extends ArimaPredictor{
 	    	        prediccionArimaAnterior = forecast;
 	        		
 	        	}catch (Exception e) {
+	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 	        	}
 			}else {
-				System.out.println("No existe config para " + bot.getRobot());
+				logger.info("No existe config para el robot: {}", bot.getRobot());
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}
 
 		return prediccion;
@@ -194,13 +145,6 @@ public class ArimaDXauUsd60  extends ArimaPredictor{
 		
 	}
 	
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		for (Double input : inputs) {
-			buffer.append(darylNormalizer.denormData(input)).append("-");
-		}
-		System.out.println(buffer.toString());
-	}
-	
+
 	
 }

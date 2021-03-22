@@ -34,7 +34,6 @@ import lombok.ToString;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaInvGdaxi60  extends RnaPredictor{
-	
 
 	
 	@Autowired(required = true)
@@ -47,38 +46,8 @@ public class RnaInvGdaxi60  extends RnaPredictor{
 	
 
 	private static Double prediccionAnterior = null;
-	
-	/*
-	private List<Datos> datosTotal;
-	
-	@PostConstruct
-	public void load() {
-		
-		DatosLoader loader = DatosLoaderOHLC.getInstance();
-		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-	}
-	*/
 
-	@Override
-	public void calculate(Robot bot) {
-				
-		Double prediccion = calcularPrediccion(bot);
-				
-		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
 
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
@@ -121,7 +90,7 @@ public class RnaInvGdaxi60  extends RnaPredictor{
 			}while(index < configuracion.getNeuronasEntrada()+1);			
 			
 			Collections.reverse(inputs);
-			verInputs(inputs);
+
 			neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 			neuralNetwork.calculate();
 			
@@ -151,7 +120,7 @@ public class RnaInvGdaxi60  extends RnaPredictor{
 		}while(index < configuracion.getNeuronasEntrada());
 
 		Collections.reverse(inputs);
-		verInputs(inputs);
+	
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 		neuralNetwork.calculate();
 		
@@ -194,14 +163,6 @@ public class RnaInvGdaxi60  extends RnaPredictor{
 		
 		
 	}
-	
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		for (Double input : inputs) {
-			buffer.append(darylNormalizer.denormData(input)).append("-");
-		}
-		System.out.println(buffer.toString());
-	}
-	
+
 	
 }

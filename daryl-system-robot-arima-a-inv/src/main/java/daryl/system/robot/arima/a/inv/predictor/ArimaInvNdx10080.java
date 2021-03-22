@@ -3,8 +3,7 @@ package daryl.system.robot.arima.a.inv.predictor;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
+import org.slf4j.Logger;
 //logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,18 +11,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
-import daryl.system.comun.dataset.DataSetLoader;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.loader.DatosLoader;
-import daryl.system.comun.dataset.loader.DatosLoaderOHLC;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistNdx;
-import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.a.inv.predictor.base.ArimaPredictor;
-import daryl.system.robot.arima.a.inv.predictor.config.ConfiguracionArimaNdx10080;
 import daryl.system.robot.arima.a.inv.repository.IHistNdxRepository;
 import lombok.ToString;
 
@@ -33,48 +27,12 @@ import lombok.ToString;
 public class ArimaInvNdx10080  extends ArimaPredictor{
 	
 
-	
-	@Autowired(required = true)
-	ConfiguracionArimaNdx10080 configuracion;
-
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
 
-	/*
-	private List<Datos> datosTotal;
-	
-	@PostConstruct
-	public void load() {
-		
-		DatosLoader loader = DatosLoaderOHLC.getInstance();
-		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-	}
-	*/
 
-	@Override
-	public void calculate(Robot bot) {
-		//Calcular la predicción
-		//System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion(bot);
-		////logger.info("Nueva predicción para el NDX W1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
-				
-		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
@@ -87,7 +45,7 @@ public class ArimaInvNdx10080  extends ArimaPredictor{
 		
 		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
-		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
+		darylNormalizer.setDatos(datosTotal, Mode.CLOSE);
 		
 		List<Double> datos = darylNormalizer.getDatos();
 		try {
@@ -106,7 +64,7 @@ public class ArimaInvNdx10080  extends ArimaPredictor{
 			}
 			
 		}catch (Exception e) {
-			
+			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}
 
 		return prediccion;
@@ -136,13 +94,6 @@ public class ArimaInvNdx10080  extends ArimaPredictor{
 		
 		
 	}
-	
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		for (Double input : inputs) {
-			buffer.append(darylNormalizer.denormData(input)).append("-");
-		}
-		System.out.println(buffer.toString());
-	}
+
 	
 }

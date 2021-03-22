@@ -33,7 +33,6 @@ import lombok.ToString;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class RnaAudCad1440  extends RnaPredictor{
-	
 
 	
 	@Autowired(required = true)
@@ -47,42 +46,7 @@ public class RnaAudCad1440  extends RnaPredictor{
 
 	private static Double prediccionAnterior = null;
 
-	/*
-	private List<Datos> datosTotal;
-	
-	@PostConstruct
-	public void load() {
-		
-		DatosLoader loader = DatosLoaderOHLC.getInstance();
-		datosTotal = loader.loadDatos(configuracion.getFHistoricoLearn());
-	}
-	*/
 
-	@Override
-	public void calculate(daryl.system.model.Robot bot) {
-		//Calcular la predicción
-		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		//System.out.println("PREDICCION ANTERIOR -> " + prediccionAnterior);
-		Double prediccion = calcularPrediccion(bot);
-		//logger.info("Nueva predicción para el AUDCAD D1: {} a las: {}" , prediccion, config.getActualDateFormattedInString());
-				
-		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
-		//Enviamos al controlador para q esté disponible lo antes posible
-		//AudCad1440Controller.orden = orden.getTipoOrden();
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
@@ -95,10 +59,11 @@ public class RnaAudCad1440  extends RnaPredictor{
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
+		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		
-		List<Double> datos = darylNormalizer.getDatos();
+
 		//Double anteAnterior = 0.0, anterior = 0.0, ultimo = 0.0;
 		List<Double> inputs = null;
 		
@@ -207,12 +172,5 @@ public class RnaAudCad1440  extends RnaPredictor{
 		
 		
 	}
-	
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		for (Double input : inputs) {
-			buffer.append(darylNormalizer.denormData(input)).append("-");
-		}
-		System.out.println(buffer.toString());
-	}
+
 }
