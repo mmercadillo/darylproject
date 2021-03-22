@@ -28,11 +28,7 @@ import lombok.ToString;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaCInvWti60  extends ArimaPredictor{
-	
 
-	@Autowired
-	Logger logger;
-	
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
 
@@ -49,31 +45,6 @@ public class ArimaCInvWti60  extends ArimaPredictor{
 	private final String robot_config= "ARIMA_C_WTI_60";
 
 
-	@Override
-	public void calculate(Robot bot) {
-		//Calcular la predicción
-		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion(bot);
-		//logger.info("Nueva predicción para el ROBOT " + robot + " : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
-		
-				
-		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
-		//Enviamos al controlador para q esté disponible lo antes posible
-		//ArimaBAudCadController.orden = orden.getTipoOrden();
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 	static Double prediccionArimaAnterior = 0.0;
 	@Override
 	protected Double calcularPrediccion(Robot bot) {

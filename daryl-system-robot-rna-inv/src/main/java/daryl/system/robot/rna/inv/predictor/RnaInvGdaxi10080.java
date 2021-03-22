@@ -35,8 +35,6 @@ import lombok.ToString;
 @ToString
 public class RnaInvGdaxi10080  extends RnaPredictor{
 
-	@Autowired
-	Logger logger;
 	
 	
 	@Autowired(required = true)
@@ -52,26 +50,6 @@ public class RnaInvGdaxi10080  extends RnaPredictor{
 	private static Double prediccionAnterior = null;
 
 
-	@Override
-	public void calculate(Robot bot) {
-	
-		Double prediccion = calcularPrediccion(bot);
-				
-		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {

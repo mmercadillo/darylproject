@@ -25,9 +25,7 @@ import lombok.ToString;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaGdaxi10080  extends ArimaPredictor{
-	
-	@Autowired
-	Logger logger;
+
 	
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
@@ -36,30 +34,6 @@ public class ArimaGdaxi10080  extends ArimaPredictor{
 	
 	private List<HistGdaxi> historico;
 
-
-	@Override
-	public void calculate(Robot bot) {
-		
-		//Calcular la predicción
-		//System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		//System.out.println("PREDICCION ANTERIOR -> " + prediccionAnterior);		
-		Double prediccion = calcularPrediccion(bot);
-		////logger.info("Nueva predicción para el GDAXI W1 : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
-				
-		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {

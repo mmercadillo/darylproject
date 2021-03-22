@@ -1,6 +1,7 @@
 package daryl.system.robot.arima.a.predictor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -26,8 +27,6 @@ import lombok.ToString;
 @ToString
 public class ArimaXauUsd60  extends ArimaPredictor{
 
-	@Autowired
-	Logger logger;
 	
 	
 	@Autowired
@@ -35,28 +34,6 @@ public class ArimaXauUsd60  extends ArimaPredictor{
 	@Autowired
 	private IHistXauUsdRepository histXauUsdRepository;
 
-	@Override
-	public void calculate(Robot bot) {
-		//Calcular la predicción
-		//System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		Double prediccion = calcularPrediccion(bot);
-		////logger.info("Nueva predicción para el XAUUSD 1H : {} a las: {}" , prediccion, config.getActualDateFormattedInString());
-		
-				
-		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {

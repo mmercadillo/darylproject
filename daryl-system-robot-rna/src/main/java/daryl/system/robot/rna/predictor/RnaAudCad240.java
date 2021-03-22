@@ -34,9 +34,7 @@ import lombok.ToString;
 @ToString
 public class RnaAudCad240  extends RnaPredictor{
 	
-	@Autowired
-	Logger logger;
-	
+
 	
 	@Autowired(required = true)
 	ConfiguracionRnaAudCad240 configuracion;
@@ -50,32 +48,6 @@ public class RnaAudCad240  extends RnaPredictor{
 	private static Double prediccionAnterior = null;
 
 
-
-	@Override
-	public void calculate(Robot bot) {
-		//Calcular la predicción
-		System.out.println("-----------------------------------------------------------------------------------------------------------------");
-		//System.out.println("PREDICCION ANTERIOR -> " + prediccionAnterior);
-		Double prediccion = calcularPrediccion(bot);
-		//logger.info("Nueva predicción para el AUDCAD H4: {} a las: {}" , prediccion, config.getActualDateFormattedInString());
-				
-		//actualizamos el fichero de ordenes
-		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
-		//logger.info("ORDEN GENERADA " + orden.getTipoOrden().name() + " ROBOT -> " + bot);
-		//Enviamos al controlador para q esté disponible lo antes posible
-		//AudCad240Controller.orden = orden.getTipoOrden();
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		//Cerramos la operacion anterior en caso q hubiera
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		//Actualizamos la tabla con la predicción
-		super.actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		super.actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
-		super.guardarNuevaOrden(orden, fechaHoraMillis);
-		///// 
-		
-	}
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {

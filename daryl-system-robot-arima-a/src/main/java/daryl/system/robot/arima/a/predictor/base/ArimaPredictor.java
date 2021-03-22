@@ -1,15 +1,11 @@
 package daryl.system.robot.arima.a.predictor.base;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
@@ -19,6 +15,10 @@ import daryl.system.robot.arima.a.repository.IPrediccionRepository;
 
 public abstract class ArimaPredictor {
 
+
+	@Autowired
+	protected Logger logger;
+	
 	@Autowired
 	protected ConfigData config;
 		
@@ -26,13 +26,11 @@ public abstract class ArimaPredictor {
 	protected IOrdenRepository ordenRepository;
 	@Autowired
 	protected IPrediccionRepository prediccionRepository;
-		
-	public abstract void calculate(Robot robot);
+
 	protected abstract Double calcularPrediccion(Robot robot);
 
 
-	//@Async
-	protected void actualizarPrediccionBDs(Activo activo, String estrategia, String robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
+	private void actualizarPrediccionBDs(Activo activo, String estrategia, String robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			
 			//Creamos el bean prediccion
@@ -53,8 +51,8 @@ public abstract class ArimaPredictor {
 		}
 	}
 	
-	//@Async
-	protected void actualizarUltimaOrden(Activo activo, String estrategia, Orden orden, Long fechaHoraMillis) {
+
+	private void actualizarUltimaOrden(Activo activo, String estrategia, Orden orden, Long fechaHoraMillis) {
 		try {
 			//Recuperamos la orden sin fecha de fin (fBaja)
 			////logger.info("Buscamos  la orden anterior para {} para actualizar",activo.name());
@@ -74,8 +72,7 @@ public abstract class ArimaPredictor {
 		}
 	}
 	
-	@Async
-	protected void guardarNuevaOrden(Orden orden, Long fechaHoraMillis) {
+	private void guardarNuevaOrden(Orden orden, Long fechaHoraMillis) {
 		try {
 			orden.setFAlta(fechaHoraMillis);
 			ordenRepository.save(orden);
@@ -87,7 +84,7 @@ public abstract class ArimaPredictor {
 		}
 	}
 	
-	protected final Orden calcularOperacion(Activo activo, String estrategia, Double prediccion, String robot, Boolean inv) {
+	private final Orden calcularOperacion(Activo activo, String estrategia, Double prediccion, String robot, Boolean inv) {
 		
 		long millis = System.currentTimeMillis();
 		Orden orden = new Orden();
@@ -112,6 +109,28 @@ public abstract class ArimaPredictor {
 		return orden;
 	}
 
+
+	public void calculate(Robot bot) {
+		
+		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot);		
+		Double prediccion = calcularPrediccion(bot);
+		logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot + " Predicción -> " + prediccion);
+		
+		logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot);		
+		Orden orden = calcularOperacion(bot.getActivo(), bot.getEstrategia(), prediccion, bot.getRobot(), bot.getInverso());
+		logger.info("ORDEN CALCULADA -> Robot -> " + bot + " -> Orden -> " + orden);
+		
+		Long fechaHoraMillis = System.currentTimeMillis();
+		
+		actualizarPrediccionBDs(bot.getActivo(), bot.getEstrategia(), bot.getRobot(), orden.getTipoOrden(), prediccion, fechaHoraMillis);
+		logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot + " Predicciñon -> " + prediccion);
+		actualizarUltimaOrden(bot.getActivo(), bot.getEstrategia(), orden, fechaHoraMillis);
+		logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot);
+		guardarNuevaOrden(orden, fechaHoraMillis);
+		logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot + " -> Orden -> " + orden);
+
+		
+	}
 
 	
 }
