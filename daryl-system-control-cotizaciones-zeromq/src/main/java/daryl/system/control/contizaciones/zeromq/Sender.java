@@ -18,7 +18,6 @@ public class Sender{
 	JmsTemplate jmsTemplate;
 	
     public void send(String destination, String robot) {
-    	
         jmsTemplate.convertAndSend(destination, robot);
     }
 	
