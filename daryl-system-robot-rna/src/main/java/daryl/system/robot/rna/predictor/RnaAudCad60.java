@@ -96,10 +96,11 @@ public class RnaAudCad60  extends RnaPredictor{
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
+		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		
-		List<Double> datos = darylNormalizer.getDatos();
+
 		//Double anteAnterior = 0.0, anterior = 0.0, ultimo = 0.0;
 		List<Double> inputs = null;
 		

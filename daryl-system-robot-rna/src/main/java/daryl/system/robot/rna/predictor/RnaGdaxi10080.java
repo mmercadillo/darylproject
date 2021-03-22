@@ -101,7 +101,7 @@ public class RnaGdaxi10080  extends RnaPredictor{
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		
-		List<Double> datos = darylNormalizer.getDatos();
+
 		//Double anteAnterior = 0.0, anterior = 0.0, ultimo = 0.0;
 		List<Double> inputs = null;
 		
