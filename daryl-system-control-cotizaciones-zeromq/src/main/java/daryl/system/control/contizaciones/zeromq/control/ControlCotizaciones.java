@@ -3,6 +3,7 @@ package daryl.system.control.contizaciones.zeromq.control;
 import java.util.Calendar;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zeromq.SocketType;
@@ -36,6 +37,8 @@ import daryl.system.model.historicos.HistXauUsd;
 @Component
 public class ControlCotizaciones extends Thread {
 
+	@Autowired
+	Logger logger;
 	
 	@Autowired
 	private ConfigData config;

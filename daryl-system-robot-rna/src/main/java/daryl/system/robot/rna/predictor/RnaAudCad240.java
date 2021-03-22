@@ -34,7 +34,9 @@ import lombok.ToString;
 @ToString
 public class RnaAudCad240  extends RnaPredictor{
 	
-
+	@Autowired
+	Logger logger;
+	
 	
 	@Autowired(required = true)
 	ConfiguracionRnaAudCad240 configuracion;

@@ -3,6 +3,7 @@ package daryl.system.robot.arima.b.apachemq;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jms.annotation.JmsListener;
@@ -39,7 +40,9 @@ import daryl.system.robot.arima.b.predictor.base.ArimaPredictor;
 @Component
 public class Receiver {
 	
-
+	@Autowired
+	Logger logger;
+	
 	@Autowired
 	JmsListenerContainerFactory<?> factory;
 

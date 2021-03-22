@@ -6,6 +6,7 @@ import java.util.List;
 import org.espy.arima.ArimaForecaster;
 import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -28,7 +29,9 @@ import lombok.ToString;
 @ToString
 public class ArimaDInvNdx10080  extends ArimaPredictor{
 	
-
+	@Autowired
+	Logger logger;
+	
 	
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;

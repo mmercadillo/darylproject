@@ -3,6 +3,7 @@ package daryl.system.robot.rna.inv.apachemq;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jms.annotation.JmsListener;
@@ -30,6 +31,8 @@ import daryl.system.robot.rna.inv.predictor.base.RnaPredictor;
 @Component
 public class Receiver {
 
+	@Autowired
+	Logger logger;
 	
 	@Autowired
 	JmsListenerContainerFactory<?> factory;

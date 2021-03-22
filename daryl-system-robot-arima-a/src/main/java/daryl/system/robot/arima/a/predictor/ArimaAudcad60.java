@@ -3,6 +3,7 @@ package daryl.system.robot.arima.a.predictor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
 //logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -25,6 +26,8 @@ import lombok.ToString;
 @ToString
 public class ArimaAudcad60  extends ArimaPredictor{
 
+	@Autowired
+	Logger logger;
 	
 
 

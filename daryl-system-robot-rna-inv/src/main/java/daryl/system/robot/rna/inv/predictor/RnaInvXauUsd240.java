@@ -35,6 +35,8 @@ import lombok.ToString;
 @ToString
 public class RnaInvXauUsd240  extends RnaPredictor{
 
+	@Autowired
+	Logger logger;
 	
 	@Autowired(required = true)
 	ConfiguracionRnaXauUsd240 configuracion;

@@ -3,6 +3,7 @@ package daryl.system.robot.arima.a.predictor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
 //logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,7 +25,10 @@ import lombok.ToString;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaAudcad240  extends ArimaPredictor{
-
+	
+	@Autowired
+	Logger logger;
+	
 
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;

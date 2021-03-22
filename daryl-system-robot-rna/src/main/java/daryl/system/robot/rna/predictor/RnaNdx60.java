@@ -34,7 +34,9 @@ import lombok.ToString;
 @ToString
 public class RnaNdx60  extends RnaPredictor{
 	
-
+	@Autowired
+	Logger logger;
+	
 	
 	@Autowired(required = true)
 	ConfiguracionRnaNdx60 configuracion;
