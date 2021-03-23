@@ -6,7 +6,6 @@ import java.util.List;
 import org.espy.arima.ArimaForecaster;
 import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -16,7 +15,6 @@ import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.ArimaConfig;
-import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.c.inv.predictor.base.ArimaPredictor;
@@ -41,10 +39,7 @@ public class ArimaCInvXauUsd  extends ArimaPredictor{
 	
 
 	private Integer inicio;
-	
 
-
-	static Double prediccionArimaAnterior = 0.0;
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
 		
