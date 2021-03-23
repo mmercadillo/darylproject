@@ -64,24 +64,23 @@ public class ControlCotizaciones extends Thread {
 
 	public void run() {
     	
-    	
 		try (ZContext context = new ZContext()) {
             // Socket to talk to clients
             ZMQ.Socket socket = context.createSocket(SocketType.REP);
             socket.bind("tcp://*:5559");
             while (!Thread.currentThread().isInterrupted()) {
-                logger.info("Esperando los datos de cotizacion ");
+                logger.info("ESPERANDO DATOS DE COTIZACIONES ...");
             	// Block until a message is received
                 byte[] reply = socket.recv(0);
                 // Print the message
-                String prediccionRecibida = new String(reply, ZMQ.CHARSET);
-                logger.info("Datos recibidos -> " + prediccionRecibida);
+                String cotizacionesRecibidas = new String(reply, ZMQ.CHARSET);
+                logger.info("DATOS RECIBIDOS -> " + cotizacionesRecibidas);
+               
                 // Enviamos la respuesta al cliente python
                 String response = "Datos recibidos, gracias";
                 socket.send(response.getBytes(ZMQ.CHARSET), 0);
 
-
-                checkCotizacion(prediccionRecibida);
+                checkCotizacion(cotizacionesRecibidas);
                 
                 
             }
@@ -98,9 +97,9 @@ public class ControlCotizaciones extends Thread {
 			Cotizacion ctzcn = Cotizacion.getCotizacionFromZeroMQ(linea);
 			Boolean noExiste = checkNuevaCotizacion(ctzcn);
 			if(noExiste == Boolean.TRUE) {
-				//Guardamos la nueva cotizacón
+				logger.info("GUARDAMOS NUEVA COTIZACIÓN -> " + linea);
 				guardarCotizacion(ctzcn);
-				//logger.info("Nueva cotización {} - {} : SE ENV�?A A LA COLA", activo.name(), timeframe);
+				logger.info("NUEVA COTIZACIÓN GUARDADA");
 				try {
 
 					List<Robot> robots = robotsRepository.findRobotsByActivoAndTimeframe(ctzcn.getActivo(), ctzcn.getTimeframe());
@@ -109,15 +108,18 @@ public class ControlCotizaciones extends Thread {
 						if(robot.getRobotActivo() == Boolean.TRUE) {
 							logger.info("SE ENVIA SEÑAL AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
 							sender.send(robot.getCanal().name(), new Gson().toJson(robot));
+							logger.info("SEÑAL ENVIADA AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
 						}
 						
 					}
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
+			}else {
+				logger.info("LA COTIZACIÓN YA EXISTE-> " + linea);
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
     	
 	}
@@ -139,7 +141,7 @@ public class ControlCotizaciones extends Thread {
 					historico.setTimeframe(ctzcn.getTimeframe());
 					
 				histXauUsdRepository.save(historico);
-				logger.info("Cotizacion para el activo {} guardada: {}", ctzcn.getActivo(), ctzcn.toString());
+				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
 			}							
 			if(ctzcn.getActivo() == Activo.AUDCAD) {
 				HistAudCad historico = new HistAudCad();
@@ -154,7 +156,7 @@ public class ControlCotizaciones extends Thread {
 					historico.setTimeframe(ctzcn.getTimeframe());
 				
 				histAudCadRepository.save(historico);
-				logger.info("Cotizacion para el activo {} guardada: {}", ctzcn.getActivo(), ctzcn.toString());
+				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
 			}
 			if(ctzcn.getActivo() == Activo.XTIUSD) {
 				HistWti historico = new HistWti();
@@ -169,7 +171,7 @@ public class ControlCotizaciones extends Thread {
 					historico.setTimeframe(ctzcn.getTimeframe());
 				
 				histWtiRepository.save(historico);
-				logger.info("Cotizacion para el activo {} guardada: {}", ctzcn.getActivo(), ctzcn.toString());
+				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
 			}
 			if(ctzcn.getActivo() == Activo.GDAXI) {
 				HistGdaxi historico = new HistGdaxi();
@@ -184,7 +186,7 @@ public class ControlCotizaciones extends Thread {
 					historico.setTimeframe(ctzcn.getTimeframe());
 					
 				histGdaxiRepository.save(historico);
-				logger.info("Cotizacion para el activo {} guardada: {}", ctzcn.getActivo(), ctzcn.toString());
+				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
 			}
 			if(ctzcn.getActivo() == Activo.NDX) {
 				HistNdx historico = new HistNdx();
@@ -199,7 +201,7 @@ public class ControlCotizaciones extends Thread {
 					historico.setTimeframe(ctzcn.getTimeframe());
 					
 				histNdxRepository.save(historico);
-				logger.info("Cotizacion para el activo {} guardada: {}", ctzcn.getActivo(), ctzcn.toString());
+				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
 			}
 			if(ctzcn.getActivo() == Activo.EURUSD) {
 				HistEurUsd historico = new HistEurUsd();
@@ -214,11 +216,10 @@ public class ControlCotizaciones extends Thread {
 					historico.setTimeframe(ctzcn.getTimeframe());
 					
 				histEurUsdRepository.save(historico);
-				logger.info("Cotizacion para el activo {} guardada: {}", ctzcn.getActivo(), ctzcn.toString());
+				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
 			}
-			System.out.println("DATOS GUARDADOS -> " + ctzcn);
 		}catch (Exception e) {
-			//logger.error("\"No se ha podido actualizar el historico del activo: {}", activo.name(), e);
+			logger.error("NO SE HA PODIDO ACTUALIZAR EL HISTORICO DEL ACTIVO: {}", ctzcn.getActivo(), e);
 			throw new SistemaException("No se ha podido actualizar el historico del activo " + ctzcn.getActivo());
 		}
 	}
@@ -281,7 +282,7 @@ public class ControlCotizaciones extends Thread {
 				
 			}	
 		}catch (Exception e) {
-			//logger.error("No se ha podido recuperar la cotizacion de Checking del activo: {}", activo.name(), e);
+			logger.error("ERROR AL COMPROBAR LA ÚLTIMA COTIZACIÓN ALMACENADA: {}", activo.name(), e);
 			throw new SistemaException("No se ha podido recuperar la cotizacion de Checking del activo " + activo.name(), e);
 		}		
 		

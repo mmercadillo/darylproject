@@ -9,11 +9,7 @@ public class ARMA {
 	int q;
 	ARMAMath armamath=new ARMAMath();
 	
-	/**
-	 * ARMAģ��
-	 * @param stdoriginalData
-	 * @param p,q //p,qΪMAģ�ͽ���
-	 */
+
 	public ARMA(double [] stdoriginalData,int p,int q)
 	{
 		this.stdoriginalData=stdoriginalData;
@@ -27,26 +23,14 @@ public class ARMA {
 		
 		double[] autocorData=getautocorofMA(p, q, stdoriginalData, arcoe);
 		
-		double[] macoe=armamath.getMApara(autocorData, q);//�õ�MAģ������Ĳ���ֵ
-//		for(int i=0;i<macoe.length;i++)
-//			{
-//				System.out.println(macoe[i]);
-//			}
-//		System.out.println();
+		double[] macoe=armamath.getMApara(autocorData, q);
 		Vector<double[]> v=new Vector<double[]>();
 		v.add(arcoe);
 		v.add(macoe);
 		return v;
 	}
 	
-	/**
-	 * �õ�MA�������ϵ��
-	 * @param p
-	 * @param q
-	 * @param stdoriginalData
-	 * @param autoCordata
-	 * @return
-	 */
+
 	public double[] getautocorofMA(int p,int q,double[] stdoriginalData,double[] autoRegress)
 	{
 		int temp=0;
@@ -57,7 +41,7 @@ public class ARMA {
 			temp=0;
 			for(int j=1;j<=p;j++)
 				temp+=stdoriginalData[i-j]*autoRegress[j-1];
-			errArray[count++]=stdoriginalData[i]-temp;//������Ʋв�����
+			errArray[count++]=stdoriginalData[i]-temp;
 		}
 		return armamath.autocorGrma(errArray, q);
 	}

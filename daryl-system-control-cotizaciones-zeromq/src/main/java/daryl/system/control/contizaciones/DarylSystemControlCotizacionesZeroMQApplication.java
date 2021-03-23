@@ -45,7 +45,6 @@ public class DarylSystemControlCotizacionesZeroMQApplication {
     	controlCoticiones.start();
 
     }
-    
 
 
 }

@@ -37,16 +37,11 @@ public class ARMAMath
 		return variance/dataArray.length;//variance error;
 	}
 	
-	/**
-	 * ��������صĺ��� Tho(k)=Grma(k)/Grma(0)
-	 * @param dataArray ����
-	 * @param order ����
-	 * @return
-	 */
+
 	public double[] autocorData(double[] dataArray,int order)
 	{
 		double[] autoCor=new double[order+1];
-		double varData=this.varerrData(dataArray);//��׼������ķ���
+		double varData=this.varerrData(dataArray);
 		
 		for(int i=0;i<=order;i++)
 		{
@@ -61,12 +56,7 @@ public class ARMAMath
 		return autoCor;
 	}
 	
-/**
- * Grma
- * @param dataArray
- * @param order
- * @return ���е������ϵ��
- */
+
 	public double[] autocorGrma(double[] dataArray,int order)
 	{
 		double[] autoCor=new double[order+1];
@@ -83,12 +73,7 @@ public class ARMAMath
 		return autoCor;
 	}
 	
-/**
- * ��ƫ�����ϵ��
- * @param dataArray
- * @param order
- * @return
- */
+
 	public double[] parautocorData(double[] dataArray,int order)
 	{
 		double parautocor[]=new double[order];
@@ -99,14 +84,9 @@ public class ARMAMath
 	    }
 		return parautocor;
 	}
-/**
- * ����Toplize����
- * @param dataArray
- * @param order
- * @return
- */
+
 	public double[][] toplize(double[] dataArray,int order)
-	{//����toplize��ά����
+	{
 		double[][] toplizeMatrix=new double[order][order];
 		double[] atuocorr=this.autocorData(dataArray,order);
 
@@ -127,21 +107,15 @@ public class ARMAMath
 		return toplizeMatrix;
 	}
 
-	/**
-	 * ��MAģ�͵Ĳ���
-	 * @param autocorData
-	 * @param q
-	 * @return
-	 */
+
 	public double[] getMApara(double[] autocorData,int q)
 	{
-		double[] maPara=new double[q+1];//��һ�������������������q�����ma����sigma2,ma1,ma2...
+		double[] maPara=new double[q+1];
 		double[] tempmaPara=maPara;
 		double temp=0;
 		boolean iterationFlag=true;
-		//�ⷽ����
-		//�������ⷽ����
-		maPara[0]=1;//��ʼ��
+
+		maPara[0]=1;
 		while(iterationFlag)
 		{
 			for(int i=1;i<maPara.length;i++)
@@ -174,19 +148,13 @@ public class ARMAMath
 		
 		return maPara;
 	}
-	/**
-	 * �����Իع�ϵ��
-	 * @param dataArray
-	 * @param p
-	 * @param q
-	 * @return
-	 */
+
 	public double[] parcorrCompute(double[] dataArray,int p,int q)
 	{
-		double[][] toplizeArray=new double[p][p];//p��toplize����
+		double[][] toplizeArray=new double[p][p];
 		
-		double[] atuocorr=this.autocorData(dataArray,p+q);//����p+q�׵�����غ���
-		double[] autocorrF=this.autocorGrma(dataArray, p+q);//����p+q�׵������ϵ����
+		double[] atuocorr=this.autocorData(dataArray,p+q);
+		double[] autocorrF=this.autocorGrma(dataArray, p+q);
 		for(int i=1;i<=p;i++)
 		{
 			int k=1;
@@ -202,8 +170,8 @@ public class ARMAMath
 			}
 		}
 		
-	    Matrix toplizeMatrix = new Matrix(toplizeArray);//�ɶ�λ����ת���ɶ�ά����
-	    Matrix toplizeMatrixinverse=toplizeMatrix.inverse();//������������
+	    Matrix toplizeMatrix = new Matrix(toplizeArray);
+	    Matrix toplizeMatrixinverse=toplizeMatrix.inverse();
 		
 	    double[] temp=new double[p];
 	    for(int i=1;i<=p;i++)
@@ -212,11 +180,8 @@ public class ARMAMath
 	    }
 	    
 		Matrix autocorrMatrix=new Matrix(temp, p);
-		Matrix parautocorDataMatrix=toplizeMatrixinverse.times(autocorrMatrix); //  [Fi]=[toplize]x[autocorr]';
-		//���������Ӧ���ǰ���[a b c]'  �������洢��
-		//System.out.println("row="+parautocorDataMatrix.getRowDimension()+"  Col="+parautocorDataMatrix.getColumnDimension());
-		//parautocorDataMatrix.print(p, 2);//(�������,С�������λ��)
-		//System.out.println(parautocorDataMatrix.get(p-1,0));
+		Matrix parautocorDataMatrix=toplizeMatrixinverse.times(autocorrMatrix); 
+		
 		
 		double[] result=new double[parautocorDataMatrix.getRowDimension()+1];
 		for(int i=0;i<parautocorDataMatrix.getRowDimension();i++)
@@ -224,17 +189,17 @@ public class ARMAMath
 			result[i]=parautocorDataMatrix.get(i,0);
 		}
 		
-		//����sigmat2
+		
 		double sum2=0;
 		for(int i=0;i<p;i++)
 			for(int j=0;j<p;j++)
 			{
 				sum2+=result[i]*result[j]*autocorrF[Math.abs(i-j)];
 			}
-		result[result.length-1]=autocorrF[0]-sum2; //result�������һ���洢���Ź���ֵ
+		result[result.length-1]=autocorrF[0]-sum2; 
 		
 		
-			return result;   //����0�е����һ������k�׵�ƫ�����ϵ�� pcorr[k]=����ֵ
+			return result;  
 	}
 
 	

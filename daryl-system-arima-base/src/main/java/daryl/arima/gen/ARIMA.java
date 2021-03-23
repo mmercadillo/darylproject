@@ -30,10 +30,7 @@ public class ARIMA {
 		this.originalData=originalData;
 		this.period = period;
 	}
-/**
- * 
- * @return 
- */ 
+
 	public double[] preDealDif()
 	{
 		
@@ -46,14 +43,9 @@ public class ARIMA {
 
 		return tempData;
 	}
-/**
- * ԭʼ���ݱ�׼������Z-Score��һ��
- * @param ����������
- * @return ��һ�����������
- */
 	public double[] preDealNor(double[] tempData)
 	{
-		//Z-Score
+
 		avgsumData=armamath.avgData(tempData);
 		stderrDara=armamath.stderrData(tempData);
 		
@@ -64,31 +56,28 @@ public class ARIMA {
 		
 		return tempData;
 	}
-/**
-* �õ�ARMAģ��=[p,q]
- * @return ARMAģ�͵Ľ�����Ϣ
- */
+
 	public int[] getARIMAmodel()
 	{
-		double[] stdoriginalData=this.preDealDif();//ԭʼ���ݲ�ִ���
+		double[] stdoriginalData=this.preDealDif();
 		
 		int paraType=0;
 		double minAIC=9999999;
 		int bestModelindex=0;
 		int[][] model=new int[][]{{0,1},{1,0},{1,1},{0,2},{2,0},{2,2},{1,2},{2,1},{3,0},{0,3},{3,1},{1,3},{3,2},{2,3},{3,3},{4,0},{0,4},{4,1},{1,4},{4,2},{2,4},{4,3},{3,4},{4,4}};
-		//��8��ģ�ͽ��е�����ѡ��AICֵ��С��ģ����Ϊ���ǵ�ģ��
+		
 		for(int i=0;i<model.length;i++)
 		{
 			if(model[i][0]==0)
 			{
 				MA ma=new MA(stdoriginalData, model[i][1]);
-				armaARMAcoe=ma.MAmodel(); //�õ�maģ�͵Ĳ���
+				armaARMAcoe=ma.MAmodel(); 
 				paraType=1;
 			}
 			else if(model[i][1]==0)
 			{
 				AR ar=new AR(stdoriginalData, model[i][0]);
-				armaARMAcoe=ar.ARmodel(); //�õ�arģ�͵Ĳ���
+				armaARMAcoe=ar.ARmodel(); 
 				paraType=2;
 			}
 			else
@@ -100,7 +89,7 @@ public class ARIMA {
 			
 
 			double temp=getmodelAIC(armaARMAcoe,stdoriginalData,paraType);
-			//System.out.println("AIC of these model="+temp);
+			
 			if (temp<minAIC)
 			{
 				bestModelindex=i;
@@ -111,13 +100,7 @@ public class ARIMA {
 		
 		return model[bestModelindex];
  	}
-/**
- * ����ARMAģ�͵�AIC
- * @param para װ��ģ�͵Ĳ�����Ϣ
- * @param stdoriginalData   Ԥ��������ԭʼ����
- * @param type 1��MA��2��AR��3��ARMA
- * @return ģ�͵�AICֵ
- */
+
 	public double getmodelAIC(Vector<double[]> para,double[] stdoriginalData,int type)
 	{
 		double temp=0;
@@ -142,18 +125,18 @@ public class ARIMA {
 					temp+=maPara[i]*err[i];
 				}
 			
-				//��������ʱ�̵�����
+				
 				for(int j=q-1;j>0;j--)
 				{
 					err[j]=err[j-1];
 				}
 				err[0]=random.nextGaussian()*Math.sqrt(maPara[0]);
 				
-				//���Ƶķ���֮��
+				
 				sumerr+=(stdoriginalData[k]-(temp))*(stdoriginalData[k]-(temp));
 				
 			}
-			//return  (n-(q-1))*Math.log(sumerr/(n-(q-1)))+(q)*Math.log(n-(q-1));//AIC ��С���˹���
+			
 			return (n-(q-1))*Math.log(sumerr/(n-(q-1)))+(q+1)*2;
 		}
 		else if(type==2)
@@ -167,11 +150,11 @@ public class ARIMA {
 				{
 					temp+=arPara[i]*stdoriginalData[k-i-1];
 				}
-				//���Ƶķ���֮��
+				
 				sumerr+=(stdoriginalData[k]-temp)*(stdoriginalData[k]-temp);
 			}
 			return (n-(q-1))*Math.log(sumerr/(n-(q-1)))+(p+1)*2;
-			//return (n-(p-1))*Math.log(sumerr/(n-(p-1)))+(p)*Math.log(n-(p-1));//AIC ��С���˹���
+			
 		}
 		else
 		{
@@ -179,7 +162,7 @@ public class ARIMA {
 			double[] maPara=para.get(1);
 			p=arPara.length;
 			q=maPara.length;
-			double[] err=new double[q];  //error(t),error(t-1),error(t-2)...
+			double[] err=new double[q]; 
 			
 			for(int k=p-1;k<n;k++)
 			{
@@ -195,36 +178,27 @@ public class ARIMA {
 					temp2+=maPara[i]*err[i];
 				}
 			
-				//��������ʱ�̵�����
+				
 				for(int j=q-1;j>0;j--)
 				{
 					err[j]=err[j-1];
 				}
-				//System.out.println("predictBeforeDiff="+1);
+				
 				err[0]=random.nextGaussian()*Math.sqrt(maPara[0]);
-				//���Ƶķ���֮��
+				
 				sumerr+=(stdoriginalData[k]-(temp2+temp))*(stdoriginalData[k]-(temp2+temp));
 			}
 			return (n-(q-1))*Math.log(sumerr/(n-(q-1)))+(p+q)*2;
-			//return (n-(p-1))*Math.log(sumerr/(n-(p-1)))+(p+q-1)*Math.log(n-(p-1));//AIC ��С���˹���
+			
 		}
 	}
-/**
- * ��Ԥ��ֵ���з���ִ���
- * @param predictValue Ԥ���ֵ
- * @return ����ֹ����Ԥ��ֵ
- */
+
 	public int aftDeal(int predictValue)
 	{
-		//System.out.println("predictBeforeDiff="+predictValue);
+
 		return (int)(predictValue+originalData[originalData.length-7]);
 	}
-/**
- * ����һ��Ԥ��
- * @param p ARMAģ�͵�AR�Ľ���
- * @param q ARMAģ�͵�MA�Ľ���
- * @return Ԥ��ֵ
- */
+
 	public int predictValue(int p,int q)
 	{
 		int predict=0;
@@ -244,14 +218,14 @@ public class ARIMA {
 				{
 					temp+=maPara[i]*err[i];
 				}
-				//��������ʱ�̵�����
+				
 				for(int j=q;j>0;j--)
 				{
 					err[j]=err[j-1];
 				}
 				err[0]=random.nextGaussian()*Math.sqrt(maPara[0]);
 			}
-			predict=(int)(temp); //����Ԥ��
+			predict=(int)(temp); 
 		}
 		else if(q==0)
 		{
@@ -271,7 +245,7 @@ public class ARIMA {
 
 			double[] arPara=bestarmaARMAcoe.get(0);
 			double[] maPara=bestarmaARMAcoe.get(1);
-			err=new double[q+1];  //error(t),error(t-1),error(t-2)...
+			err=new double[q+1];  
 			for(int k=p;k<n;k++)
 			{
 				temp=0;
@@ -286,7 +260,7 @@ public class ARIMA {
 					temp2+=maPara[i]*err[i];
 				}
 			
-				//��������ʱ�̵�����
+				
 				for(int j=q;j>0;j--)
 				{
 					err[j]=err[j-1];
@@ -302,20 +276,14 @@ public class ARIMA {
 		
 		return predict;
 	}
-/**
- * ����MAģ�͵Ĳ���
- * @param autocorData �����ϵ��Grma
- * @param q MAģ�͵Ľ���
- * @return ����MAģ�͵Ĳ���
- */
+
 	public double[] getMApara(double[] autocorData,int q)
 	{
-		double[] maPara=new double[q+1];//��һ�������������������q�����ma����sigma2,ma1,ma2...
+		double[] maPara=new double[q+1];
 		double[] tempmaPara=maPara;
 		double temp=0;
 		boolean iterationFlag=true;
-		//�ⷽ����
-		//�������ⷽ����
+
 		System.out.println("autocorData[0]"+autocorData[0]);
 		while(iterationFlag)
 		{
