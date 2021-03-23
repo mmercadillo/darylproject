@@ -14,8 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
-@Table
+
 @ToString
 public class HistGdaxiDto {
 	
