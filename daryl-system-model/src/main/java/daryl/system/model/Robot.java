@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.CanalAmq;
 import daryl.system.comun.enums.Timeframes;
@@ -67,5 +68,16 @@ public class Robot implements Serializable{
 	@Column(nullable = true)
 	private String arimaConfig;
 	
+	@Getter @Setter
+	@Column(nullable = true)
+	private String ficheroRna;	
 	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = true)
+	@Getter @Setter
+	private Mode mode;
+	
+	@Getter @Setter
+	@Column(nullable = true)
+	private Integer neuronasEntrada;
 }
