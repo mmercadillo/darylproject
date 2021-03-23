@@ -66,7 +66,7 @@ public class RnaAudCad60  extends RnaPredictor{
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		
 
-		//Double anteAnterior = 0.0, anterior = 0.0, ultimo = 0.0;
+
 		List<Double> inputs = null;
 		
 		if(prediccionAnterior == null) {
@@ -90,7 +90,6 @@ public class RnaAudCad60  extends RnaPredictor{
 				}			
 			}while(index < configuracion.getNeuronasEntrada()+1);			
 			
-			System.out.println(inputs);
 			Collections.reverse(inputs);
 			neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 			neuralNetwork.calculate();
@@ -121,7 +120,6 @@ public class RnaAudCad60  extends RnaPredictor{
 			}			
 		}while(index < configuracion.getNeuronasEntrada());
 
-		System.out.println(inputs);
 		Collections.reverse(inputs);
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 		neuralNetwork.calculate();
@@ -130,6 +128,9 @@ public class RnaAudCad60  extends RnaPredictor{
         double[] networkOutput = neuralNetwork.getOutput();
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
+        prediccion = nuevaPrediccion - RnaAudCad60.prediccionAnterior;
+        RnaAudCad60.prediccionAnterior = nuevaPrediccion;
+        
 		
         return prediccion;
 	

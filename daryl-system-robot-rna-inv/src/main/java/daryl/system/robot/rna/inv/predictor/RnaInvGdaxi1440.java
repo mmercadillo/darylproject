@@ -64,7 +64,6 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		
-		List<Double> datos = darylNormalizer.getDatos();
 		List<Double> inputs = null;
 		
 		if(prediccionAnterior == null) {
@@ -88,7 +87,6 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
 				}			
 			}while(index < configuracion.getNeuronasEntrada()+1);			
 			
-			System.out.println(inputs);
 			Collections.reverse(inputs);
 			neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 			neuralNetwork.calculate();
@@ -118,7 +116,6 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
 			}			
 		}while(index < configuracion.getNeuronasEntrada());
 
-		System.out.println(inputs);
 		Collections.reverse(inputs);
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 		neuralNetwork.calculate();
@@ -128,15 +125,9 @@ public class RnaInvGdaxi1440  extends RnaPredictor{
        
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
 		
-        if(nuevaPrediccion > prediccionAnterior /*datos.get(datos.size()-1) && datos.get(datos.size()-1) > media && media > 0*/) {
-        	//B
-        	prediccion = 1.0;
-        }else if(nuevaPrediccion < prediccionAnterior /*datos.get(datos.size()-1) && datos.get(datos.size()-1) < media && media > 0*/) {
-        	prediccion = -1.0;
-        }else {
-        	prediccion = 0.0;
-        }
-        prediccionAnterior = nuevaPrediccion;
+        prediccion = nuevaPrediccion - RnaInvGdaxi1440.prediccionAnterior;
+        RnaInvGdaxi1440.prediccionAnterior = nuevaPrediccion;
+        
 		return prediccion;
 	}
 

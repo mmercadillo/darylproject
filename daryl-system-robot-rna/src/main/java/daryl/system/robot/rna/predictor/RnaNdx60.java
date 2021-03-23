@@ -64,9 +64,7 @@ public class RnaNdx60  extends RnaPredictor{
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		
-		List<Double> datos = darylNormalizer.getDatos();
-		
-		//Double anteAnterior = 0.0, anterior = 0.0, ultimo = 0.0;
+
 		List<Double> inputs = null;
 		
 		if(prediccionAnterior == null) {
@@ -130,15 +128,8 @@ public class RnaNdx60  extends RnaPredictor{
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
         
-        if(nuevaPrediccion > datos.get(datos.size()-1) ) {
-        	//B
-        	prediccion = 1.0;
-        }else if(nuevaPrediccion < datos.get(datos.size()-1) ) {
-        	prediccion = -1.0;
-        }else {
-        	prediccion = 0.0;
-        }
-
+        prediccion = nuevaPrediccion - RnaNdx60.prediccionAnterior;
+        RnaNdx60.prediccionAnterior = nuevaPrediccion;
 		return prediccion;
 	
 	}

@@ -65,7 +65,7 @@ public class RnaGdaxi10080  extends RnaPredictor{
 		darylNormalizer.setDatos(datosTotal, Mode.valueOf(configuracion.getMode()));
 		
 
-		//Double anteAnterior = 0.0, anterior = 0.0, ultimo = 0.0;
+
 		List<Double> inputs = null;
 		
 		if(prediccionAnterior == null) {
@@ -120,7 +120,6 @@ public class RnaGdaxi10080  extends RnaPredictor{
 			}			
 		}while(index < configuracion.getNeuronasEntrada());
 
-		System.out.println(inputs);
 		Collections.reverse(inputs);
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 		neuralNetwork.calculate();
@@ -131,15 +130,8 @@ public class RnaGdaxi10080  extends RnaPredictor{
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
 		
         
-        if(nuevaPrediccion > prediccionAnterior ) {
-        	//B
-        	prediccion = 1.0;
-        }else if(nuevaPrediccion < prediccionAnterior ) {
-        	prediccion = -1.0;
-        }else {
-        	prediccion = 0.0;
-        }
-        prediccionAnterior = nuevaPrediccion;
+        prediccion = nuevaPrediccion - RnaGdaxi10080.prediccionAnterior;
+        RnaGdaxi10080.prediccionAnterior = nuevaPrediccion;
 		return prediccion;
 	}
 

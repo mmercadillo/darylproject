@@ -128,14 +128,8 @@ public class RnaNdx240  extends RnaPredictor{
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
 		
-        
-        if(nuevaPrediccion > prediccionAnterior ) {
-    	   prediccion = 1.0;
-        }else if(nuevaPrediccion < prediccionAnterior ) {
-    	   prediccion = -1.0;
-        }else {
-    	   prediccion = 0.0;
-        }
+        prediccion = nuevaPrediccion - RnaNdx240.prediccionAnterior;
+        RnaNdx240.prediccionAnterior = nuevaPrediccion;
 
 		return prediccion;
 	
