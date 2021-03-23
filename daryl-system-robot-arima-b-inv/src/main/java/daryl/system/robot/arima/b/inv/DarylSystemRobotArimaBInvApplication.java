@@ -19,9 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class DarylSystemRobotArimaBInvApplication {
 
-	@Autowired
-	Logger logger;
-	
+
 	public static void main(String[] args) {
 		
         SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemRobotArimaBInvApplication.class);
