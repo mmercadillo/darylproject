@@ -19,9 +19,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString
+
 @Entity
 @Table
+@ToString
 public class Robot implements Serializable{
 
 	/**

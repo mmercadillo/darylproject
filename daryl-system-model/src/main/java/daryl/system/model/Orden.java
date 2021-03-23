@@ -15,9 +15,11 @@ import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.TipoOrden;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table
+@ToString
 public class Orden implements Serializable{
 	
 	/**
