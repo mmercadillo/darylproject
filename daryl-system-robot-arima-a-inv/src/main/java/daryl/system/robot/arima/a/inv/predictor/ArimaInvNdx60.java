@@ -3,7 +3,6 @@ package daryl.system.robot.arima.a.inv.predictor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
 //logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -14,7 +13,6 @@ import daryl.arima.gen.ARIMA;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
-import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistNdx;
 import daryl.system.robot.arima.a.inv.predictor.base.ArimaPredictor;
