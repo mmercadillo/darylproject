@@ -6,17 +6,12 @@ import java.util.List;
 import org.espy.arima.ArimaForecaster;
 import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.ArimaConfig;
-import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.robot.arima.d.inv.predictor.base.ArimaPredictor;
@@ -24,8 +19,8 @@ import daryl.system.robot.arima.d.inv.repository.IArimaConfigRepository;
 import daryl.system.robot.arima.d.inv.repository.IHistXauUsdRepository;
 import lombok.ToString;
 
-@Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+//@Component
+//@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
 public class ArimaDInvXauUsd10080  extends ArimaPredictor{
 	
@@ -43,7 +38,6 @@ public class ArimaDInvXauUsd10080  extends ArimaPredictor{
 
 	private Integer inicio;
 
-	private final String robot_config= "ARIMA_C_XAUUSD_10080";
 
 	static Double prediccionArimaAnterior = 0.0;
 	@Override
@@ -70,7 +64,7 @@ public class ArimaDInvXauUsd10080  extends ArimaPredictor{
 		try {
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
 			if(arimaConfig != null) {
 				this.inicio = arimaConfig.getInicio();
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
