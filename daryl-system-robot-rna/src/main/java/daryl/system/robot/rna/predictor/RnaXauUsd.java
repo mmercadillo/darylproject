@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
@@ -39,7 +40,7 @@ public class RnaXauUsd  extends RnaPredictor{
 
 		Double prediccion = 0.0;
 		
-		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(bot.getFicheroRna());
+		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(ConfigData.BASE_PATH_RNAS + bot.getFicheroRna());
 		
 		List<HistXauUsd> historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
