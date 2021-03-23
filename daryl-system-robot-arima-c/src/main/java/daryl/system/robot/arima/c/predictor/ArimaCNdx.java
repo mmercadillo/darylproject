@@ -62,7 +62,7 @@ public class ArimaCNdx  extends ArimaPredictor{
 
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getRobot());
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 

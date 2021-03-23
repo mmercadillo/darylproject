@@ -63,5 +63,9 @@ public class Robot implements Serializable{
 	@Getter @Setter
 	private Boolean inverso;
 	
+	@Getter @Setter
+	@Column(nullable = true)
+	private String arimaConfig;
+	
 	
 }

@@ -54,17 +54,12 @@ public class ArimaCXauUsd  extends ArimaPredictor{
 		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
 		
 		List<Double> datos = darylNormalizer.getDatos();
-		
-
-		
+				
 		try {
 
-
-
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getRobot());
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
-
 	        
 	    	List<Double> aux = datos;
 	    	if(datos.size() > this.inicio) {

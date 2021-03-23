@@ -43,8 +43,6 @@ public class ArimaDInvGdaxi  extends ArimaPredictor{
 	private Integer inicio;
 
 
-	private final String robot_config= "ARIMA_C_GDAXI_10080";
-
 
 	static Double prediccionArimaAnterior = 0.0;
 	@Override
@@ -68,7 +66,7 @@ public class ArimaDInvGdaxi  extends ArimaPredictor{
 		try {
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
 			if(arimaConfig != null) {
 				this.inicio = arimaConfig.getInicio();
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);

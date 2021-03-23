@@ -61,7 +61,7 @@ public class ArimaCWti  extends ArimaPredictor{
 		try {
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getRobot());
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 	        

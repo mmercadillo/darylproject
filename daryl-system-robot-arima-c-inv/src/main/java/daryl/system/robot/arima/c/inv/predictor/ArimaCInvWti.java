@@ -42,7 +42,6 @@ public class ArimaCInvWti  extends ArimaPredictor{
 	private Integer inicio;
 	
 
-	private final String robot_config= "ARIMA_C_WTI_1440";
 
 
 	static Double prediccionArimaAnterior = 0.0;
@@ -63,7 +62,7 @@ public class ArimaCInvWti  extends ArimaPredictor{
 		try {
 
 
-			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot_config);
+			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
 			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 
