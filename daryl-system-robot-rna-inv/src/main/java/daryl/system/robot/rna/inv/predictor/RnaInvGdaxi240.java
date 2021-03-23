@@ -53,7 +53,7 @@ public class RnaInvGdaxi240  extends RnaPredictor{
 		
 		Double prediccion = 0.0;
 		
-		NeuralNetwork neuralNetwork = NeuralNetwork.load(configuracion.getRutaRNA());
+		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(configuracion.getRutaRNA());
 		
 		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
