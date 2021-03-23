@@ -50,5 +50,4 @@ public class HistAudCadDto {
 	private Timeframes timeframe;
 	
 
-
 }
