@@ -23,9 +23,7 @@ public class ControlHistoricoOperaciones {
 
 	@Autowired
 	Logger logger;
-	
-	@Autowired
-	private ConfigData config;
+
 	@Autowired
 	IHistoricoOperacionesRepository historicoOperacionesRepository;
 	@Autowired

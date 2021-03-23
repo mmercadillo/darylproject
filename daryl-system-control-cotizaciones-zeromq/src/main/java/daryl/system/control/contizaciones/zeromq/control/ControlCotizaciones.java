@@ -64,7 +64,6 @@ public class ControlCotizaciones extends Thread {
 
 	public void run() {
     	
-    	
 		try (ZContext context = new ZContext()) {
             // Socket to talk to clients
             ZMQ.Socket socket = context.createSocket(SocketType.REP);
@@ -80,7 +79,6 @@ public class ControlCotizaciones extends Thread {
                 // Enviamos la respuesta al cliente python
                 String response = "Datos recibidos, gracias";
                 socket.send(response.getBytes(ZMQ.CHARSET), 0);
-
 
                 checkCotizacion(cotizacionesRecibidas);
                 
@@ -284,7 +282,7 @@ public class ControlCotizaciones extends Thread {
 				
 			}	
 		}catch (Exception e) {
-			//logger.error("No se ha podido recuperar la cotizacion de Checking del activo: {}", activo.name(), e);
+			logger.error("ERROR AL COMPROBAR LA ÚLTIMA COTIZACIÓN ALMACENADA: {}", activo.name(), e);
 			throw new SistemaException("No se ha podido recuperar la cotizacion de Checking del activo " + activo.name(), e);
 		}		
 		
