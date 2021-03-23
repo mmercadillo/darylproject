@@ -23,9 +23,7 @@ public class ControlHistoricoOperaciones {
 
 	@Autowired
 	Logger logger;
-	
-	@Autowired
-	private ConfigData config;
+
 	@Autowired
 	IHistoricoOperacionesRepository historicoOperacionesRepository;
 	@Autowired
@@ -39,9 +37,10 @@ public class ControlHistoricoOperaciones {
 	public void run() {
     	
 		
-    	System.out.println("ACTUALIZANDO RESUMEN DE OPERACIONES=============");
+    	logger.info("ACTUALIZANDO RESUMEN DE OPERACIONES=============");
     	List<Robot> robots = robotRepository.findAll();
 		for (Robot robot : robots) {
+			logger.info("ACTUALIZANDO OPERACIONES ROBOT -> " + robot.getRobot());
 			//System.out.println("RESUMEN ROBOT -> " + robot.name() + " =============");
 			try {
 				//Recuperamos la info del robot de la BD,s
@@ -94,18 +93,17 @@ public class ControlHistoricoOperaciones {
 							// TODO: handle exception
 						}
 					}
-		    		
-		    		//System.out.println("ACTUALIZANDO -> " + resumen.toString());
+		    		logger.info("OPERACIONES ROBOT ACTUALIZADAS-> " + robot.getRobot());
 			    	resumenRobotRepository.save(resumen);
-			    	//System.out.println("RESUMEN ROBOT -> " + robot.name() + " ACTUALIZADO =============");
+			    	logger.info("OPERACIONES ROBOT GUARDADAS-> " + robot.getRobot());
 			    	
 		    	}
 			
 			}catch (Exception e) {
-				e.printStackTrace();
+				logger.error("RESUMEN DE OPERACIONES ACTUALIZADO=============", e);
 			}
 		}
-		System.out.println("RESUMEN DE OPERACIONES ACTUALIZADO=============");
+    	logger.info("RESUMEN DE OPERACIONES ACTUALIZADO=============");
 
 	}
 
