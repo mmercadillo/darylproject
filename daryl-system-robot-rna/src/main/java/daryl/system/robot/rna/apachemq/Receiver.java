@@ -13,19 +13,11 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 
 import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Robot;
-import daryl.system.robot.rna.predictor.RnaGdaxi10080;
-import daryl.system.robot.rna.predictor.RnaGdaxi240;
-import daryl.system.robot.rna.predictor.RnaGdaxi60;
-import daryl.system.robot.rna.predictor.RnaNdx10080;
-import daryl.system.robot.rna.predictor.RnaNdx1440;
-import daryl.system.robot.rna.predictor.RnaNdx240;
-import daryl.system.robot.rna.predictor.RnaNdx60;
-import daryl.system.robot.rna.predictor.RnaXauUsd10080;
-import daryl.system.robot.rna.predictor.RnaXauUsd1440;
-import daryl.system.robot.rna.predictor.RnaXauUsd240;
-import daryl.system.robot.rna.predictor.RnaXauUsd60;
+import daryl.system.robot.rna.predictor.RnaAudCad;
+import daryl.system.robot.rna.predictor.RnaGdaxi;
+import daryl.system.robot.rna.predictor.RnaNdx;
+import daryl.system.robot.rna.predictor.RnaXauUsd;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
 
 @Component
@@ -45,104 +37,41 @@ public class Receiver {
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
-		
-		Timeframes timeframe = robot.getTimeframe();
+
 		RnaPredictor predictor = null;
 		
-		if(timeframe == Timeframes.PERIOD_H1) {
+		if(robot.getActivo() == Activo.GDAXI) {
 			try{
-				if(robot.getActivo() == Activo.GDAXI) {
-					predictor = applicationContext.getBean(RnaGdaxi60.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-			try{
-				if(robot.getActivo() == Activo.NDX) {
-					predictor = applicationContext.getBean(RnaNdx60.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-			try{
-				if(robot.getActivo() == Activo.XAUUSD) {
-					predictor = applicationContext.getBean(RnaXauUsd60.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-		}else if(timeframe == Timeframes.PERIOD_H4) {
-			try{
-				if(robot.getActivo() == Activo.GDAXI) {
-					predictor = applicationContext.getBean(RnaGdaxi240.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-			try{
-				if(robot.getActivo() == Activo.NDX) {
-					predictor = applicationContext.getBean(RnaNdx240.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-			try{
-				if(robot.getActivo() == Activo.XAUUSD) {
-					predictor = applicationContext.getBean(RnaXauUsd240.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-		}else if(timeframe == Timeframes.PERIOD_D1) {
-			try{
-				if(robot.getActivo() == Activo.NDX) {
-					predictor = applicationContext.getBean(RnaNdx1440.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-			try{
-				if(robot.getActivo() == Activo.XAUUSD) {
-					predictor = applicationContext.getBean(RnaXauUsd1440.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-		}else if(timeframe == Timeframes.PERIOD_W1) {
-			try{
-				if(robot.getActivo() == Activo.GDAXI) {
-					predictor = applicationContext.getBean(RnaGdaxi10080.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-			try{
-				if(robot.getActivo() == Activo.NDX) {
-					predictor = applicationContext.getBean(RnaNdx10080.class);
-					predictor.calculate(robot);
-				}
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-			try{
-				if(robot.getActivo() == Activo.XAUUSD) {
-					predictor = applicationContext.getBean(RnaXauUsd10080.class);
-					predictor.calculate(robot);
-				}
+				predictor = applicationContext.getBean(RnaGdaxi.class);
+				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
-		
+		if(robot.getActivo() == Activo.NDX) {
+			try{
+				predictor = applicationContext.getBean(RnaNdx.class);
+				predictor.calculate(robot);
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+		}
+		if(robot.getActivo() == Activo.XAUUSD) {
+			try{
+				predictor = applicationContext.getBean(RnaXauUsd.class);
+				predictor.calculate(robot);
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+		}
+		if(robot.getActivo() == Activo.AUDCAD) {
+			try{
+				predictor = applicationContext.getBean(RnaAudCad.class);
+				predictor.calculate(robot);
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+		}
 	}
 
 }

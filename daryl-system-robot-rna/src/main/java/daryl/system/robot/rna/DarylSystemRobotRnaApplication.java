@@ -17,22 +17,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
 @EntityScan("daryl.system.model")
-@EnableScheduling
 @EnableJms
 @EnableTransactionManagement
-@PropertySource("classpath:rna-xauusd.properties")
-@PropertySource("classpath:rna-xauusd-h4.properties")
-@PropertySource("classpath:rna-xauusd-d1.properties")
-@PropertySource("classpath:rna-xauusd-w1.properties")
-@PropertySource("classpath:rna-audcad.properties")
-@PropertySource("classpath:rna-ndx.properties")
-@PropertySource("classpath:rna-ndx-h4.properties")
-@PropertySource("classpath:rna-ndx-d1.properties")
-@PropertySource("classpath:rna-ndx-w1.properties")
-@PropertySource("classpath:rna-gdaxi.properties")
-@PropertySource("classpath:rna-gdaxi-h4.properties")
-@PropertySource("classpath:rna-gdaxi-d1.properties")
-@PropertySource("classpath:rna-gdaxi-w1.properties")
 public class DarylSystemRobotRnaApplication {
 
 	@Autowired
