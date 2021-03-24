@@ -25,6 +25,7 @@ import daryl.system.control.contizaciones.zeromq.repository.IHistGdaxiRepository
 import daryl.system.control.contizaciones.zeromq.repository.IHistNdxRepository;
 import daryl.system.control.contizaciones.zeromq.repository.IHistWtiRepository;
 import daryl.system.control.contizaciones.zeromq.repository.IHistXauUsdRepository;
+import daryl.system.control.contizaciones.zeromq.repository.IHistoricoRepository;
 import daryl.system.control.contizaciones.zeromq.repository.IRobotsRepository;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistAudCad;
@@ -33,6 +34,7 @@ import daryl.system.model.historicos.HistGdaxi;
 import daryl.system.model.historicos.HistNdx;
 import daryl.system.model.historicos.HistWti;
 import daryl.system.model.historicos.HistXauUsd;
+import daryl.system.model.historicos.Historico;
 
 @Component
 public class ControlCotizaciones extends Thread {
@@ -58,7 +60,9 @@ public class ControlCotizaciones extends Thread {
 	protected IHistEurUsdRepository histEurUsdRepository;
 	@Autowired
 	protected IHistWtiRepository histWtiRepository;	
-
+	@Autowired
+	protected IHistoricoRepository histRepository;	
+	
 	@Autowired
 	private IRobotsRepository robotsRepository;
 
@@ -128,6 +132,28 @@ public class ControlCotizaciones extends Thread {
 		//Guardamos en la tabla correspondiente la nueva cotizaion
 		try {
 
+			//Guardamos en la tabla Historico
+			try {
+				
+				Historico historico = new Historico();
+					historico.setFecha(ctzcn.getFecha());
+					historico.setHora(ctzcn.getHora());
+					historico.setApertura(new Double(ctzcn.getApertura()));
+					historico.setMaximo(new Double(ctzcn.getMaximo()));
+					historico.setMinimo(new Double(ctzcn.getMinimo()));
+					historico.setCierre(new Double(ctzcn.getCierre()));
+					historico.setVolumen(new Double(ctzcn.getVolumen()));
+					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
+					historico.setTimeframe(ctzcn.getTimeframe());
+					historico.setActivo(ctzcn.getActivo());
+				
+				histRepository.save(historico);
+				
+			}catch (Exception e) {
+			}
+			///////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			
 			if(ctzcn.getActivo() == Activo.XAUUSD) {
 				HistXauUsd historico = new HistXauUsd();
 					historico.setFecha(ctzcn.getFecha());
