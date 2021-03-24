@@ -23,8 +23,7 @@ import lombok.ToString;
 @ToString
 public class ArimaInvAudcad  extends ArimaPredictor{
 
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
+
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 
@@ -38,8 +37,8 @@ public class ArimaInvAudcad  extends ArimaPredictor{
 		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
 		
 		datos.stream().forEach(dato -> {

@@ -3,23 +3,40 @@ package daryl.system.comun.dataset.normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@NoArgsConstructor
 public class DarylMaxMinNormalizer{
 
 	@Getter private List<Double> datos;
 	private Double maximo;
 	private Double minimo;
+	
+	public DarylMaxMinNormalizer(List<Datos> datos, Mode mode) {
+		
+		this.datos = new ArrayList<Double>();
+		for (Object object : datos) {
+			if(object instanceof Double) {
+				this.datos.add((Double)object);
+			}
+			if(object instanceof Datos) {
+				if(mode == Mode.CLOSE) this.datos.add(((Datos)object).getCierre());
+				if(mode == Mode.HIGH) this.datos.add(((Datos)object).getMaximo());
+				if(mode == Mode.LOW) this.datos.add(((Datos)object).getMinimo());
+				if(mode == Mode.OPEN) this.datos.add(((Datos)object).getApertura());
+			}
+		}
+		
+		this.maximo = getMaximo();
+		this.minimo = getMinimo();
+		
+	}
 
-	public void setDatos(List datos, Mode mode) {
+	/*
+	public void setDatos(List<Datos> datos, Mode mode) {
 		this.datos = new ArrayList<Double>();
 		for (Object object : datos) {
 			if(object instanceof Double) {
@@ -36,7 +53,7 @@ public class DarylMaxMinNormalizer{
 		this.maximo = getMaximo();
 		this.minimo = getMinimo();
 	}
-	
+	*/
 	public List<Double> getNormalizedList(){
 		
 		List<Double> normalizedList = new ArrayList<Double>();

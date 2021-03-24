@@ -25,8 +25,6 @@ public class ArimaBGdaxi  extends ArimaPredictor{
 	
 
 	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
-	@Autowired
 	private IHistGdaxiRepository histGdaxiRepository;
 	
 
@@ -34,7 +32,8 @@ public class ArimaBGdaxi  extends ArimaPredictor{
 		
 		//Lista para prediccionAnterior
 		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
-		darylNormalizer.setDatos(datosForecastAnterior, Mode.CLOSE);
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datosAnterior = darylNormalizer.getDatos();
 
 		ARIMA arima=new ARIMA(datosAnterior.stream().mapToDouble(Double::new).toArray());
@@ -55,8 +54,8 @@ public class ArimaBGdaxi  extends ArimaPredictor{
 			
 			Integer prediccionAnterior = getPrediccionAnterior(datosForecast);
 			
-			darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+			//Recuperamos los cierres de cada Dato
+			DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 			List<Double> datos = darylNormalizer.getDatos();
 
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());

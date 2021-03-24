@@ -31,10 +31,6 @@ public class ArimaDWti  extends ArimaPredictor{
 	
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
-
-
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistWtiRepository histWtiRepository;
 
@@ -43,7 +39,9 @@ public class ArimaDWti  extends ArimaPredictor{
 		
 		//Lista para prediccionAnterior
 		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
-		darylNormalizer.setDatos(datosForecastAnterior, Mode.CLOSE);
+		
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datosAnterior = darylNormalizer.getDatos();
 
 		
@@ -83,11 +81,10 @@ public class ArimaDWti  extends ArimaPredictor{
 				List<Datos> datosForecast = toDatosList(historico);
 				Double prediccionAnterior = getPrediccionAnterior(datosForecast, arimaProcess, arimaConfig);
 				
-				darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+				//Recuperamos los cierres de cada Dato
+				DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
 
-		        
 		    	List<Double> aux = datos;
 		    	if(datos.size() > arimaConfig.getInicio()) {
 		    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());

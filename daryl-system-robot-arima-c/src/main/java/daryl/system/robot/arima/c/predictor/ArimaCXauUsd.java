@@ -30,10 +30,6 @@ public class ArimaCXauUsd  extends ArimaPredictor{
 
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
-
-
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistXauUsdRepository histXauUsdRepository;
 
@@ -46,8 +42,8 @@ public class ArimaCXauUsd  extends ArimaPredictor{
 		List<HistXauUsd> historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
 				
 		try {

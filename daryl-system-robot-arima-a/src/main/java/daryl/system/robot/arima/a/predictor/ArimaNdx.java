@@ -24,11 +24,10 @@ import lombok.ToString;
 @ToString
 public class ArimaNdx  extends ArimaPredictor{
 
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
+
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
-	
+
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
@@ -38,9 +37,10 @@ public class ArimaNdx  extends ArimaPredictor{
 		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
+		
 		try {
 			
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());

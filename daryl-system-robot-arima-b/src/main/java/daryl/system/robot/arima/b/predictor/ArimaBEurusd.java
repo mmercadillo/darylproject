@@ -24,8 +24,6 @@ import lombok.ToString;
 public class ArimaBEurusd  extends ArimaPredictor{
 	
 	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
-	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
 
 
@@ -33,7 +31,8 @@ public class ArimaBEurusd  extends ArimaPredictor{
 		
 		//Lista para prediccionAnterior
 		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
-		darylNormalizer.setDatos(datosForecastAnterior, Mode.CLOSE);
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datosAnterior = darylNormalizer.getDatos();
 		datosAnterior.stream().forEach(dato -> {
 			int pos = datosAnterior.indexOf(dato);
@@ -58,8 +57,8 @@ public class ArimaBEurusd  extends ArimaPredictor{
 			
 			Integer prediccionAnterior = getPrediccionAnterior(datosForecast);
 			
-			darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-			
+			//Recuperamos los cierres de cada Dato
+			DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 			List<Double> datos = darylNormalizer.getDatos();
 			
 			datos.stream().forEach(dato -> {

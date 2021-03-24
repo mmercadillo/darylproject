@@ -24,8 +24,7 @@ import lombok.ToString;
 @ToString
 public class ArimaInvGdaxi  extends ArimaPredictor{
 	
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
+
 	@Autowired
 	private IHistGdaxiRepository histGdaxiRepository;
 	
@@ -39,9 +38,10 @@ public class ArimaInvGdaxi  extends ArimaPredictor{
 		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
+		
 		try {
 			
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());

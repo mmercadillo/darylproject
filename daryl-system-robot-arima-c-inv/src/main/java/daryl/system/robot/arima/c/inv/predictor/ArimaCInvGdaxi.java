@@ -30,10 +30,6 @@ public class ArimaCInvGdaxi  extends ArimaPredictor{
 
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
-
-
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistGdaxiRepository histGdaxiRepository;
 	
@@ -47,8 +43,8 @@ public class ArimaCInvGdaxi  extends ArimaPredictor{
 		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
 
 		

@@ -25,12 +25,8 @@ import lombok.ToString;
 public class ArimaEurusd  extends ArimaPredictor{
 	
 
-	
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
-
 
 
 	@Override
@@ -41,8 +37,8 @@ public class ArimaEurusd  extends ArimaPredictor{
 		List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
 		
 		datos.stream().forEach(dato -> {
