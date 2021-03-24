@@ -65,7 +65,7 @@ public class ArimaBInvNdx  extends ArimaPredictor{
 
 
 			Integer forecast = arima.aftDeal(arima.predictValue(model[0],model[1]));
-			logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", forecast);	
+			logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);	
 			if(forecast > prediccionAnterior) {
 				prediccion = 1.0;
 			}else if(forecast < prediccionAnterior) {

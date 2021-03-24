@@ -76,11 +76,11 @@ public class ArimaCWti  extends ArimaPredictor{
 	        	try {
 	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
 			        double forecast = arimaForecaster.next();			
-			        double ultimoDato = datos.get(datos.size()-1);	        
-			        if(forecast > ultimoDato) {
+			        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
+			        if(forecast > datos.get(datos.size()-1)) {
 			        	prediccion = 1.0;
 			        }
-			        if(forecast < ultimoDato) {
+			        if(forecast < datos.get(datos.size()-1)) {
 			        	prediccion = -1.0;
 			        }
 	        	}catch (Exception e) {

@@ -102,7 +102,7 @@ public class ArimaDInvAudcad  extends ArimaPredictor{
 	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
 	        		
 	        		double forecast = arimaForecaster.next();
-	        		logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", forecast);
+	        		logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
 	    	        if(forecast > prediccionAnterior) {
 	    	        	prediccion = 1.0;
 	    	        }

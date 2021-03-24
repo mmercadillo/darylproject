@@ -111,12 +111,12 @@ public class RnaGdaxi  extends RnaPredictor{
         // get network output
         double[] networkOutput = neuralNetwork.getOutput();
         //double predicted = interpretOutput(networkOutput);
-        double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
-        logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", nuevaPrediccion);
+        double forecast = darylNormalizer.denormData(networkOutput[0]);
+        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
         
-        if(nuevaPrediccion > prediccionAnterior) {
+        if(forecast > prediccionAnterior) {
         	prediccion = 1.0;
-        }else if(nuevaPrediccion < prediccionAnterior) {
+        }else if(forecast < prediccionAnterior) {
         	prediccion = -1.0;
         }
         

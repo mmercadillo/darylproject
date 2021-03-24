@@ -48,6 +48,7 @@ public class ArimaNdx  extends ArimaPredictor{
 			int []model=arima.getARIMAmodel();
 
 			double forecast = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
+			logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
 			if(forecast > datos.get(datos.size()-1)) {
 				prediccion = 1.0;
 			}else if(forecast < datos.get(datos.size()-1)) {

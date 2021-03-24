@@ -106,12 +106,12 @@ public class RnaAudCad  extends RnaPredictor{
 		neuralNetwork.calculate();
 		
         double[] networkOutput = neuralNetwork.getOutput();
-        double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
-        logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", nuevaPrediccion);
+        double forecast = darylNormalizer.denormData(networkOutput[0]);
+        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
         
-        if(nuevaPrediccion > prediccionAnterior) {
+        if(forecast > prediccionAnterior) {
         	prediccion = 1.0;
-        }else if(nuevaPrediccion < prediccionAnterior) {
+        }else if(forecast < prediccionAnterior) {
         	prediccion = -1.0;
         }
         

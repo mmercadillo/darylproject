@@ -58,15 +58,11 @@ public class ArimaCGdaxi  extends ArimaPredictor{
 			if(arimaConfig != null) {
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 	
-		        
 		    	List<Double> aux = datos;
 		    	if(datos.size() > arimaConfig.getInicio()) {
 		    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());
-		    	}else {
-		    		
 		    	}
 		    	
-		    	//List<Double> aux = data.subList((data.size()-inicio), data.size())
 		    	double[] observations = new double[aux.size()];
 		    	for(int i = 0; i < aux.size(); i++) {
 		    		observations[i] = aux.get(i).doubleValue();
@@ -76,11 +72,11 @@ public class ArimaCGdaxi  extends ArimaPredictor{
 	        	try {
 	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
 			        double forecast = arimaForecaster.next();			
-			        double ultimoDato = datos.get(datos.size()-1);	        
-			        if(forecast > ultimoDato) {
+			        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
+			        if(forecast > datos.get(datos.size()-1)) {
 			        	prediccion = 1.0;
 			        }
-			        if(forecast < ultimoDato) {
+			        if(forecast < datos.get(datos.size()-1)) {
 			        	prediccion = -1.0;
 			        }
 	        	}catch (Exception e) {
