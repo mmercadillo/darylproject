@@ -12,7 +12,6 @@ import daryl.system.model.historicos.HistXauUsd;
 public interface IHistXauUsdRepository extends JpaRepository<HistXauUsd, Long> {
 
 	HistXauUsd findFirstByOrderByFechaHoraDesc();
-	//HistXauUsd findFirstByOrderByFechaHoraDesc();
 	HistXauUsd findFirstByTimeframeOrderByFechaHoraDesc(Timeframes tf);
 	List<HistXauUsd> findAllByTimeframeOrderByFechaHoraAsc(Timeframes tf);
 	
