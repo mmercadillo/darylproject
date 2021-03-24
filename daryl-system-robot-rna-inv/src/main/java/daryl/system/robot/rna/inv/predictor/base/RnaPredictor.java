@@ -1,13 +1,19 @@
 package daryl.system.robot.rna.inv.predictor.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import daryl.system.comun.configuration.ConfigData;
+import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
 import daryl.system.model.Robot;
+import daryl.system.model.historicos.HistAudCad;
+import daryl.system.model.historicos.Historico;
 import daryl.system.robot.rna.inv.repository.IOrdenRepository;
 import daryl.system.robot.rna.inv.repository.IPrediccionRepository;
 
@@ -117,6 +123,29 @@ public abstract class RnaPredictor {
 		guardarNuevaOrden(orden, fechaHoraMillis);
 		logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot + " -> Orden -> " + orden);
 
+		
+	}
+	
+	protected List<Datos> toListOfDatos(List<Historico> historico){
+		
+		List<Datos> datos = new ArrayList<Datos>();
+		
+		for (Historico hist : historico) {
+			
+			Datos dato = Datos.builder().fecha(hist.getFecha())
+										.hora(hist.getHora())
+										.apertura(hist.getApertura())
+										.maximo(hist.getMaximo())
+										.minimo(hist.getMinimo())
+										.cierre(hist.getCierre())
+										.volumen(hist.getVolumen())
+										.build();
+			datos.add(dato);
+			
+		}
+		
+		return datos;
+		
 		
 	}
 
