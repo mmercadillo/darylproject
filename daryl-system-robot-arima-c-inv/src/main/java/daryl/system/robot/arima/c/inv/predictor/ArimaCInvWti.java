@@ -30,14 +30,11 @@ public class ArimaCInvWti  extends ArimaPredictor{
 
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
-
 	@Autowired
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistWtiRepository histWtiRepository;
 	
-
-	private Integer inicio;
 	
 
 	@Override
@@ -58,12 +55,11 @@ public class ArimaCInvWti  extends ArimaPredictor{
 
 
 			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
-			this.inicio = arimaConfig.getInicio();
 			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 
 	    	List<Double> aux = datos;
-	    	if(datos.size() > this.inicio) {
-	    		aux = datos.subList((datos.size()-this.inicio), datos.size());
+	    	if(datos.size() > arimaConfig.getInicio()) {
+	    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());
 	    	}else {
 	    		
 	    	}

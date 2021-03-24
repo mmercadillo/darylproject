@@ -37,10 +37,6 @@ public class ArimaDInvAudcad  extends ArimaPredictor{
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
-	
-
-	private Integer inicio;
-
 
 
 	static Double prediccionArimaAnterior = 0.0;
@@ -66,13 +62,13 @@ public class ArimaDInvAudcad  extends ArimaPredictor{
 
 			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
 			if(arimaConfig != null) {
-				this.inicio = arimaConfig.getInicio();
+
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 	
 		        
 		    	List<Double> aux = datos;
-		    	if(datos.size() > this.inicio) {
-		    		aux = datos.subList((datos.size()-this.inicio), datos.size());
+		    	if(datos.size() > arimaConfig.getInicio()) {
+		    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());
 		    	}else {
 		    		
 		    	}
