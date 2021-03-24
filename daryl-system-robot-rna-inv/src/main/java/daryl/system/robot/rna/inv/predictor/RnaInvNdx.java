@@ -31,9 +31,39 @@ public class RnaInvNdx  extends RnaPredictor{
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
 	
+	private Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosTotal) {
+		
+		List<Double> inputs = new ArrayList<Double>();
+			
+		int index = 1;
+		do {
+			index++;
+			if(bot.getMode() == Mode.CLOSE) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getCierre()));
+			}
+			if(bot.getMode() == Mode.HIGH) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMaximo()));
+			}
+			if(bot.getMode() == Mode.LOW) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMinimo()));
+			}
+			if(bot.getMode() == Mode.OPEN) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getApertura()));
+			}			
+		}while(index < bot.getNeuronasEntrada()+1);			
+		
+		Collections.reverse(inputs);
+		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
+		neuralNetwork.calculate();
+		
+        // get network output
+        double[] networkOutput = neuralNetwork.getOutput();
+        //double predicted = interpretOutput(networkOutput);
+        double prediccionAnterior =  darylNormalizer.denormData(networkOutput[0]);
 
-	private static Double prediccionAnterior = null;
-
+        logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+        return prediccionAnterior;
+	}
 
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
@@ -44,49 +74,15 @@ public class RnaInvNdx  extends RnaPredictor{
 		
 		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
-		List<Datos> datosForecast = toDatosList(historico);
-		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
-		
+		List<Datos> datosForecast = toDatosList(historico);	
 		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, bot.getMode());
 		
-		List<Double> inputs = null;
-		
-		if(prediccionAnterior == null) {
-			
-			inputs = new ArrayList<Double>();
-			
-			int index = 1;
-			do {
-				index++;
-				if(bot.getMode() == Mode.CLOSE) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getCierre()));
-				}
-				if(bot.getMode() == Mode.HIGH) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMaximo()));
-				}
-				if(bot.getMode() == Mode.LOW) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMinimo()));
-				}
-				if(bot.getMode() == Mode.OPEN) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getApertura()));
-				}			
-			}while(index < bot.getNeuronasEntrada()+1);			
+		Double prediccionAnterior = getPrediccionAnterior(bot, neuralNetwork, datosTotal);
 
-			Collections.reverse(inputs);
-
-			neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
-			neuralNetwork.calculate();
-			
-	        // get network output
-	        double[] networkOutput = neuralNetwork.getOutput();
-	        //double predicted = interpretOutput(networkOutput);
-	        prediccionAnterior = darylNormalizer.denormData(networkOutput[0]);
-			
-		}
 		
-		inputs = new ArrayList<Double>();
+		List<Double> inputs = new ArrayList<Double>();
 		int index = 0;
 		do {
 			index++;
@@ -113,10 +109,13 @@ public class RnaInvNdx  extends RnaPredictor{
         double[] networkOutput = neuralNetwork.getOutput();
         //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
+        logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", nuevaPrediccion);
         
-		  
-        prediccion = nuevaPrediccion - RnaInvNdx.prediccionAnterior;
-        RnaInvNdx.prediccionAnterior = nuevaPrediccion;
+        if(nuevaPrediccion > prediccionAnterior) {
+        	prediccion = 1.0;
+        }else if(nuevaPrediccion < prediccionAnterior) {
+        	prediccion = -1.0;
+        }
 		return prediccion;
 	
 	}

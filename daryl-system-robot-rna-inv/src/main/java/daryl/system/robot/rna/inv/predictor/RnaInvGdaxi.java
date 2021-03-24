@@ -31,7 +31,39 @@ public class RnaInvGdaxi  extends RnaPredictor{
 	private IHistGdaxiRepository histGdaxiRepository;
 	
 
-	private static Double prediccionAnterior = null;
+	private Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosTotal) {
+		
+		List<Double> inputs = new ArrayList<Double>();
+			
+		int index = 1;
+		do {
+			index++;
+			if(bot.getMode() == Mode.CLOSE) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getCierre()));
+			}
+			if(bot.getMode() == Mode.HIGH) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMaximo()));
+			}
+			if(bot.getMode() == Mode.LOW) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMinimo()));
+			}
+			if(bot.getMode() == Mode.OPEN) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getApertura()));
+			}			
+		}while(index < bot.getNeuronasEntrada()+1);			
+		
+		Collections.reverse(inputs);
+		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
+		neuralNetwork.calculate();
+		
+        // get network output
+        double[] networkOutput = neuralNetwork.getOutput();
+        //double predicted = interpretOutput(networkOutput);
+        double prediccionAnterior =  darylNormalizer.denormData(networkOutput[0]);
+
+        logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+        return prediccionAnterior;
+	}
 
 
 
@@ -46,47 +78,14 @@ public class RnaInvGdaxi  extends RnaPredictor{
 		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
 		List<Datos> datosForecast = toDatosList(historico);
-		
 		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, bot.getMode());
 		
-		List<Double> inputs = null;
-		
-		if(prediccionAnterior == null) {
-			
-			inputs = new ArrayList<Double>();
-			
-			int index = 1;
-			do {
-				index++;
-				if(bot.getMode() == Mode.CLOSE) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getCierre()));
-				}
-				if(bot.getMode() == Mode.HIGH) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMaximo()));
-				}
-				if(bot.getMode() == Mode.LOW) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMinimo()));
-				}
-				if(bot.getMode() == Mode.OPEN) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getApertura()));
-				}			
-			}while(index < bot.getNeuronasEntrada()+1);			
-			
-			Collections.reverse(inputs);
-
-			neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
-			neuralNetwork.calculate();
-			
-	        // get network output
-	        double[] networkOutput = neuralNetwork.getOutput();
-	        prediccionAnterior = darylNormalizer.denormData(networkOutput[0]);
-			
-		}
+		Double prediccionAnterior = getPrediccionAnterior(bot, neuralNetwork, datosTotal);
 		
 		
-		inputs = new ArrayList<Double>();
+		List<Double> inputs = new ArrayList<Double>();
 		int index = 0;
 		do {
 			index++;
@@ -112,9 +111,13 @@ public class RnaInvGdaxi  extends RnaPredictor{
         // get network output
         double[] networkOutput = neuralNetwork.getOutput();
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
-		
-        prediccion = nuevaPrediccion - RnaInvGdaxi.prediccionAnterior;
-        RnaInvGdaxi.prediccionAnterior = nuevaPrediccion;
+        logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", nuevaPrediccion);
+        
+        if(nuevaPrediccion > prediccionAnterior) {
+        	prediccion = 1.0;
+        }else if(nuevaPrediccion < prediccionAnterior) {
+        	prediccion = -1.0;
+        }
 
         
 		return prediccion;

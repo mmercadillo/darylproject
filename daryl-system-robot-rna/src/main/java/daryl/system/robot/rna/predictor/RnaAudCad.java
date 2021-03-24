@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.espy.arima.ArimaForecaster;
+import org.espy.arima.DefaultArimaForecaster;
+import org.espy.arima.DefaultArimaProcess;
 import org.neuroph.core.NeuralNetwork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -14,6 +17,7 @@ import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
+import daryl.system.model.ArimaConfig;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistAudCad;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
@@ -29,9 +33,40 @@ public class RnaAudCad  extends RnaPredictor{
 	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
-	
 
-	private static Double prediccionAnterior = null;
+	private Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosTotal) {
+		
+		List<Double> inputs = new ArrayList<Double>();
+			
+		int index = 1;
+		do {
+			index++;
+			if(bot.getMode() == Mode.CLOSE) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getCierre()));
+			}
+			if(bot.getMode() == Mode.HIGH) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMaximo()));
+			}
+			if(bot.getMode() == Mode.LOW) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMinimo()));
+			}
+			if(bot.getMode() == Mode.OPEN) {
+				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getApertura()));
+			}			
+		}while(index < bot.getNeuronasEntrada()+1);			
+		
+		Collections.reverse(inputs);
+		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
+		neuralNetwork.calculate();
+		
+        // get network output
+        double[] networkOutput = neuralNetwork.getOutput();
+        //double predicted = interpretOutput(networkOutput);
+        double prediccionAnterior =  darylNormalizer.denormData(networkOutput[0]);
+
+        logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+        return prediccionAnterior;
+	}
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
 
@@ -42,48 +77,13 @@ public class RnaAudCad  extends RnaPredictor{
 		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		
 		List<Datos> datosTotal = new ArrayList<Datos>();
 		datosTotal.addAll(datosForecast);
 		darylNormalizer.setDatos(datosTotal, bot.getMode());
 		
-
-		List<Double> inputs = null;
+		Double prediccionAnterior = getPrediccionAnterior(bot, neuralNetwork, datosTotal);
 		
-		if(prediccionAnterior == null) {
-			
-			inputs = new ArrayList<Double>();
-			
-			int index = 1;
-			do {
-				index++;
-				if(bot.getMode() == Mode.CLOSE) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getCierre()));
-				}
-				if(bot.getMode() == Mode.HIGH) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMaximo()));
-				}
-				if(bot.getMode() == Mode.LOW) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMinimo()));
-				}
-				if(bot.getMode() == Mode.OPEN) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getApertura()));
-				}			
-			}while(index < bot.getNeuronasEntrada()+1);			
-			
-			Collections.reverse(inputs);
-			neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
-			neuralNetwork.calculate();
-			
-	        // get network output
-	        double[] networkOutput = neuralNetwork.getOutput();
-	        //double predicted = interpretOutput(networkOutput);
-	        prediccionAnterior = darylNormalizer.denormData(networkOutput[0]);
-			
-		}
-		
-		
-		inputs = new ArrayList<Double>();
+		List<Double> inputs = new ArrayList<Double>();
 		int index = 0;
 		do {
 			index++;
@@ -105,13 +105,16 @@ public class RnaAudCad  extends RnaPredictor{
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 		neuralNetwork.calculate();
 		
-        // get network output
         double[] networkOutput = neuralNetwork.getOutput();
-        //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
+        logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", nuevaPrediccion);
         
-        prediccion = nuevaPrediccion - RnaAudCad.prediccionAnterior;
-        RnaAudCad.prediccionAnterior = nuevaPrediccion;
+        if(nuevaPrediccion > prediccionAnterior) {
+        	prediccion = 1.0;
+        }else if(nuevaPrediccion < prediccionAnterior) {
+        	prediccion = -1.0;
+        }
+        
 		
         return prediccion;
 	

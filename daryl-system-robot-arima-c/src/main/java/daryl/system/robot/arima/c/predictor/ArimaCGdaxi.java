@@ -51,14 +51,8 @@ public class ArimaCGdaxi  extends ArimaPredictor{
 		
 		List<Double> datos = darylNormalizer.getDatos();
 		
-		datos.stream().forEach(dato -> {
-			int pos = datos.indexOf(dato);
-			datos.set(pos, dato * 10000);
-		});
 		
 		try {
-
-
 
 			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
 			if(arimaConfig != null) {

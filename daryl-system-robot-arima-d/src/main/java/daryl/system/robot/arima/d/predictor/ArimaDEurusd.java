@@ -38,31 +38,53 @@ public class ArimaDEurusd  extends ArimaPredictor{
 	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
 
-	static Double prediccionArimaAnterior = 0.0;
+
+	private Double getPrediccionAnterior(List<Datos> datosForecast, DefaultArimaProcess arimaProcess, ArimaConfig arimaConfig) {
+		
+		//Lista para prediccionAnterior
+		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
+		darylNormalizer.setDatos(datosForecastAnterior, Mode.CLOSE);
+		List<Double> datosAnterior = darylNormalizer.getDatos();
+
+		
+    	List<Double> aux = datosAnterior;
+    	if(datosAnterior.size() > arimaConfig.getInicio()) {
+    		aux = datosAnterior.subList((datosAnterior.size()-arimaConfig.getInicio()), datosAnterior.size());
+    	}
+
+		double[] observations = new double[aux.size()];
+		for(int i = 0; i < aux.size(); i++) {
+			observations[i] = aux.get(i).doubleValue();
+		}
+		
+		ArimaForecaster arimaForecaster = null;
+		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
+		
+		double prediccionAnterior = arimaForecaster.next();	
+		
+		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+		return prediccionAnterior;
+
+	}
+	
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
-		
-		List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
-		
-		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
-		List<Double> datos = darylNormalizer.getDatos();
-		
-		datos.stream().forEach(dato -> {
-			int pos = datos.indexOf(dato);
-			datos.set(pos, dato * 10000);
-		});
-		
 		try {
-
-
+			List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
 			if(arimaConfig != null) {
-
+				
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
+				
+				List<Datos> datosForecast = toDatosList(historico);
+				Double prediccionAnterior = getPrediccionAnterior(datosForecast, arimaProcess, arimaConfig);
+				
+				darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
+				
+				List<Double> datos = darylNormalizer.getDatos();
+				
 	
 		    	List<Double> aux = datos;
 		    	if(datos.size() > arimaConfig.getInicio()) {
@@ -78,22 +100,17 @@ public class ArimaDEurusd  extends ArimaPredictor{
 		    	}
 	
 		    	ArimaForecaster arimaForecaster = null;
-	        	try {
+		    	try {
 	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
 	        		
-	        		double forecast = arimaForecaster.next();			
-	    	        double ultimoDato = datos.get(datos.size()-1);
-	    	        
-	    	        if(prediccionArimaAnterior != 0.0) {
-	    	        	ultimoDato = prediccionArimaAnterior;
-	    	        }
-	    	        if(forecast > ultimoDato) {
+	        		double forecast = arimaForecaster.next();
+	        		logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", forecast);
+	    	        if(forecast > prediccionAnterior) {
 	    	        	prediccion = 1.0;
 	    	        }
-	    	        if(forecast < ultimoDato) {
+	    	        if(forecast < prediccionAnterior) {
 	    	        	prediccion = -1.0;
 	    	        }
-	    	        prediccionArimaAnterior = forecast;
 	        		
 	        	}catch (Exception e) {
 	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
