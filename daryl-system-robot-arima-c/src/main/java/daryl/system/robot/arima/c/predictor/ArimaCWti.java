@@ -55,36 +55,40 @@ public class ArimaCWti  extends ArimaPredictor{
 
 
 			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
-			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
-	        
-	    	List<Double> aux = datos;
-	    	if(datos.size() > arimaConfig.getInicio()) {
-	    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());
-	    	}else {
-	    		
-	    	}
-	    	
-	    	//List<Double> aux = data.subList((data.size()-inicio), data.size())
-	    	double[] observations = new double[aux.size()];
-	    	for(int i = 0; i < aux.size(); i++) {
-	    		observations[i] = aux.get(i).doubleValue();
-	    	}
-
-	    	ArimaForecaster arimaForecaster = null;
-        	try {
-        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
-		        double forecast = arimaForecaster.next();			
-		        double ultimoDato = datos.get(datos.size()-1);	        
-		        if(forecast > ultimoDato) {
-		        	prediccion = 1.0;
-		        }
-		        if(forecast < ultimoDato) {
-		        	prediccion = -1.0;
-		        }
-        	}catch (Exception e) {
-        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
-        	}
-
+			
+			if(arimaConfig != null) {
+				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
+		        
+		    	List<Double> aux = datos;
+		    	if(datos.size() > arimaConfig.getInicio()) {
+		    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());
+		    	}else {
+		    		
+		    	}
+		    	
+		    	//List<Double> aux = data.subList((data.size()-inicio), data.size())
+		    	double[] observations = new double[aux.size()];
+		    	for(int i = 0; i < aux.size(); i++) {
+		    		observations[i] = aux.get(i).doubleValue();
+		    	}
+	
+		    	ArimaForecaster arimaForecaster = null;
+	        	try {
+	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
+			        double forecast = arimaForecaster.next();			
+			        double ultimoDato = datos.get(datos.size()-1);	        
+			        if(forecast > ultimoDato) {
+			        	prediccion = 1.0;
+			        }
+			        if(forecast < ultimoDato) {
+			        	prediccion = -1.0;
+			        }
+	        	}catch (Exception e) {
+	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
+	        	}
+			}else {
+				logger.info("No existe config para el robot: {}", bot.getRobot());
+			}
 		}catch (Exception e) {
 			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}
