@@ -110,7 +110,6 @@ public class RnaInvXauUsd  extends RnaPredictor{
 		
         // get network output
         double[] networkOutput = neuralNetwork.getOutput();
-        //double predicted = interpretOutput(networkOutput);
         double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
         logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", nuevaPrediccion);
         
