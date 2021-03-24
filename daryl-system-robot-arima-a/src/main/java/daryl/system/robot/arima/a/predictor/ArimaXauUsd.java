@@ -49,10 +49,10 @@ public class ArimaXauUsd  extends ArimaPredictor{
 			
 			int []model=arima.getARIMAmodel();
 
-			prediccion = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
-			if(prediccion > datos.get(datos.size()-1)) {
+			double forecast = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
+			if(forecast > datos.get(datos.size()-1)) {
 				prediccion = 1.0;
-			}else if(prediccion < datos.get(datos.size()-1)) {
+			}else if(forecast < datos.get(datos.size()-1)) {
 				prediccion = -1.0;
 			}else {
 				prediccion = 0.0;
