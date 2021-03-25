@@ -39,7 +39,7 @@ public class ArimaDInvXauUsd  extends ArimaPredictor{
 		//Lista para prediccionAnterior
 		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
 		//Recuperamos los cierres de cada Dato
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecastAnterior, Mode.CLOSE);
 		List<Double> datosAnterior = darylNormalizer.getDatos();
 
 		
@@ -58,7 +58,7 @@ public class ArimaDInvXauUsd  extends ArimaPredictor{
 		
 		double prediccionAnterior = arimaForecaster.next();	
 		
-		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+		logger.info("PREDICCIï¿½N ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
 		return prediccionAnterior;
 
 	}
@@ -103,7 +103,7 @@ public class ArimaDInvXauUsd  extends ArimaPredictor{
 	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
 	        		
 	        		double forecast = arimaForecaster.next();
-	        		logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
+	        		logger.info("Robot -> " + bot.getRobot() + " PREDICCIï¿½N -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
 	    	        if(forecast > prediccionAnterior) {
 	    	        	prediccion = 1.0;
 	    	        }

@@ -28,18 +28,37 @@ public class ArimaBAudcad  extends ArimaPredictor{
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 	
-
+	
+	protected void verInputs(List<Double> inputs) {
+		StringBuffer buffer = new StringBuffer();
+		
+		List<Double> ins = inputs.subList(inputs.size()-5, inputs.size());
+		for (Double input : ins) {
+			buffer.append(input).append("-");
+		}
+		logger.info("MUESTRA PARA CALCULO ANTERIOR -> " + buffer.toString());
+	}
+	
+	
 	private Integer getPrediccionAnterior(List<Datos> datosForecast) {
 		
 		//Lista para prediccionAnterior
 		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
+		
 		//Recuperamos los cierres de cada Dato
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecastAnterior, Mode.CLOSE);
 		List<Double> datosAnterior = darylNormalizer.getDatos();
+		
+		 verInputs(datosAnterior);
+		
 		datosAnterior.stream().forEach(dato -> {
 			int pos = datosAnterior.indexOf(dato);
 			datosAnterior.set(pos, dato * 10000);
 		});
+		
+		
+		
+		
 		ARIMA arima=new ARIMA(datosAnterior.stream().mapToDouble(Double::new).toArray());
 		int []model=arima.getARIMAmodel();
 		Integer prediccionAnterior = arima.aftDeal(arima.predictValue(model[0],model[1]));
@@ -61,7 +80,7 @@ public class ArimaBAudcad  extends ArimaPredictor{
 			//Recuperamos los cierres de cada Dato
 			DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 			List<Double> datos = darylNormalizer.getDatos();
-		
+			verInputs(datos);
 			datos.stream().forEach(dato -> {
 				int pos = datos.indexOf(dato);
 				datos.set(pos, dato * 10000);

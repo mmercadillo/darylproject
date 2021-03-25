@@ -41,7 +41,7 @@ public class ArimaDWti  extends ArimaPredictor{
 		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
 		
 		//Recuperamos los cierres de cada Dato
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecastAnterior, Mode.CLOSE);
 		List<Double> datosAnterior = darylNormalizer.getDatos();
 
 		
