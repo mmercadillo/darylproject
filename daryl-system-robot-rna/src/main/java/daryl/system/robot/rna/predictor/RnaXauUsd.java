@@ -25,13 +25,45 @@ import lombok.ToString;
 @ToString
 public class RnaXauUsd  extends RnaPredictor{
 
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
+
 	@Autowired
 	private IHistXauUsdRepository histXauUsdRepository;
 	
 
-	private static Double prediccionAnterior = null;
+	private Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
+		
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+		List<Double> inputs = new ArrayList<Double>();
+			
+		int index = 1;
+		do {
+			index++;
+			if(bot.getMode() == Mode.CLOSE) {
+				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getCierre()));
+			}
+			if(bot.getMode() == Mode.HIGH) {
+				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getMaximo()));
+			}
+			if(bot.getMode() == Mode.LOW) {
+				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getMinimo()));
+			}
+			if(bot.getMode() == Mode.OPEN) {
+				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getApertura()));
+			}			
+		}while(index < bot.getNeuronasEntrada()+1);			
+		
+		Collections.reverse(inputs);
+		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
+		neuralNetwork.calculate();
+		
+        // get network output
+        double[] networkOutput = neuralNetwork.getOutput();
+        //double predicted = interpretOutput(networkOutput);
+        double prediccionAnterior =  darylNormalizer.denormData(networkOutput[0]);
+
+        logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+        return prediccionAnterior;
+	}
 
 
 	@Override
@@ -45,62 +77,26 @@ public class RnaXauUsd  extends RnaPredictor{
 		List<HistXauUsd> historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		//List<Datos> datosT = loader.loadDatos(configuracion.getFHistoricoLearn());
-		List<Datos> datosTotal = new ArrayList<Datos>();
-		datosTotal.addAll(datosForecast);
-		darylNormalizer.setDatos(datosTotal, bot.getMode());
-		
 	
-		List<Double> inputs = null;
+		Double prediccionAnterior = getPrediccionAnterior(bot, neuralNetwork, datosForecast);
 		
-		if(prediccionAnterior == null) {
-			
-			inputs = new ArrayList<Double>();
-			
-			int index = 1;
-			do {
-				index++;
-				if(bot.getMode() == Mode.CLOSE) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getCierre()));
-				}
-				if(bot.getMode() == Mode.HIGH) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMaximo()));
-				}
-				if(bot.getMode() == Mode.LOW) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMinimo()));
-				}
-				if(bot.getMode() == Mode.OPEN) {
-					inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getApertura()));
-				}			
-			}while(index < bot.getNeuronasEntrada()+1);			
-
-			Collections.reverse(inputs);
-
-			neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
-			neuralNetwork.calculate();
-			
-	        // get network output
-	        double[] networkOutput = neuralNetwork.getOutput();
-	        //double predicted = interpretOutput(networkOutput);
-	        prediccionAnterior = darylNormalizer.denormData(networkOutput[0]);
-			
-		}
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		
-		inputs = new ArrayList<Double>();
+		List<Double> inputs = new ArrayList<Double>();
 		int index = 0;
 		do {
 			index++;
 			if(bot.getMode() == Mode.CLOSE) {
-				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getCierre()));
+				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getCierre()));
 			}
 			if(bot.getMode() == Mode.HIGH) {
-				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMaximo()));
+				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getMaximo()));
 			}
 			if(bot.getMode() == Mode.LOW) {
-				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getMinimo()));
+				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getMinimo()));
 			}
 			if(bot.getMode() == Mode.OPEN) {
-				inputs.add(darylNormalizer.normData(datosTotal.get(datosTotal.size()-index).getApertura()));
+				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getApertura()));
 			}			
 		}while(index < bot.getNeuronasEntrada());
 
@@ -112,10 +108,16 @@ public class RnaXauUsd  extends RnaPredictor{
         // get network output
         double[] networkOutput = neuralNetwork.getOutput();
         //double predicted = interpretOutput(networkOutput);
-        double nuevaPrediccion = darylNormalizer.denormData(networkOutput[0]);
+        double forecast = darylNormalizer.denormData(networkOutput[0]);
+        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
         
-        prediccion = nuevaPrediccion - RnaXauUsd.prediccionAnterior;
-        RnaXauUsd.prediccionAnterior = nuevaPrediccion;
+        if(forecast > prediccionAnterior) {
+        	prediccion = 1.0;
+        }else if(forecast < prediccionAnterior) {
+        	prediccion = -1.0;
+        }
+        
+        
 		return prediccion;
 	
 	}

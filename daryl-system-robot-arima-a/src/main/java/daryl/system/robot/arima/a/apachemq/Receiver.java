@@ -81,7 +81,6 @@ public class Receiver {
 				logger.error(e.getMessage(), e);		
 			}
 		}
-
 	}
 
 	

@@ -24,59 +24,62 @@ import lombok.ToString;
 public class ArimaBEurusd  extends ArimaPredictor{
 	
 	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
-	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
 
 
-	static Integer prediccionArimaAnterior = 0;
+	private Integer getPrediccionAnterior(List<Datos> datosForecast) {
+		
+		//Lista para prediccionAnterior
+		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecastAnterior, Mode.CLOSE);
+		List<Double> datosAnterior = darylNormalizer.getDatos();
+		datosAnterior.stream().forEach(dato -> {
+			int pos = datosAnterior.indexOf(dato);
+			datosAnterior.set(pos, dato * 10000);
+		});
+		ARIMA arima=new ARIMA(datosAnterior.stream().mapToDouble(Double::new).toArray());
+		int []model=arima.getARIMAmodel();
+		Integer prediccionAnterior = arima.aftDeal(arima.predictValue(model[0],model[1]));
+		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+		return prediccionAnterior;
+	}
+	
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
 		
 
 		Double prediccion = 0.0;
-		
-		List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
-		
-		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
-		List<Double> datos = darylNormalizer.getDatos();
-		
-		datos.stream().forEach(dato -> {
-			int pos = datos.indexOf(dato);
-			datos.set(pos, dato * 10000);
-		});
-		
 		try {
+		
+			List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+			List<Datos> datosForecast = toDatosList(historico);
 			
+			Integer prediccionAnterior = getPrediccionAnterior(datosForecast);
+			
+			//Recuperamos los cierres de cada Dato
+			DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+			List<Double> datos = darylNormalizer.getDatos();
+			
+			datos.stream().forEach(dato -> {
+				int pos = datos.indexOf(dato);
+				datos.set(pos, dato * 10000);
+			});
+		
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());
 			
 			int []model=arima.getARIMAmodel();
 
-			if(prediccionArimaAnterior == 0) {
-				
-				if(arima.aftDeal(arima.predictValue(model[0],model[1])) > datos.get(datos.size()-1)) {
-					prediccion = 1.0;
-				}else if(arima.aftDeal(arima.predictValue(model[0],model[1])) < datos.get(datos.size()-1)) {
-					prediccion = -1.0;
-				}else {
-					prediccion = 0.0;
-				}
-
+			Integer forecast = arima.aftDeal(arima.predictValue(model[0],model[1]));
+			logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
+			if(forecast > prediccionAnterior) {
+				prediccion = 1.0;
+			}else if(forecast < prediccionAnterior) {
+				prediccion = -1.0;
 			}else {
-				
-				if(arima.aftDeal(arima.predictValue(model[0],model[1])) > prediccionArimaAnterior) {
-					prediccion = 1.0;
-				}else if(arima.aftDeal(arima.predictValue(model[0],model[1])) < prediccionArimaAnterior) {
-					prediccion = -1.0;
-				}else {
-					prediccion = 0.0;
-				}
-
+				prediccion = 0.0;
 			}
-			prediccionArimaAnterior = arima.aftDeal(arima.predictValue(model[0],model[1]));
-			
+
 		}catch (Exception e) {
 			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}

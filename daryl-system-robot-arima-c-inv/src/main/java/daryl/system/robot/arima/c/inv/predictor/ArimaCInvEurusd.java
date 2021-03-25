@@ -29,15 +29,9 @@ public class ArimaCInvEurusd  extends ArimaPredictor{
 
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
-
-
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
 	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
 	
-
-	private Integer inicio;
 	
 
 	@Override
@@ -48,8 +42,8 @@ public class ArimaCInvEurusd  extends ArimaPredictor{
 		List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
 
 		
@@ -57,38 +51,41 @@ public class ArimaCInvEurusd  extends ArimaPredictor{
 
 
 			ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(bot.getArimaConfig());
-			this.inicio = arimaConfig.getInicio();
-			DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
-
-	        
-	    	List<Double> aux = datos;
-	    	if(datos.size() > this.inicio) {
-	    		aux = datos.subList((datos.size()-this.inicio), datos.size());
-	    	}else {
-	    		
-	    	}
-	    	
-	    	//List<Double> aux = data.subList((data.size()-inicio), data.size())
-	    	double[] observations = new double[aux.size()];
-	    	for(int i = 0; i < aux.size(); i++) {
-	    		observations[i] = aux.get(i).doubleValue();
-	    	}
-
-	    	ArimaForecaster arimaForecaster = null;
-        	try {
-        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
-		        double forecast = arimaForecaster.next();			
-		        double ultimoDato = datos.get(datos.size()-1);	        
-		        if(forecast > ultimoDato) {
-		        	prediccion = 1.0;
-		        }
-		        if(forecast < ultimoDato) {
-		        	prediccion = -1.0;
-		        }
-        	}catch (Exception e) {
-        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
-        	}
-
+			
+			if(arimaConfig != null) {
+				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
+	
+		        
+		    	List<Double> aux = datos;
+		    	if(datos.size() > arimaConfig.getInicio()) {
+		    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());
+		    	}else {
+		    		
+		    	}
+		    	
+		    	//List<Double> aux = data.subList((data.size()-inicio), data.size())
+		    	double[] observations = new double[aux.size()];
+		    	for(int i = 0; i < aux.size(); i++) {
+		    		observations[i] = aux.get(i).doubleValue();
+		    	}
+	
+		    	ArimaForecaster arimaForecaster = null;
+	        	try {
+	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
+			        double forecast = arimaForecaster.next();			
+			        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
+			        if(forecast > datos.get(datos.size()-1)) {
+			        	prediccion = 1.0;
+			        }
+			        if(forecast < datos.get(datos.size()-1)) {
+			        	prediccion = -1.0;
+			        }
+	        	}catch (Exception e) {
+	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
+	        	}
+			}else {
+				logger.info("No existe config para el robot: {}", bot.getRobot());
+			}
 		}catch (Exception e) {
 			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}

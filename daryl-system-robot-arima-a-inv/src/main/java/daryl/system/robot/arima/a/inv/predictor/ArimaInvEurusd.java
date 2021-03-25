@@ -24,9 +24,7 @@ import lombok.ToString;
 @ToString
 public class ArimaInvEurusd  extends ArimaPredictor{
 
-	
-	@Autowired
-	private DarylMaxMinNormalizer darylNormalizer;
+
 	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
 
@@ -40,8 +38,8 @@ public class ArimaInvEurusd  extends ArimaPredictor{
 		List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
-		darylNormalizer.setDatos(datosForecast, Mode.CLOSE);
-		
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
 		
 		datos.stream().forEach(dato -> {
@@ -56,10 +54,11 @@ public class ArimaInvEurusd  extends ArimaPredictor{
 			int []model=arima.getARIMAmodel();
 
 
-			prediccion = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
-			if(prediccion > datos.get(datos.size()-1)) {
+			double forecast = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
+			logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
+			if(forecast > datos.get(datos.size()-1)) {
 				prediccion = 1.0;
-			}else if(prediccion < datos.get(datos.size()-1) ) {
+			}else if(forecast < datos.get(datos.size()-1) ) {
 				prediccion = -1.0;
 			}else {
 				prediccion = 0.0;
