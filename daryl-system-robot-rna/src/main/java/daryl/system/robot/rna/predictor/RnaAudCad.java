@@ -33,15 +33,6 @@ public class RnaAudCad  extends RnaPredictor{
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 
-	protected void verInputs(List<Double> inputs) {
-		StringBuffer buffer = new StringBuffer();
-		
-		for (Double input : inputs) {
-			buffer.append(input).append("-");
-		}
-		logger.info("MUESTRA PARA CALCULO ANTERIOR -> " + buffer.toString());
-	}
-	
 	
 	private Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
 
@@ -67,8 +58,7 @@ public class RnaAudCad  extends RnaPredictor{
 		
 			
 		Collections.reverse(inputs);
-		
-		verInputs(inputs);
+
 		
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 		neuralNetwork.calculate();
@@ -116,8 +106,7 @@ public class RnaAudCad  extends RnaPredictor{
 
 		Collections.reverse(inputs);
 
-		verInputs(inputs);
-		
+			
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
 		neuralNetwork.calculate();
 		
