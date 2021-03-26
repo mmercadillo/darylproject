@@ -45,7 +45,7 @@ public class ArimaCGdaxi  extends ArimaPredictor{
 		List<Datos> datosForecast = toDatosList(historico);
 		//Recuperamos los cierres de cada Dato
 		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
-		List<Double> datos = darylNormalizer.getNormalizedList();
+		List<Double> datos = darylNormalizer.getDatos();
 		
 		
 		try {
@@ -67,7 +67,7 @@ public class ArimaCGdaxi  extends ArimaPredictor{
 		    	ArimaForecaster arimaForecaster = null;
 	        	try {
 	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
-			        double forecast = arimaForecaster.next();			
+			        double forecast = arimaForecaster.next();	
 			        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
 			        if(forecast > datos.get(datos.size()-1)) {
 			        	prediccion = 1.0;

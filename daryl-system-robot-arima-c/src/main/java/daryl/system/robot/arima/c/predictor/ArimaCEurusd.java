@@ -45,9 +45,13 @@ public class ArimaCEurusd  extends ArimaPredictor{
 		List<Datos> datosForecast = toDatosList(historico);
 		//Recuperamos los cierres de cada Dato
 		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
-		List<Double> datos = darylNormalizer.getNormalizedList();
+		List<Double> datos = darylNormalizer.getDatos();
 		
-
+		
+		datos.stream().forEach(dato -> {
+			int pos = datos.indexOf(dato);
+			datos.set(pos, dato * 10000);
+		});
 		try {
 
 

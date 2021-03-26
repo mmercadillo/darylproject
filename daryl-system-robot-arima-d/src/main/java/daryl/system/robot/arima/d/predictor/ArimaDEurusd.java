@@ -41,8 +41,12 @@ public class ArimaDEurusd  extends ArimaPredictor{
 		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
 		//Recuperamos los cierres de cada Dato
 		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecastAnterior, Mode.CLOSE);
-		List<Double> datosAnterior = darylNormalizer.getNormalizedList();
+		List<Double> datosAnterior = darylNormalizer.getDatos();
 
+		datosAnterior.stream().forEach(dato -> {
+			int pos = datosAnterior.indexOf(dato);
+			datosAnterior.set(pos, dato * 10000);
+		});
 		
     	List<Double> aux = datosAnterior;
     	if(datosAnterior.size() > arimaConfig.getInicio()) {
@@ -80,8 +84,12 @@ public class ArimaDEurusd  extends ArimaPredictor{
 				
 				//Recuperamos los cierres de cada Dato
 				DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
-				List<Double> datos = darylNormalizer.getNormalizedList();
+				List<Double> datos = darylNormalizer.getDatos();
 				
+				datos.stream().forEach(dato -> {
+					int pos = datos.indexOf(dato);
+					datos.set(pos, dato * 10000);
+				});
 	
 		    	List<Double> aux = datos;
 		    	if(datos.size() > arimaConfig.getInicio()) {
