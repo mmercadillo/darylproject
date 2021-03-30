@@ -4,4 +4,7 @@
 .project
 .DS_Store
 /.settings/
-/.factorypath
+/.springBeans
+/.mvn/
+mvnw
+mvnw.cmd

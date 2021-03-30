@@ -75,11 +75,11 @@ public class ArimaCNdx  extends ArimaPredictor{
 	        	try {
 	        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
 			        double forecast = arimaForecaster.next();			
-			        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + aux.get(datos.size()-1));
-			        if(forecast > datos.get(aux.size()-1)) {
+			        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
+			        if(forecast > datos.get(datos.size()-1)) {
 			        	prediccion = 1.0;
 			        }
-			        if(forecast < datos.get(aux.size()-1)) {
+			        if(forecast < datos.get(datos.size()-1)) {
 			        	prediccion = -1.0;
 			        }
 	        	}catch (Exception e) {

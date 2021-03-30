@@ -1,7 +1,10 @@
 /bin/
 /target/
-/.classpath
-/.project
+.classpath
+.project
 .DS_Store
 /.settings/
-/.factorypath
+/.springBeans
+/.mvn/
+mvnw
+mvnw.cmd

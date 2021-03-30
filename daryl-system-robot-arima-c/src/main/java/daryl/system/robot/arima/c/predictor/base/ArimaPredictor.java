@@ -70,7 +70,7 @@ public abstract class ArimaPredictor {
 
 		
     	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
-        if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
+        //if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
         if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
         arimaProcess.setIntegrationOrder(arimaConfig.getIntegrationOrder());
         arimaProcess.setStd(arimaConfig.getStandarDeviation());
@@ -160,6 +160,7 @@ public abstract class ArimaPredictor {
 		Double prediccion = calcularPrediccion(bot);
 		logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot + " Predicción -> " + prediccion);
 		
+		/*
 		logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot);		
 		Orden orden = calcularOperacion(bot, prediccion, bot.getInverso());
 		logger.info("ORDEN CALCULADA -> Robot -> " + bot + " -> Orden -> " + orden);
@@ -172,7 +173,7 @@ public abstract class ArimaPredictor {
 		logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot);
 		guardarNuevaOrden(orden, fechaHoraMillis);
 		logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot + " -> Orden -> " + orden);
-
+	*/
 		
 	}
 

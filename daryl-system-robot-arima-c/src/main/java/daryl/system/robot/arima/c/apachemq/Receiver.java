@@ -18,6 +18,7 @@ import daryl.system.robot.arima.c.predictor.ArimaCAudcad;
 import daryl.system.robot.arima.c.predictor.ArimaCEurusd;
 import daryl.system.robot.arima.c.predictor.ArimaCGdaxi;
 import daryl.system.robot.arima.c.predictor.ArimaCNdx;
+import daryl.system.robot.arima.c.predictor.ArimaCWti;
 import daryl.system.robot.arima.c.predictor.ArimaCXauUsd;
 import daryl.system.robot.arima.c.predictor.base.ArimaPredictor;
 
@@ -80,7 +81,14 @@ public class Receiver {
 				logger.error(e.getMessage(), e);		
 			}
 		}
-
+		if(robot.getActivo() == Activo.XTIUSD) {
+			try{
+				predictor = applicationContext.getBean(ArimaCWti.class);
+				predictor.calculate(robot);
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+		}
 	}
 
 	

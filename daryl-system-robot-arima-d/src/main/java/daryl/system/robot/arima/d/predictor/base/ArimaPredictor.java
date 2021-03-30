@@ -70,7 +70,7 @@ public abstract class ArimaPredictor {
 
 		
     	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
-        if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
+        //if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
         if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
         arimaProcess.setIntegrationOrder(arimaConfig.getIntegrationOrder());
         arimaProcess.setStd(arimaConfig.getStandarDeviation());

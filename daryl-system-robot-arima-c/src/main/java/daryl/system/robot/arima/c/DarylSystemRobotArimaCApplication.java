@@ -12,6 +12,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import daryl.system.comun.enums.Timeframes;
+import daryl.system.model.Robot;
+import daryl.system.robot.arima.c.predictor.ArimaCGdaxi;
+
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
 @EntityScan("daryl.system.model")
@@ -19,16 +23,35 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class DarylSystemRobotArimaCApplication {
 
-
-
+	
+	
 	public static void main(String[] args) {
 		
         SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemRobotArimaCApplication.class);
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
-	    
+	    //test(context);
 	}
 
+	
+	public static void test(ConfigurableApplicationContext context) {
+		
+		String robot = "ARIMA_C_GDAXI_60";
+		Robot bot = new Robot();
+			bot.setInverso(true);
+			bot.setRobot(robot);
+			bot.setArimaConfig(robot);
+			bot.setTimeframe(Timeframes.PERIOD_H1);
+		
+		ArimaCGdaxi a = context.getBean(ArimaCGdaxi.class);
+			a.calculate(bot);
+		
+		
+		
+		System.out.println(a);
+		
+	}
+	
 	
 	@Bean
     public Logger darylLogger() {

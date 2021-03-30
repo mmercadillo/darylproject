@@ -1,1 +1,10 @@
-/.project
+/bin/
+/target/
+.classpath
+.project
+.DS_Store
+/.settings/
+/.springBeans
+/.mvn/
+mvnw
+mvnw.cmd

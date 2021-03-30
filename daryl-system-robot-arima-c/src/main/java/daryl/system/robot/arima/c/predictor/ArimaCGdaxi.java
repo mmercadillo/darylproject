@@ -1,6 +1,7 @@
 package daryl.system.robot.arima.c.predictor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.espy.arima.ArimaForecaster;
@@ -34,7 +35,6 @@ public class ArimaCGdaxi  extends ArimaPredictor{
 	private IHistGdaxiRepository histGdaxiRepository;
 
 
-	static Integer prediccionArimaAnterior = 0;
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
 
