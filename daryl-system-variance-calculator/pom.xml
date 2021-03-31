@@ -17,7 +17,7 @@
 		<java.version>1.8</java.version>
 		<daryl.system.comun>1.0.4</daryl.system.comun>
 		<daryl.system.model>1.0.4</daryl.system.model>
-		<daryl.system.arima-base>1.0.4</daryl.system.arima-base>
+		<daryl.system.variance-base>1.0.0</daryl.system.variance-base>
 	</properties> 
 	<dependencies>
 	 		<!-- Daryl System Dependencies -->
@@ -33,8 +33,8 @@
 		</dependency>
 				<dependency>
 			<groupId>daryl.system.robots</groupId>
-			<artifactId>arima-base</artifactId>
-			<version>${daryl.system.arima-base}</version>
+			<artifactId>variance-base</artifactId>
+			<version>${daryl.system.variance-base}</version>
 		</dependency>
 		
 		<!-- // -->

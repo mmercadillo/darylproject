@@ -3,25 +3,19 @@ package daryl.system.robot.variance.predictor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.espy.arima.ArimaForecaster;
-import org.espy.arima.DefaultArimaForecaster;
-import org.espy.arima.DefaultArimaProcess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
-import daryl.system.model.ArimaConfig;
 import daryl.system.model.Robot;
 import daryl.system.model.VarianceConfig;
 import daryl.system.model.historicos.HistNdx;
-import daryl.system.robot.variance.calculation.StockPredict;
 import daryl.system.robot.variance.predictor.base.VariancePredictor;
 import daryl.system.robot.variance.repository.IHistNdxRepository;
 import daryl.system.robot.variance.repository.IVarianceConfigRepository;
+import daryl.variance.StockPredict;
 import lombok.ToString;
 
 @Component

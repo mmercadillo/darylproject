@@ -9,15 +9,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Robot;
 import daryl.system.model.VarianceConfig;
 import daryl.system.model.historicos.HistAudCad;
-import daryl.system.robot.variance.calculation.StockPredict;
 import daryl.system.robot.variance.predictor.base.VariancePredictor;
 import daryl.system.robot.variance.repository.IHistAudCadRepository;
 import daryl.system.robot.variance.repository.IVarianceConfigRepository;
+import daryl.variance.StockPredict;
 import lombok.ToString;
 
 @Component

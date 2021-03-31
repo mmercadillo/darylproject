@@ -1,4 +1,4 @@
-package daryl.system.robot.variance.calculation;
+package daryl.variance;
 import java.util.List;
 
 import daryl.system.comun.dataset.Datos;

@@ -1,7 +1,7 @@
-package daryl.system.robot.variance.calculation;
+package daryl.variance;
 import java.util.List;
 
-import Jama.*;
+import Jama.Matrix;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.Activo;
 
