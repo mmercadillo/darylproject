@@ -14,21 +14,19 @@ import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Estrategia;
 import daryl.system.comun.enums.Timeframes;
-import daryl.system.comun.enums.TipoRobot;
 import daryl.system.model.ArimaConfig;
-import daryl.system.model.Robot;
 import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigRepository;
 
 
 @Component
-@Scope(value = "prototype")
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ArimaForecasterGenerator implements Runnable{
 	
 	@Autowired
@@ -41,9 +39,9 @@ public class ArimaForecasterGenerator implements Runnable{
 	final String BASE_PATH = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\"; 
 	final String COMBINACIONES = "COMBINACIONES.csv";
 	
-	private Robot robot;
+	private String robot;
 	private Activo tipoActivo;
-	private Estrategia estrategia;
+	private String estrategia;
 	private Timeframes timeframe;
 	private String DATA = "";
 	private int inicio = 0;
@@ -58,7 +56,7 @@ public class ArimaForecasterGenerator implements Runnable{
 		// TODO Auto-generated constructor stu
 	}
 	
-	public void init(Estrategia estrategia, Robot robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio) {
+	public void init(String estrategia, String robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio) {
 		this.robot = robot;
 		
 		this.DATA = "h\\" + tipoActivo.name() + "_" + timeframe.valor + ".csv"; //EURUSD_60.csv
@@ -93,10 +91,8 @@ public class ArimaForecasterGenerator implements Runnable{
 	Double maxRachaPerdedora = 0.0;
 	
 
-    
-    boolean sinInicio = true;
 	
-	public void loadData() {
+	public  void loadData() {
 		
 		resultado = 0.0;
 		operaciones = 0;
@@ -166,52 +162,39 @@ public class ArimaForecasterGenerator implements Runnable{
 
 	long numCombinacion = 0;
 	long totalCombinaciones = 0;
-	public void run() {
+	public  void run() {
 		totalCombinaciones = combinacionesFile.size() * combinacionesFile.size();
 		
-		ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot.getRobot());
+		ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
 		
 		int iAux = 0;
 		int iiAux = 0;
 		
 		if(arimaConfig != null && arimaConfig.getIndexA() != null) iAux = arimaConfig.getIndexA();
 		if(arimaConfig != null && arimaConfig.getIndexB() != null) iiAux = arimaConfig.getIndexB();
-		
-		for(int std = 0; std <= desviaciones; std++) {
-			for(int i = iAux; i < combinacionesFile.size(); i++) {
-				
+
+		for(int i = iAux; i < combinacionesFile.size(); i++) {
+			for(int std = 0; std <= desviaciones; std++) {		
 				
 				String combinacion = combinacionesFile.get(i);
 				
 				if(seguir == false) break;
+				loadData();
+				
 				String[] optionsAr = combinacion.split(",");
 				double[] coefficentsAr = new double[optionsAr.length];
 				for(int j = 0; j < optionsAr.length; j++) {
 					coefficentsAr[j] = Double.parseDouble(optionsAr[j]);
 				}
 				//numCombinacion++;
-				//calcular(coefficentsAr, null, std);
-				for(int ii = iiAux; ii < combinacionesFile.size(); ii++) {
-					
-					iiAux = 0;
-					String comb2 = combinacionesFile.get(ii);
-					
-					numCombinacion++;
-					if(seguir == false) break;
-					loadData();
-					
-					String[] optionsMa = comb2.split(",");
-					double[] coefficentsMa = new double[optionsMa.length];
-					for(int j = 0; j < optionsMa.length; j++) {
-						coefficentsMa[j] = Double.parseDouble(optionsMa[j]);
-					}
-					calcular(coefficentsAr, coefficentsMa, std, 1, 0.0, 0.0, 1.0, i, ii);
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+		        
+		        try {
+					Thread.sleep(500);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+				calcular(coefficentsAr, null, std, 1, 0.0, 0.0, 1.0, i, 0);
 			}
 		}
 
@@ -219,13 +202,11 @@ public class ArimaForecasterGenerator implements Runnable{
 	
 	boolean seguir = true;
 	double resAnt = 0.0;
-    public void calcular(double[] coefficentsAr, double[] coefficentsMa, int std, int integrationOrder,
+    public  void calcular(double[] coefficentsAr, double[] coefficentsMa, int std, int integrationOrder,
     		double constant, double shockExpectation, double shockVariation, int indexA, int indexB) {
         
-
-		
     	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
-        //arimaProcess.setMaCoefficients(0.1);
+        arimaProcess.setMaCoefficients(0.1);
         if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
         if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
         arimaProcess.setIntegrationOrder(integrationOrder);
@@ -233,8 +214,6 @@ public class ArimaForecasterGenerator implements Runnable{
         arimaProcess.setShockExpectation(shockExpectation);
         arimaProcess.setConstant(constant);
         arimaProcess.setShockVariation(shockVariation);
-        
-        System.out.println(arimaProcess.toString());
 
         
         double prediccionAnterior = 0.0;
@@ -242,8 +221,7 @@ public class ArimaForecasterGenerator implements Runnable{
         double maxRachaPerdedoraAux = 0.0;
     
         for(int i = 0; i < data2.size(); i++) {
-    	
-        	if(i < inicio && sinInicio == false) {
+        	if(i < inicio) {
         		data.add(data2.get(i));
         		continue;
         	}
@@ -254,18 +232,18 @@ public class ArimaForecasterGenerator implements Runnable{
         	try {
         		//System.out.println(observations.length);
         		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
-	       }catch (Exception e) {
+        	}catch (Exception e) {
 	    	   data.add(data2.get(i));
-       		continue;
-		}
-	        double forecast = arimaForecaster.next();
-        
-	        //System.out.println("Forecast: " + forecast);
-	    
+       			continue;
+	       }
+        	double forecast = arimaForecaster.next();
+       	    
 	        //Chequeamos el resultado
 	        double ultimoDato = data.get(data.size()-1);
 	        double prediccion = forecast;
-        
+		        
+		    //System.out.println("FORECAST: " + forecast + " ULTIMO DATO: " + ultimoDato);
+		                
 	        double res = 0.0;
 	        //if(prediccionAnterior > 0.0 && prediccionAnterior > prediccion) {
 	        if(ultimoDato > prediccion) {
@@ -277,57 +255,61 @@ public class ArimaForecasterGenerator implements Runnable{
 	        	//Alcista
 	        	res = (data2.get(i) - ultimoDato);
 	        }
-	        //System.out.println("Forecast: " + res);
-	        //if(prediccionAnterior > 0.0) {
-		        resultado += res;
-		        if(res > 0) {
-		        	resWin += res;
-		        	opWin++;
-		        	if(maxGananciaEnUnaOp < res) maxGananciaEnUnaOp = res;
-		        	maxRachaGanadoraAux += res;
-		        	
-		        	if(maxRachaPerdedora > maxRachaPerdedoraAux) {
-		        		maxRachaPerdedora = maxRachaPerdedoraAux;
-		        	}
-		        	maxRachaPerdedoraAux = 0.0;
-		        	
-		        }else {
-		        	resLoss += res;
-		        	opLoss++;
-		        	if(maxPerdidaEnUnaOp > res) maxPerdidaEnUnaOp = res;
-		        	maxRachaPerdedoraAux += res;
-		        	
-		        	if(maxRachaGanadora < maxRachaGanadoraAux) {
-		        		maxRachaGanadora = maxRachaGanadoraAux;
-		        	}
-		        	maxRachaGanadoraAux = 0.0;
-		        }
-		        operaciones++;
-	        //}
-	        //System.out.println("-----------------------------------------");
+
+	        resultado += res;
+	        if(res > 0) {
+	        	resWin += res;
+	        	opWin++;
+	        	if(maxGananciaEnUnaOp < res) maxGananciaEnUnaOp = res;
+	        	maxRachaGanadoraAux += res;
+	        	
+	        	if(maxRachaPerdedora > maxRachaPerdedoraAux) {
+	        		maxRachaPerdedora = maxRachaPerdedoraAux;
+	        	}
+	        	maxRachaPerdedoraAux = 0.0;
+	        	
+	        }else {
+	        	resLoss += res;
+	        	opLoss++;
+	        	if(maxPerdidaEnUnaOp > res) maxPerdidaEnUnaOp = res;
+	        	maxRachaPerdedoraAux += res;
+	        	
+	        	if(maxRachaGanadora < maxRachaGanadoraAux) {
+	        		maxRachaGanadora = maxRachaGanadoraAux;
+	        	}
+	        	maxRachaGanadoraAux = 0.0;
+	        }
+	        operaciones++;
+
 	        prediccionAnterior = prediccion;
 	        data.add(data2.get(i));
-	    
+    
         }
-        
-        
-        mediaOpsLoss = (double)opLoss / operaciones;
-        mediaOpsWin = (double)opWin / operaciones;
-        gananciaMediaPorOpWin = resWin / (double)opWin;
-        perdidaMediaPorOpLoss = resLoss / (double)opLoss;
+
+	    mediaOpsLoss = (double)opLoss / operaciones;
+	    mediaOpsWin = (double)opWin / operaciones;
+	    gananciaMediaPorOpWin = resWin / (double)opWin;
+	    perdidaMediaPorOpLoss = resLoss / (double)opLoss;
 
         
         //System.out.println(numCombinacion + " de " + totalCombinaciones +  " - Resultado " + this.tipoActivo.name() + "_" + this.timeframe.valor + " -> " + resultado + " - " + arimaProcess.toString());
     	//Recuperamos el anterior
-    	ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot.getRobot());
-        if(resultado > 0 && resAnt < resultado) {
+    	ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+    	
+        logger.info("=================================");
+        logger.info("Robot -> " + robot + " Resultado -> " + resultado);
+        logger.info(arimaProcess.toString());
+        logger.info("================================");
+    	
+    	
+        if(/*resultado > 0 &&*/ resAnt == 0 || resAnt < resultado) {
         	resAnt = resultado;
         	
         	Long fechaHoraMillis = System.currentTimeMillis();
         	if(arimaConfig == null) {
         		
         		arimaConfig = new ArimaConfig();
-        		arimaConfig.setRobot(robot.getRobot());
+        		arimaConfig.setRobot(robot);
         		arimaConfig.setEstrategia(estrategia);
         		arimaConfig.setTipoActivo(tipoActivo);
         		
@@ -337,6 +319,7 @@ public class ArimaForecasterGenerator implements Runnable{
         	arimaConfig.setIndexB(indexB);
 
     		if(arimaConfig.getResultado() == null || arimaConfig.getResultado() < resultado) {
+
     			arimaConfig.setArCoefficients(Arrays.toString(arimaProcess.getArCoefficients()));
         		arimaConfig.setConstant(arimaProcess.getConstant());
         		arimaConfig.setFecha(config.getFechaInString(fechaHoraMillis));
@@ -350,63 +333,12 @@ public class ArimaForecasterGenerator implements Runnable{
         		arimaConfig.setResultado(resultado);
         		arimaConfig.setInicio(inicio);
         		
-        		arimaConfigRepository.save(arimaConfig);
         		
-		        System.out.println("=================================");
-		        System.out.println("Robot -> " + robot + " Resultado -> " + resultado);
-		        System.out.println(arimaProcess.toString());
-	        	System.out.println("================================");
+        		
+        		arimaConfigRepository.save(arimaConfig);
+
     		}
 
-        	
-        	//Damos de alta el nuevo
-        	
-	        /*
-        	try {
-		        
-	        	FileWriter fw = new FileWriter(BASE_PATH + RESULTADO, true);
-	        	PrintWriter pw = new PrintWriter(fw);
-	        
-	        	pw.println(arimaProcess.toString());
-	        
-	        	System.out.println("Resultado -> " + resultado);
-	        	pw.println("Resultado -> " + resultado);
-	        
-		        System.out.println("Operaciones -> " + operaciones);
-		        pw.println("Operaciones -> " + operaciones);
-		        
-		        System.out.println("Operaciones W -> " + opWin);
-		        pw.println("Operaciones W -> " + opWin);
-		        System.out.println("Operaciones L -> " + opLoss);
-		        pw.println("Operaciones L -> " + opLoss);
-		        System.out.println("Media pts por Op -> " + (double)resultado/operaciones);
-		        pw.println("Media pts por Op -> " + (double)resultado/operaciones);
-		        System.out.println("Media de ops W -> " + mediaOpsWin);
-		        pw.println("Media de ops W -> " + mediaOpsWin);
-		        System.out.println("Media de ops L -> " + mediaOpsLoss);
-		        pw.println("Media de ops L -> " + mediaOpsLoss);
-		        System.out.println("W Media por op W -> " + gananciaMediaPorOpWin);
-		        pw.println("W Media por op W -> " + gananciaMediaPorOpWin);
-		        System.out.println("L Media por op L -> " + perdidaMediaPorOpLoss);
-		        pw.println("L Media por op L -> " + perdidaMediaPorOpLoss);
-		        System.out.println("Max G en una Op -> " + maxGananciaEnUnaOp);
-		        pw.println("Max G en una Op -> " + maxGananciaEnUnaOp);
-		        System.out.println("Max L en una Op -> " + maxPerdidaEnUnaOp);
-		        pw.println("Max L en una Op -> " + maxPerdidaEnUnaOp);
-		        System.out.println("Max Racha G -> " + maxRachaGanadora);
-		        pw.println("Max Racha G -> " + maxRachaGanadora);
-		        System.out.println("Max Racha L -> " + maxRachaPerdedora);
-		        pw.println("Max Racha L -> " + maxRachaPerdedora);
-		        System.out.println("-----------------------------------------");
-		        pw.println("-----------------------------------------");
-		        
-		        pw.flush();
-		        pw.close();
-	        
-	        }catch (Exception e) {
-				e.printStackTrace();
-			}
-			*/
         }else {
 			
 			if(arimaConfig != null) {
@@ -415,9 +347,6 @@ public class ArimaForecasterGenerator implements Runnable{
 	        	arimaConfigRepository.save(arimaConfig);
 			}
 			
-		}
-        if(resultado > 1500) {
-        	//seguir = false;
         }
 
     }

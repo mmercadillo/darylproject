@@ -1,0 +1,76 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>daryl.system.robots</groupId>
+  <artifactId>variance-base</artifactId>
+  <version>1.0.0</version>
+  <name>daryl-system-arima-base</name>
+  <description>Cálculos base para el sistema Variance</description>
+  
+    
+  	<properties>
+		<java.version>1.8</java.version>
+				<daryl.system.comun>1.0.4</daryl.system.comun>
+		<daryl.system.model>1.0.4</daryl.system.model>
+	</properties>
+   
+  	<dependencies>
+  	  		<!-- Daryl System Dependencies -->
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>comun</artifactId>
+			<version>${daryl.system.comun}</version>
+		</dependency>
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>model</artifactId>
+			<version>${daryl.system.model}</version>
+		</dependency>
+  	  		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>provided</scope>
+		</dependency>
+  	
+  				<!-- Test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.1</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-math3</artifactId>
+    <version>3.0</version>
+</dependency>
+
+		<!-- ARIMA -->
+		<dependency>
+    <groupId>gov.nist.math</groupId>
+    <artifactId>jama</artifactId>
+    <version>1.0.3</version>
+</dependency>
+  	
+  	</dependencies>
+  
+  
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+  
+  
+</project>

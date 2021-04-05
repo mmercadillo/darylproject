@@ -40,9 +40,8 @@ public class ArimaConfig implements Serializable{
 	@Getter @Setter
 	private Activo tipoActivo;
 	
-	@Enumerated(EnumType.STRING)
 	@Getter @Setter
-	private Estrategia estrategia;
+	private String estrategia;
 	
 	@Column(nullable = true)
 	@Getter @Setter

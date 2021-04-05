@@ -70,6 +70,10 @@ public class Robot implements Serializable{
 	
 	@Getter @Setter
 	@Column(nullable = true)
+	private String varianceConfig;
+	
+	@Getter @Setter
+	@Column(nullable = true)
 	private String ficheroRna;	
 	
 	@Enumerated(EnumType.STRING)

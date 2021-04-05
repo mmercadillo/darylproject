@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 public class Imprimir {
-	final String BASE_PATH = "/Volumes/Macintosh HD/SISTEMA_DARYL/SeriesTemporales/Historicos/"; 
+	final String BASE_PATH = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\"; 
 	public void execute(List<String> lista) {
 
 		try {
