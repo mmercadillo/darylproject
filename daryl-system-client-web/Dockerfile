@@ -1,4 +1,4 @@
-FROM 8-jdk-alpine
+FROM openjdk:8-jdk-alpine
 VOLUME /tmp
 EXPOSE 9090
 ADD ./target/client-web-1.0.0.jar client-web-1.0.0.jar
