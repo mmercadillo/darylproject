@@ -27,14 +27,14 @@ public class ChartControlller {
 		
 		view.addObject("robot", robot);
 		
-		ResponseEntity<String> resumenes = restClient.getForEntity("http://servicio-zuul-server:8888/api/daryl/robot/chartdata/"+robot, String.class);
+		ResponseEntity<String> resumenes = restClient.getForEntity("http://localhost:8888/api/daryl/robot/chartdata/"+robot, String.class);
 		System.out.println(resumenes.getBody());
 		view.addObject("datosParaChart", resumenes.getBody());
 
-		ResumenRobotDto resumenDto = restClient.getForObject("http://servicio-zuul-server:8888/api/daryl/robot/detalle/"+robot, ResumenRobotDto.class);
+		ResumenRobotDto resumenDto = restClient.getForObject("http://localhost:8888/api/daryl/robot/detalle/"+robot, ResumenRobotDto.class);
 		view.addObject("resumenRobot",resumenDto);
 		
-		TotalDto totalDto = restClient.getForObject("http://servicio-zuul-server:8888/api/daryl/robot/total/" + robot, TotalDto.class);
+		TotalDto totalDto = restClient.getForObject("http://localhost:8888/api/daryl/robot/total/" + robot, TotalDto.class);
 		view.addObject("sumRobot", totalDto.getTotal());
 
         return view; //view

@@ -22,21 +22,21 @@ public class OrdenesController {
     public List<OrdenDto> main( @PathVariable String cta) {
 		
 		System.out.println("FULL: " + cta + " " + new Date());
-		List<OrdenDto> ordenes = Arrays.asList(restClient.getForObject("http://servicio-zuul-server:8888/api/daryl/ordenes/all", OrdenDto[].class));
+		List<OrdenDto> ordenes = Arrays.asList(restClient.getForObject("http://localhost:8888/api/daryl/ordenes/all", OrdenDto[].class));
         return ordenes;
     }
     
 	@GetMapping("/mt/ordenes/{num}/{cta}")
     public List<OrdenDto> main(@PathVariable Integer num, @PathVariable String cta) {
 		System.out.println("TOP: " + cta + " NUM: " + num + " - " + new Date());
-		List<OrdenDto> ordenes = Arrays.asList(restClient.getForObject("http://servicio-zuul-server:8888/api/daryl/ordenes/top/"+num, OrdenDto[].class));
+		List<OrdenDto> ordenes = Arrays.asList(restClient.getForObject("http://localhost:8888/api/daryl/ordenes/top/"+num, OrdenDto[].class));
         return ordenes;
     }
 	
 	@GetMapping("/mt/ordenes/cuenta/{cta}")
     public List<OrdenDto> ordenesCuenta(@PathVariable String cta) {
 		System.out.println("ROBOTS CTA: " + cta + new Date());
-		List<OrdenDto> ordenes = Arrays.asList(restClient.getForObject("http://servicio-zuul-server:8888/api/daryl/ordenes/cuenta/"+cta, OrdenDto[].class));
+		List<OrdenDto> ordenes = Arrays.asList(restClient.getForObject("http://localhost:8888/api/daryl/ordenes/cuenta/"+cta, OrdenDto[].class));
         
 		System.out.println(ordenes);
 		return ordenes;
