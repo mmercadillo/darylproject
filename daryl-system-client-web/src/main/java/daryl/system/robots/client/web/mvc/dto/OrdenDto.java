@@ -15,7 +15,7 @@ public class OrdenDto{
 	@Getter @Setter
 	private Activo tipoActivo;
 	@Getter @Setter
-	private Estrategia estrategia;
+	private String estrategia;
 	@Getter @Setter
 	private String fAlta;
 	@Getter @Setter
