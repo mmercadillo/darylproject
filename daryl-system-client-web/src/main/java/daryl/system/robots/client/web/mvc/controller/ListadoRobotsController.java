@@ -19,11 +19,11 @@ public class ListadoRobotsController {
 		
 		ModelAndView view = new ModelAndView("listado_robots");
 		
-		ResponseEntity<String> resumenes = restClient.getForEntity("http://localhost:8888/api/daryl/robots/listado", String.class);
+		ResponseEntity<String> resumenes = restClient.getForEntity("http://servicio-zuul-server:8888/api/daryl/robots/listado", String.class);
 		System.out.println(resumenes);
 		view.addObject("robots", resumenes.getBody());
 		
-		ResponseEntity<Long> total = restClient.getForEntity("http://localhost:8888/api/daryl/robots/total", Long.class);
+		ResponseEntity<Long> total = restClient.getForEntity("http://servicio-zuul-server:8888/api/daryl/robots/total", Long.class);
 		view.addObject("sumRobots", total.getBody());
 		
 		view.addObject("robotsActive", true);

@@ -19,7 +19,7 @@ public class TopRobotsController {
 		
 		ModelAndView view = new ModelAndView("listado_robots");
 		
-		ResponseEntity<String> robots = restClient.getForEntity("http://localhost:8888/api/daryl/robots/top/5", String.class);
+		ResponseEntity<String> robots = restClient.getForEntity("http://servicio-zuul-server:8888/api/daryl/robots/top/5", String.class);
 		System.out.println(robots.getBody());
 		
         return robots.getBody();
