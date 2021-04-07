@@ -20,7 +20,8 @@ public class ConfigData {
 	public static final String ZEROMQ_SERVER_URL_FROM_PYTHON = "tcp://127.0.0.1:5555";
 	public static final String ZEROMQ_SERVER_URL_FROM_JAVA = "tcp://127.0.0.1:5556";
 	
-	public static final String BASE_PATH_RNAS = "rnas/";
+	public static final String BASE_PATH_RNAS = "classpath:rnas/";
+	
 	
 	//private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	private SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
