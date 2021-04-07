@@ -9,6 +9,7 @@ import java.util.List;
 import org.neuroph.core.NeuralNetwork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,8 @@ import lombok.ToString;
 @ToString
 public class RnaNdx  extends RnaPredictor{
 	
-
+	@Autowired
+	ApplicationContext ctx;
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
 	
@@ -76,9 +78,15 @@ public class RnaNdx  extends RnaPredictor{
 
 		Double prediccion = 0.0;
 		
-		String fileName = "F:\\DarylSystem\\rnas\\"+bot.getFicheroRna();
-        ClassLoader classLoader = getClass().getClassLoader();
-        File rna = new File(classLoader.getResource(fileName).getFile());
+		File rna = null;
+		try {
+			rna = ctx.getResource("classpath:/rnas/" + bot.getFicheroRna()).getFile();
+		}catch (Exception e) {
+			System.out.println("SE HACE LA FORMA TRADICIONAL");
+			String fileName = "F:\\DarylSystem\\rnas\\"+bot.getFicheroRna();
+	        ClassLoader classLoader = getClass().getClassLoader();
+	        rna = new File(classLoader.getResource(fileName).getFile());
+		}
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
 		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());

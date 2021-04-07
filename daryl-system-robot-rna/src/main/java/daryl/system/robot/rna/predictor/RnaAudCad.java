@@ -9,12 +9,10 @@ import java.util.List;
 import org.neuroph.core.NeuralNetwork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
-import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
@@ -30,6 +28,8 @@ import lombok.ToString;
 public class RnaAudCad  extends RnaPredictor{
 
 
+	@Autowired
+	ApplicationContext ctx;
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 
@@ -75,10 +75,17 @@ public class RnaAudCad  extends RnaPredictor{
 	protected Double calcularPrediccion(Robot bot) throws IOException {
 
 		Double prediccion = 0.0;
+		File rna = null;
+		try {
+			rna = ctx.getResource("classpath:/rnas/" + bot.getFicheroRna()).getFile();
+		}catch (Exception e) {
+			System.out.println("SE HACE LA FORMA TRADICIONAL");
+			String fileName = "F:\\DarylSystem\\rnas\\"+bot.getFicheroRna();
+	        ClassLoader classLoader = getClass().getClassLoader();
+	        rna = new File(classLoader.getResource(fileName).getFile());
+		}
 		
-		String fileName = "F:\\DarylSystem\\rnas\\"+bot.getFicheroRna();
-        ClassLoader classLoader = getClass().getClassLoader();
-        File rna = new File(classLoader.getResource(fileName).getFile());
+
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
 		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
