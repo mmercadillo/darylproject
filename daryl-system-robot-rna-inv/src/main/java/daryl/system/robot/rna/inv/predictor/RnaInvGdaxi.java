@@ -87,8 +87,7 @@ public class RnaInvGdaxi  extends RnaPredictor{
 		}catch (Exception e) {
 			System.out.println("SE HACE LA FORMA TRADICIONAL");
 			String fileName = "F:\\DarylSystem\\rnas\\"+bot.getFicheroRna();
-	        ClassLoader classLoader = getClass().getClassLoader();
-	        rna = new File(classLoader.getResource(fileName).getFile());
+	        rna = new File(fileName);
 		}
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
