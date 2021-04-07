@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.Datos;
@@ -73,7 +74,7 @@ public class RnaInvAudCad  extends RnaPredictor{
 
 		Double prediccion = 0.0;
 		
-		File rna = new ClassPathResource(ConfigData.BASE_PATH_RNAS + bot.getFicheroRna()).getFile();
+		File rna = ResourceUtils.getFile("rnas/"+bot.getFicheroRna());
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
 		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());

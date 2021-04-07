@@ -76,7 +76,7 @@ public class RnaXauUsd  extends RnaPredictor{
 
 		Double prediccion = 0.0;
 		
-		File rna = ResourceUtils.getFile("classpath:rnas/"+bot.getFicheroRna());
+		File rna = ResourceUtils.getFile("rnas/"+bot.getFicheroRna());
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
 		List<HistXauUsd> historico = histXauUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
