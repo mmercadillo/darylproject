@@ -76,7 +76,7 @@ public class RnaInvXauUsd  extends RnaPredictor{
 
 		Double prediccion = 0.0;
 		
-		String fileName = "rnas/"+bot.getFicheroRna();
+		String fileName = "/rnas/"+bot.getFicheroRna();
         ClassLoader classLoader = getClass().getClassLoader();
         File rna = new File(classLoader.getResource(fileName).getFile());
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
