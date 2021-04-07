@@ -76,7 +76,7 @@ public class RnaAudCad  extends RnaPredictor{
 
 		Double prediccion = 0.0;
 		
-		File rna = ResourceUtils.getFile("classpath:rnas/"+bot.getFicheroRna());
+		File rna = ResourceUtils.getFile("rnas/"+bot.getFicheroRna());
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
 		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
