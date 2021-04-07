@@ -73,7 +73,9 @@ public class RnaInvNdx  extends RnaPredictor{
 
 		Double prediccion = 0.0;
 		
-		File rna = ResourceUtils.getFile("rnas/"+bot.getFicheroRna());
+		String fileName = "rnas/"+bot.getFicheroRna();
+        ClassLoader classLoader = getClass().getClassLoader();
+        File rna = new File(classLoader.getResource(fileName).getFile());
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
 		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
