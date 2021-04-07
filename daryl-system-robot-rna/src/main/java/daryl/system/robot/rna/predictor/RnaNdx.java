@@ -79,7 +79,9 @@ public class RnaNdx  extends RnaPredictor{
 		Double prediccion = 0.0;
 		
 		File rna = null;
+		System.out.println("SE CARGA EL FICHERO: " + bot.getFicheroRna());
 		try {
+			System.out.println("SE CARGA DESDE EL CLASSPATH");
 			rna = ctx.getResource("classpath:/rnas/" + bot.getFicheroRna()).getFile();
 		}catch (Exception e) {
 			System.out.println("SE HACE LA FORMA TRADICIONAL");
