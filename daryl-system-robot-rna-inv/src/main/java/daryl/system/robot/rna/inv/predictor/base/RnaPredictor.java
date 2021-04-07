@@ -1,5 +1,6 @@
 package daryl.system.robot.rna.inv.predictor.base;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public abstract class RnaPredictor {
 	@Autowired
 	protected IPrediccionRepository prediccionRepository;
 
-	protected abstract Double calcularPrediccion(Robot robot);
+	protected abstract Double calcularPrediccion(Robot robot) throws IOException;
 
 	private void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
@@ -104,7 +105,7 @@ public abstract class RnaPredictor {
 	}
 
 
-	public void calculate(Robot bot) {
+	public void calculate(Robot bot) throws IOException {
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot);		
 		Double prediccion = calcularPrediccion(bot);
