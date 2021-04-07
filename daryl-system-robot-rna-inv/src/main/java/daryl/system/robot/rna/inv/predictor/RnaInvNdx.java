@@ -74,15 +74,15 @@ public class RnaInvNdx  extends RnaPredictor{
 	protected Double calcularPrediccion(Robot bot) throws IOException {
 
 		Double prediccion = 0.0;
-		
 		File rna = null;
+		System.out.println("SE CARGA EL FICHERO: " + bot.getFicheroRna());
 		try {
+			System.out.println("SE CARGA DESDE EL CLASSPATH");
 			rna = ctx.getResource("classpath:/rnas/" + bot.getFicheroRna()).getFile();
 		}catch (Exception e) {
 			System.out.println("SE HACE LA FORMA TRADICIONAL");
 			String fileName = "F:\\DarylSystem\\rnas\\"+bot.getFicheroRna();
-	        ClassLoader classLoader = getClass().getClassLoader();
-	        rna = new File(classLoader.getResource(fileName).getFile());
+	        rna = new File(fileName);
 		}
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
