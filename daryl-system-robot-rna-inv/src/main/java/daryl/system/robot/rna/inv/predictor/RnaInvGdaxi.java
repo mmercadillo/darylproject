@@ -1,5 +1,7 @@
 package daryl.system.robot.rna.inv.predictor;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,6 +10,7 @@ import org.neuroph.core.NeuralNetwork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.configuration.ConfigData;
@@ -67,12 +70,13 @@ public class RnaInvGdaxi  extends RnaPredictor{
 
 
 	@Override
-	protected Double calcularPrediccion(Robot bot) {
+	protected Double calcularPrediccion(Robot bot) throws IOException {
 
 		
 		Double prediccion = 0.0;
 		
-		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(ConfigData.BASE_PATH_RNAS + bot.getFicheroRna());
+		File rna = new ClassPathResource(ConfigData.BASE_PATH_RNAS + bot.getFicheroRna()).getFile();
+		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
 		List<HistGdaxi> historico = histGdaxiRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 
