@@ -36,7 +36,7 @@ public class ArimaForecasterGenerator implements Runnable{
 	@Autowired
 	ConfigData config;
 	
-	final String BASE_PATH = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\"; 
+	final String BASE_PATH = "F:\\DarylSystem\\historicos\\"; 
 	final String COMBINACIONES = "COMBINACIONES.csv";
 	
 	private String robot;
