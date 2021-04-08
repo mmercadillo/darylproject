@@ -59,7 +59,7 @@ public class ArimaForecasterGenerator implements Runnable{
 	public void init(String estrategia, String robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio) {
 		this.robot = robot;
 		
-		this.DATA = "h\\" + tipoActivo.name() + "_" + timeframe.valor + ".csv"; //EURUSD_60.csv
+		this.DATA = tipoActivo.name() + "_" + timeframe.valor + ".csv"; //EURUSD_60.csv
 		this.desviaciones = std;
 		this.inicio = inicio;
 		this.tipoActivo = tipoActivo;
