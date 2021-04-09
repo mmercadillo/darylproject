@@ -212,7 +212,7 @@ License: You must have a valid license purchased only from themeforest(the above
 												<a th:href="@{'/robot/'+${resumen.robot}}" th:text="${resumen.robot}"></a>
 											</td>
 											<td th:text="${resumen.fModificacion}"></td>
-											<td th:text="${resumen.total}"></td>
+											<td th:text="${#numbers.formatDecimal(resumen.total, 0, 'POINT', 2, 'COMMA')}"></td>
 											<td th:text="${resumen.numOperaciones}"></td>
 											<td th:text="${resumen.numOpsGanadoras}"></td>
 											<td th:text="${resumen.numOpsPerdedoras}"></td>
