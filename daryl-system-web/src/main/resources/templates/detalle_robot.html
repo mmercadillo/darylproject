@@ -200,10 +200,26 @@ License: You must have a valid license purchased only from themeforest(the above
 							View more <i class="m-icon-swapright m-icon-white"></i>
 						</a>
 					</div>
-				</div>
+				</div>		
 			</div>
 			<div class="row">
-				<img th:src="@{/chart/} + ${bot}" alt="No sale"/>
+				<div class="col-md-12 col-sm-12">
+					<!-- BEGIN PORTLET-->
+					<div class="portlet light ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-bar-chart font-green-sharp hide"></i>
+								<span class="caption-subject font-green-sharp bold uppercase">Resumen grafico</span>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div class="row">
+								<img th:src="@{/chart/} + ${bot}" alt="No sale" class="col-md-12 col-sm-12"/>
+							</div>
+						</div>
+					</div>
+					<!-- END PORTLET-->
+				</div>				
 			</div>
 		</div>
 	</div>

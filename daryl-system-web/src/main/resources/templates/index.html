@@ -88,7 +88,7 @@ License: You must have a valid license purchased only from themeforest(the above
 							<div class="number" th:text="${numTotalRobotsEnNegativo}">
 							</div>
 							<div class="desc">
-								 Robots en pérdidas
+								 Robots en perdidas
 							</div>
 						</div>
 						<a class="more" href="javascript:;">
@@ -113,6 +113,7 @@ License: You must have a valid license purchased only from themeforest(the above
 						</a>
 					</div>
 				</div>
+				<!--
 				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="dashboard-stat purple-plum">
 						<div class="visual">
@@ -131,25 +132,59 @@ License: You must have a valid license purchased only from themeforest(the above
 						</a>
 					</div>
 				</div>
+				-->
 			</div>
 			<!-- END DASHBOARD STATS -->
 			<div class="clearfix">
 			</div>
 			<div class="row">
-				<div class="col-md-12 col-sm-12">
-				<!-- BEGIN PORTLET-->
-				<div class="portlet light ">
-					<div class="portlet-title">
-						<div class="caption">
-							<i class="icon-bar-chart font-green-sharp hide"></i>
-							<span class="caption-subject font-green-sharp bold uppercase">Darwin NBQ</span>
+				<div class="col-md-3 col-sm-3">
+					<!-- BEGIN PORTLET-->
+					<div class="portlet light ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-bar-chart font-green-sharp hide"></i>
+								<span class="caption-subject font-green-sharp bold uppercase">Top 5</span>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div class="row">
+								<table class="table table-condensed table-hover">
+									<thead>
+										<tr>
+											<th>Robot</th>
+											<th>Total<th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="resumen : ${top5}">
+											<td>
+												<a th:href="@{'/robot/'+${resumen.robot}}" th:text="${resumen.robot}"></a>
+											</td>
+											<td th:text="${#numbers.formatDecimal(resumen.total, 0, 'POINT', 2, 'COMMA')}"></td>
+										</tr>
+								</table>
+							</div>
 						</div>
 					</div>
-					<div class="portlet-body">
-						<a href="https://www.darwinex.com/invest/NBQ?utm_source=WidgetDarwin&utm_medium=Referral&utm_campaign=WidgetChart&utm_content=mmercadillo"><img src="https://prodx-widgets.s3-eu-west-1.amazonaws.com/NBQ-widgets-darwin-chart-darwin-6m-bg-transparent-l-es.png" alt="NBQ"></a>
-					</div>
+					<!-- END PORTLET-->
 				</div>
-				<!-- END PORTLET-->
+				<div class="col-md-9 col-sm-9">
+					<!-- BEGIN PORTLET-->
+					<div class="portlet light ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-bar-chart font-green-sharp hide"></i>
+								<span class="caption-subject font-green-sharp bold uppercase">Darwin NBQ</span>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div class="row">
+							<img src="https://prodx-widgets.s3-eu-west-1.amazonaws.com/NBQ-widgets-darwin-chart-darwin-6m-bg-transparent-l-es.png" alt="NBQ" class="col-md-12 col-sm-12">
+							</div>
+						</div>
+					</div>
+					<!-- END PORTLET-->
 				</div>
 			</div>			
 			<div class="clearfix">
