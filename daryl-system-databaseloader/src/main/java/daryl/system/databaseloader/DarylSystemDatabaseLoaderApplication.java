@@ -19,6 +19,7 @@ import daryl.system.comun.enums.Timeframes;
 import daryl.system.databaseloader.loaders.AudCadLoader;
 import daryl.system.databaseloader.loaders.EurUsdLoader;
 import daryl.system.databaseloader.loaders.GdaxiLoader;
+import daryl.system.databaseloader.loaders.GeneralLoader;
 import daryl.system.databaseloader.loaders.NdxLoader;
 import daryl.system.databaseloader.loaders.WtiLoader;
 import daryl.system.databaseloader.loaders.XauUsdLoader;
@@ -49,6 +50,7 @@ public class DarylSystemDatabaseLoaderApplication {
 	    loadNdx(context);
 	    loadWti(context);
 	    loadXauUsd(context);
+	    loadGeneral(context);
 	}
 
 	static void loadAudCad(ApplicationContext context) {
@@ -123,6 +125,20 @@ public class DarylSystemDatabaseLoaderApplication {
 	
 	static void loadWti(ApplicationContext context) {
 	    WtiLoader loader = context.getBean(WtiLoader.class);
+	    try {
+	    	loader.load(Timeframes.PERIOD_H1);
+	    	loader.load(Timeframes.PERIOD_H4);
+			loader.load(Timeframes.PERIOD_D1);
+			loader.load(Timeframes.PERIOD_W1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	static void loadGeneral(ApplicationContext context) {
+	    GeneralLoader loader = context.getBean(GeneralLoader.class);
 	    try {
 	    	loader.load(Timeframes.PERIOD_H1);
 	    	loader.load(Timeframes.PERIOD_H4);

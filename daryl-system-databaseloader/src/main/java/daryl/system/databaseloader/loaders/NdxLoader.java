@@ -50,8 +50,8 @@ public class NdxLoader extends Loader {
 		if(ficheroHistorico != null) {
 			
 			SimpleDateFormat sdfOrigen = new SimpleDateFormat("yyyyMMddHH:mm:ss");
-			SimpleDateFormat sdfDestinoFecha = new SimpleDateFormat("yyyyMMddHH:mm:ss");
-			SimpleDateFormat sdfDestinoHora = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+			SimpleDateFormat sdfDestinoFecha = new SimpleDateFormat("yyyy.MM.dd");
+			SimpleDateFormat sdfDestinoHora = new SimpleDateFormat("HH:mm:ss");
 			
 			FileReader fr = new FileReader(ficheroHistorico);
 			BufferedReader reader = new BufferedReader(fr);
