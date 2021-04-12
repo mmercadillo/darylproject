@@ -28,6 +28,13 @@
 								Listado Robots
 							</a>
 						</li>
+						</li>
+						<li th:class="${robotsActive == true ? 'active' : ''}">
+							<a th:href="@{/robots/cuenta}">
+								<i class="icon-bulb"></i>
+								Robots cuenta
+							</a>
+						</li>
 					</ul>
 				</li>
 			</ul>
