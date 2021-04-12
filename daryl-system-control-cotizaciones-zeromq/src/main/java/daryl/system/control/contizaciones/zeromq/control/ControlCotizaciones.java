@@ -71,7 +71,7 @@ public class ControlCotizaciones extends Thread {
 		try (ZContext context = new ZContext()) {
             // Socket to talk to clients
             ZMQ.Socket socket = context.createSocket(SocketType.REP);
-            socket.bind("tcp://192.168.0.113:5559");
+            socket.bind("tcp://192.168.0.114:5559");
             while (!Thread.currentThread().isInterrupted()) {
                 logger.info("ESPERANDO DATOS DE COTIZACIONES ...");
             	// Block until a message is received
