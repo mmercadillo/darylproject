@@ -1,3 +1,4 @@
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
 <!DOCTYPE html>
 <!-- 
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
@@ -70,13 +71,13 @@ License: You must have a valid license purchased only from themeforest(the above
 						</div>
 						<div class="portlet-body form">
 							<div class="skin skin-square">
-								<form class="form-horizontal" role="form">
+								<form action="#" th:action="@{/robots/cuenta/find}" th:object="${robots_cuenta}" method="post" class="form-horizontal" role="form">
 									<div class="form-body">
 										<div class="form-group">
 											<div class="col-md-12">
 												<label class="col-md-3 control-label">Cuenta:</label>
 												<div class="col-md-9">
-													<input type="text" class="form-control input-circle" placeholder="Introduce la cuenta">
+													<input type="text" th:field="*{cuenta}" class="form-control input-circle" placeholder="Introduce la cuenta"/>
 													<span class="help-block">
 													Numero de cuenta de trading. </span>
 												</div>
@@ -84,127 +85,8 @@ License: You must have a valid license purchased only from themeforest(the above
 										</div>
 									</div>
 									<div class="form-actions">
-										<button type="submit" class="btn blue">Submit</button>
-										<button type="button" class="btn default">Cancel</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="portlet box green-haze">
-						<div class="portlet-title">
-							<div class="caption">
-								<i class="icon-settings"></i> Seleccion de robots por cuenta
-							</div>
-						</div>
-						<div class="portlet-body form">
-							<div class="skin skin-square">
-								<form class="form-horizontal" role="form">
-									<div class="form-body">
-										<div class="form-group">
-											<div class="col-md-12">
-												<label class="col-md-3 control-label">Cuenta:</label>
-												<div class="col-md-9">
-													<input type="text" class="form-control input-circle" placeholder="Introduce la cuenta">
-													<span class="help-block">
-													Numero de cuenta de trading. </span>
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-md-12">
-												<div class="input-group col-md-12">
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-																												<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-																												<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-																												<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list  col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-																												<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="form-actions">
-										<button type="submit" class="btn blue">Submit</button>
-										<button type="button" class="btn default">Cancel</button>
+										<button type="submit" class="btn blue">Buscar</button>
+										<!-- <button type="reset" class="btn default">Cancel</button>-->
 									</div>
 								</form>
 							</div>

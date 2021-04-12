@@ -33,21 +33,8 @@ public class DetalleControlller {
 
 		ModelAndView view = new ModelAndView("detalle_robot");
 		
-		String titulo = "Detalle del robot: " + robot;
-		view.addObject("titulo", titulo);
+		//Datos resumen del robot
 		view.addObject("bot", robot);
-		
-		/*
-		ResponseEntity<String> resumenes = restClient.getForEntity("http://localhost:8888/api/daryl/robot/chartdata/"+robot, String.class);
-		System.out.println(resumenes.getBody());
-		view.addObject("datosParaChart", resumenes.getBody());
-
-		ResumenRobotDto resumenDto = restClient.getForObject("http://localhost:8888/api/daryl/robot/detalle/"+robot, ResumenRobotDto.class);
-		view.addObject("resumenRobot",resumenDto);
-		
-		TotalDto totalDto = restClient.getForObject("http://localhost:8888/api/daryl/robot/total/" + robot, TotalDto.class);
-		view.addObject("sumRobot", totalDto.getTotal());
-		*/
 		List<Long> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChart(charDataRobotService.findListaParaChartByRobot(robot));
 		view.addObject("datosParaChart", historicoParaChartDto);
 		
@@ -58,6 +45,14 @@ public class DetalleControlller {
 		Long total = totalPipsRobotsService.totalPipsByRobot(robot);
 		TotalDto totalDto = TotalDto.getDto(robot, total);
 		view.addObject("sumRobot", totalDto.getTotal());
+		////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		String titulo = "Detalle del robot: " + robot;
+		String lugar = "Detalle robot";
+		view.addObject("titulo", titulo);
+		view.addObject("lugar", lugar);
+		view.addObject("detalleRobotActive", true);
+		
 
         return view; //view
     }

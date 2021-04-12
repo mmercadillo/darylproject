@@ -57,7 +57,7 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 	public static ResumenRobotDto getDto(ResumenRobot resumen) {
 		
 		ResumenRobotDto resumenDto = new ResumenRobotDto();
-			resumenDto.setEstrategia(resumen.getEstrategia());
+			try{resumenDto.setEstrategia(resumen.getEstrategia());}catch (Exception e) {}
 			resumenDto.setFAlta(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFAlta())));
 			resumenDto.setFModificacion(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFModificacion())));
 			resumenDto.setId(resumen.getId());

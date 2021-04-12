@@ -168,6 +168,33 @@ License: You must have a valid license purchased only from themeforest(the above
 						</div>
 					</div>
 					<!-- END PORTLET-->
+					<!-- BEGIN PORTLET-->
+					<div class="portlet light ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-bar-chart font-green-sharp hide"></i>
+								<span class="caption-subject font-green-sharp bold uppercase">Robots Darwin NBQ</span>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div class="row">
+								<table class="table table-condensed table-hover">
+									<thead>
+										<tr>
+											<th>Robot</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="robot : ${robotsDarwin}">
+											<td>
+												<a th:href="@{'/robot/'+${robot.robot}}" th:text="${robot.robot}"></a>
+											</td>
+										</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- END PORTLET-->
 				</div>
 				<div class="col-md-9 col-sm-9">
 					<!-- BEGIN PORTLET-->
