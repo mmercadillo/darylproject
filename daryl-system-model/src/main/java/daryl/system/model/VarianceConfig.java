@@ -69,6 +69,10 @@ public class VarianceConfig implements Serializable{
 	
 	@Column(nullable = true)
 	@Getter @Setter
+	private Double resultado;
+	
+	@Column(nullable = true)
+	@Getter @Setter
 	private Integer lastN;
 	
 	@Column(nullable = true)

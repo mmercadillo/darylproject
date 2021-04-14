@@ -2,8 +2,6 @@ package daryl.system.web.mvc.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -20,7 +18,7 @@ import daryl.system.web.services.IRobotsCuentaService;
 import daryl.system.web.services.IRobotsService;
 
 @RestController
-public class InicioController {
+public class DashboardController {
  
 	@Autowired
 	IResumenRobotService resumenRobotService;
@@ -29,7 +27,7 @@ public class InicioController {
 	@Autowired
 	IRobotsCuentaService robotsCuentaService;
 	
-	@GetMapping("/")
+	@GetMapping("/dashboard")
     public ModelAndView main(Model model) {
 
 		ModelAndView view = new ModelAndView("index");

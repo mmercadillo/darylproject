@@ -42,7 +42,6 @@ public class ArimaForecasterGenerator implements Runnable{
 	private String robot;
 	private Activo tipoActivo;
 	private String estrategia;
-	private Timeframes timeframe;
 	private String DATA = "";
 	private int inicio = 0;
 	private int desviaciones = 0;
@@ -53,7 +52,6 @@ public class ArimaForecasterGenerator implements Runnable{
     //int inicio = 4;//10080
 
 	public ArimaForecasterGenerator() {
-		// TODO Auto-generated constructor stu
 	}
 	
 	public void init(String estrategia, String robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio) {
@@ -63,7 +61,6 @@ public class ArimaForecasterGenerator implements Runnable{
 		this.desviaciones = std;
 		this.inicio = inicio;
 		this.tipoActivo = tipoActivo;
-		this.timeframe = timeframe;
 		this.estrategia = estrategia;
 		loadData();
 	}

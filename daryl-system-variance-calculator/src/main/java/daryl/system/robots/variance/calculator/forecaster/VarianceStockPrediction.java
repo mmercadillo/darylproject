@@ -3,25 +3,55 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import daryl.system.comun.configuration.ConfigData;
+import daryl.system.comun.enums.Activo;
+import daryl.system.comun.enums.Timeframes;
+import daryl.system.model.ArimaConfig;
+import daryl.system.model.VarianceConfig;
+import daryl.system.robots.variance.calculator.repository.IVarianceConfigRepository;
 import daryl.variance.StockPredict;
 
-/**
- * Created by Hon on 3/5/2015.
- */
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class VarianceStockPrediction implements Runnable{
 
-	private String symbol = null;
-	private String fileName = null;
+	@Autowired
+	Logger logger;
+	@Autowired
+	private IVarianceConfigRepository varianceConfigRepository;
+	@Autowired
+	ConfigData config;
 	
-	public VarianceStockPrediction(String symbol) {
-		this.symbol = symbol;
-		this.fileName =  "StockData/" + symbol + ".csv";
+	final String BASE_PATH = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\h\\";
+	
+	private String robot;
+	private Activo activo;
+	private String estrategia;
+	private Timeframes timeframe;
+	private String DATA = "";
+	private int inicio = 0;
+
+	public VarianceStockPrediction() {
+	}
+	
+	public void init(Activo activo, Timeframes timeframe, String robot, int inicio) {
+		this.activo = activo;
+		this.timeframe = timeframe;
+		this.DATA = activo.name() + "_" + timeframe.valor + ".csv"; //EURUSD_60.csv
+		this.robot = robot;
+		this.estrategia = robot;
+		this.inicio = inicio;
 	}
 	
 	@Override
@@ -32,109 +62,62 @@ public class VarianceStockPrediction implements Runnable{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-	}
-	
-	private void escribirNuevoResultado(String fileName, String linea) {
-			
-		try {
-			
-			FileWriter fw = new FileWriter(new File(fileName), Boolean.FALSE);
-			PrintWriter pw = new PrintWriter(fw);
-			
-			pw.println(linea);
-			pw.flush();
-			pw.close();
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
 	}
-	
-	
-	private String leerResultadoAnterior(String fileName) {
-		
-		String resultado = null;
-		
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader (new File(fileName)));
-	    	resultado = reader.readLine();
-	    	reader.close();
-			
-		} catch (FileNotFoundException e) {
-			//e.printStackTrace();
-			System.out.println("Fichero no encontrado, se crea uno: " + e.getMessage());
-		} catch (IOException e) {
-			//e.printStackTrace();
-			System.out.println("Fichero no encontrado, se crea uno: " + e.getMessage());
-		}
-		
-		
-		
-		return resultado;
-		
-	}
-	
-	private void checkResultado(String lineaNueva, String fileName) {
-		
 
-		//Recuperamos el anterior
-		String resAnterior = leerResultadoAnterior(fileName);
-		if(resAnterior != null && !resAnterior.equals("")) {
-			String[] datosAnteriores = resAnterior.split(",");
-			
-			//Nuevos datos
-			String[] datosNuevos = lineaNueva.split(",");
-			
-			//Comparamos los resultados
-			if(Double.parseDouble(datosNuevos[2]) > Double.parseDouble(datosAnteriores[2])) {
-				//Como el nuevo es mayor almacenamos el nuevo
-				System.out.println("Nueva linea guardada -> " + lineaNueva);
-				escribirNuevoResultado(fileName, lineaNueva);
+
+	List<Double> datos = null;
+	
+    private void runPrediction() throws FileNotFoundException, IOException, Exception {
+    	
+    	//Cargamos las cotizaciones
+    	System.out.println("Cargando cotizaciones para: " + robot);
+		if(datos == null) {
+	    	//Cargamos la segunda lista
+			File ficherodatos2 = new File(BASE_PATH + DATA);
+	    	try(BufferedReader reader = new BufferedReader(new FileReader(ficherodatos2))){
+	    		datos = new ArrayList<Double>();
+	    		String leido;
+	    		boolean encabezado = true;
+	    		while( (leido = reader.readLine()) != null  ) {
+	    			if(encabezado == true) {
+	    				encabezado = false;
+	    				continue;
+	    			}
+	    			String[] partes = leido.split(",");
+	    			datos.add(new Double(partes[5]));
+	    			
+	    		}
+	    	} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		}else {
-			//Como el nuevo es mayor almacenamos el nuevo
-			System.out.println("Nueva linea guardada -> " + lineaNueva);
-			escribirNuevoResultado(fileName, lineaNueva);
 		}
-		
-	}
+		System.out.println("Cotizaciones cargadas para: " + robot);
 
-    private void runPrediction() throws FileNotFoundException, IOException {
-    	
-     	List<String> cotizsTotal = new ArrayList<String>();
-    	
-    	
-    	//Leemos el fichero con las cotizaciones
-    	BufferedReader reader = new BufferedReader(new FileReader (new File(fileName)));
-    	
-    	String leido;
-    	Boolean encabezado = true;
-    	while( (leido = reader.readLine()) != null ) {
-    		if(encabezado == true) {
-    			encabezado = false;
-    			continue;
-    		}
-    		cotizsTotal.add(leido);
-    	}
-    	
-        System.out.printf("\n-------------------- DEMO MODE --------------------\n");
-
-       	
-       	
        	int offset = 1;
        	int n = 1;
-       	
-        String cont = "yes"; // this variable is used to judge whether the user want to continue
+        double alpha = 0.005;
+        double beta = 11.1;
 
+        VarianceConfig varianceConfig = varianceConfigRepository.findVarianceConfigByRobot(robot);
+        System.out.println("Config para: " + robot + " -> " + varianceConfig);
         
-        for(n = 1; n < 20; n++) {
+		if(varianceConfig != null && varianceConfig.getLastOffset() != null) offset = varianceConfig.getLastOffset();
+		if(varianceConfig != null && varianceConfig.getLastN() != null) n = varianceConfig.getLastN();
+        
+		System.out.println("Empezamos en offset -> " + offset + " y n -> " + n + " para: " + robot);
+		
+		
+        for(int i = n; i < 20; i++) {
         	
-        	for(offset = 1; offset < 20; offset++) {
+        	for(int j = offset; j < 20; j++) {
         		
         		int contador = 0;
         		
@@ -148,38 +131,29 @@ public class VarianceStockPrediction implements Runnable{
                 double perdidas = 0.0;
                 double resultado = 0.0;
 
-                List<String> cotizs = new ArrayList<String>();
+                List<Double> datos2 = new ArrayList<Double>();
+                
 		        try {
-		        	System.out.println("Probando " + symbol + " con -> n: " + n + " - offset: " + offset);
+		        	System.out.println("Probando " + robot + " con -> n: " + i + " - offset: " + j);
 		        	
 			        while(true){
 			
-			        	if(contador == cotizsTotal.size()-1) break;
+			        	if(contador == datos.size()-1) break;
 			        	
-			        	cotizs.add(0,cotizsTotal.get(contador));
+			        	datos2.add(0,datos.get(contador));
 			
-			        	if(contador < ((offset + n) + 1) ) {
+			        	if(contador < (inicio + (i + j) + 1) ) {
 			                contador++;
 			        		continue;
 			            }
 			
-			            StockPredict stock = new StockPredict(cotizs, symbol, offset, n);
+			            StockPredict stock = new StockPredict(datos2, activo, j, i, alpha, beta);
 			            double[] priceVariance = stock.getPriceVariance();
 			
-			            lastPrice = Double.parseDouble(cotizsTotal.get(contador).split(",")[5]);
-			            expectedPrice = Double.parseDouble(cotizsTotal.get(contador+1).split(",")[5]);
+			            lastPrice = datos.get(contador);
+			            expectedPrice = datos.get(contador+1);
 			            predictedPrice = priceVariance[0];
-			            
-			            /*
-			            System.out.printf("\n-------------- The prediction is: --------------\n\n");
-			            System.out.println("Line: " + contador + " fecha: " + cotizsTotal.get(contador).split(",")[0] + " " + cotizsTotal.get(contador).split(",")[1]);
-			            System.out.printf("The last price is: %f\n", lastPrice);
-			            System.out.printf("The expeted price is: %f\n", expectedPrice);
-			            System.out.printf("The predicted price is: %f\n", predictedPrice);
-			            System.out.printf("The predicted variance is: %f\n", priceVariance[1]);
-			            System.out.printf("The price would be likely in this range: %f ~ %f\n", priceVariance[0] - 3 * priceVariance[1], priceVariance[0] + 3 * priceVariance[1]);
-			            System.out.printf("\n---------------------- END ----------------------\n");
-						*/
+
 			            
 			            contador++;
 			            //System.out.println(lastPredictedPrice + " - " + predictedPrice);
@@ -207,23 +181,19 @@ public class VarianceStockPrediction implements Runnable{
 			            lastExpectedPrice = expectedPrice;
 			            lastPredictedPrice = predictedPrice;
 			            
-			            
-			
-			            //System.out.println("Do you want to continue? (yes/anything)");
-			            //cont = sc.nextLine();
-			            //System.out.printf("\n");
-			            //Thread.sleep(10);
-			            
-			            //if(cotizsTotal.get(contador).split(",")[0].equals("20191231")) break;
 			        }
 			        
 			        
 		        }catch (Exception e) {
 					e.printStackTrace();
 				}finally {
-		            String lineaGenerada = offset + "," + n + "," + resultado;
-		            System.out.println("RESULTADO " + symbol + " -> " + lineaGenerada);
-		            checkResultado(lineaGenerada, "StockData/" + symbol + "_RES.csv");
+		            String lineaGenerada = j + "," + i + "," + resultado;
+		            System.out.println("RESULTADO " + robot + " -> " + lineaGenerada);
+
+		            //Comprobamos el resultado
+		            varianceConfig = checkResultado(varianceConfig, resultado, i, j);
+		            
+		            
 				}
         	}
         }
@@ -231,12 +201,43 @@ public class VarianceStockPrediction implements Runnable{
     }
 
     
-    public static void main(String[] args) {
-    	try {
-			new VarianceStockPrediction("GDAXI_240").runPrediction();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private VarianceConfig checkResultado(VarianceConfig varianceConfig, Double resultado, int n, int offset) {
+		
+		if(varianceConfig == null) {
+			
+			varianceConfig = new VarianceConfig();
+			varianceConfig.setRobot(robot);
+			varianceConfig.setEstrategia(estrategia);
+			varianceConfig.setTipoActivo(activo);
+			
 		}
-    }
+		
+		
+		
+		Long fechaHoraMillis = System.currentTimeMillis();
+		if(varianceConfig.getResultado() == null || varianceConfig.getResultado() < resultado) {
+			
+			varianceConfig.setFecha(config.getFechaInString(fechaHoraMillis));
+			varianceConfig.setFModificacion(fechaHoraMillis);
+			varianceConfig.setHora(config.getHoraInString(fechaHoraMillis));
+			varianceConfig.setResultado(resultado);
+			varianceConfig.setOffset(offset);
+			varianceConfig.setN(n);
+			varianceConfig.setLastN(n);
+			varianceConfig.setLastOffset(offset);
+			varianceConfigRepository.save(varianceConfig);
+		}else {
+			
+			if(varianceConfig != null) {
+				varianceConfig.setLastN(n);
+				varianceConfig.setLastOffset(offset);
+				varianceConfigRepository.save(varianceConfig);
+			}
+			
+        }
+		return varianceConfig;
+		
+	}
+    
+
 }

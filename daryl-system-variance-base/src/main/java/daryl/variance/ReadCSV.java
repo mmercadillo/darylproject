@@ -16,7 +16,7 @@ public class ReadCSV {
     private int offset;
     private int position;
 
-    public ReadCSV(int N, Activo activo, int offset, List<Datos> datosForecast){
+    public ReadCSV(int N, Activo activo, int offset, List<Double> datosForecast){
         this.N = N;
         price = new double[N][1];
         date = new String[N];
@@ -26,10 +26,11 @@ public class ReadCSV {
         info = new String[41700][2];
         try {
         	int count = 0;
-        	for (Datos dato : datosForecast) {
+        	for (Double dato : datosForecast) {
 				
-        		info[count][0] = String.valueOf(dato.getCierre());
-                info[count][1] = dato.getFecha()+" "+dato.getHora();
+        		info[count][0] = String.valueOf(dato);
+                //info[count][1] = dato.getFecha()+" "+dato.getHora();
+        		info[count][1] = "";
                 ++count;
 			}
 

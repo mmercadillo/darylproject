@@ -23,7 +23,7 @@ public class StockPredict {
 
     public String[] date = new String[n];
 
-    public StockPredict(List<Datos> datosForecast, Activo activo, int offset, int n, double alpha, double beta){
+    public StockPredict(List<Double> datosForecast, Activo activo, int offset, int n, double alpha, double beta){
         this.activo = activo;
         this.offset = offset;
         ReadCSV readData = new ReadCSV(n, activo, offset, datosForecast);
