@@ -58,35 +58,35 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 		
 		ResumenRobotDto resumenDto = new ResumenRobotDto();
 			try{resumenDto.setEstrategia(resumen.getEstrategia());}catch (Exception e) {}
-			resumenDto.setFAlta(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFAlta())));
-			resumenDto.setFModificacion(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFModificacion())));
-			resumenDto.setId(resumen.getId());
-			resumenDto.setNumOperaciones(resumen.getNumOperaciones());
-			resumenDto.setNumOpsGanadoras(resumen.getNumOpsGanadoras());
-			resumenDto.setNumOpsPerdedoras(resumen.getNumOpsPerdedoras());
-			resumenDto.setRobot(resumen.getRobot());
-			resumenDto.setTipoActivo(resumen.getTipoActivo());
-			resumenDto.setTotal(Math.round(resumen.getTotal()));
-			resumenDto.setTotalGanancias(Math.round(resumen.getTotalGanancias()));
-			resumenDto.setTotalPerdidas(Math.round(resumen.getTotalPerdidas()));
-			resumenDto.setVersion(resumen.getVersion());
-			/*resumenDto.setMes(resumen.getMes());
-			resumenDto.setSemana(resumen.getSemana());
-			resumenDto.setAnyo(resumen.getAnyo());
-			resumenDto.setDia(resumen.getDia());
-			resumenDto.setTotalSemana(Math.round(resumen.getTotalSemana()));
-			resumenDto.setTotalMes(Math.round(resumen.getTotalMes()));
-			resumenDto.setTotalAnyo(Math.round(resumen.getTotalAnyo()));
+			try{resumenDto.setFAlta(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFAlta())));}catch (Exception e) {}
+			try{resumenDto.setFModificacion(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFModificacion())));}catch (Exception e) {}
+			try{resumenDto.setId(resumen.getId());}catch (Exception e) {}
+			try{resumenDto.setNumOperaciones(resumen.getNumOperaciones());}catch (Exception e) {}
+			try{resumenDto.setNumOpsGanadoras(resumen.getNumOpsGanadoras());}catch (Exception e) {}
+			try{resumenDto.setNumOpsPerdedoras(resumen.getNumOpsPerdedoras());}catch (Exception e) {}
+			try{resumenDto.setRobot(resumen.getRobot());}catch (Exception e) {}
+			try{resumenDto.setTipoActivo(resumen.getTipoActivo());}catch (Exception e) {}
+			try{resumenDto.setTotal(Math.round(resumen.getTotal()));}catch (Exception e) {}
+			try{resumenDto.setTotalGanancias(Math.round(resumen.getTotalGanancias()));}catch (Exception e) {}
+			try{resumenDto.setTotalPerdidas(Math.round(resumen.getTotalPerdidas()));}catch (Exception e) {}
+			try{resumenDto.setVersion(resumen.getVersion());}catch (Exception e) {}
+			/*resumenDto.setMes(resumen.getMes());}catch (Exception e) {}
+			resumenDto.setSemana(resumen.getSemana());}catch (Exception e) {}
+			resumenDto.setAnyo(resumen.getAnyo());}catch (Exception e) {}
+			resumenDto.setDia(resumen.getDia());}catch (Exception e) {}
+			resumenDto.setTotalSemana(Math.round(resumen.getTotalSemana()));}catch (Exception e) {}
+			resumenDto.setTotalMes(Math.round(resumen.getTotalMes()));}catch (Exception e) {}
+			resumenDto.setTotalAnyo(Math.round(resumen.getTotalAnyo()));}catch (Exception e) {}
 			resumenDto.setTotalDia(Math.round(resumen.getTotalDia()));*/
 			
-			resumenDto.setPctOpsGanadoras(resumen.getPctOpsGanadoras());
-			resumenDto.setPctOpsPerdedoras(resumen.getPctOpsPerdedoras());
-			resumenDto.setGananciaMediaPorOpGanadora(resumen.getGananciaMediaPorOpGanadora());
-			resumenDto.setPerdidaMediaPorOpPerdedora(resumen.getPerdidaMediaPorOpPerdedora());
-			
-			if(Math.round(resumen.getTotal()) >= 15) resumenDto.setType(1);
-			else resumenDto.setType(2);
-			
+			try{resumenDto.setPctOpsGanadoras(resumen.getPctOpsGanadoras());}catch (Exception e) {}
+			try{resumenDto.setPctOpsPerdedoras(resumen.getPctOpsPerdedoras());}catch (Exception e) {}
+			try{resumenDto.setGananciaMediaPorOpGanadora(resumen.getGananciaMediaPorOpGanadora());}catch (Exception e) {}
+			try{resumenDto.setPerdidaMediaPorOpPerdedora(resumen.getPerdidaMediaPorOpPerdedora());}catch (Exception e) {}
+			try{
+				if(Math.round(resumen.getTotal()) >= 15) resumenDto.setType(1);
+				else resumenDto.setType(2);
+			}catch (Exception e) {}
 		return resumenDto;
 		
 	}
