@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,7 +30,8 @@ public class DashboardController {
 	@Autowired
 	IRobotsCuentaService robotsCuentaService;
 	
-	@GetMapping("/dashboard")
+	
+	@RequestMapping(path = "/dashboard", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView main(Model model) {
 
 		ModelAndView view = new ModelAndView("index");
