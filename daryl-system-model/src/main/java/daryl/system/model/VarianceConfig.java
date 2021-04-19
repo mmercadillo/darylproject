@@ -46,6 +46,11 @@ public class VarianceConfig implements Serializable{
 	@Getter @Setter
 	private Integer offset;
 	
+	
+	@Column
+	@Getter @Setter
+	private Integer m;
+	
 	@Column
 	@Getter @Setter
 	private Double alpha;
@@ -78,6 +83,17 @@ public class VarianceConfig implements Serializable{
 	@Column(nullable = true)
 	@Getter @Setter
 	private Integer lastOffset;
-
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastM;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastAlpha;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastBeta;
 	
 }

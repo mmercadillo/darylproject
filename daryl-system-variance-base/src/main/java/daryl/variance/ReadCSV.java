@@ -16,14 +16,14 @@ public class ReadCSV {
     private int offset;
     private int position;
 
-    public ReadCSV(int N, Activo activo, int offset, List<Double> datosForecast){
+    public ReadCSV(int N, Activo activo, int offset, List<Double> datosForecast) throws Exception{
         this.N = N;
         price = new double[N][1];
         date = new String[N];
         this.activo = activo;
         this.offset = offset;
 
-        info = new String[41700][2];
+        info = new String[datosForecast.size()][2];
         try {
         	int count = 0;
         	for (Double dato : datosForecast) {
