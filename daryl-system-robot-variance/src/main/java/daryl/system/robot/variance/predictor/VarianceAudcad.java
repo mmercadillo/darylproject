@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.Datos;
+import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Robot;
 import daryl.system.model.VarianceConfig;
 import daryl.system.model.historicos.HistAudCad;
@@ -29,77 +31,62 @@ public class VarianceAudcad  extends VariancePredictor{
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 
-
-	private Double getPrediccionAnterior(List<Datos> datosForecast, VarianceConfig varianceConfig, Robot bot) {
-		
-		//Lista para prediccionAnterior
-		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
-		
-		int n = varianceConfig.getN();
-		int offset = varianceConfig.getOffset();
-		double alpha = varianceConfig.getAlpha();
-		double beta = varianceConfig.getBeta();
-		
-		StockPredict stock = new StockPredict(datosForecast, bot.getActivo(), offset, n, alpha, beta);
-		double[] priceVariance = stock.getPriceVariance();
-		
-		double prediccionAnterior = priceVariance[0];	
-		
-		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
-		return prediccionAnterior;
-
-	}
 	
 	
+
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
+
+		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+		List<Datos> datosForecast = toDatosList(historico);
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+		List<Double> datos = darylNormalizer.getDatos();
 		
 		try {
-		
-			List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
-			VarianceConfig varianceConfig = varianceConfigRepository.findVarianceConfigByRobot(bot.getVarianceConfig());
 			
+			VarianceConfig varianceConfig = varianceConfigRepository.findVarianceConfigByRobot(bot.getVarianceConfig());
 			if(varianceConfig != null) {
-				
-				List<Datos> datosForecast = toDatosList(historico);
-				Double prediccionAnterior = getPrediccionAnterior(datosForecast, varianceConfig, bot);
 				
 				int n = varianceConfig.getN();
 				int offset = varianceConfig.getOffset();
 				double alpha = varianceConfig.getAlpha();
 				double beta = varianceConfig.getBeta();
-
-	        	try {
+				int m = varianceConfig.getLastM();
+				
+				try {
 	        		
 	        		
-	        		StockPredict stock = new StockPredict(datosForecast, bot.getActivo(), offset, n, alpha, beta);
+	        		StockPredict stock = new StockPredict(datos, offset, n, alpha, beta, m);
 	        		double[] priceVariance = stock.getPriceVariance();
 	        		
 	        		double forecast = priceVariance[0];
-	        		logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
-	    	        if(forecast > prediccionAnterior) {
-	    	        	prediccion = 1.0;
-	    	        }
-	    	        if(forecast < prediccionAnterior) {
-	    	        	prediccion = -1.0;
-	    	        }
+	        		logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
+	        		if(forecast > datos.get(datos.size()-1)) {
+			        	prediccion = 1.0;
+			        }
+			        if(forecast < datos.get(datos.size()-1)) {
+			        	prediccion = -1.0;
+			        }
 	        		
 	        	}catch (Exception e) {
 	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 	        	}
+				
 			}else {
 				logger.info("No existe config para el robot: {}", bot.getRobot());
 			}
-
+			
 		}catch (Exception e) {
 			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 		}
 
 		return prediccion;
-	
+		
 	}
+	
 
 	
 	private List<Datos> toDatosList(List<HistAudCad> historico){
