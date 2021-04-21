@@ -13,7 +13,7 @@
 	<groupId>daryl.system</groupId>
 	<artifactId>mt4-client-web</artifactId>
 	<version>1.0.5</version>
-	<name>daryl-system-client-web</name>
+	<name>daryl-system-mt4-client-web</name>
 	<description>Servicios rest para explotación del terminal de trading mt4</description>
 	
 	<properties>
