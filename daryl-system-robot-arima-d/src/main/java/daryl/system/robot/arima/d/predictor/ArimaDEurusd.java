@@ -33,6 +33,8 @@ public class ArimaDEurusd  extends ArimaPredictor{
 	IArimaConfigRepository arimaConfigRepository;
 	@Autowired
 	private IHistEurUsdRepository histEurUsdRepository;
+	
+	
 
 
 	private Double getPrediccionAnterior(List<Datos> datosForecast, DefaultArimaProcess arimaProcess, ArimaConfig arimaConfig) {
