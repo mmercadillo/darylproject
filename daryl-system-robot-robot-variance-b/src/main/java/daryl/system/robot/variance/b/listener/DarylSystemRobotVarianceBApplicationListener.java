@@ -1,4 +1,4 @@
-package daryl.system.robot.variance.listener;
+package daryl.system.robot.variance.b.listener;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(0)
-public class DarylSystemRobotArimaEApplicationListener implements ApplicationListener<ApplicationReadyEvent>{
+public class DarylSystemRobotVarianceBApplicationListener implements ApplicationListener<ApplicationReadyEvent>{
 
 	@Autowired
 	Logger logger;

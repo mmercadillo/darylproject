@@ -11,7 +11,7 @@
 	<groupId>daryl.system.robots</groupId>
 	<artifactId>robot-variance</artifactId>
 	<version>1.0.4</version>
-	<name>daryl-system-robot-arima-e</name>
+	<name>daryl-system-robot-variance</name>
 	  <description>Microservicio que calcula la orden del robot Variance</description>
    	<properties>
 		<java.version>1.8</java.version>
