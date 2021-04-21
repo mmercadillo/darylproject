@@ -12,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Estrategia;
-import daryl.system.comun.enums.TipoRobot;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

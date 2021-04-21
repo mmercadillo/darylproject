@@ -31,6 +31,31 @@ public class VarianceBAudcad  extends VariancePredictor{
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
 
+
+	private Double getPrediccionAnterior(List<Datos> datosForecast, VarianceConfig varianceConfig) throws Exception {
+		
+		//Lista para prediccionAnterior
+		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
+		//Recuperamos los cierres de cada Dato
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecastAnterior, Mode.CLOSE);
+		List<Double> datosAnterior = darylNormalizer.getDatos();
+		
+		int n = varianceConfig.getN();
+		int offset = varianceConfig.getOffset();
+		double alpha = varianceConfig.getAlpha();
+		double beta = varianceConfig.getBeta();
+		int m = varianceConfig.getLastM();
+		
+		StockPredict stock = new StockPredict(datosAnterior, offset, n, alpha, beta, m);
+		double[] priceVariance = stock.getPriceVariance();
+		
+		double prediccionAnterior = priceVariance[0];
+
+		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+		return prediccionAnterior;
+
+	}
+	
 	
 	
 
@@ -38,17 +63,22 @@ public class VarianceBAudcad  extends VariancePredictor{
 	protected Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
-
-		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
-		List<Datos> datosForecast = toDatosList(historico);
-		//Recuperamos los cierres de cada Dato
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
-		List<Double> datos = darylNormalizer.getDatos();
 		
 		try {
 			
+			List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
+			
 			VarianceConfig varianceConfig = varianceConfigRepository.findVarianceConfigByRobot(bot.getVarianceConfig());
 			if(varianceConfig != null) {
+				
+				
+				List<Datos> datosForecast = toDatosList(historico);
+				Double prediccionAnterior = getPrediccionAnterior(datosForecast, varianceConfig);
+				
+				//Recuperamos los cierres de cada Dato
+				DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+				List<Double> datos = darylNormalizer.getDatos();
+				
 				
 				int n = varianceConfig.getN();
 				int offset = varianceConfig.getOffset();
@@ -63,11 +93,11 @@ public class VarianceBAudcad  extends VariancePredictor{
 	        		double[] priceVariance = stock.getPriceVariance();
 	        		
 	        		double forecast = priceVariance[0];
-	        		logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
-	        		if(forecast > datos.get(datos.size()-1)) {
+	        		logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
+	        		if(forecast > prediccionAnterior) {
 			        	prediccion = 1.0;
 			        }
-			        if(forecast < datos.get(datos.size()-1)) {
+			        if(forecast < prediccionAnterior) {
 			        	prediccion = -1.0;
 			        }
 	        		
