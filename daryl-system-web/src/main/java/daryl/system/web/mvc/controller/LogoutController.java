@@ -28,6 +28,7 @@ public class LogoutController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
     }
 
 	

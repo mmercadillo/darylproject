@@ -22,9 +22,6 @@ import lombok.ToString;
 @ToString
 public class ResumenRobot implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -94,4 +91,10 @@ public class ResumenRobot implements Serializable{
 	private Double gananciaMediaPorOpGanadora = 0.0;
 	@Getter @Setter
 	private Double perdidaMediaPorOpPerdedora = 0.0;
+	
+	//Esperanza matemática
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double espmat = 0.0;
+	
 }

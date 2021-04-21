@@ -53,6 +53,9 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 	private Double gananciaMediaPorOpGanadora;
 	@Getter @Setter
 	private Double perdidaMediaPorOpPerdedora;
+	@Getter @Setter
+	private Double espmat;
+	
 	
 	public static ResumenRobotDto getDto(ResumenRobot resumen) {
 		
@@ -83,10 +86,13 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 			try{resumenDto.setPctOpsPerdedoras(resumen.getPctOpsPerdedoras());}catch (Exception e) {}
 			try{resumenDto.setGananciaMediaPorOpGanadora(resumen.getGananciaMediaPorOpGanadora());}catch (Exception e) {}
 			try{resumenDto.setPerdidaMediaPorOpPerdedora(resumen.getPerdidaMediaPorOpPerdedora());}catch (Exception e) {}
+			try{resumenDto.setEspmat(resumen.getEspmat());}catch (Exception e) {}
+			
 			try{
 				if(Math.round(resumen.getTotal()) >= 15) resumenDto.setType(1);
 				else resumenDto.setType(2);
 			}catch (Exception e) {}
+			
 		return resumenDto;
 		
 	}

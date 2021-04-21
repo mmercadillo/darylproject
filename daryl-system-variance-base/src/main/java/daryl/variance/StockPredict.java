@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Jama.Matrix;
-import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.enums.Activo;
 
 /**
  * Created by Hon on 2/27/2015.
@@ -12,6 +10,7 @@ import daryl.system.comun.enums.Activo;
 public class StockPredict {
 
     private int n;
+    private int offset;
     private int M = 5;
     private double alpha = 0.005;
     private double beta = 11.1;
@@ -20,14 +19,16 @@ public class StockPredict {
     public StockPredict(List<Double> datosForecast, int offset, int n, double alpha, double beta, int M){
         
         this.n = n;
-        this.alpha = alpha;
-        this.beta = beta;
-        this.M = M;
+        //this.alpha = alpha;
+        //this.beta = beta;
+        //this.M = M;
+        this.offset = offset;
 
-        for(int i = n - 1; i >= 0; i--){
-            this.prices.add(datosForecast.get(i + offset));
+        for(int i = 0; i < this.n; i++) {
+        	this.prices.add(datosForecast.get(datosForecast.size()- this.n - this.offset) + i);
         }
-
+        //System.out.println("Prices: " + this.prices);
+        
     }
     
     public double[] getPriceVariance() throws Exception{

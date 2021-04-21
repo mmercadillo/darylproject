@@ -16,19 +16,20 @@ public class ResumenRobotServiceImpl implements IResumenRobotService {
 
 	@Autowired
 	IResumenRobotRepository repository;
+
+	@Transactional
+	public List<ResumenRobot> findResumenRobotTopNumOrderByEspmatDesc(Integer num) {
+		return repository.findResumenRobotsByOrderByEspmatDesc(PageRequest.of(0,  num));
+	}
 	
 	@Transactional
 	public List<ResumenRobot> findResumenRobotTopNumOrderByTotalDesc(Integer num) {
-		
 		return repository.findResumenRobotsByOrderByTotalDesc(PageRequest.of(0,  num));
 	}
 
-	
 	@Transactional
 	public ResumenRobot findResumenRobotByRobotOrderByTotalDesc(String robot) {
-		
 		return repository.findResumenRobotByRobotOrderByTotalDesc(robot);
 	}
-	
 	
 }

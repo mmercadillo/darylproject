@@ -10,6 +10,8 @@ import daryl.system.model.ResumenRobot;
 
 @Repository
 public interface IResumenRobotRepository extends JpaRepository<ResumenRobot, Long> {
+	
+	List<ResumenRobot> findResumenRobotsByOrderByEspmatDesc(Pageable page);
 	List<ResumenRobot> findResumenRobotsByOrderByTotalDesc(Pageable page);
 	ResumenRobot findResumenRobotByRobotOrderByTotalDesc(String robot);
 }
