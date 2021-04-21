@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
   	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -8,11 +9,13 @@
 		<version>2.2.1.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	
 	<groupId>daryl.system.robots</groupId>
 	<artifactId>variance-calculator</artifactId>
 	<version>1.0.5</version>
 	<name>daryl-system-variance-calculator</name>
 	<description>Cálculo de las combinaciones del sistema VARIANCE sobre el cierre</description>
+  	
   	<properties>
 		<java.version>1.8</java.version>
 		<daryl.system.comun>1.0.5</daryl.system.comun>
@@ -20,7 +23,8 @@
 		<daryl.system.variance-base>1.0.5</daryl.system.variance-base>
 	</properties> 
 	<dependencies>
-	 		<!-- Daryl System Dependencies -->
+		
+		<!-- Daryl System Dependencies -->
 		<dependency>
 			<groupId>daryl.system</groupId>
 			<artifactId>comun</artifactId>
@@ -31,20 +35,19 @@
 			<artifactId>model</artifactId>
 			<version>${daryl.system.model}</version>
 		</dependency>
-				<dependency>
+		<dependency>
 			<groupId>daryl.system.robots</groupId>
 			<artifactId>variance-base</artifactId>
 			<version>${daryl.system.variance-base}</version>
 		</dependency>
 		
 		<!-- // -->
-  
   		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		
-				<dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
@@ -61,10 +64,10 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-    <groupId>gov.nist.math</groupId>
-    <artifactId>jama</artifactId>
-    <version>1.0.3</version>
-</dependency>
+    		<groupId>gov.nist.math</groupId>
+    		<artifactId>jama</artifactId>
+    		<version>1.0.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>

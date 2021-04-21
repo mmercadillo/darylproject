@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+
+	<modelVersion>4.0.0</modelVersion>
   
-        	<parent>
+    <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.1.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
   
-  <groupId>daryl.system.robots</groupId>
-  <artifactId>robot-arima-b</artifactId>
-  <version>1.0.5</version>
-  <name>daryl-system-robot-aima-b</name>
-  <description>Robot Arima B</description>
-  
-  
+  	<groupId>daryl.system.robots</groupId>
+  	<artifactId>robot-arima-b</artifactId>
+  	<version>1.0.5</version>
+  	<name>daryl-system-robot-aima-b</name>
+  	<description>Robot Arima B</description>
+
    	<properties>
 		<java.version>1.8</java.version>
 		<daryl.system.comun>1.0.5</daryl.system.comun>
@@ -23,12 +23,13 @@
 		<gson.version>2.8.6</gson.version>
 	</properties>  
   
-  <dependencies>
-    <dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-    <version>${gson.version}</version>
-</dependency>
+  	<dependencies>
+    	
+    	<dependency>
+    		<groupId>com.google.code.gson</groupId>
+    		<artifactId>gson</artifactId>
+    		<version>${gson.version}</version>
+		</dependency>
   		<!-- Daryl System Dependencies -->
 		<dependency>
 			<groupId>daryl.system</groupId>
@@ -52,7 +53,7 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		
-				<dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
@@ -69,7 +70,7 @@
 			<optional>true</optional>
 		</dependency>
 		
-		          <dependency>
+		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-activemq</artifactId>
         </dependency>
@@ -77,7 +78,7 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-broker</artifactId>
         </dependency>
-  </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>

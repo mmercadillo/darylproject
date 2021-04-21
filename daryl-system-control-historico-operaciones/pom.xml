@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  
+
+	<modelVersion>4.0.0</modelVersion>
     
   	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
   
-  <groupId>daryl.system.robots</groupId>
-  <artifactId>control-historico-operaciones</artifactId>
-  <version>1.0.5</version>
-  <name>daryl-system-control-historico-operaciones</name>
-  <description>Control del historico de operaciones, creando el resumen de cada robot</description>
+ 	<groupId>daryl.system.robots</groupId>
+  	<artifactId>control-historico-operaciones</artifactId>
+  	<version>1.0.5</version>
+  	<name>daryl-system-control-historico-operaciones</name>
+  	<description>Control del historico de operaciones, creando el resumen de cada robot</description>
   
    	<properties>
 		<java.version>1.8</java.version>
@@ -22,7 +22,7 @@
 		<daryl.system.arima-base>1.0.5</daryl.system.arima-base>
 	</properties>  
   
-  <dependencies>
+  	<dependencies>
   
   		<!-- Daryl System Dependencies -->
 		<dependency>
@@ -43,7 +43,7 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		
-				<dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
@@ -60,8 +60,7 @@
 			<optional>true</optional>
 		</dependency>
 		
-		  
-  </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>

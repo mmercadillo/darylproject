@@ -1,21 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+
+	<modelVersion>4.0.0</modelVersion>
   
-  <groupId>daryl.system.robots</groupId>
-  <artifactId>variance-base</artifactId>
-  <version>1.0.5</version>
-  <name>daryl-system-variance-base</name>
-  <description>Cálculos base para el sistema Variance</description>
-  
-    
+  	<groupId>daryl.system.robots</groupId>
+  	<artifactId>variance-base</artifactId>
+  	<version>1.0.5</version>
+  	<name>daryl-system-variance-base</name>
+  	<description>Cálculos base para el sistema Variance</description>
+      
   	<properties>
 		<java.version>1.8</java.version>
-				<daryl.system.comun>1.0.5</daryl.system.comun>
+		<daryl.system.comun>1.0.5</daryl.system.comun>
 		<daryl.system.model>1.0.5</daryl.system.model>
 	</properties>
    
   	<dependencies>
-  	  		<!-- Daryl System Dependencies -->
+  	  	<!-- Daryl System Dependencies -->
 		<dependency>
 			<groupId>daryl.system</groupId>
 			<artifactId>comun</artifactId>
@@ -33,7 +33,7 @@
 			<scope>provided</scope>
 		</dependency>
   	
-  				<!-- Test dependencies -->
+  		<!-- Test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -42,18 +42,18 @@
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-math3</artifactId>
-    <version>3.0</version>
-</dependency>
+		<dependency>
+    		<groupId>org.apache.commons</groupId>
+    		<artifactId>commons-math3</artifactId>
+    		<version>3.0</version>
+		</dependency>
 
 		<!-- ARIMA -->
 		<dependency>
-    <groupId>gov.nist.math</groupId>
-    <artifactId>jama</artifactId>
-    <version>1.0.3</version>
-</dependency>
+    		<groupId>gov.nist.math</groupId>
+    		<artifactId>jama</artifactId>
+    		<version>1.0.3</version>
+		</dependency>
   	
   	</dependencies>
   
