@@ -10,7 +10,9 @@
   
   <groupId>daryl.system</groupId>
   <artifactId>comun</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
+    <name>daryl-system-comun</name>
+  <description>Elementos de uso común</description>
   
   	<properties>
 		<java.version>1.8</java.version>
