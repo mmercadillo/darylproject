@@ -8,19 +8,19 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
   
-  <groupId>daryl.system.robots</groupId>
-  <artifactId>databaseloader</artifactId>
-  <version>1.0.4</version>
-  <name>daryl-system-databaseloader</name>
-  <description>Microservico de cálculo de las combinaciones de del sistema aima C sobre el cierre</description>
+  	<groupId>daryl.system.robots</groupId>
+  	<artifactId>databaseloader</artifactId>
+  	<version>1.0.5</version>
+  	<name>daryl-system-databaseloader</name>
+  	<description>Carga la base de datos con las cotizaciones hitóricas procedentes de Tickstory</description>
   
   	<properties>
 		<java.version>1.8</java.version>
-		<daryl.system.comun>1.0.4</daryl.system.comun>
-		<daryl.system.model>1.0.4</daryl.system.model>
+		<daryl.system.comun>1.0.5</daryl.system.comun>
+		<daryl.system.model>1.0.5</daryl.system.model>
 	</properties>  
   
-  <dependencies>
+  	<dependencies>
   
   		<!-- Daryl System Dependencies -->
 		<dependency>
@@ -36,18 +36,18 @@
 
 		
 		<!-- // -->
-  
   		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		
-				<dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -57,10 +57,9 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
-		
+		</dependency>	
 		  
-  </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>

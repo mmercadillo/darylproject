@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<configuration>
 	 
-	    <property name="LOGS" value="D:/eclipse-asterix/logs" />
+	    <property name="LOGS" value="C:/Users/Admin/Desktop/DarylWorkspace/logs" />
+	     <property name="APP" value="daryl-system-web" />
 
 	    <appender name="Console"
 	        class="ch.qos.logback.core.ConsoleAppender">

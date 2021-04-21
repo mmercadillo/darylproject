@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+
+	<modelVersion>4.0.0</modelVersion>
   
   	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -8,22 +9,20 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
   
-  <groupId>daryl.system</groupId>
-  <artifactId>model</artifactId>
-  <version>1.0.4</version>
-  <name>daryl-system-model</name>
-  <description>Cojunto d entidades del sistema</description>
-  
-    
+  	<groupId>daryl.system</groupId>
+  	<artifactId>model</artifactId>
+  	<version>1.0.5</version>
+  	<name>daryl-system-model</name>
+  	<description>Cojunto de entidades del sistema</description>
+      
   	<properties>
 		<java.version>1.8</java.version>
-		<daryl.system.comun>1.0.4</daryl.system.comun>
+		<daryl.system.comun>1.0.5</daryl.system.comun>
 	</properties>
   
   	<dependencies>
   	
-  	
-  			<!-- Daryl System Dependencies -->
+  		<!-- Daryl System Dependencies -->
 		<dependency>
 			<groupId>daryl.system</groupId>
 			<artifactId>comun</artifactId>
@@ -31,12 +30,12 @@
 		</dependency>
 		<!-- // -->
   	
-  			<dependency>
+  		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		
-				<dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
@@ -49,12 +48,12 @@
 		</dependency>
 		
 		<dependency>
-    <groupId>org.modelmapper</groupId>
-    <artifactId>modelmapper</artifactId>
-    <version>2.3.9</version>
-</dependency>
+    		<groupId>org.modelmapper</groupId>
+    		<artifactId>modelmapper</artifactId>
+    		<version>2.3.9</version>
+		</dependency>
 		
-  	</dependencies>
+	</dependencies>
   
 	<build>
 		<plugins>
