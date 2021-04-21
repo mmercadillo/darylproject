@@ -34,14 +34,14 @@ public class DashboardController {
 	@RequestMapping(path = "/dashboard", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView main(Model model) {
 
-		ModelAndView view = new ModelAndView("index");
+		ModelAndView view = new ModelAndView("dashboard");
 		
 		//Card con los robots del darwin
 		List<RobotsCuenta> robotsDarwin = robotsCuentaService.findRobotsCuentaByCuenta("2100073282");
 		view.addObject("robotsDarwin", robotsDarwin);
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		//Card con el top5
+		//Card con el top5 en resultado
 		List<ResumenRobot> top5 = resumenRobotService.findResumenRobotTopNumOrderByTotalDesc(5);
 		List<ResumenRobotDto> resumenesTop5 = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top5) {
@@ -49,7 +49,18 @@ public class DashboardController {
 		}
 		view.addObject("top5", resumenesTop5);
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//Robots para calcular los res�menoes
+		
+		//Card con el top5 en esperanza matemática
+		List<ResumenRobot> top5EspMat = resumenRobotService.findResumenRobotTopNumOrderByEspmatDesc(5);
+		List<ResumenRobotDto> resumenesTop5EspMat = new ArrayList<ResumenRobotDto>();
+		for (ResumenRobot resumen : top5EspMat) {
+			if(resumen != null) resumenesTop5EspMat.add(ResumenRobotDto.getDto(resumen));
+		}
+		view.addObject("top5Espmat", resumenesTop5EspMat);
+		///////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		
+		//Robots para calcular los cards con los resúmenes resumenes
 		Integer numTotalRobots = 0;
 		Integer numTotalRobotsEnPositivo = 0;
 		Integer numTotalRobotsEnNegativo = 0;

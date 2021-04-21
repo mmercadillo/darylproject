@@ -92,6 +92,22 @@ public class ControlHistoricoOperaciones {
 						}catch (Exception e) {
 							// TODO: handle exception
 						}
+						
+						//Cálculo de la esperanza matemática
+						try {
+							
+							double probWin = resumen.getNumOpsGanadoras() / resumen.getNumOperaciones();
+							double probLoss = resumen.getNumOpsPerdedoras() / resumen.getNumOperaciones();
+							
+							double gananciaMediaPorOpGanadora = resumen.getGananciaMediaPorOpGanadora();
+							double perdidaMediaPorOpPerdedora = resumen.getPerdidaMediaPorOpPerdedora();
+							
+							double espmat = (probWin * gananciaMediaPorOpGanadora) - (probLoss * perdidaMediaPorOpPerdedora);
+							resumen.setEspmat(espmat);
+							
+						}catch (Exception e) {
+						}
+						
 					}
 		    		logger.info("OPERACIONES ROBOT ACTUALIZADAS-> " + robot.getRobot());
 			    	resumenRobotRepository.save(resumen);
