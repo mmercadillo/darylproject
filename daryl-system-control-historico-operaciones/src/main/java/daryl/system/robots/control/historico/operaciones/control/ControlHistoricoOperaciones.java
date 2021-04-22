@@ -96,8 +96,8 @@ public class ControlHistoricoOperaciones {
 						//C�lculo de la esperanza matem�tica
 						try {
 							
-							double probWin = resumen.getNumOpsGanadoras() / resumen.getNumOperaciones();
-							double probLoss = resumen.getNumOpsPerdedoras() / resumen.getNumOperaciones();
+							double probWin = (double)resumen.getNumOpsGanadoras() / (double)resumen.getNumOperaciones();
+							double probLoss = (double)resumen.getNumOpsPerdedoras() / (double)resumen.getNumOperaciones();
 							
 							double gananciaMediaPorOpGanadora = resumen.getGananciaMediaPorOpGanadora();
 							double perdidaMediaPorOpPerdedora = resumen.getPerdidaMediaPorOpPerdedora();
