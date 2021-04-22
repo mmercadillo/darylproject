@@ -213,13 +213,13 @@ License: You must have a valid license purchased only from themeforest(the above
 												<a th:href="@{'/robot/'+${resumen.robot}}" th:text="${resumen.robot}"></a>
 											</td>
 											<td th:text="${resumen.fModificacion}"></td>
-											<td th:text="${#numbers.formatDecimal(resumen.total, 0, 'POINT', 2, 'COMMA')}"></td>
-											<td th:text="${#numbers.formatDecimal(resumen.espmat, 0, 'POINT', 2, 'COMMA')}"></td>
+											<td th:text="${#numbers.formatDecimal(resumen.total, 1, 'POINT', 2, 'COMMA')}"></td>
+											<td th:text="${#numbers.formatDecimal(resumen.espmat, 1, 'POINT', 2, 'COMMA')}"></td>
 											<td th:text="${resumen.numOperaciones}"></td>
 											<td th:text="${resumen.numOpsGanadoras}"></td>
 											<td th:text="${resumen.numOpsPerdedoras}"></td>
-											<td th:text="${#numbers.formatDecimal(resumen.pctOpsGanadoras, 0, 'POINT', 2, 'COMMA') + '%'}"></td>
-											<td th:text="${#numbers.formatDecimal(resumen.pctOpsPerdedoras, 0, 'POINT', 2, 'COMMA') + '%'}"></td>
+											<td th:text="${#numbers.formatDecimal(resumen.pctOpsGanadoras, 1, 'POINT', 2, 'COMMA') + '%'}"></td>
+											<td th:text="${#numbers.formatDecimal(resumen.pctOpsPerdedoras, 1, 'POINT', 2, 'COMMA') + '%'}"></td>
 										</tr>
 									</tbody>
 								</table>
