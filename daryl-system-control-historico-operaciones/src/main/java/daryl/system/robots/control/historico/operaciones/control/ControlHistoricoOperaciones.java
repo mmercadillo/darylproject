@@ -93,7 +93,7 @@ public class ControlHistoricoOperaciones {
 							// TODO: handle exception
 						}
 						
-						//Cálculo de la esperanza matemática
+						//Cï¿½lculo de la esperanza matemï¿½tica
 						try {
 							
 							double probWin = resumen.getNumOpsGanadoras() / resumen.getNumOperaciones();
@@ -106,6 +106,7 @@ public class ControlHistoricoOperaciones {
 							resumen.setEspmat(espmat);
 							
 						}catch (Exception e) {
+							e.printStackTrace();
 						}
 						
 					}
