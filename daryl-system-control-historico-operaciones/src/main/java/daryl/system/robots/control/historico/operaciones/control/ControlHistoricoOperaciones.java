@@ -102,7 +102,7 @@ public class ControlHistoricoOperaciones {
 							double gananciaMediaPorOpGanadora = resumen.getGananciaMediaPorOpGanadora();
 							double perdidaMediaPorOpPerdedora = resumen.getPerdidaMediaPorOpPerdedora();
 							
-							double espmat = (probWin * gananciaMediaPorOpGanadora) - (probLoss * perdidaMediaPorOpPerdedora);
+							double espmat = (probWin * gananciaMediaPorOpGanadora) - (probLoss * perdidaMediaPorOpPerdedora * -1);//Multiplicamos por -1 pq perdidaMediaPorOpPerdedora es negativo
 							resumen.setEspmat(espmat);
 							
 						}catch (Exception e) {
