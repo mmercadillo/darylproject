@@ -28,6 +28,9 @@ public class HistoricoResumenRobot implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Getter @Setter
 	private Long id;
+
+	@Getter @Setter
+	private Long idResumen;
 	
 	@Getter @Setter
 	private String robot;

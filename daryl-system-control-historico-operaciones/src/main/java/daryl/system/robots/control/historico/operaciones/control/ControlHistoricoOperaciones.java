@@ -33,37 +33,8 @@ public class ControlHistoricoOperaciones {
 	IHistoricoResumenRobotRepository historicoResumenRobotRepository;
 	@Autowired
 	IRobotsRepository robotRepository;
-	
-	private HistoricoResumenRobot getHistorico(ResumenRobot resumen) {
-		Calendar now = Calendar.getInstance();
-		HistoricoResumenRobot hrr = new HistoricoResumenRobot();
-			hrr.setEspmat(resumen.getEspmat());
-			hrr.setEspmatAnterior(resumen.getEspmatAnterior());
-			hrr.setEstrategia(resumen.getEstrategia());
-			hrr.setFAlta(now.getTimeInMillis());
-			hrr.setGananciaMediaPorOpGanadora(resumen.getGananciaMediaPorOpGanadora());
-			hrr.setNumOperaciones(resumen.getNumOperaciones());
-			hrr.setNumOpsGanadoras(resumen.getNumOpsGanadoras());
-			hrr.setNumOpsPerdedoras(resumen.getNumOpsPerdedoras());
-			hrr.setPctOpsGanadoras(resumen.getPctOpsGanadoras());
-			hrr.setPctOpsPerdedoras(resumen.getPctOpsPerdedoras());
-			hrr.setPerdidaMediaPorOpPerdedora(resumen.getPerdidaMediaPorOpPerdedora());
-			hrr.setRobot(resumen.getRobot());
-			hrr.setTipoActivo(resumen.getTipoActivo());
-			hrr.setTotal(resumen.getTotal());
-			hrr.setTotalAnterior(resumen.getTotalAnterior());
-			hrr.setTotalGanancias(resumen.getTotalGanancias());
-			hrr.setTotalPerdidas(resumen.getTotalPerdidas());
-			hrr.setVersion(resumen.getVersion());
-			
-			
-		return hrr;	
-			
+
 		
-		
-	}
-	
-	
     @Scheduled(fixedDelay = 600000, initialDelay = 1000)
     @Transactional
 	public void run() {
@@ -79,16 +50,6 @@ public class ControlHistoricoOperaciones {
 				ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
 				Long desde = 0L;
 				if(resumen != null) {
-					
-					//Creamos el Historico y lo guardamos
-					try {
-						
-						HistoricoResumenRobot hrr = getHistorico(resumen);
-						historicoResumenRobotRepository.save(hrr);
-						
-					}catch (Exception e) {
-						e.printStackTrace();
-					}
 					
 					desde = resumen.getUltimoTicket();
 				}
