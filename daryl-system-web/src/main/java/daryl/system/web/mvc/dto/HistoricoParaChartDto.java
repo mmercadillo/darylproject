@@ -74,16 +74,12 @@ public class HistoricoParaChartDto{
 				try {
 					
 					double perdidaMediaPorOpLoss = perdidas / opsLoss;
-					System.out.println(perdidaMediaPorOpLoss);
 					double gananciaMediaPorOpWin = ganacias / opsWin;
-					System.out.println(gananciaMediaPorOpWin);
+
 					double probWin = (double)opsWin / opsTotales;
-					System.out.println(probWin);
 					double probLoss = (double)opsLoss / opsTotales;
-					System.out.println(probLoss);
+
 					em = (gananciaMediaPorOpWin * probWin) + (perdidaMediaPorOpLoss * probLoss + (-1));
-					System.out.println(em);
-					System.out.println("==========");
 					datosParaChart.add(em);
 				}catch (Exception e) {
 					// TODO: handle exception
