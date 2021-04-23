@@ -10,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import daryl.system.comun.configuration.ConfigData;
 import daryl.system.model.HistoricoOperaciones;
+import daryl.system.model.HistoricoResumenRobot;
 import daryl.system.model.ResumenRobot;
 import daryl.system.model.Robot;
 import daryl.system.robots.control.historico.operaciones.repository.IHistoricoOperacionesRepository;
+import daryl.system.robots.control.historico.operaciones.repository.IHistoricoResumenRobotRepository;
 import daryl.system.robots.control.historico.operaciones.repository.IResumenRobotRepository;
 import daryl.system.robots.control.historico.operaciones.repository.IRobotsRepository;
 
@@ -29,7 +30,38 @@ public class ControlHistoricoOperaciones {
 	@Autowired
 	IResumenRobotRepository resumenRobotRepository;
 	@Autowired
+	IHistoricoResumenRobotRepository historicoResumenRobotRepository;
+	@Autowired
 	IRobotsRepository robotRepository;
+	
+	private HistoricoResumenRobot getHistorico(ResumenRobot resumen) {
+		Calendar now = Calendar.getInstance();
+		HistoricoResumenRobot hrr = new HistoricoResumenRobot();
+			hrr.setEspmat(resumen.getEspmat());
+			hrr.setEspmatAnterior(resumen.getEspmatAnterior());
+			hrr.setEstrategia(resumen.getEstrategia());
+			hrr.setFAlta(now.getTimeInMillis());
+			hrr.setGananciaMediaPorOpGanadora(resumen.getGananciaMediaPorOpGanadora());
+			hrr.setNumOperaciones(resumen.getNumOperaciones());
+			hrr.setNumOpsGanadoras(resumen.getNumOpsGanadoras());
+			hrr.setNumOpsPerdedoras(resumen.getNumOpsPerdedoras());
+			hrr.setPctOpsGanadoras(resumen.getPctOpsGanadoras());
+			hrr.setPctOpsPerdedoras(resumen.getPctOpsPerdedoras());
+			hrr.setPerdidaMediaPorOpPerdedora(resumen.getPerdidaMediaPorOpPerdedora());
+			hrr.setRobot(resumen.getRobot());
+			hrr.setTipoActivo(resumen.getTipoActivo());
+			hrr.setTotal(resumen.getTotal());
+			hrr.setTotalAnterior(resumen.getTotalAnterior());
+			hrr.setTotalGanancias(resumen.getTotalGanancias());
+			hrr.setTotalPerdidas(resumen.getTotalPerdidas());
+			hrr.setVersion(resumen.getVersion());
+			
+			
+		return hrr;	
+			
+		
+		
+	}
 	
 	
     @Scheduled(fixedDelay = 600000, initialDelay = 1000)
@@ -47,6 +79,17 @@ public class ControlHistoricoOperaciones {
 				ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
 				Long desde = 0L;
 				if(resumen != null) {
+					
+					//Creamos el Historico y lo guardamos
+					try {
+						
+						HistoricoResumenRobot hrr = getHistorico(resumen);
+						historicoResumenRobotRepository.save(hrr);
+						
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
+					
 					desde = resumen.getUltimoTicket();
 				}
 				else resumen = new ResumenRobot();
@@ -65,6 +108,11 @@ public class ControlHistoricoOperaciones {
 						resumen.setTipoActivo(robot.getActivo());
 						resumen.setEstrategia(robot.getEstrategia());
 						resumen.setVersion(resumen.getVersion());
+						
+						//Ponemos el total anterior
+						try{resumen.setTotalAnterior(resumen.getTotal());}catch (Exception e) {
+							resumen.setTotalAnterior(0.0);
+						}
 						resumen.setTotal(hops.getProfit()+resumen.getTotal());
 						
 						if(hops.getProfit()<0) {
@@ -103,6 +151,11 @@ public class ControlHistoricoOperaciones {
 							double perdidaMediaPorOpPerdedora = resumen.getPerdidaMediaPorOpPerdedora();
 							
 							double espmat = (probWin * gananciaMediaPorOpGanadora) - (probLoss * perdidaMediaPorOpPerdedora * -1);//Multiplicamos por -1 pq perdidaMediaPorOpPerdedora es negativo
+							
+							//Ponemos la anterior esp mat
+							try {resumen.setEspmatAnterior(resumen.getEspmat());}catch (Exception e) {
+								resumen.setEspmatAnterior(0.0);
+							}
 							resumen.setEspmat(espmat);
 							
 						}catch (Exception e) {

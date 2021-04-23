@@ -74,6 +74,11 @@ public class ResumenRobot implements Serializable{
 	@Column(nullable = true)
 	@Getter @Setter
 	private Double total = 0.0;
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double totalAnterior = 0.0;
+	
 	
 	@Column(nullable = true)
 	@Getter @Setter
@@ -96,5 +101,9 @@ public class ResumenRobot implements Serializable{
 	@Column(nullable = true)
 	@Getter @Setter
 	private Double espmat = 0.0;
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double espmatAnterior = 0.0;
 	
 }

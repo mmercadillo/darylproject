@@ -12,6 +12,7 @@ public interface IResumenRobotService {
 	List<ResumenRobot> findResumenRobotTopNumOrderByEspmatDesc(Integer num);
 	List<ResumenRobot> findResumenRobotTopNumOrderByTotalDesc(Integer num);
 	ResumenRobot findResumenRobotByRobotOrderByTotalDesc(String robot);
+	ResumenRobot findResumenRobotByRobotOrderByEspmatDesc(String robot);
 	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc(String timeframe, Integer num);
 	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc(String timeframe, Integer num);
 }
