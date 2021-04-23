@@ -65,6 +65,11 @@ public class ControlHistoricoOperaciones {
 						resumen.setTipoActivo(robot.getActivo());
 						resumen.setEstrategia(robot.getEstrategia());
 						resumen.setVersion(resumen.getVersion());
+						
+						//Ponemos el total anterior
+						try{resumen.setTotalAnterior(resumen.getTotal());}catch (Exception e) {
+							resumen.setTotalAnterior(0.0);
+						}
 						resumen.setTotal(hops.getProfit()+resumen.getTotal());
 						
 						if(hops.getProfit()<0) {
@@ -103,6 +108,11 @@ public class ControlHistoricoOperaciones {
 							double perdidaMediaPorOpPerdedora = resumen.getPerdidaMediaPorOpPerdedora();
 							
 							double espmat = (probWin * gananciaMediaPorOpGanadora) - (probLoss * perdidaMediaPorOpPerdedora * -1);//Multiplicamos por -1 pq perdidaMediaPorOpPerdedora es negativo
+							
+							//Ponemos la anterior esp mat
+							try {resumen.setEspmatAnterior(resumen.getEspmat());}catch (Exception e) {
+								resumen.setEspmatAnterior(0.0);
+							}
 							resumen.setEspmat(espmat);
 							
 						}catch (Exception e) {

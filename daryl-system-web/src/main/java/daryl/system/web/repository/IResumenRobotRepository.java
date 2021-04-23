@@ -13,6 +13,7 @@ public interface IResumenRobotRepository extends JpaRepository<ResumenRobot, Lon
 	
 	List<ResumenRobot> findResumenRobotsByOrderByEspmatDesc(Pageable page);
 	List<ResumenRobot> findResumenRobotsByOrderByTotalDesc(Pageable page);
+	ResumenRobot findResumenRobotByRobotOrderByEspmatDesc(String robot);
 	ResumenRobot findResumenRobotByRobotOrderByTotalDesc(String robot);
 	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc(String timeframe,Pageable page);
 	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc(String timeframe,Pageable page);

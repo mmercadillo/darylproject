@@ -33,6 +33,11 @@ public class ResumenRobotServiceImpl implements IResumenRobotService {
 	}
 	
 	@Transactional
+	public ResumenRobot findResumenRobotByRobotOrderByEspmatDesc(String robot) {
+		return repository.findResumenRobotByRobotOrderByEspmatDesc(robot);
+	}
+
+	@Transactional
 	public List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc(String timeframe, Integer num){
 		return repository.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc(timeframe, PageRequest.of(0,  num));
 	}
