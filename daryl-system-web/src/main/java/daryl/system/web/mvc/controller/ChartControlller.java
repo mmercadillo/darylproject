@@ -31,10 +31,48 @@ public class ChartControlller {
 	@Autowired
 	ITotalPipsRobotsService totalPipsRobotsService;
  
-	@GetMapping("/chart/{robot}")
-    public void main(@PathVariable String robot, HttpServletResponse response) {
+	@GetMapping("/chart/{robot}/em")
+    public void chartEspMat(@PathVariable String robot, HttpServletResponse response) {
 
-		List<Long> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChart(charDataRobotService.findListaParaChartByRobot(robot));
+		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeEspMat(charDataRobotService.findListaParaChartByRobot(robot));
+
+		
+		List<Double> periodos = new ArrayList<Double>();
+		for (int i = 0; i < historicoParaChartDto.size(); i++) {
+			periodos.add((double)i+1);
+		}
+		
+		// Create Chart
+		XYChart chart = new XYChartBuilder().width(1140)
+											.height(470)
+											//.title("Estudio")
+											//.xAxisTitle("Operaciones")
+											//.yAxisTitle("Puntos DAX")
+											.build();
+
+		// Customize Chart
+		chart.getStyler().setChartTitleVisible(true);
+		chart.getStyler().setLegendPosition(LegendPosition.InsideNW);
+		chart.getStyler().setYAxisLogarithmic(false);
+		chart.getStyler().setXAxisLabelRotation(0);
+		chart.getStyler().setXAxisTicksVisible(false);
+		chart.getStyler().setMarkerSize(0);
+		
+		chart.addSeries("EM", periodos, historicoParaChartDto);
+		//BitmapEncoder.saveBitmap(chart, nombreFicheroChart.toString(), BitmapFormat.PNG);
+		try {
+			BitmapEncoder.saveBitmap(chart, response.getOutputStream(), BitmapFormat.PNG);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }
+	
+	@GetMapping("/chart/{robot}/total")
+    public void chartTotal(@PathVariable String robot, HttpServletResponse response) {
+
+		List<Long> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
 
 		
 		List<Double> periodos = new ArrayList<Double>();
