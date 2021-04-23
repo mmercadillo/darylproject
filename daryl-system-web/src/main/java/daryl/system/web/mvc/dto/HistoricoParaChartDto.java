@@ -32,7 +32,7 @@ public class HistoricoParaChartDto{
 
 	
 	
-	public static List<Long> getDtoParaChart(List<HistoricoOperaciones> historico) {
+	public static List<Long> getDtoParaChartDeTotales(List<HistoricoOperaciones> historico) {
 
 		List<Long> datosParaChart = new ArrayList<Long>();
 		Long acumulado = 0L;
@@ -46,6 +46,56 @@ public class HistoricoParaChartDto{
 		
 	}
 
+	public static List<Double> getDtoParaChartDeEspMat(List<HistoricoOperaciones> historico) {
+
+		List<Double> datosParaChart = new ArrayList<Double>();
+		Long acumulado = 0L;
+		Long opsWin = 0L;
+		Long opsLoss = 0L;
+		Long opsTotales = 0L;
+		
+		
+		Double ganacias = 0.0;
+		Double perdidas = 0.0;
+		
+		if(historico != null && historico.size() > 0) {
+			for (HistoricoOperaciones hist : historico) {
+				
+				opsTotales += 1;
+				if(hist.getProfit() > 0) {
+					opsWin += 1;
+					ganacias += hist.getProfit();
+				}else {
+					opsLoss += 1;
+					perdidas += hist.getProfit();
+				}
+				
+				double em = 0.0;
+				try {
+					
+					double perdidaMediaPorOpLoss = perdidas / opsLoss;
+					System.out.println(perdidaMediaPorOpLoss);
+					double gananciaMediaPorOpWin = ganacias / opsWin;
+					System.out.println(gananciaMediaPorOpWin);
+					double probWin = (double)opsWin / opsTotales;
+					System.out.println(probWin);
+					double probLoss = (double)opsLoss / opsTotales;
+					System.out.println(probLoss);
+					em = (gananciaMediaPorOpWin * probWin) + (perdidaMediaPorOpLoss * probLoss + (-1));
+					System.out.println(em);
+					System.out.println("==========");
+					datosParaChart.add(em);
+				}catch (Exception e) {
+					// TODO: handle exception
+				}
+				
+
+				
+			} 
+		}
+		return datosParaChart;
+		
+	}
 
 	
 }
