@@ -79,7 +79,7 @@ public class HistoricoParaChartDto{
 					double probWin = (double)opsWin / opsTotales;
 					double probLoss = (double)opsLoss / opsTotales;
 
-					em = (gananciaMediaPorOpWin * probWin) + (perdidaMediaPorOpLoss * probLoss + (-1));
+					em = (gananciaMediaPorOpWin * probWin) + (perdidaMediaPorOpLoss * probLoss * (-1));
 					datosParaChart.add(em);
 				}catch (Exception e) {
 					// TODO: handle exception
