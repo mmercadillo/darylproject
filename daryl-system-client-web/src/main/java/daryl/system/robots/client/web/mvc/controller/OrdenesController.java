@@ -31,10 +31,7 @@ public class OrdenesController {
     public List<OrdenDto> main( @PathVariable String cta) {
 		
 		System.out.println("FULL: " + cta + " " + new Date());
-		/*
-		List<OrdenDto> ordenes = Arrays.asList(restClient.getForObject("http://localhost:8888/api/daryl/ordenes/all", OrdenDto[].class));
-        return ordenes;
-        */
+
 		
 		List<Orden> ordenes = service.findAllByOrderByRobotAsc();
 		
@@ -51,11 +48,7 @@ public class OrdenesController {
     public List<OrdenDto> main(@PathVariable Integer num, @PathVariable String cta) {
 		System.out.println("TOP: " + cta + " NUM: " + num + " - " + new Date());
 		
-		/*
-		List<OrdenDto> ordenes = Arrays.asList(restClient.getForObject("http://localhost:8888/api/daryl/ordenes/top/"+num, OrdenDto[].class));
-        return ordenes;
-        */
-		
+
 		//Recuperamos el top "num" de los robots
 		List<ResumenRobot> topNumRobots = resumenService.findResumenRobotTopNumOrderByTotalDesc(num);
 		
@@ -82,10 +75,7 @@ public class OrdenesController {
     public List<OrdenDto> ordenesCuenta(@PathVariable String cta) {
 		System.out.println("ROBOTS CTA: " + cta + new Date());
 		
-		/*
-		List<OrdenDto> ordenes = Arrays.asList(restClient.getForObject("http://localhost:8888/api/daryl/ordenes/cuenta/"+cta, OrdenDto[].class));
-		System.out.println(ordenes);
-		*/
+
 		
 		System.out.println("FULL: " + cta + " " + new Date());
 		
@@ -113,5 +103,7 @@ public class OrdenesController {
 		
 		//return ordenes;
     }
+	
+	
 	
 }

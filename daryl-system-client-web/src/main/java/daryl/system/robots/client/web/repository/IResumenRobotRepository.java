@@ -12,4 +12,7 @@ import daryl.system.model.ResumenRobot;
 public interface IResumenRobotRepository extends JpaRepository<ResumenRobot, Long> {
 	List<ResumenRobot> findResumenRobotsByOrderByTotalDesc(Pageable page);
 	ResumenRobot findResumenRobotByRobotOrderByTotalDesc(String robot);
+	
+	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc(String timeframe,Pageable page);
+	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc(String timeframe,Pageable page);
 }
