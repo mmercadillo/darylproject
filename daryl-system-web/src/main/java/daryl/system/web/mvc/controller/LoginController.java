@@ -10,6 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 //import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.ui.Model;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import daryl.system.web.mvc.dto.CuentaUsuarioDto;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 //import io.jsonwebtoken.Jwts;
 //import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -37,7 +41,7 @@ public class LoginController {
     }
     
 	
-	@PostMapping("/")
+	@PostMapping("/login")
     public void login(@ModelAttribute CuentaUsuarioDto cudto, HttpServletRequest request, HttpServletResponse response) {
 
 
@@ -58,6 +62,7 @@ public class LoginController {
 		}
 		
     }
+	
 	/*
 	private String getJWTToken(String username) {
 		String secretKey = "mySecretKey";

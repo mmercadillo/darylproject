@@ -58,6 +58,12 @@ public class HistoricoParaChartDto{
 		Double ganacias = 0.0;
 		Double perdidas = 0.0;
 		
+		Double pMedia = 0.0;
+		Double gMedia = 0.0;
+		
+		Double pWin = 0.0;
+		Double pLoss = 0.0;
+		
 		if(historico != null && historico.size() > 0) {
 			for (HistoricoOperaciones hist : historico) {
 				
@@ -73,14 +79,20 @@ public class HistoricoParaChartDto{
 				double em = 0.0;
 				try {
 					
-					double perdidaMediaPorOpLoss = perdidas / opsLoss;
-					double gananciaMediaPorOpWin = ganacias / opsWin;
+					double perdidaMediaPorOpLoss = (double)perdidas / (double)opsLoss;
+					double gananciaMediaPorOpWin = (double)ganacias / (double)opsWin;
 
-					double probWin = (double)opsWin / opsTotales;
-					double probLoss = (double)opsLoss / opsTotales;
+					double probWin = (double)opsWin / (double)opsTotales;
+					double probLoss = (double)opsLoss / (double)opsTotales;
 
-					em = (gananciaMediaPorOpWin * probWin) + (perdidaMediaPorOpLoss * probLoss * (-1));
+					em = (gananciaMediaPorOpWin * probWin) + (perdidaMediaPorOpLoss * probLoss);
 					datosParaChart.add(em);
+					
+					pMedia = perdidaMediaPorOpLoss;
+					gMedia = gananciaMediaPorOpWin;
+					pWin = probWin;
+					pLoss = probLoss;
+					
 				}catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -89,6 +101,7 @@ public class HistoricoParaChartDto{
 				
 			} 
 		}
+		double em = (pWin * gMedia) + (pLoss * pMedia);
 		return datosParaChart;
 		
 	}

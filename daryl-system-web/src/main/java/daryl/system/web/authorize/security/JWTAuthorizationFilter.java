@@ -38,16 +38,16 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 		try {
-			if (checkJWTToken(request, response)) {
+			//if (checkJWTToken(request, response)) {
 				Claims claims = validateToken(request);
 				if (claims.get("authorities") != null) {
 					setUpSpringAuthentication(claims);
 				} else {
 					SecurityContextHolder.clearContext();
 				}
-			} else {
-				SecurityContextHolder.clearContext();
-			}
+			//} else {
+			//	SecurityContextHolder.clearContext();
+			//}
 			chain.doFilter(request, response);
 		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
