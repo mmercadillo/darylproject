@@ -66,7 +66,7 @@ public class OrdenesController2 {
 				robots.add(resumen.getRobot());
 			}
 		}
-		System.out.println("EmTf240 --->>>>>>" + robots);
+		System.out.println("EmTf240 --->>>>>> " + robots);
 		List<Orden> ordenes = service.findAllByRobots(robots);
 		System.out.println(ordenes);
 		List<OrdenDto> ordenesDto = new ArrayList<OrdenDto>();
