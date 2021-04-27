@@ -95,7 +95,7 @@ public class DemolabParaChartDto{
 					pLoss = probLoss;
 					
 				}catch (Exception e) {
-					// TODO: handle exception
+					e.printStackTrace();
 				}
 				
 

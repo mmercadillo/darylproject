@@ -106,35 +106,38 @@ public class DemolabController {
 		//T60 - T240 - T1440 - T10080
 		
 		List<Double> historicoParaChartDto = DemolabParaChartDto.getDtoParaChartDeEspMat(demolabDataService.findListaParaChartDemolabByRobot(robot.toUpperCase()));
-		List<Double> periodos = new ArrayList<Double>();
-		for (int i = 0; i < historicoParaChartDto.size(); i++) {
-			periodos.add((double)i+1);
-		}
-		
-		
-		// Create Chart
-		XYChart chart = new XYChartBuilder().width(1140)
-											.height(470)
-											//.title("Estudio")
-											//.xAxisTitle("Operaciones")
-											//.yAxisTitle("Puntos DAX")
-											.build();
 
-		// Customize Chart
-		chart.getStyler().setChartTitleVisible(true);
-		chart.getStyler().setLegendPosition(LegendPosition.InsideNW);
-		chart.getStyler().setYAxisLogarithmic(false);
-		chart.getStyler().setXAxisLabelRotation(0);
-		chart.getStyler().setXAxisTicksVisible(false);
-		chart.getStyler().setMarkerSize(0);
-		
-		chart.addSeries("Pips", periodos, historicoParaChartDto);
-		//BitmapEncoder.saveBitmap(chart, nombreFicheroChart.toString(), BitmapFormat.PNG);
-		try {
-			BitmapEncoder.saveBitmap(chart, response.getOutputStream(), BitmapFormat.PNG);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(historicoParaChartDto.size() > 0) {
+			historicoParaChartDto = historicoParaChartDto.subList(0, historicoParaChartDto.size());
+			List<Double> periodos = new ArrayList<Double>();
+			for (int i = 0; i < historicoParaChartDto.size(); i++) {
+				periodos.add((double)i+1);
+			}
+			
+			// Create Chart
+			XYChart chart = new XYChartBuilder().width(1140)
+												.height(470)
+												//.title("Estudio")
+												//.xAxisTitle("Operaciones")
+												//.yAxisTitle("Puntos DAX")
+												.build();
+	
+			// Customize Chart
+			chart.getStyler().setChartTitleVisible(true);
+			chart.getStyler().setLegendPosition(LegendPosition.InsideNW);
+			chart.getStyler().setYAxisLogarithmic(false);
+			chart.getStyler().setXAxisLabelRotation(0);
+			chart.getStyler().setXAxisTicksVisible(false);
+			chart.getStyler().setMarkerSize(0);
+			
+			chart.addSeries("EM", periodos, historicoParaChartDto);
+			//BitmapEncoder.saveBitmap(chart, nombreFicheroChart.toString(), BitmapFormat.PNG);
+			try {
+				BitmapEncoder.saveBitmap(chart, response.getOutputStream(), BitmapFormat.PNG);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 	}
