@@ -7,7 +7,7 @@ import daryl.system.model.HistoricoOperaciones;
 import daryl.system.web.mvc.controller.DemolabController;
 
 
-public interface IChartDataRobotService {
-	List<HistoricoOperaciones> findListaParaChartByRobot(String robot);
+public interface IDemolabDataService {
+	List<DemolabOps> findListaParaChartDemolabByRobot(String robot);
 	
 }
