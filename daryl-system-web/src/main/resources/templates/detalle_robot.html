@@ -54,12 +54,34 @@ License: You must have a valid license purchased only from themeforest(the above
 			<!-- /.modal -->
 			<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
 			<!-- BEGIN PAGE HEADER-->
-			<h3 class="page-title" th:text="${titulo}">
-			</h3>
+			<h3 class="page-title" th:text="${titulo}"></h3>
 			<div class="page-bar" th:replace="common/breadcrumb">
 			</div>
 			<!-- END PAGE HEADER-->
 			<!-- BEGIN DASHBOARD STATS -->
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<!-- BEGIN PORTLET-->
+					<div class="portlet light ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-bar-chart font-green-sharp hide"></i>
+								<span class="caption-subject font-green-sharp bold uppercase">Primera operacion:</span>
+								<b>[[${fPrimeraOp}]]</b>
+								<br/>
+								<span class="caption-subject font-green-sharp bold uppercase">Ultima actualizacion:</span>
+								<b>[[${fUltimaActualizacion}]]</b>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div class="row">
+							</div>
+						</div>
+					</div>
+					<!-- END PORTLET-->
+				</div>
+			</div>
+			
 			<div class="row">
 				<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
 					<div class="dashboard-stat blue-madison">
