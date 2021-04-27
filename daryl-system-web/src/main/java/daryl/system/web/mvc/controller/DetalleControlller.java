@@ -1,5 +1,6 @@
 package daryl.system.web.mvc.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,10 @@ public class DetalleControlller {
 		TotalDto totalDto = TotalDto.getDto(robot, total);
 		view.addObject("sumRobot", totalDto.getTotal());
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		//Fecha primera operación
+		view.addObject("fPrimeraOp", "23/11/2020 19:00");
+		view.addObject("fUltimaActualizacion",resumenDto.getFModificacion());
 		
 		String titulo = "Detalle del robot: " + robot;
 		String lugar = "Detalle robot";
