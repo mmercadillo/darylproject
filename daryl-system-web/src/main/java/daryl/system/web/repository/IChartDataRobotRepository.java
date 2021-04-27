@@ -14,4 +14,5 @@ public interface IChartDataRobotRepository extends JpaRepository<HistoricoOperac
 	
 	@Query("SELECT ho FROM HistoricoOperaciones ho WHERE ho.comentario LIKE ?1% ORDER BY ho.id asc")
 	List<HistoricoOperaciones> findListaParaChartByRobot(String robot);
+	
 }
