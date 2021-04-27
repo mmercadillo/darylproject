@@ -68,7 +68,7 @@ public class OrdenesController2 {
 		}
 		System.out.println("EmTf240 --->>>>>> " + robots);
 		List<Orden> ordenes = service.findAllByRobots(robots);
-		System.out.println(ordenes);
+		System.out.println("EmTf240 --->>>>>> " + ordenes);
 		List<OrdenDto> ordenesDto = new ArrayList<OrdenDto>();
 		for (Orden orden : ordenes) {
 			if(orden != null) ordenesDto.add(OrdenDto.getDto(orden));
@@ -213,6 +213,9 @@ public class OrdenesController2 {
 		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc("10080",5);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
+		
+		
+		
 		if(top5EspMat != null) {
 			for (ResumenRobot resumen : top5EspMat) {
 				robots.add(resumen.getRobot());
