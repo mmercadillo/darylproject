@@ -63,6 +63,7 @@ public class DemolabController {
 			String varPctOpsL = robot.name() + "_PctOpsL";
 			String varAvgW = robot.name() + "_AvgW";
 			String varAvgL = robot.name() + "_AvgL";
+			String varMaxLC = robot.name() + "_MaxLC";
 			
 			try {
 				ResumenRobotDemolab resumen = detalleRobotDemolabService.findResumenRobotDemolabByRobot(robot.name());
@@ -76,6 +77,7 @@ public class DemolabController {
 				view.addObject(varPctOpsL, resumen.getPctOpsPerdedoras());
 				view.addObject(varAvgW, resumen.getGananciaMediaPorOpGanadora());
 				view.addObject(varAvgL, resumen.getPerdidaMediaPorOpPerdedora());
+				view.addObject(varMaxLC, resumen.getMaximaPerdidaConsecutiva());
 				
 				
 			}catch (Exception e) {
@@ -89,6 +91,7 @@ public class DemolabController {
 				view.addObject(varPctOpsL, 0);
 				view.addObject(varAvgW, 0);
 				view.addObject(varAvgL, 0);
+				view.addObject(varMaxLC, 0);
 				
 			}
 			
