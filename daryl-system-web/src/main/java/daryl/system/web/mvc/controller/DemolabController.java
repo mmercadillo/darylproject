@@ -21,29 +21,79 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import daryl.system.comun.enums.DemolabRobot;
 import daryl.system.model.ResumenRobot;
+import daryl.system.model.ResumenRobotDemolab;
 import daryl.system.model.Robot;
 import daryl.system.model.RobotsCuenta;
 import daryl.system.web.mvc.dto.DemolabParaChartDto;
 import daryl.system.web.mvc.dto.HistoricoParaChartDto;
 import daryl.system.web.mvc.dto.ResumenRobotDto;
 import daryl.system.web.services.IDemolabDataService;
+import daryl.system.web.services.IDetalleDemolabRobotService;
+import daryl.system.web.services.IDetalleRobotService;
 import daryl.system.web.services.IResumenRobotService;
 import daryl.system.web.services.IRobotsCuentaService;
 import daryl.system.web.services.IRobotsService;
+import net.bytebuddy.agent.builder.AgentBuilder.RedefinitionStrategy.ResubmissionScheduler;
 
 @RestController
 public class DemolabController {
  
 	@Autowired
 	IDemolabDataService demolabDataService;
-	
+	@Autowired
+	IDetalleDemolabRobotService detalleRobotDemolabService;
 	
 	@RequestMapping(path = "/demolab", method = {RequestMethod.GET})
     public ModelAndView main(Model model) {
 
 		ModelAndView view = new ModelAndView("demolab");
 	
+		
+		for(DemolabRobot robot : DemolabRobot.values()) {
+
+			
+			String varTotal = robot.name() + "_Total";
+			String varEM = robot.name() + "_Em";
+			String varOps = robot.name() + "_Ops";
+			String varOpsW = robot.name() + "_OpsW";
+			String varOpsL = robot.name() + "_OpsL";
+			String varPctOpsW = robot.name() + "_PctOpsW";
+			String varPctOpsL = robot.name() + "_PctOpsL";
+			String varAvgW = robot.name() + "_AvgW";
+			String varAvgL = robot.name() + "_AvgL";
+			
+			try {
+				ResumenRobotDemolab resumen = detalleRobotDemolabService.findResumenRobotDemolabByRobot(robot.name());
+
+				view.addObject(varTotal, resumen.getTotal());
+				view.addObject(varEM, resumen.getEspmat());
+				view.addObject(varOps, resumen.getNumOperaciones());
+				view.addObject(varOpsW, resumen.getNumOpsGanadoras());
+				view.addObject(varOpsL, resumen.getNumOpsPerdedoras());
+				view.addObject(varPctOpsW, resumen.getPctOpsGanadoras());
+				view.addObject(varPctOpsL, resumen.getPctOpsPerdedoras());
+				view.addObject(varAvgW, resumen.getGananciaMediaPorOpGanadora());
+				view.addObject(varAvgL, resumen.getPerdidaMediaPorOpPerdedora());
+				
+				
+			}catch (Exception e) {
+				
+				view.addObject(varTotal, 0);
+				view.addObject(varEM, 0);
+				view.addObject(varOps, 0);
+				view.addObject(varOpsW, 0);
+				view.addObject(varOpsL, 0);
+				view.addObject(varPctOpsW, 0);
+				view.addObject(varPctOpsL, 0);
+				view.addObject(varAvgW, 0);
+				view.addObject(varAvgL, 0);
+				
+			}
+			
+			
+		}
 
 		
 		String titulo = "DemoLab";
@@ -87,13 +137,14 @@ public class DemolabController {
 		chart.getStyler().setXAxisTicksVisible(false);
 		chart.getStyler().setMarkerSize(0);
 		
-		chart.addSeries("Pips", periodos, historicoParaChartDto);
-		//BitmapEncoder.saveBitmap(chart, nombreFicheroChart.toString(), BitmapFormat.PNG);
+
 		try {
+			chart.addSeries("Pips", periodos, historicoParaChartDto);
+			//BitmapEncoder.saveBitmap(chart, nombreFicheroChart.toString(), BitmapFormat.PNG);
 			BitmapEncoder.saveBitmap(chart, response.getOutputStream(), BitmapFormat.PNG);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 	}

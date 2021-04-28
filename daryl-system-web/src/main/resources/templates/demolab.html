@@ -104,6 +104,36 @@ License: You must have a valid license purchased only from themeforest(the above
 					</div>
 					<div class="portlet-body">
 						<div class="row">
+							<table class="table table-striped table-hover table-bordered">
+								<thead>
+									<tr>
+										<th>Total</th>
+										<th>EM</th>
+										<th>Ops.</th>
+										<th>Ops. W.</th>
+										<th>Ops. L.</th>
+										<th>%Ops. W.</th>
+										<th>%Ops. L.</th>
+										<th>Ganancia M. por Op. W.</th>
+										<th>Perdida M. por Op. L.</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>[[${#numbers.formatDecimal(EM60_Total, 1, 'POINT', 2, 'COMMA')}]]</td>
+										<td>[[${#numbers.formatDecimal(EM60_Em, 1, 'POINT', 2, 'COMMA')}]]</td>
+										<td>[[${EM60_Ops}]]</td>
+										<td>[[${EM60_OpsW}]]</td>
+										<td>[[${EM60_OpsL}]]</td>
+										<td>[[${#numbers.formatDecimal(EM60_PctOpsW, 1, 'POINT', 2, 'COMMA')}]]</td>
+										<td>[[${#numbers.formatDecimal(EM60_PctOpsL, 1, 'POINT', 2, 'COMMA')}]]</td>
+										<td>[[${#numbers.formatDecimal(EM60_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
+										<td>[[${#numbers.formatDecimal(EM60_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="row">
 							<div class="col-md-6 col-sm-6">
 								<!-- BEGIN PORTLET-->
 								<div class="portlet light ">
@@ -155,6 +185,36 @@ License: You must have a valid license purchased only from themeforest(the above
 				</div>
 				<div class="portlet-body">
 					<div class="row">
+						<table class="table table-striped table-hover table-bordered">
+							<thead>
+								<tr>
+									<th>Total</th>
+									<th>EM</th>
+									<th>Ops.</th>
+									<th>Ops. W.</th>
+									<th>Ops. L.</th>
+									<th>%Ops. W.</th>
+									<th>%Ops. L.</th>
+									<th>Ganancia M. por Op. W.</th>
+									<th>Perdida M. por Op. L.</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>[[${#numbers.formatDecimal(T60_Total, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T60_Em, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${T60_Ops}]]</td>
+									<td>[[${T60_OpsW}]]</td>
+									<td>[[${T60_OpsL}]]</td>
+									<td>[[${#numbers.formatDecimal(T60_PctOpsW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T60_PctOpsL, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T60_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T60_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="row">
 						<div class="col-md-6 col-sm-6">
 							<!-- BEGIN PORTLET-->
 							<div class="portlet light ">
@@ -193,7 +253,7 @@ License: You must have a valid license purchased only from themeforest(the above
 				</div>
 			</div>	
 		</div>
-	</div>
+		</div>
 	
 		<div class="row">
 			<div class="col-md-12 col-sm-12">
@@ -206,6 +266,36 @@ License: You must have a valid license purchased only from themeforest(the above
 					</div>
 				</div>
 				<div class="portlet-body">
+					<div class="row">
+						<table class="table table-striped table-hover table-bordered">
+							<thead>
+								<tr>
+									<th>Total</th>
+									<th>EM</th>
+									<th>Ops.</th>
+									<th>Ops. W.</th>
+									<th>Ops. L.</th>
+									<th>%Ops. W.</th>
+									<th>%Ops. L.</th>
+									<th>Ganancia M. por Op. W.</th>
+									<th>Perdida M. por Op. L.</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>[[${#numbers.formatDecimal(EM240_Total, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM240_Em, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${EM240_Ops}]]</td>
+									<td>[[${EM240_OpsW}]]</td>
+									<td>[[${EM240_OpsL}]]</td>
+									<td>[[${#numbers.formatDecimal(EM240_PctOpsW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM240_PctOpsL, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM240_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM240_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="row">
 						<div class="col-md-6 col-sm-6">
 							<!-- BEGIN PORTLET-->
@@ -245,7 +335,7 @@ License: You must have a valid license purchased only from themeforest(the above
 				</div>
 			</div>	
 		</div>
-	</div>
+		</div>
 	
 	
 		<div class="row">
@@ -259,6 +349,36 @@ License: You must have a valid license purchased only from themeforest(the above
 					</div>
 				</div>
 				<div class="portlet-body">
+					<div class="row">
+						<table class="table table-striped table-hover table-bordered">
+							<thead>
+								<tr>
+									<th>Total</th>
+									<th>EM</th>
+									<th>Ops.</th>
+									<th>Ops. W.</th>
+									<th>Ops. L.</th>
+									<th>%Ops. W.</th>
+									<th>%Ops. L.</th>
+									<th>Ganancia M. por Op. W.</th>
+									<th>Perdida M. por Op. L.</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>[[${#numbers.formatDecimal(T240_Total, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T240_Em, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${T240_Ops}]]</td>
+									<td>[[${T240_OpsW}]]</td>
+									<td>[[${T240_OpsL}]]</td>
+									<td>[[${#numbers.formatDecimal(T240_PctOpsW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T240_PctOpsL, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T240_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T240_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="row">
 						<div class="col-md-6 col-sm-6">
 							<!-- BEGIN PORTLET-->
@@ -298,7 +418,7 @@ License: You must have a valid license purchased only from themeforest(the above
 				</div>
 			</div>	
 		</div>
-	</div>
+		</div>
 	
 	
 		<div class="row">
@@ -312,6 +432,36 @@ License: You must have a valid license purchased only from themeforest(the above
 					</div>
 				</div>
 				<div class="portlet-body">
+					<div class="row">
+						<table class="table table-striped table-hover table-bordered">
+							<thead>
+								<tr>
+									<th>Total</th>
+									<th>EM</th>
+									<th>Ops.</th>
+									<th>Ops. W.</th>
+									<th>Ops. L.</th>
+									<th>%Ops. W.</th>
+									<th>%Ops. L.</th>
+									<th>Ganancia M. por Op. W.</th>
+									<th>Perdida M. por Op. L.</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>[[${#numbers.formatDecimal(EM1440_Total, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM1440_Em, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${EM1440_Ops}]]</td>
+									<td>[[${EM1440_OpsW}]]</td>
+									<td>[[${EM1440_OpsL}]]</td>
+									<td>[[${#numbers.formatDecimal(EM1440_PctOpsW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM1440_PctOpsL, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM1440_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM1440_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="row">
 						<div class="col-md-6 col-sm-6">
 							<!-- BEGIN PORTLET-->
@@ -351,7 +501,7 @@ License: You must have a valid license purchased only from themeforest(the above
 				</div>
 			</div>	
 		</div>
-	</div>
+		</div>
 	
 		<div class="row">
 			<div class="col-md-12 col-sm-12">
@@ -364,6 +514,36 @@ License: You must have a valid license purchased only from themeforest(the above
 					</div>
 				</div>
 				<div class="portlet-body">
+					<div class="row">
+						<table class="table table-striped table-hover table-bordered">
+							<thead>
+								<tr>
+									<th>Total</th>
+									<th>EM</th>
+									<th>Ops.</th>
+									<th>Ops. W.</th>
+									<th>Ops. L.</th>
+									<th>%Ops. W.</th>
+									<th>%Ops. L.</th>
+									<th>Ganancia M. por Op. W.</th>
+									<th>Perdida M. por Op. L.</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>[[${#numbers.formatDecimal(T1440_Total, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T1440_Em, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${T1440_Ops}]]</td>
+									<td>[[${T1440_OpsW}]]</td>
+									<td>[[${T1440_OpsL}]]</td>
+									<td>[[${#numbers.formatDecimal(T1440_PctOpsW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T1440_PctOpsL, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T1440_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T1440_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="row">
 						<div class="col-md-6 col-sm-6">
 							<!-- BEGIN PORTLET-->
@@ -403,7 +583,7 @@ License: You must have a valid license purchased only from themeforest(the above
 				</div>
 			</div>	
 		</div>
-	</div>	
+		</div>	
 	
 		<div class="row">
 			<div class="col-md-12 col-sm-12">
@@ -416,6 +596,36 @@ License: You must have a valid license purchased only from themeforest(the above
 					</div>
 				</div>
 				<div class="portlet-body">
+					<div class="row">
+						<table class="table table-striped table-hover table-bordered">
+							<thead>
+								<tr>
+									<th>Total</th>
+									<th>EM</th>
+									<th>Ops.</th>
+									<th>Ops. W.</th>
+									<th>Ops. L.</th>
+									<th>%Ops. W.</th>
+									<th>%Ops. L.</th>
+									<th>Ganancia M. por Op. W.</th>
+									<th>Perdida M. por Op. L.</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>[[${#numbers.formatDecimal(EM10080_Total, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM10080_Em, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${EM10080_Ops}]]</td>
+									<td>[[${EM10080_OpsW}]]</td>
+									<td>[[${EM10080_OpsL}]]</td>
+									<td>[[${#numbers.formatDecimal(EM10080_PctOpsW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM10080_PctOpsL, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM10080_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM10080_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="row">
 						<div class="col-md-6 col-sm-6">
 							<!-- BEGIN PORTLET-->
@@ -455,7 +665,7 @@ License: You must have a valid license purchased only from themeforest(the above
 				</div>
 			</div>	
 		</div>
-	</div>
+		</div>
 	
 
 		<div class="row">
@@ -469,6 +679,36 @@ License: You must have a valid license purchased only from themeforest(the above
 					</div>
 				</div>
 				<div class="portlet-body">
+					<div class="row">
+						<table class="table table-striped table-hover table-bordered">
+							<thead>
+								<tr>
+									<th>Total</th>
+									<th>EM</th>
+									<th>Ops.</th>
+									<th>Ops. W.</th>
+									<th>Ops. L.</th>
+									<th>%Ops. W.</th>
+									<th>%Ops. L.</th>
+									<th>Ganancia M. por Op. W.</th>
+									<th>Perdida M. por Op. L.</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>[[${#numbers.formatDecimal(T10080_Total, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T10080_Em, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${T10080_Ops}]]</td>
+									<td>[[${T10080_OpsW}]]</td>
+									<td>[[${T10080_OpsL}]]</td>
+									<td>[[${#numbers.formatDecimal(T10080_PctOpsW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T10080_PctOpsL, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T10080_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T10080_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="row">
 						<div class="col-md-6 col-sm-6">
 							<!-- BEGIN PORTLET-->
@@ -509,10 +749,6 @@ License: You must have a valid license purchased only from themeforest(the above
 			</div>	
 		</div>
 	</div>	
-	
-	
-	</div>
-	
 	<!-- END CONTENT -->
 </div>
 <!-- END CONTAINER -->

@@ -64,7 +64,7 @@ public class ControlHistoricoResumenes {
 	}
 	
 	//Cada hora
-    @Scheduled(fixedDelay = 600000, initialDelay = 1000)
+    //@Scheduled(fixedDelay = 600000, initialDelay = 1000)
     @Transactional
 	public void run60() {
     	
@@ -109,7 +109,7 @@ public class ControlHistoricoResumenes {
 	}
     
 	//Cada 4 horas
-    @Scheduled(fixedDelay = 2400000, initialDelay = 1000)
+    //@Scheduled(fixedDelay = 2400000, initialDelay = 1000)
     @Transactional
 	public void run240() {
     	
@@ -155,7 +155,7 @@ public class ControlHistoricoResumenes {
 
     
 	//Cada 24 horas
-    @Scheduled(fixedDelay = 14400000, initialDelay = 1000)
+    //@Scheduled(fixedDelay = 14400000, initialDelay = 1000)
     @Transactional
 	public void run1440() {
     	
@@ -200,7 +200,7 @@ public class ControlHistoricoResumenes {
 	}
     
 	//Cada semana
-    @Scheduled(fixedDelay = 100800000, initialDelay = 1000)
+    //@Scheduled(fixedDelay = 100800000, initialDelay = 1000)
     @Transactional
 	public void run10080() {
     	
