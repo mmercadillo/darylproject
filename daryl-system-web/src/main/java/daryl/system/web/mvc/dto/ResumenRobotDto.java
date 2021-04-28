@@ -38,6 +38,8 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 	private Long numOpsGanadoras = 0L;
 	@Getter @Setter
 	private Long numOpsPerdedoras = 0L;
+	@Getter @Setter
+	private Double maximaPerdidaConsecutiva = 0.0;
 
 	
 	private Integer status = 6;
@@ -92,6 +94,8 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 				if(Math.round(resumen.getTotal()) >= 15) resumenDto.setType(1);
 				else resumenDto.setType(2);
 			}catch (Exception e) {}
+			
+			try{resumenDto.setMaximaPerdidaConsecutiva(resumen.getMaximaPerdidaConsecutiva());}catch (Exception e) {}
 			
 		return resumenDto;
 		
