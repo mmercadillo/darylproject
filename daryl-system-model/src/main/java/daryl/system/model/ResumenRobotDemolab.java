@@ -68,6 +68,11 @@ public class ResumenRobotDemolab implements Serializable{
 	@Column(nullable = true)
 	@Getter @Setter
 	private Double total = 0.0;
+	
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double maximaPerdidaConsecutiva = 0.0;
 
 	@Column(nullable = true)
 	@Getter @Setter
