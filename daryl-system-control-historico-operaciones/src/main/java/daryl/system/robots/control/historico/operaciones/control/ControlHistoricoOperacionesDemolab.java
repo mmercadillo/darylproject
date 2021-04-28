@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 
 import daryl.system.comun.enums.DemolabRobot;
 import daryl.system.model.DemolabOps;
+import daryl.system.model.HistoricoOperaciones;
+import daryl.system.model.ResumenRobot;
 import daryl.system.model.ResumenRobotDemolab;
+import daryl.system.model.Robot;
 import daryl.system.robots.control.historico.operaciones.repository.IHistoricoOperacionesDemolabRepository;
 import daryl.system.robots.control.historico.operaciones.repository.IResumenRobotDemolabRepository;
 
@@ -28,6 +31,50 @@ public class ControlHistoricoOperacionesDemolab {
 	@Autowired
 	IResumenRobotDemolabRepository resumenRobotDemolabRepository;
 
+    @Scheduled(fixedDelay = 300000, initialDelay = 1000)
+    @Transactional
+	public void calcularMaximaRachaPerdedora() {
+    	logger.info("ACTUALIZANDO MAXIMA RACHA PERDEDORA DEMOLAB=============");
+    	List<DemolabRobot> robots = Arrays.asList(DemolabRobot.values());
+    	for (DemolabRobot robot : robots) {
+    		logger.info("ACTUALIZANDO MAXIMA RACHA PERDEDORA ROBOT DEMOLAB-> " + robot.name());
+    		try {
+    			
+    			ResumenRobotDemolab resumen = resumenRobotDemolabRepository.findResumenRobotDemolabByRobot(robot.name());
+    			if(resumen != null) {
+    				
+    				double maxRachaPerdedora = 0.0;
+    				double perdidas = 0.0;
+    				List<DemolabOps> lista = historicoOperacionesDemolabRepository.findListaByRobot(robot.name(), 0L);
+    				if(lista != null && lista.size() > 0) {
+    		    		for (DemolabOps hops : lista) {
+
+		    				if(perdidas < maxRachaPerdedora) {
+		    					maxRachaPerdedora = perdidas;
+		    				}
+    		    			if(hops.getProfit() > 0) {
+    		    				perdidas = 0.0;
+    		    			}else {
+    		    				perdidas += hops.getProfit();
+    		    			}
+    		    			
+    		    		}
+    				}
+    				resumen.setMaximaPerdidaConsecutiva(maxRachaPerdedora);
+		    		logger.info("MAXIMA RACHA PERDEDORA ROBOT ACTUALIZADAS DEMOLAB-> " + robot.name());
+		    		resumenRobotDemolabRepository.save(resumen);
+			    	logger.info("MAXIMA RACHA PERDEDORA ROBOT GUARDADAS DEMOLAB-> " + robot.name());
+    			}
+    			
+    		}catch (Exception e) {
+    			logger.error("ERROR AL ACTUALIZAR MAXIMA RACHA PERDEDORA ACTUALIZADA DEMOLAB=============", e);
+			}
+    		
+    	}
+    	logger.info("MAXIMA RACHA PERDEDORA ACTUALIZADA DEMOLAB=============");
+    	
+	}
+	
 		
     @Scheduled(fixedDelay = 300000, initialDelay = 1000)
     @Transactional

@@ -34,7 +34,51 @@ public class ControlHistoricoOperaciones {
 	@Autowired
 	IRobotsRepository robotRepository;
 
-		
+	
+    @Scheduled(fixedDelay = 600000, initialDelay = 1000)
+    @Transactional
+	public void calcularMaximaRachaPerdedora() {
+    	logger.info("ACTUALIZANDO MAXIMA RACHA PERDEDORA=============");
+    	List<Robot> robots = robotRepository.findAll();
+    	for (Robot robot : robots) {
+    		logger.info("ACTUALIZANDO MAXIMA RACHA PERDEDORA ROBOT -> " + robot.getRobot());
+    		try {
+    			
+    			ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
+    			if(resumen != null) {
+    				
+    				double maxRachaPerdedora = 0.0;
+    				double perdidas = 0.0;
+    				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), 0L);
+    				if(lista != null && lista.size() > 0) {
+    		    		for (HistoricoOperaciones hops : lista) {
+		    				if(perdidas < maxRachaPerdedora) {
+		    					maxRachaPerdedora = perdidas;
+		    				}
+    		    			if(hops.getProfit() > 0) {
+    		    				perdidas = 0.0;
+    		    			}else {
+    		    				perdidas += hops.getProfit();
+    		    			}
+    		    			
+    		    		}
+    				}
+    				resumen.setMaximaPerdidaConsecutiva(maxRachaPerdedora);
+		    		logger.info("MAXIMA RACHA PERDEDORA ROBOT ACTUALIZADAS-> " + robot.getRobot());
+			    	resumenRobotRepository.save(resumen);
+			    	logger.info("MAXIMA RACHA PERDEDORA ROBOT GUARDADAS-> " + robot.getRobot());
+    			}
+    			
+    		}catch (Exception e) {
+    			logger.error("ERROR AL ACTUALIZAR MAXIMA RACHA PERDEDORA ACTUALIZADA=============", e);
+			}
+    		
+    	}
+    	logger.info("MAXIMA RACHA PERDEDORA ACTUALIZADA=============");
+    	
+	}
+	
+	
     @Scheduled(fixedDelay = 600000, initialDelay = 1000)
     @Transactional
 	public void run() {
@@ -131,7 +175,7 @@ public class ControlHistoricoOperaciones {
 		    	}
 			
 			}catch (Exception e) {
-				logger.error("RESUMEN DE OPERACIONES ACTUALIZADO=============", e);
+				logger.error("ERROR AL ACTUALZIAR EL RESUMEN DE OPERACIONES=============", e);
 			}
 		}
     	logger.info("RESUMEN DE OPERACIONES ACTUALIZADO=============");
