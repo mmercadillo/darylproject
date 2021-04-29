@@ -31,7 +31,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class LoginController {
  
 	
-	@GetMapping("/")
+	@GetMapping("/login")
     public ModelAndView init(Model model) {
 
 		CuentaUsuarioDto cudto = new CuentaUsuarioDto();
@@ -40,7 +40,7 @@ public class LoginController {
         return view;
     }
     
-	
+	/*
 	@PostMapping("/login")
     public void login(@ModelAttribute CuentaUsuarioDto cudto, HttpServletRequest request, HttpServletResponse response) {
 
@@ -50,7 +50,7 @@ public class LoginController {
 		
 		
 		//Reenviamos al controlador de dashboard
-		
+
 		RequestDispatcher dis = request.getRequestDispatcher("/dashboard");
 		try {
 			dis.forward(request, response);
@@ -60,9 +60,9 @@ public class LoginController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
     }
-	
+	*/
 	/*
 	private String getJWTToken(String username) {
 		String secretKey = "mySecretKey";

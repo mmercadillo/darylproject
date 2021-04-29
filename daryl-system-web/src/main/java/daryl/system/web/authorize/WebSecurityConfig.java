@@ -1,79 +1,68 @@
 package daryl.system.web.authorize;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 	
+    @Autowired
+    UserDetailServiceImpl userDetailsService;
 	
-	@Override
-	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
-			.withUser("user").password("{noop}password").roles("USER");
-	}
+    //Registra el service para usuarios y el encriptador de contrasena
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception { 
+ 
+        // Setting Service to find User in the database.
+        // And Setting PassswordEncoder
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());     
+    }
 	
-	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		
-		/*
-		http 
-			.csrf() 
-			.disable()
-			//.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-			//.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-			.authorizeRequests()
-				//.antMatchers("/assets/**").permitAll()
-				//.antMatchers(HttpMethod.POST, "/login").permitAll()
-				.antMatchers("/**").hasAnyRole("USER")
-				.anyRequest().authenticated()
-				.and()
-			.formLogin().loginPage("/");
-		*/
-
-		/*
-		http.csrf().disable()
-			//.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-			.authorizeRequests()
-			.antMatchers("/assets/**").permitAll()
-			.antMatchers(HttpMethod.GET, "/**").hasAnyRole("USER")
-			.antMatchers("/").permitAll()
-			.antMatchers(HttpMethod.POST, "/login").permitAll()
-			.and()
-			.formLogin().loginPage("/").permitAll().successForwardUrl("/dashboard")
-            .and()
-            .logout()
-            .permitAll()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/");
-			*(
-		
-		/*
-		http.csrf().disable()
-			.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-			.authorizeRequests()
-			.antMatchers(HttpMethod.POST, "/").permitAll() //permitimos el acceso a / a cualquiera
-			.anyRequest().authenticated() //cualquier otra peticion requiere autenticacion
-			.and()
-            .formLogin().loginPage("/").permitAll().successForwardUrl("/dashboard")
-            .and()
-            .logout()
-            .permitAll()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/");
-        */
-		
+	@Bean 
+	public PasswordEncoder passwordEncoder() { 
+	    return new Pbkdf2PasswordEncoder("darylsystemproject");
 	}
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 	    web.ignoring().antMatchers("/assets/**");
 	}
+	
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		
+		 http 
+	      .csrf().disable()
+	      .authorizeRequests()	
+	      	.antMatchers("/robots/cuenta").hasRole("USER")
+	      	.antMatchers(HttpMethod.POST, "/robots/cuenta/**").hasRole("USER")
+	      	.antMatchers("/login").permitAll() 
+	      	.antMatchers("/").permitAll()
+	      	.antMatchers("/dashboard").permitAll()
+	      	.antMatchers("/robots").permitAll()
+	      	.antMatchers("/robot/*").permitAll()
+	      	.antMatchers("/chart/**").permitAll()
+	      	.antMatchers("/demolab/**").permitAll()
+	      .anyRequest().authenticated()
+	      .and() 
+	      .formLogin().loginPage("/login").loginProcessingUrl("/login").successForwardUrl("/robots/cuenta")
+	      .usernameParameter("username")
+	      .passwordParameter("password")
+	      .and() 
+	      .logout().logoutUrl("/logout").invalidateHttpSession(true).clearAuthentication(true).permitAll().logoutSuccessUrl("/login"); 
+
+		
+	}
+	
+
 	
 }

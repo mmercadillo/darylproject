@@ -145,7 +145,7 @@ public class DemolabController {
 			chart.addSeries("Pips", periodos, historicoParaChartDto);
 			//BitmapEncoder.saveBitmap(chart, nombreFicheroChart.toString(), BitmapFormat.PNG);
 			BitmapEncoder.saveBitmap(chart, response.getOutputStream(), BitmapFormat.PNG);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 		}

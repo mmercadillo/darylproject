@@ -31,7 +31,7 @@ public class DashboardController {
 	IRobotsCuentaService robotsCuentaService;
 	
 	
-	@RequestMapping(path = "/dashboard", method = {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(path = {"/dashboard","/"}, method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView main(Model model) {
 
 		ModelAndView view = new ModelAndView("dashboard");
