@@ -34,6 +34,53 @@ public class ControlHistoricoOperaciones {
 	@Autowired
 	IRobotsRepository robotRepository;
 
+    @Scheduled(fixedDelay = 600000, initialDelay = 1000)
+    @Transactional
+	public void calcularMaxMinDD() {
+    	
+    	List<Robot> robots = robotRepository.findAll();
+    	for (Robot robot : robots) {
+    		
+    		try {
+    			
+    			ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
+    			if(resumen != null) {
+    				
+    				double max = 0.0;
+    				double min = 0.0;
+    				double difMaxMin = 0.0;
+    				double res = 0.0;
+    				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), 0L);
+    				if(lista != null && lista.size() > 0) {
+    		    		for (HistoricoOperaciones hops : lista) {
+		    				
+    		    			res += hops.getProfit();
+    		    			if(res < min) {
+    		    				min = res;
+    		    			}
+    		    			if(res > max) {
+    		    				max = res;
+    		    			}
+
+    		    			
+    		    		}
+    				}
+
+    				difMaxMin = max - min;
+    				
+    				resumen.setMaximo(max);
+    				resumen.setMinimo(min);
+    				resumen.setDifMaxMin(difMaxMin);
+			    	resumenRobotRepository.save(resumen);
+    			}
+    			
+    		}catch (Exception e) {
+    			
+			}
+    		
+    	}
+    	
+    }
 	
     @Scheduled(fixedDelay = 600000, initialDelay = 1000)
     @Transactional
