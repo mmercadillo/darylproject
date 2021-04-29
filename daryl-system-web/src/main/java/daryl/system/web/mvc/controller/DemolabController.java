@@ -64,6 +64,9 @@ public class DemolabController {
 			String varAvgW = robot.name() + "_AvgW";
 			String varAvgL = robot.name() + "_AvgL";
 			String varMaxLC = robot.name() + "_MaxLC";
+			String varMax = robot.name() + "_Max";
+			String varMin = robot.name() + "_Min";
+			String varDifmaxMin = robot.name() + "_DifMaxMin";
 			
 			try {
 				ResumenRobotDemolab resumen = detalleRobotDemolabService.findResumenRobotDemolabByRobot(robot.name());
@@ -78,6 +81,9 @@ public class DemolabController {
 				view.addObject(varAvgW, resumen.getGananciaMediaPorOpGanadora());
 				view.addObject(varAvgL, resumen.getPerdidaMediaPorOpPerdedora());
 				view.addObject(varMaxLC, resumen.getMaximaPerdidaConsecutiva());
+				view.addObject(varMax, resumen.getMaximo());
+				view.addObject(varMin, resumen.getMinimo());
+				view.addObject(varDifmaxMin, resumen.getDifMaxMin());
 				
 				
 			}catch (Exception e) {
@@ -92,6 +98,9 @@ public class DemolabController {
 				view.addObject(varAvgW, 0);
 				view.addObject(varAvgL, 0);
 				view.addObject(varMaxLC, 0);
+				view.addObject(varMax, 0);
+				view.addObject(varMin, 0);
+				view.addObject(varDifmaxMin, 0);
 				
 			}
 			
