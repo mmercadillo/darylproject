@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import daryl.system.model.Robot;
 import daryl.system.model.RobotsCuenta;
-import daryl.system.web.authorize.User;
 import daryl.system.web.mvc.dto.RobotsCuentaDto;
 import daryl.system.web.services.IRobotsCuentaService;
 import daryl.system.web.services.IRobotsService;
@@ -31,10 +32,11 @@ public class RobotsCuentaControlller{
 	
 	//@PostMapping("/robots/cuenta")
 	@RequestMapping(value = "/robots/cuenta", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView getRobots(Authentication authentication) {
+    public ModelAndView getRobots() {
 
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		RobotsCuentaDto rcdto = new RobotsCuentaDto();
-			rcdto.setCuenta( ((User)authentication.getPrincipal()).getUsername());
+			rcdto.setCuenta( ((UserDetails)authentication.getPrincipal()).getUsername());
 		ModelAndView view = new ModelAndView("buscador_robots_cuenta", "robots_cuenta", rcdto);
 		
 		
