@@ -22,7 +22,7 @@
 		<!-- END RESPONSIVE MENU TOGGLER -->
 		<!-- BEGIN TOP NAVIGATION MENU -->
 		<div class="top-menu">
-			<span th:text="${#authentication.getPrincipal().getUsername()}"></span> <!-- No ".getUsername()"-->
+			<span  sec:authorize="isAuthenticated()" th:text="${#authentication.getPrincipal().getUsername()}"></span>
 			<ul class="nav navbar-nav pull-right">
 				<!-- BEGIN QUICK SIDEBAR TOGGLER -->
 				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
