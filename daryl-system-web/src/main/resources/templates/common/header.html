@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" class="no-js" 	xmlns:th="http://www.thymeleaf.org"
+								xmlns:sec="http://www.thymeleaf.org" 
+								xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <!-- BEGIN HEADER -->
 <div class="page-header md-shadow-z-1-i navbar navbar-fixed-top">
@@ -20,10 +22,11 @@
 		<!-- END RESPONSIVE MENU TOGGLER -->
 		<!-- BEGIN TOP NAVIGATION MENU -->
 		<div class="top-menu">
+			<span  sec:authorize="isAuthenticated()" th:text="${#authentication.getPrincipal().getUsername()}"></span>
 			<ul class="nav navbar-nav pull-right">
 				<!-- BEGIN QUICK SIDEBAR TOGGLER -->
 				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-				<li class="dropdown dropdown-quick-sidebar-toggler">
+				<li class="dropdown dropdown-quick-sidebar-toggler" sec:authorize="isAuthenticated()">
 					<a th:href="@{/logout}" class="dropdown-toggle">
 					<i class="icon-logout"></i>
 					</a>

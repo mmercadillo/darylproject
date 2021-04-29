@@ -13,7 +13,9 @@ License: You must have a valid license purchased only from themeforest(the above
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" class="no-js" 	xmlns:th="http://www.thymeleaf.org" 
+								xmlns:sec="http://www.thymeleaf.org"
+								xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head th:replace="common/head">...</head>
@@ -117,6 +119,9 @@ License: You must have a valid license purchased only from themeforest(the above
 										<th>Ganancia M. por Op. W.</th>
 										<th>Perdida M. por Op. L.</th>
 										<th>Max. L. Consec.</th>
+										<th>Max.</th>
+										<th>Min.</th>
+										<th>Dif. Max.-Min.</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -131,6 +136,9 @@ License: You must have a valid license purchased only from themeforest(the above
 										<td>[[${#numbers.formatDecimal(EM60_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
 										<td>[[${#numbers.formatDecimal(EM60_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
 										<td>[[${#numbers.formatDecimal(EM60_MaxLC, 1, 'POINT', 2, 'COMMA')}]]</td>
+										<td>[[${#numbers.formatDecimal(EM60_Max, 1, 'POINT', 2, 'COMMA')}]]</td>
+										<td>[[${#numbers.formatDecimal(EM60_Min, 1, 'POINT', 2, 'COMMA')}]]</td>
+										<td>[[${#numbers.formatDecimal(EM60_DifMaxMin, 1, 'POINT', 2, 'COMMA')}]]</td>
 									</tr>
 								</tbody>
 							</table>
@@ -200,6 +208,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<th>Ganancia M. por Op. W.</th>
 									<th>Perdida M. por Op. L.</th>
 									<th>Max. L. Consec.</th>
+									<th>Max.</th>
+									<th>Min.</th>
+									<th>Dif. Max.-Min.</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -214,6 +225,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<td>[[${#numbers.formatDecimal(T60_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(T60_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(T60_MaxLC, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T60_Max, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T60_Min, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T60_DifMaxMin, 1, 'POINT', 2, 'COMMA')}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -284,6 +298,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<th>Ganancia M. por Op. W.</th>
 									<th>Perdida M. por Op. L.</th>
 									<th>Max. L. Consec.</th>
+									<th>Max.</th>
+									<th>Min.</th>
+									<th>Dif. Max.-Min.</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -298,6 +315,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<td>[[${#numbers.formatDecimal(EM240_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(EM240_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(EM240_MaxLC, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM240_Max, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM240_Min, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM240_DifMaxMin, 1, 'POINT', 2, 'COMMA')}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -369,6 +389,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<th>Ganancia M. por Op. W.</th>
 									<th>Perdida M. por Op. L.</th>
 									<th>Max. L. Consec.</th>
+									<th>Max.</th>
+									<th>Min.</th>
+									<th>Dif. Max.-Min.</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -383,6 +406,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<td>[[${#numbers.formatDecimal(T240_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(T240_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(T240_MaxLC, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T240_Max, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T240_Min, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T240_DifMaxMin, 1, 'POINT', 2, 'COMMA')}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -454,6 +480,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<th>Ganancia M. por Op. W.</th>
 									<th>Perdida M. por Op. L.</th>
 									<th>Max. L. Consec.</th>
+									<th>Max.</th>
+									<th>Min.</th>
+									<th>Dif. Max.-Min.</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -468,6 +497,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<td>[[${#numbers.formatDecimal(EM1440_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(EM1440_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(EM1440_MaxLC, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM1440_Max, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM1440_Min, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM1440_DifMaxMin, 1, 'POINT', 2, 'COMMA')}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -538,6 +570,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<th>Ganancia M. por Op. W.</th>
 									<th>Perdida M. por Op. L.</th>
 									<th>Max. L. Consec.</th>
+									<th>Max.</th>
+									<th>Min.</th>
+									<th>Dif. Max.-Min.</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -552,6 +587,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<td>[[${#numbers.formatDecimal(T1440_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(T1440_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(T1440_MaxLC, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T1440_Max, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T1440_Min, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T1440_DifMaxMin, 1, 'POINT', 2, 'COMMA')}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -622,6 +660,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<th>Ganancia M. por Op. W.</th>
 									<th>Perdida M. por Op. L.</th>
 									<th>Max. L. Consec.</th>
+									<th>Max.</th>
+									<th>Min.</th>
+									<th>Dif. Max.-Min.</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -636,6 +677,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<td>[[${#numbers.formatDecimal(EM10080_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(EM10080_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(EM10080_MaxLC, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM10080_Max, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM10080_Min, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(EM10080_DifMaxMin, 1, 'POINT', 2, 'COMMA')}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -707,6 +751,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<th>Ganancia M. por Op. W.</th>
 									<th>Perdida M. por Op. L.</th>
 									<th>Max. L. Consec.</th>
+									<th>Max.</th>
+									<th>Min.</th>
+									<th>Dif. Max.-Min.</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -721,6 +768,9 @@ License: You must have a valid license purchased only from themeforest(the above
 									<td>[[${#numbers.formatDecimal(T10080_AvgW, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(T10080_AvgL, 1, 'POINT', 2, 'COMMA')}]]</td>
 									<td>[[${#numbers.formatDecimal(T10080_MaxLC, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T10080_Max, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T10080_Min, 1, 'POINT', 2, 'COMMA')}]]</td>
+									<td>[[${#numbers.formatDecimal(T10080_DifMaxMin, 1, 'POINT', 2, 'COMMA')}]]</td>
 								</tr>
 							</tbody>
 						</table>

@@ -78,6 +78,18 @@ public class ResumenRobot implements Serializable{
 	@Column(nullable = true)
 	@Getter @Setter
 	private Double maximaPerdidaConsecutiva = 0.0;
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double maximo = 0.0;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double minimo = 0.0;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double difMaxMin = 0.0;
 	
 	@Column(nullable = true)
 	@Getter @Setter

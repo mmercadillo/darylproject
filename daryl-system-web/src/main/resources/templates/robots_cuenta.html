@@ -13,7 +13,9 @@ License: You must have a valid license purchased only from themeforest(the above
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" class="no-js" 	xmlns:th="http://www.thymeleaf.org" 
+								xmlns:sec="http://www.thymeleaf.org"
+								xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head th:replace="common/head"></head>
@@ -80,7 +82,7 @@ License: You must have a valid license purchased only from themeforest(the above
 											<div class="col-md-12">
 												<label class="col-md-3 control-label">Cuenta:</label>
 												<div class="col-md-9">
-													<input type="text" th:field="*{cuenta}" class="form-control input-circle" placeholder="Introduce la cuenta"/>
+													<input  readonly="readonly" type="text" th:field="*{cuenta}" class="form-control input-circle" placeholder="Introduce la cuenta"/>
 													<span class="help-block">
 													Numero de cuenta de trading. </span>
 												</div>
@@ -94,123 +96,6 @@ License: You must have a valid license purchased only from themeforest(the above
 															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey" th:field="*{robots}" th:value="${robot.robot}" th:checked="${robotsAsociadosCuenta.contains(robot.robot)}"/> [[${robot.robot}]] 
 														</label>
 													</div>
-													<!--
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list  col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 1 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" checked class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 2 
-														</label>
-													</div>
-													<div class="icheck-list col-md-3">
-														<label>
-															<input type="checkbox" class="icheck" data-checkbox="icheckbox_square-grey"> Checkbox 3 
-														</label>
-													</div>
-													-->
 												</div>
 											</div>
 										</div>

@@ -33,6 +33,53 @@ public class ControlHistoricoOperacionesDemolab {
 
     @Scheduled(fixedDelay = 300000, initialDelay = 1000)
     @Transactional
+	public void calcularMaxMinDD() {
+    	
+    	List<DemolabRobot> robots = Arrays.asList(DemolabRobot.values());
+    	for (DemolabRobot robot : robots) {
+    		
+    		try {
+    			
+    			ResumenRobotDemolab resumen = resumenRobotDemolabRepository.findResumenRobotDemolabByRobot(robot.name());
+    			if(resumen != null) {
+    				
+    				double max = 0.0;
+    				double min = 0.0;
+    				double difMaxMin = 0.0;
+    				double res = 0.0;
+    				List<DemolabOps> lista = historicoOperacionesDemolabRepository.findListaByRobot(robot.name(), 0L);
+    				if(lista != null && lista.size() > 0) {
+    		    		for (DemolabOps hops : lista) {
+		    				
+    		    			res += hops.getProfit();
+    		    			if(res < min) {
+    		    				min = res;
+    		    			}
+    		    			if(res > max) {
+    		    				max = res;
+    		    			}
+
+    		    		}
+    				}
+    				
+    				difMaxMin = max - min;
+    				resumen.setMaximo(max);
+    				resumen.setMinimo(min);
+    				resumen.setDifMaxMin(difMaxMin);
+    				resumenRobotDemolabRepository.save(resumen);
+    			}
+    			
+    		}catch (Exception e) {
+    			
+			}
+    		
+    	}
+    	
+    }
+	
+	
+    @Scheduled(fixedDelay = 300000, initialDelay = 1000)
+    @Transactional
 	public void calcularMaximaRachaPerdedora() {
     	logger.info("ACTUALIZANDO MAXIMA RACHA PERDEDORA DEMOLAB=============");
     	List<DemolabRobot> robots = Arrays.asList(DemolabRobot.values());

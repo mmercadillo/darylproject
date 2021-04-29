@@ -1,4 +1,3 @@
-<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
 <!DOCTYPE html>
 <!-- 
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
@@ -14,7 +13,9 @@ License: You must have a valid license purchased only from themeforest(the above
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" class="no-js" 	xmlns:th="http://www.thymeleaf.org" 
+								xmlns:sec="http://www.thymeleaf.org"
+								xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head th:replace="common/head"></head>
@@ -25,7 +26,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <div class="clearfix">
 </div>
 <!-- BEGIN CONTAINER -->
-<div class="page-container">
+<div class="page-container" sec:authorize="isAuthenticated()">
 	<!-- BEGIN SIDEBAR -->
 	<div class="page-sidebar-wrapper" th:replace="common/sidebar.html"></div>
 	<!-- END SIDEBAR -->
@@ -77,7 +78,7 @@ License: You must have a valid license purchased only from themeforest(the above
 											<div class="col-md-12">
 												<label class="col-md-3 control-label">Cuenta:</label>
 												<div class="col-md-9">
-													<input type="text" th:field="*{cuenta}" class="form-control input-circle" placeholder="Introduce la cuenta"/>
+													<input readonly="readonly" type="text" th:field="*{cuenta}" class="form-control input-circle" placeholder="Introduce la cuenta"/>
 													<span class="help-block">
 													Numero de cuenta de trading. </span>
 												</div>

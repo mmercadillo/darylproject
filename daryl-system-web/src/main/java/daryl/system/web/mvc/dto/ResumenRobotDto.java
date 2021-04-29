@@ -40,7 +40,12 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 	private Long numOpsPerdedoras = 0L;
 	@Getter @Setter
 	private Double maximaPerdidaConsecutiva = 0.0;
-
+	@Getter @Setter
+	private Double maximo = 0.0;
+	@Getter @Setter
+	private Double minimo = 0.0;
+	@Getter @Setter
+	private Double difMaxMin = 0.0;
 	
 	private Integer status = 6;
 	@Getter @Setter
@@ -96,6 +101,9 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 			}catch (Exception e) {}
 			
 			try{resumenDto.setMaximaPerdidaConsecutiva(resumen.getMaximaPerdidaConsecutiva());}catch (Exception e) {}
+			try{resumenDto.setMaximo(resumen.getMaximo());}catch (Exception e) {}
+			try{resumenDto.setMinimo(resumen.getMinimo());}catch (Exception e) {}
+			try{resumenDto.setDifMaxMin(resumen.getDifMaxMin());}catch (Exception e) {}
 			
 		return resumenDto;
 		
