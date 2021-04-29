@@ -2,8 +2,7 @@
 	<configuration>
 	 
 	    <property name="LOGS" value="C:/Users/Admin/Desktop/DarylWorkspace/logs" />
-	    <!--<property name="LOGS" value="F:/DarylWorkspace/logs" />-->
-	    <property name="APP" value="daryl-system-control-historico-operaciones" />
+	    <property name="APP" value="daryl-system-rna-calculator" />
 
 	    <appender name="Console"
 	        class="ch.qos.logback.core.ConsoleAppender">
