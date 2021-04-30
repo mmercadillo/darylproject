@@ -14,6 +14,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import daryl.system.comun.enums.Activo;
+import daryl.system.comun.enums.Timeframes;
+import daryl.system.robots.rna.calculator.forecaster.RnaForecasterGenerator;
+
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
 @EnableTransactionManagement
@@ -42,8 +46,10 @@ public class DarylSystemRnaCalculatorApplication {
 		
 		
 		ExecutorService servicio = Executors.newFixedThreadPool(30);
-		//4-20-120-480
-		
+
+		RnaForecasterGenerator rfg = context.getBean(RnaForecasterGenerator.class);
+		rfg.init("TEST", Activo.EURUSD, Timeframes.PERIOD_H1);
+		rfg.run();
 		
 		servicio.shutdown();
 		

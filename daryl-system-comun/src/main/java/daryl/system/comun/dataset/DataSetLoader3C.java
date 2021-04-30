@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import daryl.system.comun.dataset.aprendizaje.DatoAprendizaje;
 import daryl.system.comun.dataset.enums.Mode;
 
-@Component
+
 public final class DataSetLoader3C extends DataSetLoader{
 	
 	private static DataSetLoader3C loadDataSet;
