@@ -21,6 +21,7 @@
 		<daryl.system.comun>1.0.5</daryl.system.comun>
 		<daryl.system.model>1.0.5</daryl.system.model>
 		<daryl.system.variance-base>1.0.5</daryl.system.variance-base>
+		<neuroph.version>2.98</neuroph.version>
 	</properties> 
 	<dependencies>
 		
@@ -59,6 +60,29 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.neuroph</groupId>
+    		<artifactId>neuroph-core</artifactId>
+    		<version>${neuroph.version}</version>
+		</dependency>
+		<dependency>
+    		<groupId>com.github.neuroph</groupId>
+    		<artifactId>neuroph-imgrec</artifactId>
+    		<version>${neuroph.version}</version>
+		</dependency>
+		<dependency>
+    		<groupId>com.github.neuroph</groupId>
+    		<artifactId>neuroph-ocr</artifactId>
+    		<version>${neuroph.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.neuroph/neuroph-contrib -->
+		<dependency>
+    		<groupId>com.github.neuroph</groupId>
+    		<artifactId>neuroph-contrib</artifactId>
+    		<version>${neuroph.version}</version>
+		</dependency>
+
 
 	</dependencies>
 
