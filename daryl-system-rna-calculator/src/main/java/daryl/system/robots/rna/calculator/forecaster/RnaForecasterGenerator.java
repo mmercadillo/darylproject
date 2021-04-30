@@ -59,7 +59,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 
 	//Parámetros de configuracion RNA
 	private Integer maxNeuronasEntrada = 10;
-	private Integer maxHiddenLayers = 5;
+	private Integer maxHiddenLayers = 1;
 	private Integer maxHiddenNeurons = 10;
 	private Double minMomentum = 0.05;
 	private Double minLearningRate = 0.05;
@@ -69,16 +69,16 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 	private String[] transferFunctionTypes = {"LINEAR", "RAMP", "STEP", "SIGMOID", "TANH", "GAUSSIAN", "TRAPEZOID", "SGN", "SIN", "LOG", "RECTIFIED"};
 	
 	private Double maxError = 0.0000001;
-	private Integer maxIterations = 500;
+	private Integer maxIterations = 100;
 
 	private String rutaRna = "F:\\DarylWorkspace\\Rnas\\";
 	
 	/////////////////////////////////////////////////////
 	
 	//Parámetros para la creación de los Datasets*/
-	private Double pctLearning = 0.7;
+	private Double pctLearning = 0.5;
 	private Double pctTest = 0.05;
-	private Double pctForecast = 0.25;
+	private Double pctForecast = 0.45;
 	//////////////////////////////
 	
 	
@@ -172,15 +172,14 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 
 	public  void run() {
 		
-
-		NeuralNetwork neuralNetwork = null;
 		double resultado = 0.0;
-		
-		
 		for(int fncTransf = 0; fncTransf < transferFunctionTypes.length; fncTransf++) {
 			for(int neuronasEntrada = 1; neuronasEntrada <= maxNeuronasEntrada; neuronasEntrada++) {
 				//Creamos los dataset
 				generateDatasets(neuronasEntrada);
+				
+				maxHiddenNeurons = (2 * neuronasEntrada + 1);
+				
 				for(int bias = 0; bias <= 1; bias++) {
 					for(int pasoMomentum = 0; pasoMomentum < 20; pasoMomentum++) {
 						double momentum = minMomentum + (pasoMomentum * 0.05);
@@ -188,9 +187,9 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 						for(int pasoLearningrate = 0; pasoLearningrate < 20; pasoLearningrate++) {
 							double learningRate = minLearningRate + (pasoLearningrate * 0.05);
 							
-							for(int hiddenLayers = 0; hiddenLayers <= maxHiddenLayers; hiddenLayers++) {
+							for(int hiddenLayers = 1; hiddenLayers <= maxHiddenLayers; hiddenLayers++) {
 								for(int hiddenNeurons = 1; hiddenNeurons <= maxHiddenNeurons; hiddenNeurons++) {
-					
+									
 									try {
 									
 										List<Integer> neuronasPorLayer = new ArrayList<Integer>();
@@ -235,7 +234,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 								        neuronasPorLayer.add(neuronasSalida);
 								        
 								        //Creamos la RNA
-										neuralNetwork = new MultiLayerPerceptron(	TransferFunctionType.valueOf(transferFunctionTypes[fncTransf]), 
+								        NeuralNetwork neuralNetwork = new MultiLayerPerceptron(	TransferFunctionType.valueOf(transferFunctionTypes[fncTransf]), 
 																					neuronasPorLayer.stream().mapToInt(Integer::intValue).toArray());
 								        
 										
@@ -279,12 +278,10 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 										if(res > resultado) {
 											resultado = res;
 											System.out.println("Guardamos la RNA con res -> " + res);
-											neuralNetwork.save(this.rutaRna + this.tipoActivo + "_" + this.timeframe + "_new.rna");
+											neuralNetwork.save(this.rutaRna + this.tipoActivo + "_" + this.timeframe.valor + "_new.rna");
 										}
 										
 										System.out.println("========================================================================================");
-										
-										
 										
 									}catch (Exception e) {
 										e.printStackTrace();
@@ -299,208 +296,208 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 
 	}
 	
-	   public double testNeuralNetwork(NeuralNetwork neuralNet) {
+	public double testNeuralNetwork(NeuralNetwork neuralNet) {
 
 	   	   
-		   List<Double> esperados = new ArrayList<Double>();
-		   List<Double> predicciones = new ArrayList<Double>();
-		   List<Double> periods = new ArrayList<Double>();
+	   List<Double> esperados = new ArrayList<Double>();
+	   List<Double> predicciones = new ArrayList<Double>();
+	   List<Double> periods = new ArrayList<Double>();
 
-		   System.out.println("**********************RESULT TEST**********************");
-		   double period = 0D;
-		   for (DataSetRow testSetRow : testSet.getRows()) {
-			   neuralNet.setInput(testSetRow.getInput());
-			   neuralNet.calculate();
-			
-			   // get network output
-			   double[] networkOutput = neuralNet.getOutput();
-			   double predicted = networkOutput[0];
-			    
-			   // get target/desired output
-			   double[] desiredOutput = testSetRow.getDesiredOutput();
-			   double target = desiredOutput[0];
-			      
-			   esperados.add(darylNormalizer.denormData(target));
-			   predicciones.add(darylNormalizer.denormData(predicted));
-			  
-			   periods.add(period++);
-	        }
-	        
-	        double res = estrategia(esperados, predicciones);
-	        return res;
-
-	    }
-
-		private Double minError = null;
-		private Integer iteration = 0;
-		@Override
-		public void handleLearningEvent(LearningEvent event) {
-			
-			
-			BackPropagation bp = (BackPropagation) event.getSource();
-	        //SupervisedHebbianLearning bp = (SupervisedHebbianLearning)event.getSource();
-			if (event.getEventType().equals(LearningEvent.Type.LEARNING_STOPPED)) {
-	            double error = bp.getTotalNetworkError();
-	            //System.out.println("Training completed in " + bp.getCurrentIteration() + " iterations, ");
-	            //System.out.println("With total error: " + formatDecimalNumber(error));
-	            //System.out.println("With MIN error: " + formatDecimalNumber(minError) + " in iteration: " + iteration);
-	            
-	        } else {
-	        	
-
-	            //System.out.println("Iteration: " + bp.getCurrentIteration() + " | Network error: " + formatDecimalNumber(bp.getTotalNetworkError()));
-	            
-	            if(minError == null || minError > bp.getTotalNetworkError()) {
-	            	minError = bp.getTotalNetworkError();
-	            	iteration = bp.getCurrentIteration();
-	            }
-	            
-	    	
-	            
-	        }
-			
-
-			
-		}
+	   System.out.println("**********************RESULT TEST**********************");
+	   double period = 0D;
+	   for (DataSetRow testSetRow : testSet.getRows()) {
+		   neuralNet.setInput(testSetRow.getInput());
+		   neuralNet.calculate();
 		
-	    //Formating decimal number to have 3 decimal places
-	    public String formatDecimalNumber(double number) {
-	        return new BigDecimal(number).setScale(20, RoundingMode.HALF_UP).toString();
-	    }
+		   // get network output
+		   double[] networkOutput = neuralNet.getOutput();
+		   double predicted = networkOutput[0];
+		    
+		   // get target/desired output
+		   double[] desiredOutput = testSetRow.getDesiredOutput();
+		   double target = desiredOutput[0];
+		      
+		   esperados.add(darylNormalizer.denormData(target));
+		   predicciones.add(darylNormalizer.denormData(predicted));
+		  
+		   periods.add(period++);
+        }
+        
+        double res = estrategia(esperados, predicciones);
+        return res;
+
+    }
+
+	private Double minError = null;
+	private Integer iteration = 0;
+	@Override
+	public void handleLearningEvent(LearningEvent event) {
+			
+			
+		BackPropagation bp = (BackPropagation) event.getSource();
+        //SupervisedHebbianLearning bp = (SupervisedHebbianLearning)event.getSource();
+		if (event.getEventType().equals(LearningEvent.Type.LEARNING_STOPPED)) {
+            double error = bp.getTotalNetworkError();
+            //System.out.println("Training completed in " + bp.getCurrentIteration() + " iterations, ");
+            //System.out.println("With total error: " + formatDecimalNumber(error));
+            //System.out.println("With MIN error: " + formatDecimalNumber(minError) + " in iteration: " + iteration);
+            
+        } else {
+        	
+
+            //System.out.println("Iteration: " + bp.getCurrentIteration() + " | Network error: " + formatDecimalNumber(bp.getTotalNetworkError()));
+            
+            if(minError == null || minError > bp.getTotalNetworkError()) {
+            	minError = bp.getTotalNetworkError();
+            	iteration = bp.getCurrentIteration();
+            }
+            
+    	
+            
+        }
+			
+
+			
+	}
 		
-	    public double estrategia(List<Double> esperados, List<Double> predicciones) {
+    //Formating decimal number to have 3 decimal places
+    public String formatDecimalNumber(double number) {
+    	return new BigDecimal(number).setScale(20, RoundingMode.HALF_UP).toString();
+    }
+		
+    public double estrategia(List<Double> esperados, List<Double> predicciones) {
 	    	
-	        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	 		int aciertos = 0;
-	 		int fallos = 0;
-	 		double ptsGanados = 0.0;
-	 		double ptsPerdidos = 0.0;
-	 		int perdidasConsecutivas = 0;
-	 		int gananciasConsecutivas = 0;
-	 		int maxPerdidasConsecutivas = 0;
-	 		int maxGanaciasConsecutivas = 0;
-	 		double maxPtsConsecutivosGanados = 0.0;
-	 		double maxPtsConsecutivosPerdidos = 0.0;
-	 		double ptsConsecutivosGanados = 0.0;
-	 		double ptsConsecutivosPerdidos = 0.0;
-	 		//Evaluamos los resultados
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 		int aciertos = 0;
+ 		int fallos = 0;
+ 		double ptsGanados = 0.0;
+ 		double ptsPerdidos = 0.0;
+ 		int perdidasConsecutivas = 0;
+ 		int gananciasConsecutivas = 0;
+ 		int maxPerdidasConsecutivas = 0;
+ 		int maxGanaciasConsecutivas = 0;
+ 		double maxPtsConsecutivosGanados = 0.0;
+ 		double maxPtsConsecutivosPerdidos = 0.0;
+ 		double ptsConsecutivosGanados = 0.0;
+ 		double ptsConsecutivosPerdidos = 0.0;
+ 		//Evaluamos los resultados
 
-	 		for(int i = 2; i < esperados.size(); i++) {
-	 						
-	 			if(predicciones.get(i) < predicciones.get(i-1)) {
-	 				//B
-	 				if(esperados.get(i) > esperados.get(i-1)) {
-	 					aciertos++;
-	 					double res =  (esperados.get(i) - esperados.get(i-1));
-	 					ptsGanados = ptsGanados + res;
-	 					
-	 					
-	 					gananciasConsecutivas++;
-	 					if(perdidasConsecutivas > 0) {
-	 						if(perdidasConsecutivas > maxPerdidasConsecutivas) {
-	 							maxPerdidasConsecutivas = perdidasConsecutivas;
-	 						}
-	 						perdidasConsecutivas = 0;
-	 					}
-	 					
-	 					ptsConsecutivosGanados += res;
-	 					if(ptsConsecutivosPerdidos < 0) {
-	 						if(ptsConsecutivosPerdidos < maxPtsConsecutivosPerdidos) {
-	 							maxPtsConsecutivosPerdidos = ptsConsecutivosPerdidos;
-	 						}
-	 						ptsConsecutivosPerdidos = 0.0;
-	 					}
-	 					
-	 					
-	 					
-	 				}else {
-	 					fallos++;
-	 					double res =  (esperados.get(i) - esperados.get(i-1));
-	 					ptsPerdidos = ptsPerdidos + res;
-	 					
-	 					perdidasConsecutivas++;
-	 					if(gananciasConsecutivas > 0) {
-	 						if(gananciasConsecutivas > maxGanaciasConsecutivas) {
-	 							maxGanaciasConsecutivas = gananciasConsecutivas;
-	 						}
-	 						gananciasConsecutivas = 0;
-	 					}
-	 					
-	 					ptsConsecutivosPerdidos += res;
-	 					if(ptsConsecutivosGanados > 0) {
-	 						if(ptsConsecutivosGanados > maxPtsConsecutivosGanados) {
-	 							maxPtsConsecutivosGanados = ptsConsecutivosGanados;
-	 						}
-	 						ptsConsecutivosGanados = 0.0;
-	 					}
-	 				}
-	 			}
+ 		for(int i = 2; i < esperados.size(); i++) {
+ 						
+ 			if(predicciones.get(i) < predicciones.get(i-1)) {
+ 				//B
+ 				if(esperados.get(i) > esperados.get(i-1)) {
+ 					aciertos++;
+ 					double res =  (esperados.get(i) - esperados.get(i-1));
+ 					ptsGanados = ptsGanados + res;
+ 					
+ 					
+ 					gananciasConsecutivas++;
+ 					if(perdidasConsecutivas > 0) {
+ 						if(perdidasConsecutivas > maxPerdidasConsecutivas) {
+ 							maxPerdidasConsecutivas = perdidasConsecutivas;
+ 						}
+ 						perdidasConsecutivas = 0;
+ 					}
+ 					
+ 					ptsConsecutivosGanados += res;
+ 					if(ptsConsecutivosPerdidos < 0) {
+ 						if(ptsConsecutivosPerdidos < maxPtsConsecutivosPerdidos) {
+ 							maxPtsConsecutivosPerdidos = ptsConsecutivosPerdidos;
+ 						}
+ 						ptsConsecutivosPerdidos = 0.0;
+ 					}
+ 					
+ 					
+ 					
+ 				}else {
+ 					fallos++;
+ 					double res =  (esperados.get(i) - esperados.get(i-1));
+ 					ptsPerdidos = ptsPerdidos + res;
+ 					
+ 					perdidasConsecutivas++;
+ 					if(gananciasConsecutivas > 0) {
+ 						if(gananciasConsecutivas > maxGanaciasConsecutivas) {
+ 							maxGanaciasConsecutivas = gananciasConsecutivas;
+ 						}
+ 						gananciasConsecutivas = 0;
+ 					}
+ 					
+ 					ptsConsecutivosPerdidos += res;
+ 					if(ptsConsecutivosGanados > 0) {
+ 						if(ptsConsecutivosGanados > maxPtsConsecutivosGanados) {
+ 							maxPtsConsecutivosGanados = ptsConsecutivosGanados;
+ 						}
+ 						ptsConsecutivosGanados = 0.0;
+ 					}
+ 				}
+ 			}
 
-	 			if(predicciones.get(i) > predicciones.get(i-1)) {
-	 				//S
-	 				if(esperados.get(i) < esperados.get(i-1)) {
-	 					aciertos++;
-	 					double res = (esperados.get(i-1) - esperados.get(i));
-	 					ptsGanados = ptsGanados + res;
-	 					
-	 					gananciasConsecutivas++;
-	 					if(perdidasConsecutivas > 0) {
-	 						if(perdidasConsecutivas > maxPerdidasConsecutivas) {
-	 							maxPerdidasConsecutivas = perdidasConsecutivas;
-	 						}
-	 						perdidasConsecutivas = 0;
-	 					}
-	 					
-	 					ptsConsecutivosGanados += res;
-	 					if(ptsConsecutivosPerdidos < 0) {
-	 						if(ptsConsecutivosPerdidos < maxPtsConsecutivosPerdidos) {
-	 							maxPtsConsecutivosPerdidos = ptsConsecutivosPerdidos;
-	 						}
-	 						ptsConsecutivosPerdidos = 0.0;
-	 					}
-	 					
-	 				}else {
-	 					fallos++;
-	 					double res = (esperados.get(i-1) - esperados.get(i));
-	 					ptsPerdidos = ptsPerdidos + res;
-	
-	 					
-	 					perdidasConsecutivas++;
-	 					if(gananciasConsecutivas > 0) {
-	 						if(gananciasConsecutivas > maxGanaciasConsecutivas) {
-	 							maxGanaciasConsecutivas = gananciasConsecutivas;
-	 						}
-	 						gananciasConsecutivas = 0;
-	 					}
-	 					
-	 					ptsConsecutivosPerdidos += res;
-	 					if(ptsConsecutivosGanados > 0) {
-	 						if(ptsConsecutivosGanados > maxPtsConsecutivosGanados) {
-	 							maxPtsConsecutivosGanados = ptsConsecutivosGanados;
-	 						}
-	 						ptsConsecutivosGanados = 0.0;
-	 					}
-	 				}
-	 			}
-	 			
-	 		}
-	 		
-	 		//System.out.println("======================================");
-	 		//System.out.println("RES -> " + (ptsGanados + ptsPerdidos));
-	 		//System.out.println("A: " + aciertos + " - F: " + fallos + " - PTS_P: " + ptsPerdidos + " - PTS_G: " + ptsGanados + " - MG: " + (ptsGanados/aciertos) + " - MP: " + (ptsPerdidos/fallos));
-	 		
-	 		double pctAciertos = (double)aciertos / (aciertos + fallos);
-	 		double pctFallos = (double)fallos / (aciertos + fallos);
-	 		double mediaGPorOpGanadora = (double)ptsGanados / aciertos;
-	 		double mediaPPorOpPerdedora = (double)ptsPerdidos / fallos;
-	 		
-	 		//System.out.println("EM -> " + ((pctAciertos * mediaGPorOpGanadora ) + (pctFallos * mediaPPorOpPerdedora))  );
-	 		//System.out.println("PC -> " + maxPerdidasConsecutivas + " GC -> " + maxGanaciasConsecutivas);
-	 		//System.out.println("MPP -> " + maxPtsConsecutivosPerdidos + " MPG -> " + maxPtsConsecutivosGanados);
-	 		
-	 		return ptsGanados + ptsPerdidos;
-	 		
-	    }
+ 			if(predicciones.get(i) > predicciones.get(i-1)) {
+ 				//S
+ 				if(esperados.get(i) < esperados.get(i-1)) {
+ 					aciertos++;
+ 					double res = (esperados.get(i-1) - esperados.get(i));
+ 					ptsGanados = ptsGanados + res;
+ 					
+ 					gananciasConsecutivas++;
+ 					if(perdidasConsecutivas > 0) {
+ 						if(perdidasConsecutivas > maxPerdidasConsecutivas) {
+ 							maxPerdidasConsecutivas = perdidasConsecutivas;
+ 						}
+ 						perdidasConsecutivas = 0;
+ 					}
+ 					
+ 					ptsConsecutivosGanados += res;
+ 					if(ptsConsecutivosPerdidos < 0) {
+ 						if(ptsConsecutivosPerdidos < maxPtsConsecutivosPerdidos) {
+ 							maxPtsConsecutivosPerdidos = ptsConsecutivosPerdidos;
+ 						}
+ 						ptsConsecutivosPerdidos = 0.0;
+ 					}
+ 					
+ 				}else {
+ 					fallos++;
+ 					double res = (esperados.get(i-1) - esperados.get(i));
+ 					ptsPerdidos = ptsPerdidos + res;
+
+ 					
+ 					perdidasConsecutivas++;
+ 					if(gananciasConsecutivas > 0) {
+ 						if(gananciasConsecutivas > maxGanaciasConsecutivas) {
+ 							maxGanaciasConsecutivas = gananciasConsecutivas;
+ 						}
+ 						gananciasConsecutivas = 0;
+ 					}
+ 					
+ 					ptsConsecutivosPerdidos += res;
+ 					if(ptsConsecutivosGanados > 0) {
+ 						if(ptsConsecutivosGanados > maxPtsConsecutivosGanados) {
+ 							maxPtsConsecutivosGanados = ptsConsecutivosGanados;
+ 						}
+ 						ptsConsecutivosGanados = 0.0;
+ 					}
+ 				}
+ 			}
+ 			
+ 		}
+ 		
+ 		//System.out.println("======================================");
+ 		//System.out.println("RES -> " + (ptsGanados + ptsPerdidos));
+ 		//System.out.println("A: " + aciertos + " - F: " + fallos + " - PTS_P: " + ptsPerdidos + " - PTS_G: " + ptsGanados + " - MG: " + (ptsGanados/aciertos) + " - MP: " + (ptsPerdidos/fallos));
+ 		
+ 		double pctAciertos = (double)aciertos / (aciertos + fallos);
+ 		double pctFallos = (double)fallos / (aciertos + fallos);
+ 		double mediaGPorOpGanadora = (double)ptsGanados / aciertos;
+ 		double mediaPPorOpPerdedora = (double)ptsPerdidos / fallos;
+ 		
+ 		//System.out.println("EM -> " + ((pctAciertos * mediaGPorOpGanadora ) + (pctFallos * mediaPPorOpPerdedora))  );
+ 		//System.out.println("PC -> " + maxPerdidasConsecutivas + " GC -> " + maxGanaciasConsecutivas);
+ 		//System.out.println("MPP -> " + maxPtsConsecutivosPerdidos + " MPG -> " + maxPtsConsecutivosGanados);
+ 		
+ 		return ptsGanados + ptsPerdidos;
+ 		
+    }
 	    
 		
     
