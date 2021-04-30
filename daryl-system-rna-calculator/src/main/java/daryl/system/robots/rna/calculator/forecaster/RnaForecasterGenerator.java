@@ -133,8 +133,6 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo);
 		this.datosForecast = toDatosList(historico);
 		
-		
-		
 		this.darylNormalizer = new DarylMaxMinNormalizer(this.datosForecast, Mode.CLOSE);
 		List<Double> normalizedData = darylNormalizer.getNormalizedList();
 		
