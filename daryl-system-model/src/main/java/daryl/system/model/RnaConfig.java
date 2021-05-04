@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import daryl.system.comun.enums.Activo;
@@ -45,6 +46,11 @@ public class RnaConfig implements Serializable{
 	@Column
 	@Getter @Setter
 	private String ficheroRna;
+	
+	@Lob
+    @Column(columnDefinition="BLOB")
+	@Getter @Setter
+    private byte[] rna;
 
 	
 	@Column(nullable = true)
@@ -62,16 +68,37 @@ public class RnaConfig implements Serializable{
 	@Column(nullable = false)
 	@Getter @Setter
 	private String hora;
+	
+	////
 
 	@Column(nullable = true)
 	@Getter @Setter
 	private Integer lastNeuronasEntrada;
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastCapasOcultas;
+	
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastPasoLearnigRate;
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastPasoMomentum;
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastHiddenNeurons;
 	
 	@Column(nullable = true)
 	@Getter @Setter
-	private Integer transferFunctionTypes;
-
+	private Integer lastTransferFunctionType;
 	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastBias;	
 	
 	
 }

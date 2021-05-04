@@ -117,10 +117,8 @@ public class ArimaForecasterGenerator implements Runnable{
 	    			combinacionesFile.add(leido);
 	    		}
 	    	} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -145,10 +143,8 @@ public class ArimaForecasterGenerator implements Runnable{
 	    			
 	    		}
 	    	} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

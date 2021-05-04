@@ -1,10 +1,17 @@
 package daryl.system.robots.rna.calculator.forecaster;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.neuroph.core.Layer;
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.Neuron;
@@ -32,8 +39,10 @@ import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
+import daryl.system.model.RnaConfig;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robots.rna.calculator.repository.IHistoricoRepository;
+import daryl.system.robots.rna.calculator.repository.IRnaConfigRepository;
 
 
 @Component
@@ -49,6 +58,8 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 	@Autowired
 	ConfigData config;
 	
+	@Autowired
+	private IRnaConfigRepository rnaConfigRepository;
 	@Autowired
 	private IHistoricoRepository historicoRepository;
 	
@@ -97,12 +108,23 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 	public RnaForecasterGenerator() {
 	}
 	
-	public void init(String robot, Activo tipoActivo, Timeframes timeframe) {
+	public void init(String robot, Activo tipoActivo, Timeframes timeframe, int maxNeuronasEntrada, int maxCapasOcultas, int maxIteraciones, double errorMaximo) {
+		
+		logger.info("Iniciando -> " + robot);
 		this.robot = robot;
 		this.tipoActivo = tipoActivo;
 		this.estrategia = robot;
 		this.timeframe = timeframe;
+		
+		this.maxNeuronasEntrada = maxNeuronasEntrada;
+		this.maxHiddenLayers = maxCapasOcultas;
+		this.maxIterations = maxIteraciones;
+		this.maxError = errorMaximo;
+		logger.info(this.robot + " Iniciado");
+		
+		logger.info("Cargando datos de -> " + this.robot);
 		loadData();
+		logger.info("Datos cargados de -> " + this.robot);
 	}
 	
 	private List<Datos> toDatosList(List<Historico> historico){
@@ -159,6 +181,9 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 
 	
 	public void generateDatasets(int neuronasEntrada) {
+		
+		logger.info("Creando Datasets de -> " + this.robot);
+		
 		DataSetLoader dataSetLoader = DataSetLoader3C.getInstance();
 		trainingSet = new DataSet(neuronasEntrada, neuronasSalida);
 		dataSetLoader.loadRawData(trainingSet, normalizeDataForLearning, neuronasEntrada);
@@ -166,30 +191,59 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		dataSetLoader.loadRawData(testSet, normalizeDataForTest, neuronasEntrada);
 		forecastSet = new DataSet(neuronasEntrada, neuronasSalida);
 		dataSetLoader.loadRawData(forecastSet, normalizeDataForForecast, neuronasEntrada);
+		
+		logger.info("Datasets creados de -> " + this.robot);
 	}
 
 	public  void run() {
 		
-		double resultado = 0.0;
-		for(int fncTransf = 0; fncTransf < transferFunctionTypes.length; fncTransf++) {
-			for(int neuronasEntrada = 1; neuronasEntrada <= maxNeuronasEntrada; neuronasEntrada++) {
+		int lastNeuronasEntrada = 1;
+		int lastCapasOcultas = 1;
+		int lastPasoLearnigRate = 0;
+		int lastPasoMomentum = 0;
+		int lastHiddenNeurons = 1;
+		int lastTransferFunctionType = 0;
+		int lastBias = 0;
+		Double resultado = null;
+		
+		//recuperamos la configuración existente
+		RnaConfig rnaConfig = rnaConfigRepository.findRnaConfigByRobot(robot);
+		
+		if(rnaConfig != null) {
+			
+			if(rnaConfig.getLastNeuronasEntrada() != null && rnaConfig.getLastNeuronasEntrada() >= 1) lastNeuronasEntrada = rnaConfig.getLastNeuronasEntrada();
+			if(rnaConfig.getLastCapasOcultas() != null && rnaConfig.getLastCapasOcultas() >= 1) lastCapasOcultas = rnaConfig.getLastCapasOcultas();
+			if(rnaConfig.getLastPasoLearnigRate() != null) lastPasoLearnigRate = rnaConfig.getLastPasoLearnigRate();
+			if(rnaConfig.getLastPasoMomentum() != null) lastPasoMomentum = rnaConfig.getLastPasoMomentum();
+			if(rnaConfig.getLastHiddenNeurons() != null && rnaConfig.getLastHiddenNeurons() >= 1) lastHiddenNeurons = rnaConfig.getLastHiddenNeurons();
+			if(rnaConfig.getLastTransferFunctionType() != null) lastTransferFunctionType = rnaConfig.getLastTransferFunctionType();
+			if(rnaConfig.getLastBias() != null) lastTransferFunctionType = rnaConfig.getLastBias();
+			if(rnaConfig.getResultado() != null) resultado = rnaConfig.getResultado();
+			
+		}else {
+			rnaConfig = new RnaConfig();
+		}
+		
+		
+		for(int fncTransf = lastTransferFunctionType; fncTransf < transferFunctionTypes.length; fncTransf++) {
+			for(int neuronasEntrada = lastNeuronasEntrada; neuronasEntrada <= maxNeuronasEntrada; neuronasEntrada++) {
 				//Creamos los dataset
 				generateDatasets(neuronasEntrada);
 				
 				maxHiddenNeurons = (2 * neuronasEntrada + 1);
 				
-				for(int bias = 0; bias <= 1; bias++) {
-					for(int pasoMomentum = 0; pasoMomentum < 20; pasoMomentum++) {
+				for(int bias = lastBias; bias <= 1; bias++) {
+					for(int pasoMomentum = lastPasoMomentum; pasoMomentum < 20; pasoMomentum++) {
 						double momentum = minMomentum + (pasoMomentum * 0.05);
 						
-						for(int pasoLearningrate = 0; pasoLearningrate < 20; pasoLearningrate++) {
+						for(int pasoLearningrate = lastPasoLearnigRate; pasoLearningrate < 20; pasoLearningrate++) {
 							double learningRate = minLearningRate + (pasoLearningrate * 0.05);
 							
-							for(int hiddenLayers = 1; hiddenLayers <= maxHiddenLayers; hiddenLayers++) {
-								for(int hiddenNeurons = 1; hiddenNeurons <= maxHiddenNeurons; hiddenNeurons++) {
+							for(int hiddenLayers = lastCapasOcultas; hiddenLayers <= maxHiddenLayers; hiddenLayers++) {
+								for(int hiddenNeurons = lastHiddenNeurons; hiddenNeurons <= maxHiddenNeurons; hiddenNeurons++) {
 									
 									try {
-									
+										
 										List<Integer> neuronasPorLayer = new ArrayList<Integer>();
 										List<Layer> layers = new ArrayList<Layer>();
 										
@@ -264,22 +318,51 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 										learningRule.learn(trainingSet);	
 										double res = testNeuralNetwork(neuralNetwork);
 										
-										System.out.println("Función de transferencia -> " + transferFunctionTypes[fncTransf]);
-										System.out.println("N. entrada -> " + neuronasEntrada);
-										System.out.println("Capas ocultas -> " + hiddenLayers);
-										System.out.println("N. ocultas -> " + hiddenNeurons);
-										System.out.println("N. salida -> " + neuronasSalida);
-										System.out.println("Bias -> " + ((bias==0)?Boolean.FALSE:Boolean.TRUE));
-										System.out.println("Momentum -> " + momentum);
-										System.out.println("Learning Rate -> " + learningRate);
-										System.out.println("RES -> " + res);
-										if(res > resultado) {
-											resultado = res;
-											System.out.println("Guardamos la RNA con res -> " + res);
-											neuralNetwork.save(this.rutaRna + this.tipoActivo + "_" + this.timeframe.valor + "_new.rna");
-										}
+										logger.info("Robot -> " + this.robot);
+										logger.info("Función de transferencia -> " + transferFunctionTypes[fncTransf]);
+										logger.info("N. entrada -> " + neuronasEntrada);
+										logger.info("Capas ocultas -> " + hiddenLayers);
+										logger.info("N. ocultas -> " + hiddenNeurons);
+										logger.info("N. salida -> " + neuronasSalida);
+										logger.info("Bias -> " + ((bias==0)?Boolean.FALSE:Boolean.TRUE));
+										logger.info("Momentum -> " + momentum);
+										logger.info("Learning Rate -> " + learningRate);
+										logger.info("RES -> " + res);
+
 										
-										System.out.println("========================================================================================");
+										//Actualizamos los datos de RnaConfig
+										rnaConfig.setLastNeuronasEntrada(neuronasEntrada);
+										rnaConfig.setLastCapasOcultas(hiddenLayers);
+										rnaConfig.setLastPasoLearnigRate(pasoLearningrate);
+										rnaConfig.setLastPasoMomentum(pasoMomentum);
+										rnaConfig.setLastHiddenNeurons(hiddenNeurons);
+										rnaConfig.setLastTransferFunctionType(fncTransf);
+										rnaConfig.setLastBias(bias);
+										
+										Long fechaHoraMillis = System.currentTimeMillis();
+										if(resultado == null || res > resultado) {
+											resultado = res;
+											logger.info("Guardamos la RNA con res -> " + res);
+											neuralNetwork.save(this.rutaRna + this.tipoActivo + "_" + this.timeframe.valor + "_new.rna");
+											
+											//Actualizamos la configuración
+											rnaConfig.setEstrategia(robot);
+											rnaConfig.setRobot(robot);
+											rnaConfig.setTipoActivo(tipoActivo);
+											rnaConfig.setFicheroRna("RNA_" + this.tipoActivo + "_" + this.timeframe.valor + "_" + fechaHoraMillis + ".rna");
+											rnaConfig.setNeuronasEntrada(neuronasEntrada);
+											rnaConfig.setResultado(resultado);
+											rnaConfig.setRna(rnaToByteArray(neuralNetwork));
+
+											
+											rnaConfig.setFecha(config.getFechaInString(fechaHoraMillis));
+											rnaConfig.setFModificacion(fechaHoraMillis);
+											rnaConfig.setHora(config.getHoraInString(fechaHoraMillis));
+																					
+										}
+										rnaConfigRepository.save(rnaConfig);
+										logger.info("Nueva configuración RNA guardada");
+										logger.info("========================================================================================");
 										
 									}catch (Exception e) {
 										e.printStackTrace();
@@ -293,6 +376,57 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		}
 
 	}
+	
+	
+	public byte[] rnaToByteArray(NeuralNetwork rna){
+		
+		byte[] bytesFromRna = SerializationUtils.serialize(rna);
+		return bytesFromRna;
+		/*
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream out = null;
+		try {
+			out = new ObjectOutputStream(bos);   
+			out.writeObject(rna);
+			out.flush();
+			byte[] bytesFromRna = bos.toByteArray();
+			return bytesFromRna;
+		} finally {
+			try {
+				bos.close();
+			}catch (IOException ex) {
+			}
+		}
+		*/
+		
+	}
+	
+	public NeuralNetwork rnaFromByteArray(byte[] byteArray) throws IOException, ClassNotFoundException {
+		
+		NeuralNetwork rna = (NeuralNetwork)SerializationUtils.deserialize(byteArray);
+		return rna;
+		/*
+		ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
+		ObjectInput in = null;
+		try {
+			in = new ObjectInputStream(bis);
+			NeuralNetwork rna = (NeuralNetwork)in.readObject(); 
+			
+			return rna;
+			
+			
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+			}catch (IOException ex) {
+		    // ignore close exception
+			}
+		}
+		*/
+	}
+	
 	
 	public double testNeuralNetwork(NeuralNetwork neuralNet) {
 

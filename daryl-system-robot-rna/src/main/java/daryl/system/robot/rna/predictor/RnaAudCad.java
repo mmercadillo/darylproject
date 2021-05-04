@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
+import daryl.system.model.RnaConfig;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.HistAudCad;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
@@ -32,9 +33,9 @@ public class RnaAudCad  extends RnaPredictor{
 	ApplicationContext ctx;
 	@Autowired
 	private IHistAudCadRepository histAudCadRepository;
-
 	
 	private Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
+	//private Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
 
 		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> inputs = new ArrayList<Double>();
@@ -54,7 +55,8 @@ public class RnaAudCad  extends RnaPredictor{
 			if(bot.getMode() == Mode.OPEN) {
 				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getApertura()));
 			}			
-		}while(index < bot.getNeuronasEntrada()+1);			
+		}while(index < bot.getNeuronasEntrada()+1);
+		//}while(index < neuronasEntrada+1);
 		
 			
 		Collections.reverse(inputs);
@@ -75,6 +77,7 @@ public class RnaAudCad  extends RnaPredictor{
 	protected Double calcularPrediccion(Robot bot) throws IOException {
 
 		Double prediccion = 0.0;
+		
 		File rna = null;
 		System.out.println("SE CARGA EL FICHERO: " + bot.getFicheroRna());
 		try {
@@ -82,9 +85,13 @@ public class RnaAudCad  extends RnaPredictor{
 			rna = ctx.getResource("classpath:/rnas/" + bot.getFicheroRna()).getFile();
 		}catch (Exception e) {
 			System.out.println("SE HACE LA FORMA TRADICIONAL");
-			String fileName = "F:\\DarylSystem\\rnas\\"+bot.getFicheroRna();
+			String fileName = "F:\\DarylSystem\\rnas\\" + bot.getFicheroRna();
 	        rna = new File(fileName);
 		}
+		
+		/*Alternativa a la carga del fichero*/
+		//RnaConfig rnaConfig = super.getRnaConfig(bot);
+		//NeuralNetwork neuralNetwork = rnaFromByteArray(rnaConfig.getRna());
 		
 
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
@@ -93,6 +100,7 @@ public class RnaAudCad  extends RnaPredictor{
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
+		//Double prediccionAnterior = getPrediccionAnterior(rnaConfig.getNeuronasEntrada(), bot, neuralNetwork, datosForecast);
 		Double prediccionAnterior = getPrediccionAnterior(bot, neuralNetwork, datosForecast);
 		
 		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
@@ -113,6 +121,7 @@ public class RnaAudCad  extends RnaPredictor{
 			if(bot.getMode() == Mode.OPEN) {
 				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getApertura()));
 			}			
+		//}while(index < rnaConfig.getNeuronasEntrada());
 		}while(index < bot.getNeuronasEntrada());
 
 		Collections.reverse(inputs);
