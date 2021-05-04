@@ -343,7 +343,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 										if(resultado == null || res > resultado) {
 											resultado = res;
 											logger.info("Guardamos la RNA con res -> " + res);
-											neuralNetwork.save(this.rutaRna + this.tipoActivo + "_" + this.timeframe.valor + "_new.rna");
+											//neuralNetwork.save(this.rutaRna + this.tipoActivo + "_" + this.timeframe.valor + "_new.rna");
 											
 											//Actualizamos la configuración
 											rnaConfig.setEstrategia(robot);

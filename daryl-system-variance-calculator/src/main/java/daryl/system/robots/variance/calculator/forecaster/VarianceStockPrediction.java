@@ -14,9 +14,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.configuration.ConfigData;
+import daryl.system.comun.dataset.Datos;
+import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.VarianceConfig;
+import daryl.system.model.historicos.Historico;
+import daryl.system.robots.variance.calculator.repository.IHistoricoRepository;
 import daryl.system.robots.variance.calculator.repository.IVarianceConfigRepository;
 import daryl.variance.StockPredict;
 
@@ -30,6 +35,8 @@ public class VarianceStockPrediction implements Runnable{
 	private IVarianceConfigRepository varianceConfigRepository;
 	@Autowired
 	ConfigData config;
+	@Autowired
+	private IHistoricoRepository historicoRepository;
 	
 	final String BASE_PATH = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\h\\";
 	
@@ -53,6 +60,29 @@ public class VarianceStockPrediction implements Runnable{
 		this.inicio = inicio;
 	}
 	
+	private List<Datos> toDatosList(List<Historico> historico){
+		
+		List<Datos> datos = new ArrayList<Datos>();
+		
+		for (Historico hist : historico) {
+			
+			Datos dato = Datos.builder().fecha(hist.getFecha())
+										.hora(hist.getHora())
+										.apertura(hist.getApertura())
+										.maximo(hist.getMaximo())
+										.minimo(hist.getMinimo())
+										.cierre(hist.getCierre())
+										.volumen(hist.getVolumen())
+										.build();
+			datos.add(dato);
+			
+		}
+		
+		return datos;
+		
+		
+	}
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -61,7 +91,8 @@ public class VarianceStockPrediction implements Runnable{
 	    	//Cargamos las cotizaciones
 	    	System.out.println("Cargando cotizaciones para: " + robot);
 			if(datos == null) {
-		    	//Cargamos la segunda lista
+		    	/*
+				//Cargamos la segunda lista
 				File ficherodatos2 = new File(BASE_PATH + DATA);
 		    	try(BufferedReader reader = new BufferedReader(new FileReader(ficherodatos2))){
 		    		datos = new ArrayList<Double>();
@@ -83,6 +114,12 @@ public class VarianceStockPrediction implements Runnable{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+		    	*/
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.activo);
+				List<Datos> datosForecast = toDatosList(historico);
+				DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+				datos = darylNormalizer.getDatos();
+		    	
 			}
 			System.out.println("Cotizaciones cargadas para: " + robot);
 			

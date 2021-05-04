@@ -48,7 +48,7 @@ public class DarylSystemVarianceCalculatorApplication {
 		ExecutorService servicio = Executors.newFixedThreadPool(30);
 		//4-20-120-480
 		
-		/*
+		
 		//XAUUSD
 		VarianceStockPrediction cspXAUUSD60 = context.getBean(VarianceStockPrediction.class);
 		cspXAUUSD60.init(Activo.XAUUSD, Timeframes.PERIOD_H1, "VARIANCE_XAUUSD_600", 480);
@@ -59,12 +59,12 @@ public class DarylSystemVarianceCalculatorApplication {
 		cspXAUUSD240.init(Activo.XAUUSD, Timeframes.PERIOD_H4, "VARIANCE_XAUUSD_240", 120);
 		servicio.submit(cspXAUUSD240);
 		System.out.println("cspXAUUSD240 cargado");
-		*/
+		
 		VarianceStockPrediction cspXAUUSD1440 = context.getBean(VarianceStockPrediction.class);
 		cspXAUUSD1440.init(Activo.XAUUSD, Timeframes.PERIOD_D1, "VARIANCE_XAUUSD_1440", 20);
 		servicio.submit(cspXAUUSD1440);
 		System.out.println("cspXAUUSD1440 cargado");
-		/*
+		
 		VarianceStockPrediction cspXAUUSD10080 = context.getBean(VarianceStockPrediction.class);
 		cspXAUUSD10080.init(Activo.XAUUSD, Timeframes.PERIOD_W1, "VARIANCE_XAUUSD_10080", 4);
 		servicio.submit(cspXAUUSD10080);
@@ -115,22 +115,22 @@ public class DarylSystemVarianceCalculatorApplication {
 		
 		//XTIUSD
 		VarianceStockPrediction cspXTIUSD60 = context.getBean(VarianceStockPrediction.class);
-		cspXTIUSD60.init(Activo.XTIUSD, Timeframes.PERIOD_H1, "VARIANCE_XTIUSD_60", 480);
+		cspXTIUSD60.init(Activo.XTIUSD, Timeframes.PERIOD_H1, "VARIANCE_WTI_60", 480);
 		servicio.submit(cspXTIUSD60);
 		System.out.println("cspXTIUSD60 cargado");
 
 		VarianceStockPrediction cspXTIUSD240 = context.getBean(VarianceStockPrediction.class);
-		cspXTIUSD240.init(Activo.XTIUSD, Timeframes.PERIOD_H4, "VARIANCE_XTIUSD_240", 120);
+		cspXTIUSD240.init(Activo.XTIUSD, Timeframes.PERIOD_H4, "VARIANCE_WTI_240", 120);
 		servicio.submit(cspXTIUSD240);
 		System.out.println("cspXTIUSD240 cargado");
 		
 		VarianceStockPrediction cspXTIUSD1440 = context.getBean(VarianceStockPrediction.class);
-		cspXTIUSD1440.init(Activo.XTIUSD, Timeframes.PERIOD_D1, "VARIANCE_XTIUSD_1440", 20);
+		cspXTIUSD1440.init(Activo.XTIUSD, Timeframes.PERIOD_D1, "VARIANCE_WTI_1440", 20);
 		servicio.submit(cspXTIUSD1440);
 		System.out.println("cspXTIUSD1440 cargado");
 		
 		VarianceStockPrediction cspXTIUSD10080 = context.getBean(VarianceStockPrediction.class);
-		cspXTIUSD10080.init(Activo.XTIUSD, Timeframes.PERIOD_W1, "VARIANCE_XTIUSD_10080", 4);
+		cspXTIUSD10080.init(Activo.XTIUSD, Timeframes.PERIOD_W1, "VARIANCE_WTI_10080", 4);
 		servicio.submit(cspXTIUSD10080);
 		System.out.println("cspXTIUSD10080 cargado");
 		
@@ -176,7 +176,7 @@ public class DarylSystemVarianceCalculatorApplication {
 		cspAUDCAD10080.init(Activo.AUDCAD, Timeframes.PERIOD_W1, "VARIANCE_AUDCAD_10080", 4);
 		servicio.submit(cspAUDCAD10080);
 		System.out.println("cspAUDCAD10080 cargado");
-		*/
+		
 		servicio.shutdown();
 		
 	}
