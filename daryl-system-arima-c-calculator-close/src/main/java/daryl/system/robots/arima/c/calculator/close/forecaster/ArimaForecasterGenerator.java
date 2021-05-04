@@ -19,10 +19,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.configuration.ConfigData;
+import daryl.system.comun.dataset.Datos;
+import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.ArimaConfig;
+import daryl.system.model.historicos.Historico;
 import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigRepository;
+import daryl.system.robots.arima.c.calculator.close.repository.IHistoricoRepository;
 
 
 @Component
@@ -36,12 +41,16 @@ public class ArimaForecasterGenerator implements Runnable{
 	@Autowired
 	ConfigData config;
 	
+	@Autowired
+	private IHistoricoRepository historicoRepository;
+	
 	final String BASE_PATH = "F:\\DarylSystem\\historicos\\"; 
 	final String COMBINACIONES = "COMBINACIONES.csv";
 	
 	private String robot;
 	private Activo tipoActivo;
 	private String estrategia;
+	private Timeframes timeframe;
 	private String DATA = "";
 	private int inicio = 0;
 	private int desviaciones = 0;
@@ -62,6 +71,7 @@ public class ArimaForecasterGenerator implements Runnable{
 		this.inicio = inicio;
 		this.tipoActivo = tipoActivo;
 		this.estrategia = estrategia;
+		this.timeframe = timeframe;
 		loadData();
 	}
 	
@@ -125,7 +135,7 @@ public class ArimaForecasterGenerator implements Runnable{
 
 		data = new ArrayList<Double>();
 		
-		
+		/*
 		if(data2File == null) {
 	    	//Cargamos la segunda lista
 			File ficherodatos2 = new File(BASE_PATH + DATA);
@@ -149,6 +159,12 @@ public class ArimaForecasterGenerator implements Runnable{
 			}
 		}
 		data2 = data2File;
+		*/
+		
+		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo);
+		List<Datos> datosForecast = toDatosList(historico);
+		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+		data2 = darylNormalizer.getDatos();
 		
 	}
 
@@ -344,6 +360,28 @@ public class ArimaForecasterGenerator implements Runnable{
 
     }
 
+	private List<Datos> toDatosList(List<Historico> historico){
+		
+		List<Datos> datos = new ArrayList<Datos>();
+		
+		for (Historico hist : historico) {
+			
+			Datos dato = Datos.builder().fecha(hist.getFecha())
+										.hora(hist.getHora())
+										.apertura(hist.getApertura())
+										.maximo(hist.getMaximo())
+										.minimo(hist.getMinimo())
+										.cierre(hist.getCierre())
+										.volumen(hist.getVolumen())
+										.build();
+			datos.add(dato);
+			
+		}
+		
+		return datos;
+		
+		
+	}
 
     private double[] getArrayDatos() {
     	
