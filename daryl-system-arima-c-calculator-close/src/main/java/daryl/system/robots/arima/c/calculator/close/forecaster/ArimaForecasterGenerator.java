@@ -25,8 +25,10 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.ArimaConfig;
+import daryl.system.model.CombinacionArimaC;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigRepository;
+import daryl.system.robots.arima.c.calculator.close.repository.ICombinacionesArimaCRepository;
 import daryl.system.robots.arima.c.calculator.close.repository.IHistoricoRepository;
 
 
@@ -39,19 +41,18 @@ public class ArimaForecasterGenerator implements Runnable{
 	@Autowired
 	private IArimaConfigRepository arimaConfigRepository;
 	@Autowired
+	private ICombinacionesArimaCRepository combinacionesArimaCRepository;
+	@Autowired
 	ConfigData config;
 	
 	@Autowired
 	private IHistoricoRepository historicoRepository;
-	
-	final String BASE_PATH = "F:\\DarylSystem\\historicos\\"; 
-	final String COMBINACIONES = "COMBINACIONES.csv";
+
 	
 	private String robot;
 	private Activo tipoActivo;
 	private String estrategia;
 	private Timeframes timeframe;
-	private String DATA = "";
 	private int inicio = 0;
 	private int desviaciones = 0;
 	
@@ -59,29 +60,31 @@ public class ArimaForecasterGenerator implements Runnable{
     //int inicio = 120;//240
     //int inicio = 20;//1440
     //int inicio = 4;//10080
+	
+	private List<CombinacionArimaC> combinacionesFile;
+	private List<Double> data2;
 
 	public ArimaForecasterGenerator() {
 	}
 	
-	public void init(String estrategia, String robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio) {
+	public void init(String estrategia, String robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio, List<Double> data2, List<CombinacionArimaC> combinacionesFile) {
 		this.robot = robot;
 		
-		this.DATA = tipoActivo.name() + "_" + timeframe.valor + ".csv"; //EURUSD_60.csv
 		this.desviaciones = std;
 		this.inicio = inicio;
 		this.tipoActivo = tipoActivo;
 		this.estrategia = estrategia;
 		this.timeframe = timeframe;
+		this.combinacionesFile = combinacionesFile;
+		this.data2 = data2;
 		loadData();
 	}
 	
-	
-	List<Double> dataFile;
-	List<Double> data2File;	
-	List<String> combinacionesFile;
+
+
 	
 	List<Double> data;
-	List<Double> data2;
+	
 	Double resultado = 0.0;
 	Integer operaciones = 0;
 	Integer opWin = 0;
@@ -100,6 +103,19 @@ public class ArimaForecasterGenerator implements Runnable{
 
 	
 	public  void loadData() {
+		/*
+		//Sólo se carga 1 vez al principio
+		if(this.combinacionesFile == null || this.combinacionesFile.size() == 0) {
+			this.combinacionesFile = combinacionesArimaCRepository.findAll();
+		}
+
+		if(data2 == null || data2.size() == 0) {
+			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo);
+			List<Datos> datosForecast = toDatosList(historico);
+			DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+			data2 = darylNormalizer.getDatos();
+		}
+		*/
 		
 		resultado = 0.0;
 		operaciones = 0;
@@ -115,56 +131,9 @@ public class ArimaForecasterGenerator implements Runnable{
 		maxGananciaEnUnaOp = 0.0;
 		maxRachaGanadora = 0.0;
 		maxRachaPerdedora = 0.0;
-		
-		if(combinacionesFile == null) {
-	    	//Cargamos la segunda lista
-			File ficheroCombinaciones = new File(BASE_PATH + COMBINACIONES);
-	    	try(BufferedReader reader = new BufferedReader(new FileReader(ficheroCombinaciones))){
-	    		
-	    		combinacionesFile = new ArrayList<String>();
-	    		String leido;
-	    		while( (leido = reader.readLine()) != null  ) {
-	    			combinacionesFile.add(leido);
-	    		}
-	    	} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 
 		data = new ArrayList<Double>();
 		
-		/*
-		if(data2File == null) {
-	    	//Cargamos la segunda lista
-			File ficherodatos2 = new File(BASE_PATH + DATA);
-	    	try(BufferedReader reader = new BufferedReader(new FileReader(ficherodatos2))){
-	    		data2File = new ArrayList<Double>();
-	    		String leido;
-	    		boolean encabezado = true;
-	    		while( (leido = reader.readLine()) != null  ) {
-	    			if(encabezado == true) {
-	    				encabezado = false;
-	    				continue;
-	    			}
-	    			String[] partes = leido.split(",");
-	    			data2File.add(new Double(partes[5]));
-	    			
-	    		}
-	    	} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		data2 = data2File;
-		*/
-		
-		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo);
-		List<Datos> datosForecast = toDatosList(historico);
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
-		data2 = darylNormalizer.getDatos();
 		
 	}
 
@@ -181,30 +150,45 @@ public class ArimaForecasterGenerator implements Runnable{
 		
 		if(arimaConfig != null && arimaConfig.getIndexA() != null) iAux = arimaConfig.getIndexA();
 		if(arimaConfig != null && arimaConfig.getIndexB() != null) iiAux = arimaConfig.getIndexB();
+		
 
-		for(int i = iAux; i < combinacionesFile.size(); i++) {
-			for(int std = 0; std <= desviaciones; std++) {		
-				
-				String combinacion = combinacionesFile.get(i);
-				
-				if(seguir == false) break;
-				loadData();
-				
-				String[] optionsAr = combinacion.split(",");
-				double[] coefficentsAr = new double[optionsAr.length];
-				for(int j = 0; j < optionsAr.length; j++) {
-					coefficentsAr[j] = Double.parseDouble(optionsAr[j]);
-				}
-				//numCombinacion++;
-		        
-		        try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				calcular(coefficentsAr, null, std, 1, 0.0, 0.0, 1.0, i, 0);
+		for(int k = iiAux; k < combinacionesFile.size(); k++) {
+			
+			String combinacionMa = combinacionesFile.get(k).getCombinacion();
+			String[] optionsMa = combinacionMa.split(",");
+			double[] coefficentsMa = new double[optionsMa.length];
+			for(int j = 0; j < optionsMa.length; j++) {
+				coefficentsMa[j] = Double.parseDouble(optionsMa[j]);
 			}
+			
+			for(int i = iAux; i < combinacionesFile.size(); i++) {
+				for(int std = 0; std <= desviaciones; std++) {		
+					
+					String combinacion = combinacionesFile.get(i).getCombinacion();
+					
+					if(seguir == false) break;
+					loadData();
+					
+					String[] optionsAr = combinacion.split(",");
+					double[] coefficentsAr = new double[optionsAr.length];
+					for(int j = 0; j < optionsAr.length; j++) {
+						coefficentsAr[j] = Double.parseDouble(optionsAr[j]);
+					}
+					//numCombinacion++;
+			        
+			        try {
+						Thread.sleep(00);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			        for(int posInicio = 1; posInicio <= this.inicio; posInicio++) {
+			        	calcular(coefficentsAr, coefficentsMa, std, 1, 0.0, 0.0, 1.0, i, k, posInicio);
+			        }
+					
+				}
+			}
+			iAux = 0;
 		}
 
 	}
@@ -212,7 +196,7 @@ public class ArimaForecasterGenerator implements Runnable{
 	boolean seguir = true;
 	double resAnt = 0.0;
     public  void calcular(double[] coefficentsAr, double[] coefficentsMa, int std, int integrationOrder,
-    		double constant, double shockExpectation, double shockVariation, int indexA, int indexB) {
+    		double constant, double shockExpectation, double shockVariation, int indexA, int indexB, int posInicio) {
         
     	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
         arimaProcess.setMaCoefficients(0.1);
@@ -230,12 +214,12 @@ public class ArimaForecasterGenerator implements Runnable{
         double maxRachaPerdedoraAux = 0.0;
     
         for(int i = 0; i < data2.size(); i++) {
-        	if(i < inicio) {
+        	if(i < posInicio) {
         		data.add(data2.get(i));
         		continue;
         	}
 
-        	double[] observations = getArrayDatos();
+        	double[] observations = getArrayDatos(posInicio);
 	        //System.out.println("Forecast: " + Arrays.toString(observations));
         	ArimaForecaster arimaForecaster = null;
         	try {
@@ -340,7 +324,7 @@ public class ArimaForecasterGenerator implements Runnable{
         		arimaConfig.setShockVariation(arimaProcess.getShockVariation());
         		arimaConfig.setStandarDeviation(arimaProcess.getStd());
         		arimaConfig.setResultado(resultado);
-        		arimaConfig.setInicio(inicio);
+        		arimaConfig.setInicio(posInicio);
         		
         		
         		
@@ -383,11 +367,11 @@ public class ArimaForecasterGenerator implements Runnable{
 		
 	}
 
-    private double[] getArrayDatos() {
+    private double[] getArrayDatos(int posInicio) {
     	
     	List<Double> aux = data;
-    	if(data.size() > inicio) {
-    		aux = data.subList((data.size()-inicio), data.size());
+    	if(data.size() > posInicio) {
+    		aux = data.subList((data.size()-posInicio), data.size());
     	}else {
     		
     	}

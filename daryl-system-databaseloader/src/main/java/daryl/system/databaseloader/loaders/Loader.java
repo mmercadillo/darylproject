@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import daryl.system.comun.enums.Timeframes;
-import daryl.system.model.historicos.Historico;
 
 public abstract class Loader {
 
