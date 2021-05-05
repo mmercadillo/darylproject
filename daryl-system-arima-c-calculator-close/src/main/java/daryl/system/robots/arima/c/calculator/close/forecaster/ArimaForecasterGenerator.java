@@ -41,12 +41,8 @@ public class ArimaForecasterGenerator implements Runnable{
 	@Autowired
 	private IArimaConfigRepository arimaConfigRepository;
 	@Autowired
-	private ICombinacionesArimaCRepository combinacionesArimaCRepository;
-	@Autowired
 	ConfigData config;
-	
-	@Autowired
-	private IHistoricoRepository historicoRepository;
+
 
 	
 	private String robot;
@@ -103,19 +99,7 @@ public class ArimaForecasterGenerator implements Runnable{
 
 	
 	public  void loadData() {
-		/*
-		//Sólo se carga 1 vez al principio
-		if(this.combinacionesFile == null || this.combinacionesFile.size() == 0) {
-			this.combinacionesFile = combinacionesArimaCRepository.findAll();
-		}
 
-		if(data2 == null || data2.size() == 0) {
-			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo);
-			List<Datos> datosForecast = toDatosList(historico);
-			DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
-			data2 = darylNormalizer.getDatos();
-		}
-		*/
 		
 		resultado = 0.0;
 		operaciones = 0;

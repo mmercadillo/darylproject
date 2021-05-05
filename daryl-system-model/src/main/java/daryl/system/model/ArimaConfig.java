@@ -41,11 +41,12 @@ public class ArimaConfig implements Serializable{
 	@Getter @Setter
 	private String estrategia;
 	
-	@Column(nullable = true)
+	@Column(nullable = true, columnDefinition="longtext")
 	@Getter @Setter
 	private String maCoefficients;
 	
-	@Column(nullable = true)
+
+	@Column(nullable = true, columnDefinition="longtext")
 	@Getter @Setter
 	private String arCoefficients;
 	

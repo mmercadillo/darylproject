@@ -1,11 +1,10 @@
 package daryl.system.robots.arima.c.calculator.close;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +115,8 @@ public class DarylSystemArimaCCalculatoCloseApplication {
     	
 
 		List<CombinacionArimaC> combinacionesFile = combinacionesArimaCRepository.findAll();
-
+		Collections.reverse(combinacionesFile);
+		
 
 		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H1, Activo.XAUUSD);
 		List<Datos> datosForecast = toDatosList(historico);
