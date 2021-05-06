@@ -144,8 +144,8 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 		
     	ExecutorService servicio = Executors.newFixedThreadPool(25);
 
-    	int maxDesviaciones = 5;
-    	int inicio = 1000;
+    	int maxDesviaciones = 10;
+    	int inicio = 500;
 
 		ArimaForecasterGenerator afgXAUUSD_60 = context.getBean(ArimaForecasterGenerator.class);
 	    afgXAUUSD_60.init("ARIMA_C_XAUUSD_60", "ARIMA_C_XAUUSD_60", Activo.XAUUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histXAUUSD60, combinacionesFile); // <-- here

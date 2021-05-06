@@ -1,10 +1,5 @@
 package daryl.system.robots.arima.c.calculator.close.forecaster;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,16 +15,12 @@ import org.springframework.stereotype.Component;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
-import daryl.system.model.ArimaConfig;
+import daryl.system.model.ArimaConfigCalcs;
 import daryl.system.model.CombinacionArimaC;
 import daryl.system.model.historicos.Historico;
-import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigRepository;
-import daryl.system.robots.arima.c.calculator.close.repository.ICombinacionesArimaCRepository;
-import daryl.system.robots.arima.c.calculator.close.repository.IHistoricoRepository;
+import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigCalcsRepository;
 
 
 @Component
@@ -39,7 +30,7 @@ public class ArimaForecasterGenerator implements Runnable{
 	@Autowired
 	Logger logger;
 	@Autowired
-	private IArimaConfigRepository arimaConfigRepository;
+	private IArimaConfigCalcsRepository arimaConfigRepository;
 	@Autowired
 	ConfigData config;
 
@@ -122,12 +113,11 @@ public class ArimaForecasterGenerator implements Runnable{
 	}
 
 
-	long numCombinacion = 0;
-	long totalCombinaciones = 0;
+
 	public  void run() {
-		totalCombinaciones = combinacionesFile.size() * combinacionesFile.size();
+
 		
-		ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+		ArimaConfigCalcs arimaConfig = arimaConfigRepository.findArimaConfigCalcsByRobot(robot);
 		
 		int iAux = 0;
 		int iiAux = 0;
@@ -149,10 +139,7 @@ public class ArimaForecasterGenerator implements Runnable{
 				for(int std = 0; std <= desviaciones; std++) {		
 					
 					String combinacion = combinacionesFile.get(i).getCombinacion();
-					
-					if(seguir == false) break;
-					loadData();
-					
+
 					String[] optionsAr = combinacion.split(",");
 					double[] coefficentsAr = new double[optionsAr.length];
 					for(int j = 0; j < optionsAr.length; j++) {
@@ -161,12 +148,13 @@ public class ArimaForecasterGenerator implements Runnable{
 					//numCombinacion++;
 			        
 			        try {
-						Thread.sleep(00);
+						Thread.sleep(100);
 					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 			        for(int posInicio = 1; posInicio <= this.inicio; posInicio++) {
+						loadData();
 			        	calcular(coefficentsAr, coefficentsMa, std, 1, 0.0, 0.0, 1.0, i, k, posInicio);
 			        }
 					
@@ -183,7 +171,7 @@ public class ArimaForecasterGenerator implements Runnable{
     		double constant, double shockExpectation, double shockVariation, int indexA, int indexB, int posInicio) {
         
     	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
-        arimaProcess.setMaCoefficients(0.1);
+        //arimaProcess.setMaCoefficients(0.1);
         if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
         if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
         arimaProcess.setIntegrationOrder(integrationOrder);
@@ -271,7 +259,7 @@ public class ArimaForecasterGenerator implements Runnable{
         
         //System.out.println(numCombinacion + " de " + totalCombinaciones +  " - Resultado " + this.tipoActivo.name() + "_" + this.timeframe.valor + " -> " + resultado + " - " + arimaProcess.toString());
     	//Recuperamos el anterior
-    	ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+    	ArimaConfigCalcs arimaConfig = arimaConfigRepository.findArimaConfigCalcsByRobot(robot);
     	
         logger.info("=================================");
         logger.info("Robot -> " + robot + " Resultado -> " + resultado);
@@ -285,7 +273,7 @@ public class ArimaForecasterGenerator implements Runnable{
         	Long fechaHoraMillis = System.currentTimeMillis();
         	if(arimaConfig == null) {
         		
-        		arimaConfig = new ArimaConfig();
+        		arimaConfig = new ArimaConfigCalcs();
         		arimaConfig.setRobot(robot);
         		arimaConfig.setEstrategia(estrategia);
         		arimaConfig.setTipoActivo(tipoActivo);
