@@ -262,10 +262,7 @@ public class ArimaForecasterGenerator implements Runnable{
     	ArimaConfigCalcs arimaConfig = arimaConfigRepository.findArimaConfigCalcsByRobot(robot);
     	
         logger.info("=================================");
-        logger.info("Robot -> " + robot + " Resultado -> " + resultado);
-        logger.info(arimaProcess.toString());
-        logger.info("================================");
-    	
+        logger.info("Robot -> " + robot + " Resultado -> " + resultado + " A -> " + indexA + " B -> " + indexB + " std -> " + std + " inicio -> " + posInicio);
     	
         if(/*resultado > 0 &&*/ resAnt == 0 || resAnt < resultado) {
         	resAnt = resultado;
@@ -303,7 +300,9 @@ public class ArimaForecasterGenerator implements Runnable{
         		arimaConfigRepository.save(arimaConfig);
 
     		}
-
+    		
+            logger.info(arimaProcess.toString());
+            
         }else {
 			
 			if(arimaConfig != null) {
@@ -313,6 +312,7 @@ public class ArimaForecasterGenerator implements Runnable{
 			}
 			
         }
+        logger.info("================================");
 
     }
 

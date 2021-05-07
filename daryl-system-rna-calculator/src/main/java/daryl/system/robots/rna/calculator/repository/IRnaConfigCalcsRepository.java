@@ -7,12 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.RnaConfig;
+import daryl.system.model.RnaConfigCalcs;
 import daryl.system.model.Robot;
 
 
 @Repository
-public interface IRnaConfigRepository extends JpaRepository<RnaConfig, Long> {
+public interface IRnaConfigCalcsRepository extends JpaRepository<RnaConfigCalcs, Long> {
 
-	RnaConfig findRnaConfigByRobot(String robot);
+	RnaConfigCalcs findRnaConfigCalcsByRobot(String robot);
 
 }

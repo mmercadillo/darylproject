@@ -115,7 +115,7 @@ public class DarylSystemArimaCCalculatoCloseApplication {
     	
 
 		List<CombinacionArimaC> combinacionesFile = combinacionesArimaCRepository.findAll();
-		Collections.reverse(combinacionesFile);
+		//Collections.reverse(combinacionesFile);
 		
 
 		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H1, Activo.XAUUSD);

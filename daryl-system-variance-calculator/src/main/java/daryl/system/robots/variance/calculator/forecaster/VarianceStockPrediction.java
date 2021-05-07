@@ -1,8 +1,5 @@
 package daryl.system.robots.variance.calculator.forecaster;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +17,10 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.VarianceConfig;
+import daryl.system.model.VarianceConfigCalcs;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robots.variance.calculator.repository.IHistoricoRepository;
-import daryl.system.robots.variance.calculator.repository.IVarianceConfigRepository;
+import daryl.system.robots.variance.calculator.repository.IVarianceConfigCalcsRepository;
 import daryl.variance.StockPredict;
 
 @Component
@@ -32,19 +30,17 @@ public class VarianceStockPrediction implements Runnable{
 	@Autowired
 	Logger logger;
 	@Autowired
-	private IVarianceConfigRepository varianceConfigRepository;
+	private IVarianceConfigCalcsRepository varianceConfigCalcsRepository;
 	@Autowired
 	ConfigData config;
 	@Autowired
 	private IHistoricoRepository historicoRepository;
-	
-	final String BASE_PATH = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\h\\";
+
 	
 	private String robot;
 	private Activo activo;
 	private String estrategia;
 	private Timeframes timeframe;
-	private String DATA = "";
 	private int inicio = 0;
 	private List<Double> datos = null;
 
@@ -54,7 +50,6 @@ public class VarianceStockPrediction implements Runnable{
 	public void init(Activo activo, Timeframes timeframe, String robot, int inicio) {
 		this.activo = activo;
 		this.timeframe = timeframe;
-		this.DATA = activo.name() + "_" + timeframe.valor + ".csv"; //EURUSD_60.csv
 		this.robot = robot;
 		this.estrategia = robot;
 		this.inicio = inicio;
@@ -146,7 +141,7 @@ public class VarianceStockPrediction implements Runnable{
         int beta = 1;
         int shift = 0;
 
-        VarianceConfig varianceConfig = varianceConfigRepository.findVarianceConfigByRobot(robot);
+        VarianceConfigCalcs varianceConfig = varianceConfigCalcsRepository.findVarianceConfigCalcsByRobot(robot);
         System.out.println("Config para: " + robot + " -> " + varianceConfig);
         
 		if(varianceConfig != null && varianceConfig.getLastOffset() != null) offset = varianceConfig.getLastOffset();
@@ -257,11 +252,11 @@ public class VarianceStockPrediction implements Runnable{
     }
 
     
-	private VarianceConfig checkResultado(VarianceConfig varianceConfig, Double resultado, int n, int offset, int m, double alpha, double beta, int lastAlpha, int lastBeta) {
+	private VarianceConfigCalcs checkResultado(VarianceConfigCalcs varianceConfig, Double resultado, int n, int offset, int m, double alpha, double beta, int lastAlpha, int lastBeta) {
 		
 		if(varianceConfig == null) {
 			
-			varianceConfig = new VarianceConfig();
+			varianceConfig = new VarianceConfigCalcs();
 			varianceConfig.setRobot(robot);
 			varianceConfig.setEstrategia(estrategia);
 			varianceConfig.setTipoActivo(activo);
@@ -289,7 +284,7 @@ public class VarianceStockPrediction implements Runnable{
 			varianceConfig.setLastBeta(lastBeta);
 			
 			
-			varianceConfigRepository.save(varianceConfig);
+			varianceConfigCalcsRepository.save(varianceConfig);
 		}else {
 			
 			if(varianceConfig != null) {
@@ -298,7 +293,7 @@ public class VarianceStockPrediction implements Runnable{
 				varianceConfig.setLastM(m);
 				varianceConfig.setLastAlpha(lastAlpha);
 				varianceConfig.setLastBeta(lastBeta);
-				varianceConfigRepository.save(varianceConfig);
+				varianceConfigCalcsRepository.save(varianceConfig);
 			}
 			
         }

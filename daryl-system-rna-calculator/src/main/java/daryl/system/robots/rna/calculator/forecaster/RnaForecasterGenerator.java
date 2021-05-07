@@ -1,11 +1,6 @@
 package daryl.system.robots.rna.calculator.forecaster;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -40,9 +35,10 @@ import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.RnaConfig;
+import daryl.system.model.RnaConfigCalcs;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robots.rna.calculator.repository.IHistoricoRepository;
-import daryl.system.robots.rna.calculator.repository.IRnaConfigRepository;
+import daryl.system.robots.rna.calculator.repository.IRnaConfigCalcsRepository;
 
 
 @Component
@@ -59,7 +55,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 	ConfigData config;
 	
 	@Autowired
-	private IRnaConfigRepository rnaConfigRepository;
+	private IRnaConfigCalcsRepository rnaConfigCalcsRepository;
 	@Autowired
 	private IHistoricoRepository historicoRepository;
 	
@@ -207,7 +203,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		Double resultado = null;
 		
 		//recuperamos la configuración existente
-		RnaConfig rnaConfig = rnaConfigRepository.findRnaConfigByRobot(robot);
+		RnaConfigCalcs rnaConfig = rnaConfigCalcsRepository.findRnaConfigCalcsByRobot(robot);
 		
 		if(rnaConfig != null) {
 			
@@ -221,7 +217,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 			if(rnaConfig.getResultado() != null) resultado = rnaConfig.getResultado();
 			
 		}else {
-			rnaConfig = new RnaConfig();
+			rnaConfig = new RnaConfigCalcs();
 		}
 		
 		
@@ -360,7 +356,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 											rnaConfig.setHora(config.getHoraInString(fechaHoraMillis));
 																					
 										}
-										rnaConfigRepository.save(rnaConfig);
+										rnaConfigCalcsRepository.save(rnaConfig);
 										logger.info("Nueva configuración RNA guardada");
 										logger.info("========================================================================================");
 										
