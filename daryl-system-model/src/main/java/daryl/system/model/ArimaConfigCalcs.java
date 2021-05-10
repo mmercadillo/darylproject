@@ -97,6 +97,17 @@ public class ArimaConfigCalcs implements Serializable{
 	@Column(nullable = true)
 	@Getter @Setter
 	private Integer indexB;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastStd;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastPosInicio;
+
+	
+	
 
 	
 }

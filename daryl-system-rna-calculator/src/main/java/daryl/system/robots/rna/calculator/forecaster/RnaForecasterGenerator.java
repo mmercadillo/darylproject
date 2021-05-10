@@ -364,11 +364,17 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 										e.printStackTrace();
 									}
 								}
+								lastHiddenNeurons = 1;
 							}
+							lastCapasOcultas = 1;
 						}
+						lastPasoLearnigRate = 0;
 					}
+					lastPasoMomentum = 0;
 				}
+				lastBias = 0;
 			}
+			lastNeuronasEntrada = 1;
 		}
 
 	}

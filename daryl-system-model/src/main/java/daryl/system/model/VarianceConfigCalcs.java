@@ -95,5 +95,10 @@ public class VarianceConfigCalcs implements Serializable{
 	@Column(nullable = true)
 	@Getter @Setter
 	private Integer lastBeta;
+
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastShift;
 	
 }

@@ -134,125 +134,135 @@ public class VarianceStockPrediction implements Runnable{
     private void runPrediction() throws FileNotFoundException, IOException, Exception {
     	
 
-       	int offset = 0;
-       	int n = 1;
-       	int m = 0;
-        int alpha = 1;
-        int beta = 1;
-        int shift = 0;
+       	int lastOffset = 0;
+       	int lastN = 1;
+       	int lastM = 0;
+        int lastAlpha = 1;
+        int lastBeta = 1;
+        int lastShift = 0;
 
         VarianceConfigCalcs varianceConfig = varianceConfigCalcsRepository.findVarianceConfigCalcsByRobot(robot);
         System.out.println("Config para: " + robot + " -> " + varianceConfig);
         
-		if(varianceConfig != null && varianceConfig.getLastOffset() != null) offset = varianceConfig.getLastOffset();
-		if(varianceConfig != null && varianceConfig.getLastN() != null) n = varianceConfig.getLastN();
-		if(varianceConfig != null && varianceConfig.getLastM() != null) m = varianceConfig.getLastM();
-		if(varianceConfig != null && varianceConfig.getLastAlpha() != null) alpha = varianceConfig.getLastAlpha();
-		if(varianceConfig != null && varianceConfig.getLastBeta() != null) beta = varianceConfig.getLastBeta();
+		if(varianceConfig != null && varianceConfig.getLastOffset() != null) lastOffset = varianceConfig.getLastOffset();
+		if(varianceConfig != null && varianceConfig.getLastN() != null) lastN = varianceConfig.getLastN();
+		if(varianceConfig != null && varianceConfig.getLastM() != null) lastM = varianceConfig.getLastM();
+		if(varianceConfig != null && varianceConfig.getLastAlpha() != null) lastAlpha = varianceConfig.getLastAlpha();
+		if(varianceConfig != null && varianceConfig.getLastBeta() != null) lastBeta = varianceConfig.getLastBeta();
+		if(varianceConfig != null && varianceConfig.getLastShift() != null) lastShift = varianceConfig.getLastShift();
         
-		System.out.println("Empezamos en offset -> " + offset + " y n -> " + n + " para: " + robot);
+		System.out.println("Empezamos en offset -> " + lastOffset + " y n -> " + lastN + " para: " + robot);
 		
 		
-        for(int indicadorN = n; indicadorN < 20; indicadorN++) {        	
-        	for(int indicadorOffset = offset; indicadorOffset < 20; indicadorOffset++) {
-        		for(int indicadorM = m; indicadorM < 10; indicadorM++) {
-        			for(int indicadorAlpha = alpha; indicadorAlpha < 10; indicadorAlpha++) {
-        				for(int indicadorBeta = beta; indicadorBeta < 200; indicadorBeta++) {
+        for(int indicadorN = lastN; indicadorN < 20; indicadorN++) {        	
+        	for(int indicadorOffset = lastOffset; indicadorOffset < 20; indicadorOffset++) {
+        		for(int indicadorM = lastM; indicadorM < 10; indicadorM++) {
+        			for(int indicadorAlpha = lastAlpha; indicadorAlpha < 10; indicadorAlpha++) {
+        				for(int indicadorBeta = lastBeta; indicadorBeta < 200; indicadorBeta++) {
+        					for(int indicadorShift = lastShift; indicadorShift < 25; indicadorShift++) {
         					
-        					int valorN = indicadorN;
-        					int valorOffset = indicadorOffset;
-        					int valorM = indicadorM;
-        					double valorAlpha = 0.0 + (0.001 * indicadorAlpha);
-        					double valorBeta = 0.0 + (0.1 * indicadorBeta);
-        					
-			        		
-			                double lastPrice = 0.0;
-			                double expectedPrice = 0.0;
-			                double lastExpectedPrice = 0.0;
-			                double predictedPrice = 0.0;
-			                double lastPredictedPrice = 0.0;
-			              
-			                double ganancias = 0.0;
-			                double perdidas = 0.0;
-			                double resultado = 0.0;
+	        					int valorN = indicadorN;
+	        					int valorOffset = indicadorOffset;
+	        					int valorM = indicadorM;
+	        					double valorAlpha = 0.0 + (0.001 * indicadorAlpha);
+	        					double valorBeta = 0.0 + (0.1 * indicadorBeta);
+	        					int valorShift = indicadorShift;
+	        					
+				        		
+				                double lastPrice = 0.0;
+				                double expectedPrice = 0.0;
+				                double lastExpectedPrice = 0.0;
+				                double predictedPrice = 0.0;
+				                double lastPredictedPrice = 0.0;
+				              
+				                double ganancias = 0.0;
+				                double perdidas = 0.0;
+				                double resultado = 0.0;
 
-					        try {
-					        	System.out.println(
-								        			"Probando " + robot + 
-								        			" con -> n: " + valorN + 
-								        			" - offset: " + valorOffset + 
-								        			" - m: " + valorM + 
-								        			" - Alpha: " + valorAlpha + 
-								        			" - Beta: " + valorBeta);
-
-					        	
-					        	int contador = 0;
-						        while(true){
+						        try {
+						        	System.out.println(
+									        			"Probando " + robot + 
+									        			" con -> n: " + valorN + 
+									        			" - offset: " + valorOffset + 
+									        			" - m: " + valorM + 
+									        			" - Alpha: " + valorAlpha + 
+									        			" - Beta: " + valorBeta + 
+									        			" - Shift: " + valorShift);
+	
 						        	
-						        	
-						        	int desde = contador;
-						        	int hasta = contador + (valorN + valorOffset + shift);
-						        	
-						        	if(hasta == datos.size()) break;
-						        	
-						        	List<Double> datosForecast = datos.subList(desde, hasta);
-						        	
-						        	//System.out.println("Lista de datos: " + datosForecast.toString());
-						        	lastPrice = datos.get(desde);
-						            expectedPrice = datos.get(hasta);
-						            //System.out.println("Last price -> " + lastPrice);
-						            //System.out.println("Expected price -> " + expectedPrice);
+						        	int contador = 0;
+							        while(true){
+							        	
+							        	
+							        	int desde = contador;
+							        	int hasta = contador + (valorN + valorOffset + valorShift);
+							        	
+							        	if(hasta == datos.size()) break;
+							        	
+							        	List<Double> datosForecast = datos.subList(desde, hasta);
+							        	
+							        	//System.out.println("Lista de datos: " + datosForecast.toString());
+							        	lastPrice = datos.get(desde);
+							            expectedPrice = datos.get(hasta);
+							            //System.out.println("Last price -> " + lastPrice);
+							            //System.out.println("Expected price -> " + expectedPrice);
+							            
+							            StockPredict stock = new StockPredict(datosForecast, valorOffset, valorN, valorAlpha, valorBeta, valorM);
+							            double[] priceVariance = stock.getPriceVariance();
+							
+							            predictedPrice = priceVariance[0];
+							        	
+							            
+							            contador++;
+	
+							            if(predictedPrice > lastPredictedPrice && lastPredictedPrice > 0) {
+							            	//BUY
+							            	if(expectedPrice > lastPrice) {
+							            		ganancias += (expectedPrice - lastPrice);
+							            	}else {
+							            		perdidas += (lastPrice - expectedPrice);
+							            	}
+							            }
+							            if(predictedPrice < lastPredictedPrice && lastPredictedPrice > 0) {
+							            	//SELL
+							            	if(expectedPrice < lastPrice) {
+							            		ganancias += (lastPrice - expectedPrice);
+							            	}else {
+							            		perdidas += (expectedPrice - lastPrice);
+							            	}
+							            }
+							            resultado = ganancias - perdidas;
+	
+							            lastExpectedPrice = expectedPrice;
+							            lastPredictedPrice = predictedPrice;
+							            
+							        }
+							        						        
+						        }catch (Exception e) {
+									e.printStackTrace();
+								}finally {
+									
+						            System.out.println("RESULTADO " + robot + " -> " + resultado);
+						            //Comprobamos el resultado
+						            varianceConfig = checkResultado(varianceConfig, resultado, valorN, valorOffset, valorM, valorAlpha, valorBeta, indicadorAlpha, indicadorBeta, indicadorShift);
 						            
-						            StockPredict stock = new StockPredict(datosForecast, valorOffset, valorN, valorAlpha, valorBeta, valorM);
-						            double[] priceVariance = stock.getPriceVariance();
-						
-						            predictedPrice = priceVariance[0];
-						        	
-						            
-						            contador++;
-
-						            if(predictedPrice > lastPredictedPrice && lastPredictedPrice > 0) {
-						            	//BUY
-						            	if(expectedPrice > lastPrice) {
-						            		ganancias += (expectedPrice - lastPrice);
-						            	}else {
-						            		perdidas += (lastPrice - expectedPrice);
-						            	}
-						            }
-						            if(predictedPrice < lastPredictedPrice && lastPredictedPrice > 0) {
-						            	//SELL
-						            	if(expectedPrice < lastPrice) {
-						            		ganancias += (lastPrice - expectedPrice);
-						            	}else {
-						            		perdidas += (expectedPrice - lastPrice);
-						            	}
-						            }
-						            resultado = ganancias - perdidas;
-
-						            lastExpectedPrice = expectedPrice;
-						            lastPredictedPrice = predictedPrice;
-						            
-						        }
-						        						        
-					        }catch (Exception e) {
-								e.printStackTrace();
-							}finally {
-								
-					            System.out.println("RESULTADO " + robot + " -> " + resultado);
-					            //Comprobamos el resultado
-					            varianceConfig = checkResultado(varianceConfig, resultado, valorN, valorOffset, valorM, valorAlpha, valorBeta, indicadorAlpha, indicadorBeta);
-					            
-							}
+								}
+        					}
+        					lastShift = 0;
         				}
+        				lastBeta = 1;
         			}
+        			lastAlpha = 1;
         		}
+        		lastM = 0;
         	}
+        	lastOffset = 0;
         }
-        			
+        lastN = 1;	
     }
 
     
-	private VarianceConfigCalcs checkResultado(VarianceConfigCalcs varianceConfig, Double resultado, int n, int offset, int m, double alpha, double beta, int lastAlpha, int lastBeta) {
+	private VarianceConfigCalcs checkResultado(VarianceConfigCalcs varianceConfig, Double resultado, int n, int offset, int m, double alpha, double beta, int lastAlpha, int lastBeta, int lastShift) {
 		
 		if(varianceConfig == null) {
 			
@@ -262,6 +272,14 @@ public class VarianceStockPrediction implements Runnable{
 			varianceConfig.setTipoActivo(activo);
 			
 		}
+
+		varianceConfig.setLastN(n);
+		varianceConfig.setLastOffset(offset);
+		varianceConfig.setLastM(m);
+		varianceConfig.setLastAlpha(lastAlpha);
+		varianceConfig.setLastBeta(lastBeta);
+		varianceConfig.setLastShift(lastShift);
+		
 		
 		Long fechaHoraMillis = System.currentTimeMillis();
 		if(varianceConfig.getResultado() == null || varianceConfig.getResultado() < resultado) {
@@ -274,29 +292,11 @@ public class VarianceStockPrediction implements Runnable{
 			varianceConfig.setN(n);
 			varianceConfig.setM(m);
 			varianceConfig.setAlpha(alpha);
-			varianceConfig.setBeta(beta);
+			varianceConfig.setBeta(beta);	
 			
-			
-			varianceConfig.setLastN(n);
-			varianceConfig.setLastOffset(offset);
-			varianceConfig.setLastM(m);
-			varianceConfig.setLastAlpha(lastAlpha);
-			varianceConfig.setLastBeta(lastBeta);
-			
-			
-			varianceConfigCalcsRepository.save(varianceConfig);
-		}else {
-			
-			if(varianceConfig != null) {
-				varianceConfig.setLastN(n);
-				varianceConfig.setLastOffset(offset);
-				varianceConfig.setLastM(m);
-				varianceConfig.setLastAlpha(lastAlpha);
-				varianceConfig.setLastBeta(lastBeta);
-				varianceConfigCalcsRepository.save(varianceConfig);
-			}
-			
-        }
+		}
+		
+		varianceConfigCalcsRepository.save(varianceConfig);
 		return varianceConfig;
 		
 	}

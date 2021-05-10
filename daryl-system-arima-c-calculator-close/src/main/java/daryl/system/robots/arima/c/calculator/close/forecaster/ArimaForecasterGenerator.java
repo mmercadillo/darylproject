@@ -121,10 +121,13 @@ public class ArimaForecasterGenerator implements Runnable{
 		
 		int iAux = 0;
 		int iiAux = 0;
+		int lastStd = 0;
+		int lastPosInicio = 0;
 		
 		if(arimaConfig != null && arimaConfig.getIndexA() != null) iAux = arimaConfig.getIndexA();
 		if(arimaConfig != null && arimaConfig.getIndexB() != null) iiAux = arimaConfig.getIndexB();
-		
+		if(arimaConfig != null && arimaConfig.getLastStd() != null) lastStd = arimaConfig.getLastStd();
+		if(arimaConfig != null && arimaConfig.getLastPosInicio() != null) lastPosInicio = arimaConfig.getLastPosInicio();
 
 		for(int k = iiAux; k < combinacionesFile.size(); k++) {
 			
@@ -136,7 +139,8 @@ public class ArimaForecasterGenerator implements Runnable{
 			}
 			
 			for(int i = iAux; i < combinacionesFile.size(); i++) {
-				for(int std = 0; std <= desviaciones; std++) {		
+				
+				for(int std = lastStd; std <= desviaciones; std++) {		
 					
 					String combinacion = combinacionesFile.get(i).getCombinacion();
 
@@ -153,12 +157,13 @@ public class ArimaForecasterGenerator implements Runnable{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-			        for(int posInicio = 1; posInicio <= this.inicio; posInicio++) {
+			        for(int posInicio = lastPosInicio; posInicio <= this.inicio; posInicio++) {
 						loadData();
 			        	calcular(coefficentsAr, coefficentsMa, std, 1, 0.0, 0.0, 1.0, i, k, posInicio);
 			        }
-					
+					lastPosInicio = 0;
 				}
+				lastStd = 0;
 			}
 			iAux = 0;
 		}
@@ -279,6 +284,8 @@ public class ArimaForecasterGenerator implements Runnable{
         	
         	arimaConfig.setIndexA(indexA);
         	arimaConfig.setIndexB(indexB);
+        	arimaConfig.setLastStd(std);
+        	arimaConfig.setLastPosInicio(posInicio);
 
     		if(arimaConfig.getResultado() == null || arimaConfig.getResultado() < resultado) {
 
