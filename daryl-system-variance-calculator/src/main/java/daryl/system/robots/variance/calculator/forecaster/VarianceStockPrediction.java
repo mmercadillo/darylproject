@@ -16,7 +16,6 @@ import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
-import daryl.system.model.VarianceConfig;
 import daryl.system.model.VarianceConfigCalcs;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robots.variance.calculator.repository.IHistoricoRepository;
@@ -133,7 +132,6 @@ public class VarianceStockPrediction implements Runnable{
 	
     private void runPrediction() throws FileNotFoundException, IOException, Exception {
     	
-
        	int lastOffset = 0;
        	int lastN = 1;
        	int lastM = 0;
@@ -153,25 +151,22 @@ public class VarianceStockPrediction implements Runnable{
         
 		System.out.println("Empezamos en offset -> " + lastOffset + " y n -> " + lastN + " para: " + robot);
 		
-		
         for(int indicadorN = lastN; indicadorN < 20; indicadorN++) {        	
         	for(int indicadorOffset = lastOffset; indicadorOffset < 20; indicadorOffset++) {
         		for(int indicadorM = lastM; indicadorM < 10; indicadorM++) {
         			for(int indicadorAlpha = lastAlpha; indicadorAlpha < 10; indicadorAlpha++) {
         				for(int indicadorBeta = lastBeta; indicadorBeta < 200; indicadorBeta++) {
-        					for(int indicadorShift = lastShift; indicadorShift < 25; indicadorShift++) {
+        					//for(int indicadorShift = lastShift; indicadorShift < 25; indicadorShift++) {
         					
 	        					int valorN = indicadorN;
 	        					int valorOffset = indicadorOffset;
 	        					int valorM = indicadorM;
 	        					double valorAlpha = 0.0 + (0.001 * indicadorAlpha);
 	        					double valorBeta = 0.0 + (0.1 * indicadorBeta);
-	        					int valorShift = indicadorShift;
-	        					
+	        					//int valorShift = indicadorShift;
+	        					int valorShift = 0;
 				        		
 				                double lastPrice = 0.0;
-				                double expectedPrice = 0.0;
-				                double lastExpectedPrice = 0.0;
 				                double predictedPrice = 0.0;
 				                double lastPredictedPrice = 0.0;
 				              
@@ -189,10 +184,8 @@ public class VarianceStockPrediction implements Runnable{
 									        			" - Beta: " + valorBeta + 
 									        			" - Shift: " + valorShift);
 	
-						        	
 						        	int contador = 0;
 							        while(true){
-							        	
 							        	
 							        	int desde = contador;
 							        	int hasta = contador + (valorN + valorOffset + valorShift);
@@ -202,8 +195,9 @@ public class VarianceStockPrediction implements Runnable{
 							        	List<Double> datosForecast = datos.subList(desde, hasta);
 							        	
 							        	//System.out.println("Lista de datos: " + datosForecast.toString());
-							        	lastPrice = datos.get(desde);
-							            expectedPrice = datos.get(hasta);
+							        	//lastPrice = datos.get(desde);
+							            double expectedPrice = datos.get(hasta);
+							            double lastExpectedPrice = datos.get(hasta - 1);
 							            //System.out.println("Last price -> " + lastPrice);
 							            //System.out.println("Expected price -> " + expectedPrice);
 							            
@@ -215,25 +209,24 @@ public class VarianceStockPrediction implements Runnable{
 							            
 							            contador++;
 	
-							            if(predictedPrice > lastPredictedPrice && lastPredictedPrice > 0) {
+							            if(predictedPrice > lastPredictedPrice && lastPredictedPrice > 0 && lastExpectedPrice > 0) {
 							            	//BUY
-							            	if(expectedPrice > lastPrice) {
-							            		ganancias += (expectedPrice - lastPrice);
+							            	if(expectedPrice > lastExpectedPrice) {
+							            		ganancias += (expectedPrice - lastExpectedPrice);
 							            	}else {
-							            		perdidas += (lastPrice - expectedPrice);
+							            		perdidas += (lastExpectedPrice - expectedPrice);
 							            	}
 							            }
-							            if(predictedPrice < lastPredictedPrice && lastPredictedPrice > 0) {
+							            if(predictedPrice < lastPredictedPrice && lastPredictedPrice > 0 && lastExpectedPrice > 0) {
 							            	//SELL
-							            	if(expectedPrice < lastPrice) {
-							            		ganancias += (lastPrice - expectedPrice);
+							            	if(expectedPrice < lastExpectedPrice) {
+							            		ganancias += (lastExpectedPrice - expectedPrice);
 							            	}else {
-							            		perdidas += (expectedPrice - lastPrice);
+							            		perdidas += (expectedPrice - lastExpectedPrice);
 							            	}
 							            }
 							            resultado = ganancias - perdidas;
-	
-							            lastExpectedPrice = expectedPrice;
+
 							            lastPredictedPrice = predictedPrice;
 							            
 							        }
@@ -244,11 +237,11 @@ public class VarianceStockPrediction implements Runnable{
 									
 						            System.out.println("RESULTADO " + robot + " -> " + resultado);
 						            //Comprobamos el resultado
-						            varianceConfig = checkResultado(varianceConfig, resultado, valorN, valorOffset, valorM, valorAlpha, valorBeta, indicadorAlpha, indicadorBeta, indicadorShift);
+						            varianceConfig = checkResultado(varianceConfig, resultado, valorN, valorOffset, valorM, valorAlpha, valorBeta, indicadorAlpha, indicadorBeta, valorShift);
 						            
 								}
-        					}
-        					lastShift = 0;
+        					//}
+        					//lastShift = 0;
         				}
         				lastBeta = 1;
         			}
@@ -279,7 +272,6 @@ public class VarianceStockPrediction implements Runnable{
 		varianceConfig.setLastAlpha(lastAlpha);
 		varianceConfig.setLastBeta(lastBeta);
 		varianceConfig.setLastShift(lastShift);
-		
 		
 		Long fechaHoraMillis = System.currentTimeMillis();
 		if(varianceConfig.getResultado() == null || varianceConfig.getResultado() < resultado) {

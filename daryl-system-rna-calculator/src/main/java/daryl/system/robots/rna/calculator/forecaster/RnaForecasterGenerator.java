@@ -334,6 +334,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 										rnaConfig.setLastHiddenNeurons(hiddenNeurons);
 										rnaConfig.setLastTransferFunctionType(fncTransf);
 										rnaConfig.setLastBias(bias);
+										rnaConfig.setLastBias(bias);
 										
 										Long fechaHoraMillis = System.currentTimeMillis();
 										if(resultado == null || res > resultado) {

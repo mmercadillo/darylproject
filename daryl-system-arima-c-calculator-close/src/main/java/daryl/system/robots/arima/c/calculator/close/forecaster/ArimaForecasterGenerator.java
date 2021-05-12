@@ -268,24 +268,27 @@ public class ArimaForecasterGenerator implements Runnable{
     	
         logger.info("=================================");
         logger.info("Robot -> " + robot + " Resultado -> " + resultado + " A -> " + indexA + " B -> " + indexB + " std -> " + std + " inicio -> " + posInicio);
+
+        
+    	if(arimaConfig == null) {
+    		
+    		arimaConfig = new ArimaConfigCalcs();
+    		arimaConfig.setRobot(robot);
+    		arimaConfig.setEstrategia(estrategia);
+    		arimaConfig.setTipoActivo(tipoActivo);
+    		
+    	}
+
+    	
+    	arimaConfig.setIndexA(indexA);
+    	arimaConfig.setIndexB(indexB);
+    	arimaConfig.setLastStd(std);
+    	arimaConfig.setLastPosInicio(posInicio);
     	
         if(/*resultado > 0 &&*/ resAnt == 0 || resAnt < resultado) {
         	resAnt = resultado;
         	
         	Long fechaHoraMillis = System.currentTimeMillis();
-        	if(arimaConfig == null) {
-        		
-        		arimaConfig = new ArimaConfigCalcs();
-        		arimaConfig.setRobot(robot);
-        		arimaConfig.setEstrategia(estrategia);
-        		arimaConfig.setTipoActivo(tipoActivo);
-        		
-        	}
-        	
-        	arimaConfig.setIndexA(indexA);
-        	arimaConfig.setIndexB(indexB);
-        	arimaConfig.setLastStd(std);
-        	arimaConfig.setLastPosInicio(posInicio);
 
     		if(arimaConfig.getResultado() == null || arimaConfig.getResultado() < resultado) {
 
@@ -301,24 +304,13 @@ public class ArimaForecasterGenerator implements Runnable{
         		arimaConfig.setStandarDeviation(arimaProcess.getStd());
         		arimaConfig.setResultado(resultado);
         		arimaConfig.setInicio(posInicio);
-        		
-        		
-        		
-        		arimaConfigRepository.save(arimaConfig);
 
     		}
     		
             logger.info(arimaProcess.toString());
             
-        }else {
-			
-			if(arimaConfig != null) {
-	        	arimaConfig.setIndexA(indexA);
-	        	arimaConfig.setIndexB(indexB);
-	        	arimaConfigRepository.save(arimaConfig);
-			}
-			
         }
+        arimaConfigRepository.save(arimaConfig);
         logger.info("================================");
 
     }
