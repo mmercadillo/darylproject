@@ -15,6 +15,7 @@ import daryl.system.backtest.robot.repository.IOperacionBacktestRepository;
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.TipoOrden;
+import daryl.system.model.Robot;
 import daryl.system.model.backtest.OperacionBacktest;
 
 
@@ -30,14 +31,14 @@ public class ArimaAInvTester extends Tester implements Runnable{
 	ConfigData config;
 
 	
-	private String robot;
+	private Robot robot;
 	private List<Datos> datosParaTest;
 	List<Double> cierres;
 
 	public ArimaAInvTester() {
 	}
 	
-	public void init(String robot, List<Datos> datosParaTest, int inicio) {
+	public void init(Robot robot, List<Datos> datosParaTest, int inicio) {
 
 		this.robot = robot;
 		this.datosParaTest = datosParaTest;
@@ -58,7 +59,7 @@ public class ArimaAInvTester extends Tester implements Runnable{
 			try {
 				
 				OperacionBacktest opBt = new OperacionBacktest();
-				opBt.setRobot(this.robot);
+				opBt.setRobot(this.robot.getRobot());
 				
 				ARIMA arima=new ARIMA(cierres.stream().mapToDouble(Double::new).toArray());
 				

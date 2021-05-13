@@ -43,7 +43,6 @@ public class RnaTester extends Tester implements Runnable{
 	@Autowired
 	ApplicationContext ctx;
 
-	
 	private Robot robot;
 	private List<Datos> datosParaTest;
 	private List<Datos> cierres;
@@ -77,7 +76,6 @@ public class RnaTester extends Tester implements Runnable{
 	
 	
 	private Double getPrediccionAnterior(List<Datos> cierres) {
-	//private Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
 		
 		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(cierres, Mode.CLOSE);
 		List<Double> inputs = new ArrayList<Double>();
@@ -108,7 +106,6 @@ public class RnaTester extends Tester implements Runnable{
         //double predicted = interpretOutput(networkOutput);
         double prediccionAnterior =  darylNormalizer.denormData(networkOutput[0]);
 
-        //logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
         return prediccionAnterior;
 	}
 
@@ -127,7 +124,6 @@ public class RnaTester extends Tester implements Runnable{
 				opBt.setRobot(this.robot.getRobot());
 				
 
-				
 				Double prediccionAnterior = getPrediccionAnterior(cierres.subList(0, cierres.size()-1));
 				
 				DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(cierres, Mode.CLOSE);
@@ -149,7 +145,6 @@ public class RnaTester extends Tester implements Runnable{
 						inputs.add(darylNormalizer.normData(cierres.get(cierres.size()-index).getApertura()));
 					}			
 				}while(index < this.robot.getNeuronasEntrada());
-				//}while(index < rnaConfig.getNeuronasEntrada());
 
 				Collections.reverse(inputs);
 
@@ -160,9 +155,7 @@ public class RnaTester extends Tester implements Runnable{
 		        double[] networkOutput = this.neuralNetwork.getOutput();
 		        //double predicted = interpretOutput(networkOutput);
 		        double forecast = darylNormalizer.denormData(networkOutput[0]);
-		        //logger.info("Robot -> " + this.robot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
-		        
-		        
+		        		        
 				Double apertura = datosParaTest.get(i).getCierre();
 				Double cierre = datosParaTest.get(i+1).getCierre(); 
 				opBt.setApertura(apertura);
@@ -190,7 +183,7 @@ public class RnaTester extends Tester implements Runnable{
 				opBt.setComision(0.0);
 
 				//Guardamos la operación de backtest
-				//operacionBacktestRepository.save(opBt);
+				operacionBacktestRepository.save(opBt);
 				System.out.println("Operación guardada: " + opBt.toString());
 
 			}catch (Exception e) {

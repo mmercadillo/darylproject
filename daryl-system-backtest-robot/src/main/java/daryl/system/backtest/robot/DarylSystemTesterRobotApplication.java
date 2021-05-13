@@ -13,18 +13,19 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jms.annotation.EnableJms;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import daryl.system.backtest.robot.repository.IHistoricoRepository;
 import daryl.system.backtest.robot.repository.IRobotsRepository;
 import daryl.system.backtest.robot.tester.ArimaAInvTester;
 import daryl.system.backtest.robot.tester.ArimaATester;
+import daryl.system.backtest.robot.tester.ArimaBInvTester;
+import daryl.system.backtest.robot.tester.ArimaBTester;
+import daryl.system.backtest.robot.tester.ArimaCInvTester;
+import daryl.system.backtest.robot.tester.ArimaCTester;
+import daryl.system.backtest.robot.tester.RnaInvTester;
 import daryl.system.backtest.robot.tester.RnaTester;
-import daryl.system.backtest.robot.tester.Tester;
 import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
 
@@ -52,30 +53,105 @@ public class DarylSystemTesterRobotApplication {
 	
 	private static void startBacktests(ConfigurableApplicationContext context) {
 		
-		IHistoricoRepository historicoRepository = context.getBean(IHistoricoRepository.class);
-		
-		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H1, Activo.XAUUSD);
-		List<Datos> datosParaTest = toDatosList(historico);
-		
 		IRobotsRepository robotsRepository = context.getBean(IRobotsRepository.class);
-		Robot robot = robotsRepository.findRobotByRobot("RNA_NDX_240");
+		IHistoricoRepository historicoRepository = context.getBean(IHistoricoRepository.class);
 		
 		ExecutorService servicio = Executors.newFixedThreadPool(25);
 		
-		RnaTester rnaTester = context.getBean(RnaTester.class);
-		rnaTester.init(robot, datosParaTest, 10);
-		rnaTester.run();
-		
-		/*
-		ArimaATester arimaATester = context.getBean(ArimaATester.class);
-		arimaATester.init("ARIMA_XAUUSD_60", datosParaTest, 10);
-		servicio.submit(arimaATester);
-		
-		ArimaAInvTester arimaAInvTester = context.getBean(ArimaAInvTester.class);
-		arimaAInvTester.init("ARIMA_I_XAUUSD_60", datosParaTest, 10);
-		servicio.submit(arimaAInvTester);
-		*/
-    	servicio.shutdown();
+		List<Robot> robots = robotsRepository.findAll();
+		if(robots != null) {
+			
+			//Para robots de tipo RNA
+			for (Robot robot : robots) {
+
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(robot.getTimeframe(), robot.getActivo());
+				List<Datos> datosParaTest = toDatosList(historico);
+
+				System.out.println("================================================== " + robot.getRobot() + " =============================================================================");
+				
+				/*
+				if(robot.getRobot().startsWith("RNA_" + robot.getActivo()) && !robot.getRobot().startsWith("RNA_I_" + robot.getActivo())) {
+					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
+					RnaTester rnaTester = context.getBean(RnaTester.class);
+					rnaTester.init(robot, datosParaTest, 10);
+					//servicio.submit(rnaTester);
+					rnaTester.run();
+					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
+					
+				}
+
+				if(robot.getRobot().startsWith("RNA_I_" + robot.getActivo())) {
+					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
+					RnaInvTester rnaInvTester = context.getBean(RnaInvTester.class);
+					rnaInvTester.init(robot, datosParaTest, 10);
+					//servicio.submit(rnaInvTester);
+					rnaInvTester.run();
+					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
+
+				}
+				*/
+				
+				if(robot.getRobot().startsWith("ARIMA_" + robot.getActivo())) {
+					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
+					ArimaATester arimaATester = context.getBean(ArimaATester.class);
+					arimaATester.init(robot, datosParaTest, 10);
+					//servicio.submit(arimaATester);
+					arimaATester.run();
+					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
+					
+				}
+				
+				if(robot.getRobot().startsWith("ARIMA_I_" + robot.getActivo())) {
+
+					ArimaAInvTester arimaAInvTester = context.getBean(ArimaAInvTester.class);
+					arimaAInvTester.init(robot, datosParaTest, 10);
+					//servicio.submit(arimaAInvTester);
+					arimaAInvTester.run();
+					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
+					
+				}
+				
+				if(robot.getRobot().startsWith("ARIMA_B_" + robot.getActivo())) {
+					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
+					ArimaBTester arimaBTester = context.getBean(ArimaBTester.class);
+					arimaBTester.init(robot, datosParaTest, 10);
+					//servicio.submit(arimaBTester);
+					arimaBTester.run();
+					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
+				}
+				
+				if(robot.getRobot().startsWith("ARIMA_I_B_" + robot.getActivo())) {
+					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
+					ArimaBInvTester arimaBInvTester = context.getBean(ArimaBInvTester.class);
+					arimaBInvTester.init(robot, datosParaTest, 10);
+					//servicio.submit(arimaBInvTester);
+					arimaBInvTester.run();
+					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
+				}
+				
+				
+				if(robot.getRobot().startsWith("ARIMA_C_" + robot.getActivo())) {
+					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
+					ArimaCTester arimaCTester = context.getBean(ArimaCTester.class);
+					arimaCTester.init(robot, datosParaTest, 10);
+					//servicio.submit(arimaCTester);
+					arimaCTester.run();
+					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
+				}
+				
+				if(robot.getRobot().startsWith("ARIMA_I_C_" + robot.getActivo())) {
+					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
+					ArimaCInvTester arimaCInvTester = context.getBean(ArimaCInvTester.class);
+					arimaCInvTester.init(robot, datosParaTest, 10);
+					//servicio.submit(arimaCInvTester);
+					arimaCInvTester.run();
+					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
+				}
+
+			}
+			
+		}
+		servicio.shutdown();
 		
 	}
 

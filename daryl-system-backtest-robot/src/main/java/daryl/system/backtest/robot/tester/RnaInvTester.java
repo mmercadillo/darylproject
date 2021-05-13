@@ -71,7 +71,7 @@ public class RnaInvTester extends Tester implements Runnable{
 		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(cierres, Mode.CLOSE);
 		List<Double> inputs = new ArrayList<Double>();
 			
-		int index = 1;
+		int index = 0;
 		do {
 			index++;
 			if(bot.getMode() == Mode.CLOSE) {
@@ -97,7 +97,7 @@ public class RnaInvTester extends Tester implements Runnable{
         //double predicted = interpretOutput(networkOutput);
         double prediccionAnterior =  darylNormalizer.denormData(networkOutput[0]);
 
-        logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+        //logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
         return prediccionAnterior;
 	}
 	
