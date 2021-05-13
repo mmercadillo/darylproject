@@ -1,10 +1,5 @@
 package daryl.system.robots.arima.c.calculator.close.forecaster;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,10 +14,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.configuration.ConfigData;
+import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
-import daryl.system.model.ArimaConfig;
-import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigRepository;
+import daryl.system.model.ArimaConfigCalcs;
+import daryl.system.model.CombinacionArimaC;
+import daryl.system.model.historicos.Historico;
+import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigCalcsRepository;
 
 
 @Component
@@ -32,17 +30,16 @@ public class ArimaForecasterGenerator implements Runnable{
 	@Autowired
 	Logger logger;
 	@Autowired
-	private IArimaConfigRepository arimaConfigRepository;
+	private IArimaConfigCalcsRepository arimaConfigRepository;
 	@Autowired
 	ConfigData config;
-	
-	final String BASE_PATH = "F:\\DarylSystem\\historicos\\"; 
-	final String COMBINACIONES = "COMBINACIONES.csv";
+
+
 	
 	private String robot;
 	private Activo tipoActivo;
 	private String estrategia;
-	private String DATA = "";
+	private Timeframes timeframe;
 	private int inicio = 0;
 	private int desviaciones = 0;
 	
@@ -50,28 +47,31 @@ public class ArimaForecasterGenerator implements Runnable{
     //int inicio = 120;//240
     //int inicio = 20;//1440
     //int inicio = 4;//10080
+	
+	private List<CombinacionArimaC> combinacionesFile;
+	private List<Double> data2;
 
 	public ArimaForecasterGenerator() {
 	}
 	
-	public void init(String estrategia, String robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio) {
+	public void init(String estrategia, String robot, Activo tipoActivo, Timeframes timeframe, int std, int inicio, List<Double> data2, List<CombinacionArimaC> combinacionesFile) {
 		this.robot = robot;
 		
-		this.DATA = tipoActivo.name() + "_" + timeframe.valor + ".csv"; //EURUSD_60.csv
 		this.desviaciones = std;
 		this.inicio = inicio;
 		this.tipoActivo = tipoActivo;
 		this.estrategia = estrategia;
+		this.timeframe = timeframe;
+		this.combinacionesFile = combinacionesFile;
+		this.data2 = data2;
 		loadData();
 	}
 	
-	
-	List<Double> dataFile;
-	List<Double> data2File;	
-	List<String> combinacionesFile;
+
+
 	
 	List<Double> data;
-	List<Double> data2;
+	
 	Double resultado = 0.0;
 	Integer operaciones = 0;
 	Integer opWin = 0;
@@ -90,6 +90,7 @@ public class ArimaForecasterGenerator implements Runnable{
 
 	
 	public  void loadData() {
+
 		
 		resultado = 0.0;
 		operaciones = 0;
@@ -105,94 +106,66 @@ public class ArimaForecasterGenerator implements Runnable{
 		maxGananciaEnUnaOp = 0.0;
 		maxRachaGanadora = 0.0;
 		maxRachaPerdedora = 0.0;
-		
-		if(combinacionesFile == null) {
-	    	//Cargamos la segunda lista
-			File ficheroCombinaciones = new File(BASE_PATH + COMBINACIONES);
-	    	try(BufferedReader reader = new BufferedReader(new FileReader(ficheroCombinaciones))){
-	    		
-	    		combinacionesFile = new ArrayList<String>();
-	    		String leido;
-	    		while( (leido = reader.readLine()) != null  ) {
-	    			combinacionesFile.add(leido);
-	    		}
-	    	} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 
 		data = new ArrayList<Double>();
 		
 		
-		if(data2File == null) {
-	    	//Cargamos la segunda lista
-			File ficherodatos2 = new File(BASE_PATH + DATA);
-	    	try(BufferedReader reader = new BufferedReader(new FileReader(ficherodatos2))){
-	    		data2File = new ArrayList<Double>();
-	    		String leido;
-	    		boolean encabezado = true;
-	    		while( (leido = reader.readLine()) != null  ) {
-	    			if(encabezado == true) {
-	    				encabezado = false;
-	    				continue;
-	    			}
-	    			String[] partes = leido.split(",");
-	    			data2File.add(new Double(partes[5]));
-	    			
-	    		}
-	    	} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		data2 = data2File;
-		
 	}
 
 
-	long numCombinacion = 0;
-	long totalCombinaciones = 0;
+
 	public  void run() {
-		totalCombinaciones = combinacionesFile.size() * combinacionesFile.size();
+
 		
-		ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+		ArimaConfigCalcs arimaConfig = arimaConfigRepository.findArimaConfigCalcsByRobot(robot);
 		
 		int iAux = 0;
 		int iiAux = 0;
+		int lastStd = 0;
+		int lastPosInicio = 0;
 		
 		if(arimaConfig != null && arimaConfig.getIndexA() != null) iAux = arimaConfig.getIndexA();
 		if(arimaConfig != null && arimaConfig.getIndexB() != null) iiAux = arimaConfig.getIndexB();
+		if(arimaConfig != null && arimaConfig.getLastStd() != null) lastStd = arimaConfig.getLastStd();
+		if(arimaConfig != null && arimaConfig.getLastPosInicio() != null) lastPosInicio = arimaConfig.getLastPosInicio();
 
-		for(int i = iAux; i < combinacionesFile.size(); i++) {
-			for(int std = 0; std <= desviaciones; std++) {		
-				
-				String combinacion = combinacionesFile.get(i);
-				
-				if(seguir == false) break;
-				loadData();
-				
-				String[] optionsAr = combinacion.split(",");
-				double[] coefficentsAr = new double[optionsAr.length];
-				for(int j = 0; j < optionsAr.length; j++) {
-					coefficentsAr[j] = Double.parseDouble(optionsAr[j]);
-				}
-				//numCombinacion++;
-		        
-		        try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				calcular(coefficentsAr, null, std, 1, 0.0, 0.0, 1.0, i, 0);
+		for(int k = iiAux; k < combinacionesFile.size(); k++) {
+			
+			String combinacionMa = combinacionesFile.get(k).getCombinacion();
+			String[] optionsMa = combinacionMa.split(",");
+			double[] coefficentsMa = new double[optionsMa.length];
+			for(int j = 0; j < optionsMa.length; j++) {
+				coefficentsMa[j] = Double.parseDouble(optionsMa[j]);
 			}
+			
+			for(int i = iAux; i < combinacionesFile.size(); i++) {
+				
+				for(int std = lastStd; std <= desviaciones; std++) {		
+					
+					String combinacion = combinacionesFile.get(i).getCombinacion();
+
+					String[] optionsAr = combinacion.split(",");
+					double[] coefficentsAr = new double[optionsAr.length];
+					for(int j = 0; j < optionsAr.length; j++) {
+						coefficentsAr[j] = Double.parseDouble(optionsAr[j]);
+					}
+					//numCombinacion++;
+			        
+			        try {
+						Thread.sleep(100);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			        for(int posInicio = lastPosInicio; posInicio <= this.inicio; posInicio++) {
+						loadData();
+			        	calcular(coefficentsAr, coefficentsMa, std, 1, 0.0, 0.0, 1.0, i, k, posInicio);
+			        }
+					lastPosInicio = 0;
+				}
+				lastStd = 0;
+			}
+			iAux = 0;
 		}
 
 	}
@@ -200,10 +173,10 @@ public class ArimaForecasterGenerator implements Runnable{
 	boolean seguir = true;
 	double resAnt = 0.0;
     public  void calcular(double[] coefficentsAr, double[] coefficentsMa, int std, int integrationOrder,
-    		double constant, double shockExpectation, double shockVariation, int indexA, int indexB) {
+    		double constant, double shockExpectation, double shockVariation, int indexA, int indexB, int posInicio) {
         
     	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
-        arimaProcess.setMaCoefficients(0.1);
+        //arimaProcess.setMaCoefficients(0.1);
         if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
         if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
         arimaProcess.setIntegrationOrder(integrationOrder);
@@ -218,12 +191,12 @@ public class ArimaForecasterGenerator implements Runnable{
         double maxRachaPerdedoraAux = 0.0;
     
         for(int i = 0; i < data2.size(); i++) {
-        	if(i < inicio) {
+        	if(i < posInicio) {
         		data.add(data2.get(i));
         		continue;
         	}
 
-        	double[] observations = getArrayDatos();
+        	double[] observations = getArrayDatos(posInicio);
 	        //System.out.println("Forecast: " + Arrays.toString(observations));
         	ArimaForecaster arimaForecaster = null;
         	try {
@@ -291,29 +264,31 @@ public class ArimaForecasterGenerator implements Runnable{
         
         //System.out.println(numCombinacion + " de " + totalCombinaciones +  " - Resultado " + this.tipoActivo.name() + "_" + this.timeframe.valor + " -> " + resultado + " - " + arimaProcess.toString());
     	//Recuperamos el anterior
-    	ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot);
+    	ArimaConfigCalcs arimaConfig = arimaConfigRepository.findArimaConfigCalcsByRobot(robot);
     	
         logger.info("=================================");
-        logger.info("Robot -> " + robot + " Resultado -> " + resultado);
-        logger.info(arimaProcess.toString());
-        logger.info("================================");
+        logger.info("Robot -> " + robot + " Resultado -> " + resultado + " A -> " + indexA + " B -> " + indexB + " std -> " + std + " inicio -> " + posInicio);
+
+        
+    	if(arimaConfig == null) {
+    		
+    		arimaConfig = new ArimaConfigCalcs();
+    		arimaConfig.setRobot(robot);
+    		arimaConfig.setEstrategia(estrategia);
+    		arimaConfig.setTipoActivo(tipoActivo);
+    		
+    	}
+
     	
+    	arimaConfig.setIndexA(indexA);
+    	arimaConfig.setIndexB(indexB);
+    	arimaConfig.setLastStd(std);
+    	arimaConfig.setLastPosInicio(posInicio);
     	
         if(/*resultado > 0 &&*/ resAnt == 0 || resAnt < resultado) {
         	resAnt = resultado;
         	
         	Long fechaHoraMillis = System.currentTimeMillis();
-        	if(arimaConfig == null) {
-        		
-        		arimaConfig = new ArimaConfig();
-        		arimaConfig.setRobot(robot);
-        		arimaConfig.setEstrategia(estrategia);
-        		arimaConfig.setTipoActivo(tipoActivo);
-        		
-        	}
-        	
-        	arimaConfig.setIndexA(indexA);
-        	arimaConfig.setIndexB(indexB);
 
     		if(arimaConfig.getResultado() == null || arimaConfig.getResultado() < resultado) {
 
@@ -328,32 +303,46 @@ public class ArimaForecasterGenerator implements Runnable{
         		arimaConfig.setShockVariation(arimaProcess.getShockVariation());
         		arimaConfig.setStandarDeviation(arimaProcess.getStd());
         		arimaConfig.setResultado(resultado);
-        		arimaConfig.setInicio(inicio);
-        		
-        		
-        		
-        		arimaConfigRepository.save(arimaConfig);
+        		arimaConfig.setInicio(posInicio);
 
     		}
-
-        }else {
-			
-			if(arimaConfig != null) {
-	        	arimaConfig.setIndexA(indexA);
-	        	arimaConfig.setIndexB(indexB);
-	        	arimaConfigRepository.save(arimaConfig);
-			}
-			
+    		
+            logger.info(arimaProcess.toString());
+            
         }
+        arimaConfigRepository.save(arimaConfig);
+        logger.info("================================");
 
     }
 
+	private List<Datos> toDatosList(List<Historico> historico){
+		
+		List<Datos> datos = new ArrayList<Datos>();
+		
+		for (Historico hist : historico) {
+			
+			Datos dato = Datos.builder().fecha(hist.getFecha())
+										.hora(hist.getHora())
+										.apertura(hist.getApertura())
+										.maximo(hist.getMaximo())
+										.minimo(hist.getMinimo())
+										.cierre(hist.getCierre())
+										.volumen(hist.getVolumen())
+										.build();
+			datos.add(dato);
+			
+		}
+		
+		return datos;
+		
+		
+	}
 
-    private double[] getArrayDatos() {
+    private double[] getArrayDatos(int posInicio) {
     	
     	List<Double> aux = data;
-    	if(data.size() > inicio) {
-    		aux = data.subList((data.size()-inicio), data.size());
+    	if(data.size() > posInicio) {
+    		aux = data.subList((data.size()-posInicio), data.size());
     	}else {
     		
     	}

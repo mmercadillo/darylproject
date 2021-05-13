@@ -20,7 +20,7 @@ import lombok.ToString;
 @Entity
 @Table
 @ToString
-public class RnaConfig implements Serializable{
+public class RnaConfigCalcs implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 

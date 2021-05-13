@@ -9,7 +9,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import daryl.system.comun.enums.Activo;
@@ -20,7 +19,7 @@ import lombok.ToString;
 @Entity
 @Table
 @ToString
-public class RnaConfig implements Serializable{
+public class VarianceConfigCalcs implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
@@ -41,21 +40,25 @@ public class RnaConfig implements Serializable{
 	
 	@Column
 	@Getter @Setter
-	private Integer neuronasEntrada;
+	private Integer n;
 	
 	@Column
 	@Getter @Setter
-	private String ficheroRna;
+	private Integer offset;
 	
-	@Lob
-    @Column(columnDefinition="BLOB")
-	@Getter @Setter
-    private byte[] rna;
-
 	
-	@Column(nullable = true)
+	@Column
 	@Getter @Setter
-	private Double resultado;
+	private Integer m;
+	
+	@Column
+	@Getter @Setter
+	private Double alpha;
+	
+	@Column
+	@Getter @Setter
+	private Double beta;
+	
 	
 	@Column(nullable = true)
 	@Getter @Setter
@@ -69,36 +72,33 @@ public class RnaConfig implements Serializable{
 	@Getter @Setter
 	private String hora;
 	
-	////
-
 	@Column(nullable = true)
 	@Getter @Setter
-	private Integer lastNeuronasEntrada;
-
-	@Column(nullable = true)
-	@Getter @Setter
-	private Integer lastCapasOcultas;
-	
-
-	@Column(nullable = true)
-	@Getter @Setter
-	private Integer lastPasoLearnigRate;
-
-	@Column(nullable = true)
-	@Getter @Setter
-	private Integer lastPasoMomentum;
-
-	@Column(nullable = true)
-	@Getter @Setter
-	private Integer lastHiddenNeurons;
+	private Double resultado;
 	
 	@Column(nullable = true)
 	@Getter @Setter
-	private Integer lastTransferFunctionType;
+	private Integer lastN;
 	
 	@Column(nullable = true)
 	@Getter @Setter
-	private Integer lastBias;	
+	private Integer lastOffset;
 	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastM;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastAlpha;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastBeta;
+
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastShift;
 	
 }

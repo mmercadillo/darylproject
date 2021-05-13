@@ -22,6 +22,7 @@
 		<daryl.system.model>1.0.5</daryl.system.model>
 		<daryl.system.variance-base>1.0.5</daryl.system.variance-base>
 		<neuroph.version>2.98</neuroph.version>
+		<commons.lang3.version>3.11</commons.lang3.version>
 	</properties> 
 	<dependencies>
 		
@@ -83,7 +84,11 @@
     		<version>${neuroph.version}</version>
 		</dependency>
 
-
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>${commons.lang3.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

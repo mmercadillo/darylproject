@@ -37,6 +37,7 @@ public class RnaNdx  extends RnaPredictor{
 	
 
 	private Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
+	//private Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
 		
 		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
 		List<Double> inputs = new ArrayList<Double>();
@@ -57,6 +58,7 @@ public class RnaNdx  extends RnaPredictor{
 				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getApertura()));
 			}			
 		}while(index < bot.getNeuronasEntrada()+1);			
+		//}while(index < neuronasEntrada+1);
 		
 		Collections.reverse(inputs);
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
@@ -88,13 +90,19 @@ public class RnaNdx  extends RnaPredictor{
 			String fileName = "F:\\DarylSystem\\rnas\\"+bot.getFicheroRna();
 	        rna = new File(fileName);
 		}
+		
+		
+		/*Alternativa a la carga del fichero*/
+		//RnaConfig rnaConfig = super.getRnaConfig(bot);
+		//NeuralNetwork neuralNetwork = rnaFromByteArray(rnaConfig.getRna());
+		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
 		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
 		List<Datos> datosForecast = toDatosList(historico);
 		
-		
+		//Double prediccionAnterior = getPrediccionAnterior(rnaConfig.getNeuronasEntrada(), bot, neuralNetwork, datosForecast);
 		Double prediccionAnterior = getPrediccionAnterior(bot, neuralNetwork, datosForecast);
 
 		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
@@ -116,6 +124,7 @@ public class RnaNdx  extends RnaPredictor{
 				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getApertura()));
 			}			
 		}while(index < bot.getNeuronasEntrada());
+		//}while(index < rnaConfig.getNeuronasEntrada());
 
 		Collections.reverse(inputs);
 

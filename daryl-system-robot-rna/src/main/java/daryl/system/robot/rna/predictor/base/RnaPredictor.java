@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.SerializationUtils;
+import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,10 +14,12 @@ import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
+import daryl.system.model.RnaConfig;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robot.rna.repository.IOrdenRepository;
 import daryl.system.robot.rna.repository.IPrediccionRepository;
+import daryl.system.robot.rna.repository.IRnaConfigRepository;
 
 public abstract class RnaPredictor {
 
@@ -30,9 +34,24 @@ public abstract class RnaPredictor {
 	protected IOrdenRepository ordenRepository;
 	@Autowired
 	protected IPrediccionRepository prediccionRepository;
+	@Autowired
+	private IRnaConfigRepository rnaConfigRepository;
 
 	protected abstract Double calcularPrediccion(Robot robot) throws IOException;
 
+	protected RnaConfig getRnaConfig(Robot robot) {
+		
+		return rnaConfigRepository.findRnaConfigByRobot(robot.getRnaConfig());
+		
+	}
+	
+	protected NeuralNetwork rnaFromByteArray(byte[] byteArray) throws IOException, ClassNotFoundException {
+		
+		NeuralNetwork rna = (NeuralNetwork)SerializationUtils.deserialize(byteArray);
+		return rna;
+	}
+	
+	
 	private void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			

@@ -9,7 +9,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import daryl.system.comun.enums.Activo;
@@ -20,8 +19,11 @@ import lombok.ToString;
 @Entity
 @Table
 @ToString
-public class RnaConfig implements Serializable{
+public class ArimaConfigCalcs implements Serializable{
 	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -39,23 +41,34 @@ public class RnaConfig implements Serializable{
 	@Getter @Setter
 	private String estrategia;
 	
-	@Column
+	@Column(nullable = true)
 	@Getter @Setter
-	private Integer neuronasEntrada;
-	
-	@Column
-	@Getter @Setter
-	private String ficheroRna;
-	
-	@Lob
-    @Column(columnDefinition="BLOB")
-	@Getter @Setter
-    private byte[] rna;
-
+	private String maCoefficients;
 	
 	@Column(nullable = true)
 	@Getter @Setter
-	private Double resultado;
+	private String arCoefficients;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer standarDeviation;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer integrationOrder;
+	
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double shockExpectation;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double shockVariation;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double constant;
 	
 	@Column(nullable = true)
 	@Getter @Setter
@@ -69,36 +82,32 @@ public class RnaConfig implements Serializable{
 	@Getter @Setter
 	private String hora;
 	
-	////
-
 	@Column(nullable = true)
 	@Getter @Setter
-	private Integer lastNeuronasEntrada;
-
-	@Column(nullable = true)
-	@Getter @Setter
-	private Integer lastCapasOcultas;
-	
-
-	@Column(nullable = true)
-	@Getter @Setter
-	private Integer lastPasoLearnigRate;
-
-	@Column(nullable = true)
-	@Getter @Setter
-	private Integer lastPasoMomentum;
-
-	@Column(nullable = true)
-	@Getter @Setter
-	private Integer lastHiddenNeurons;
+	private Integer inicio;
 	
 	@Column(nullable = true)
 	@Getter @Setter
-	private Integer lastTransferFunctionType;
+	private Double resultado;
 	
 	@Column(nullable = true)
 	@Getter @Setter
-	private Integer lastBias;	
+	private Integer indexA;
 	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer indexB;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastStd;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastPosInicio;
+
+	
+	
+
 	
 }
