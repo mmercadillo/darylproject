@@ -34,7 +34,6 @@ public class ArimaForecasterGenerator implements Runnable{
 	@Autowired
 	ConfigData config;
 
-
 	
 	private String robot;
 	private Activo tipoActivo;
@@ -42,11 +41,7 @@ public class ArimaForecasterGenerator implements Runnable{
 	private Timeframes timeframe;
 	private int inicio = 0;
 	private int desviaciones = 0;
-	
-	//int inicio = 480;//60
-    //int inicio = 120;//240
-    //int inicio = 20;//1440
-    //int inicio = 4;//10080
+
 	
 	private List<CombinacionArimaC> combinacionesFile;
 	private List<Double> data2;
@@ -66,8 +61,6 @@ public class ArimaForecasterGenerator implements Runnable{
 		this.data2 = data2;
 		loadData();
 	}
-	
-
 
 	
 	List<Double> data;
