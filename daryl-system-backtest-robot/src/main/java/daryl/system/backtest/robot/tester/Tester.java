@@ -1,5 +1,10 @@
 package daryl.system.backtest.robot.tester;
 
-public class Tester {
+import daryl.system.comun.enums.TipoOrden;
+import daryl.system.model.backtest.HistoricoOperacionesBacktest;
 
+public abstract class Tester {
+
+	//public abstract TipoOrden calcularTipoOrden(HistoricoOperacionesBacktest opBt);
+	
 }

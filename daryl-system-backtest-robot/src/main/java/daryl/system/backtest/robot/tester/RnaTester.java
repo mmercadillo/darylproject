@@ -153,7 +153,7 @@ public class RnaTester extends Tester implements Runnable{
 		        // get network output
 		        double[] networkOutput = this.neuralNetwork.getOutput();
 		        //double predicted = interpretOutput(networkOutput);
-		        double forecast = darylNormalizer.denormData(networkOutput[0]);
+		        Double forecast = darylNormalizer.denormData(networkOutput[0]);
 		        		        
 				Double apertura = datosParaTest.get(i).getCierre();
 				Double cierre = datosParaTest.get(i+1).getCierre(); 
@@ -168,7 +168,7 @@ public class RnaTester extends Tester implements Runnable{
 				opBt.setFapertura(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraApertura).getTime());
 				opBt.setFcierre(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraCierre).getTime());
 		        
-		        
+				opBt.setProfit(0.0);
 		        if(forecast > prediccionAnterior) {
 		        	opBt.setTipo(TipoOrden.BUY);
 					opBt.setProfit(cierre - apertura);
@@ -192,6 +192,9 @@ public class RnaTester extends Tester implements Runnable{
 		}
 	
 	}
+
+
+
 	
 
 }

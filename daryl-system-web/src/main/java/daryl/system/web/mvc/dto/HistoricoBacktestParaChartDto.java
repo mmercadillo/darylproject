@@ -33,13 +33,13 @@ public class HistoricoBacktestParaChartDto{
 
 	
 	
-	public static List<Long> getDtoParaChartDeTotales(List<HistoricoOperacionesBacktest> historico) {
+	public static List<Double> getDtoParaChartDeTotales(List<HistoricoOperacionesBacktest> historico) {
 
-		List<Long> datosParaChart = new ArrayList<Long>();
-		Long acumulado = 0L;
+		List<Double> datosParaChart = new ArrayList<Double>();
+		Double acumulado = 0.0;
 		if(historico != null && historico.size() > 0) {
 			for (HistoricoOperacionesBacktest hist : historico) {
-				acumulado += Math.round(hist.getProfit());
+				acumulado += hist.getProfit();
 				datosParaChart.add(acumulado);
 			} 
 		}
@@ -50,7 +50,7 @@ public class HistoricoBacktestParaChartDto{
 	public static List<Double> getDtoParaChartDeEspMat(List<HistoricoOperacionesBacktest> historico) {
 
 		List<Double> datosParaChart = new ArrayList<Double>();
-		Long acumulado = 0L;
+
 		Long opsWin = 0L;
 		Long opsLoss = 0L;
 		Long opsTotales = 0L;

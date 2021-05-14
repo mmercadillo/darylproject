@@ -2,7 +2,7 @@
 	<configuration>
 	 
 	    <property name="LOGS" value="F:/DarylSystem/logs" />
-	    <property name="APP" value="daryl-system-robot-rna" />
+	    <property name="APP" value="daryl-system-ta4j" />
 
 	    <appender name="Console"
 	        class="ch.qos.logback.core.ConsoleAppender">

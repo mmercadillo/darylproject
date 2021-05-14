@@ -110,4 +110,21 @@ public class ResumenRobotBacktest implements Serializable{
 	@Getter @Setter
 	private Double espmatAnterior = 0.0;
 	
+	@Column(nullable = true)
+	@Getter @Setter
+	private String fprimeraOpTxt;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private String fultimaOpTxt;
+
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Long fprimeraOp;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Long fultimaOp;
+	
 }

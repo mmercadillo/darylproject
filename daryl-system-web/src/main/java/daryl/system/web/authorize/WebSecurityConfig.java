@@ -52,6 +52,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 	      	.antMatchers("/robot/*").permitAll()
 	      	.antMatchers("/chart/**").permitAll()
 	      	.antMatchers("/demolab/**").permitAll()
+	      	.antMatchers("/backtest/**").permitAll()
 	      .anyRequest().authenticated()
 	      .and() 
 	      .formLogin().loginPage("/login").loginProcessingUrl("/login").successForwardUrl("/robots/cuenta")

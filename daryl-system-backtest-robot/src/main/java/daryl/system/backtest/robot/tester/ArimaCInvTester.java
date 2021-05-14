@@ -149,7 +149,7 @@ public class ArimaCInvTester extends Tester implements Runnable{
 						opBt.setFapertura(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraApertura).getTime());
 						opBt.setFcierre(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraCierre).getTime());
 				        
-				        
+						opBt.setProfit(0.0);
 				        if(forecast > cierres.get(cierres.size()-1)) {
 				        	opBt.setTipo(TipoOrden.SELL);
 							opBt.setProfit(apertura - cierre);

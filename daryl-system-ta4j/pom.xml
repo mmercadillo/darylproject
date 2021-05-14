@@ -41,11 +41,6 @@
 			<artifactId>model</artifactId>
 			<version>${daryl.system.model}</version>
 		</dependency>
-		<dependency>
-			<groupId>daryl.system.robots</groupId>
-			<artifactId>arima-base</artifactId>
-			<version>${daryl.system.arima-base}</version>
-		</dependency>
 		<!-- // -->
   
   		<dependency>

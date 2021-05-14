@@ -3,6 +3,8 @@ package daryl.system.web.mvc.dto;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
+
 import daryl.system.comun.enums.Activo;
 import daryl.system.model.ResumenRobot;
 import daryl.system.model.backtest.ResumenRobotBacktest;
@@ -34,7 +36,7 @@ public class ResumenRobotBacktestDto implements Comparable<ResumenRobotBacktestD
 	@Getter @Setter
 	private Long totalGanancias = 0L;
 	@Getter @Setter
-	private Long total = 0L;
+	private Double total = 0.0;
 	@Getter @Setter
 	private Long numOpsGanadoras = 0L;
 	@Getter @Setter
@@ -63,7 +65,12 @@ public class ResumenRobotBacktestDto implements Comparable<ResumenRobotBacktestD
 	private Double perdidaMediaPorOpPerdedora;
 	@Getter @Setter
 	private Double espmat;
-	
+
+	@Getter @Setter
+	private String fprimeraOpTxt;
+	@Getter @Setter
+	private String fultimaOpTxt;
+
 	
 	public static ResumenRobotBacktestDto getDto(ResumenRobotBacktest resumen) {
 		
@@ -71,13 +78,17 @@ public class ResumenRobotBacktestDto implements Comparable<ResumenRobotBacktestD
 			try{resumenDto.setEstrategia(resumen.getEstrategia());}catch (Exception e) {}
 			try{resumenDto.setFAlta(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFAlta())));}catch (Exception e) {}
 			try{resumenDto.setFModificacion(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFModificacion())));}catch (Exception e) {}
+			
+			try{resumenDto.setFprimeraOpTxt(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFprimeraOp())));}catch (Exception e) {}
+			try{resumenDto.setFultimaOpTxt(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date(resumen.getFultimaOp())));}catch (Exception e) {}
+			
 			try{resumenDto.setId(resumen.getId());}catch (Exception e) {}
 			try{resumenDto.setNumOperaciones(resumen.getNumOperaciones());}catch (Exception e) {}
 			try{resumenDto.setNumOpsGanadoras(resumen.getNumOpsGanadoras());}catch (Exception e) {}
 			try{resumenDto.setNumOpsPerdedoras(resumen.getNumOpsPerdedoras());}catch (Exception e) {}
 			try{resumenDto.setRobot(resumen.getRobot());}catch (Exception e) {}
 			try{resumenDto.setTipoActivo(resumen.getTipoActivo());}catch (Exception e) {}
-			try{resumenDto.setTotal(Math.round(resumen.getTotal()));}catch (Exception e) {}
+			try{resumenDto.setTotal(resumen.getTotal());}catch (Exception e) {}
 			try{resumenDto.setTotalGanancias(Math.round(resumen.getTotalGanancias()));}catch (Exception e) {}
 			try{resumenDto.setTotalPerdidas(Math.round(resumen.getTotalPerdidas()));}catch (Exception e) {}
 			/*resumenDto.setMes(resumen.getMes());}catch (Exception e) {}

@@ -1,5 +1,6 @@
 package daryl.system.backtest.robot.resumen;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -108,8 +109,6 @@ public class ControlHistoricoOperacionesBacktest {
 			logger.error("ERROR AL ACTUALIZAR MAXIMA RACHA PERDEDORA ACTUALIZADA=============", e);
 		}
 		
-
-    	
 	}
 	
 
@@ -119,18 +118,28 @@ public class ControlHistoricoOperacionesBacktest {
 			//Recuperamos la info del robot de la BD,s
 			ResumenRobotBacktest resumen = resumenRobotBacktestRepository.findResumenRobotByRobot(this.robot.getRobot());
 			Long desde = 0L;
-			if(resumen == null) {
-				resumen = new ResumenRobotBacktest();
+			if(resumen != null) {
+				resumenRobotBacktestRepository.delete(resumen);
 			}
+			resumen = new ResumenRobotBacktest();
 			
 			Calendar c = Calendar.getInstance();
 
 			//Buscamos su lista de operaciones
 	    	List<HistoricoOperacionesBacktest> lista = historicoOperacionesBacktestRepository.findListaByRobot(this.robot.getRobot(), desde);
+	    	
 			
 	    	if(lista != null && lista.size() > 0) {
 	    		for (HistoricoOperacionesBacktest hops : lista) {
-					resumen.setRobot(robot.getRobot());
+					
+	    			//Fecha de apertura de la primera operación
+	    			//sólo se informa la primara vez
+	    			if(resumen.getFprimeraOpTxt() == null) {
+	    				resumen.setFprimeraOp(hops.getFapertura());
+	    				resumen.setFprimeraOpTxt(hops.getFaperturaTxt());
+	    			}
+	    			
+	    			resumen.setRobot(robot.getRobot());
 					resumen.setNumOperaciones(resumen.getNumOperaciones()+1);
 					resumen.setTipoActivo(robot.getActivo());
 					resumen.setEstrategia(robot.getEstrategia());
@@ -151,6 +160,12 @@ public class ControlHistoricoOperacionesBacktest {
 					Calendar now = Calendar.getInstance();
 					if(resumen.getFAlta() == null) resumen.setFAlta(now.getTimeInMillis());
 					resumen.setFModificacion(now.getTimeInMillis());
+					
+					//fecha de cierre de la ultima operación
+					//se va modificando hasta llegar a la última
+					resumen.setFultimaOp(hops.getFcierre());
+					resumen.setFultimaOpTxt(hops.getFcierreTxt());
+					
 					
 					try {
 						if(resumen.getNumOperaciones() != 0) {

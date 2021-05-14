@@ -37,7 +37,6 @@ public class DetalleBacktestRobotControlller {
 		
 	}
 	
-	
 	@GetMapping("/backtest/{robot}")
     public ModelAndView main(@PathVariable String robot, Model model) {
 
@@ -58,11 +57,11 @@ public class DetalleBacktestRobotControlller {
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//Fecha primera operación
-		view.addObject("fPrimeraOp", "23/11/2020 19:00");
-		view.addObject("fUltimaActualizacion",resumenBacktestDto.getFModificacion());
+		view.addObject("fPrimeraOp", resumenBacktestDto.getFprimeraOpTxt());
+		view.addObject("fUltimaActualizacion",resumenBacktestDto.getFultimaOpTxt());
 		
-		String titulo = "Detalle del robot: " + robot;
-		String lugar = "Detalle robot";
+		String titulo = "Backtest del robot: " + robot;
+		String lugar = "Backtest robot";
 		view.addObject("titulo", titulo);
 		view.addObject("lugar", lugar);
 		view.addObject("detalleRobotBacktestActive", true);

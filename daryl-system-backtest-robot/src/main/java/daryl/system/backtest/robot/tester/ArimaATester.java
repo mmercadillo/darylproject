@@ -45,6 +45,12 @@ public class ArimaATester extends Tester implements Runnable{
 		this.robot = robot;
 		this.datosParaTest = datosParaTest;
 		this.cierres =  this.datosParaTest.subList(0, inicio).stream().map(d -> d.getCierre()).collect(Collectors.toList());
+		
+		this.cierres.stream().forEach(dato -> {
+			int pos = this.cierres.indexOf(dato);
+			this.cierres.set(pos, dato * 10000);
+		});
+		
 		//Dejamos los datos excepto los quitados anteriormente
 		this.datosParaTest = this.datosParaTest.subList(inicio, this.datosParaTest.size());
 	}
@@ -54,8 +60,8 @@ public class ArimaATester extends Tester implements Runnable{
 
 		//Recorremos los datos 
 		for (int i = 0; i < datosParaTest.size()-1; i++) {
-			System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
-			cierres.add(datosParaTest.get(i).getCierre());
+
+			cierres.add(datosParaTest.get(i).getCierre() * 10000);
 			
 			try {
 				
@@ -82,7 +88,7 @@ public class ArimaATester extends Tester implements Runnable{
 				opBt.setFapertura(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraApertura).getTime());
 				opBt.setFcierre(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraCierre).getTime());
 				
-				
+				opBt.setProfit(0.0);
 				if(forecast > cierres.get(cierres.size()-1) ) {
 
 					opBt.setTipo(TipoOrden.BUY);
@@ -109,5 +115,6 @@ public class ArimaATester extends Tester implements Runnable{
 	
 	}
 	
+
 
 }
