@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.espy.arima.ArimaForecaster;
 import org.espy.arima.ArimaProcess;
 import org.espy.arima.DefaultArimaForecaster;
@@ -15,13 +17,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.backtest.robot.repository.IArimaConfigRepository;
-import daryl.system.backtest.robot.repository.IOperacionBacktestRepository;
+import daryl.system.backtest.robot.repository.IHistoricoOperacionesBacktestRepository;
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.Robot;
-import daryl.system.model.backtest.OperacionBacktest;
+import daryl.system.model.backtest.HistoricoOperacionesBacktest;
 
 
 @Component
@@ -31,7 +33,7 @@ public class ArimaCInvTester extends Tester implements Runnable{
 	@Autowired
 	Logger logger;
 	@Autowired
-	private IOperacionBacktestRepository operacionBacktestRepository;
+	private IHistoricoOperacionesBacktestRepository operacionBacktestRepository;
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
 	@Autowired
@@ -112,7 +114,7 @@ public class ArimaCInvTester extends Tester implements Runnable{
 			
 			try {
 				
-				OperacionBacktest opBt = new OperacionBacktest();
+				HistoricoOperacionesBacktest opBt = new HistoricoOperacionesBacktest();
 				opBt.setRobot(this.robot.getRobot());
 				
 				ArimaConfig arimaConfig = arimaConfigRepository.findArimaConfigByRobot(robot.getArimaConfig());

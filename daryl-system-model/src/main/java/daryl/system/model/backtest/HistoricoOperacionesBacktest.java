@@ -20,7 +20,7 @@ import lombok.ToString;
 @Entity
 @Table
 @ToString
-public class OperacionBacktest implements Serializable{
+public class HistoricoOperacionesBacktest implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 

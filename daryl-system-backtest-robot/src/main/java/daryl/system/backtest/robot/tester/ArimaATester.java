@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -11,12 +13,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.arima.gen.ARIMA;
-import daryl.system.backtest.robot.repository.IOperacionBacktestRepository;
+import daryl.system.backtest.robot.repository.IHistoricoOperacionesBacktestRepository;
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Robot;
-import daryl.system.model.backtest.OperacionBacktest;
+import daryl.system.model.backtest.HistoricoOperacionesBacktest;
 
 
 @Component
@@ -26,7 +28,7 @@ public class ArimaATester extends Tester implements Runnable{
 	@Autowired
 	Logger logger;
 	@Autowired
-	private IOperacionBacktestRepository operacionBacktestRepository;
+	private IHistoricoOperacionesBacktestRepository operacionBacktestRepository;
 	@Autowired
 	ConfigData config;
 
@@ -47,7 +49,6 @@ public class ArimaATester extends Tester implements Runnable{
 		this.datosParaTest = this.datosParaTest.subList(inicio, this.datosParaTest.size());
 	}
 
-
 	public  void run() {
 
 
@@ -58,7 +59,7 @@ public class ArimaATester extends Tester implements Runnable{
 			
 			try {
 				
-				OperacionBacktest opBt = new OperacionBacktest();
+				HistoricoOperacionesBacktest opBt = new HistoricoOperacionesBacktest();
 				opBt.setRobot(this.robot.getRobot());
 				
 				ARIMA arima=new ARIMA(cierres.stream().mapToDouble(Double::new).toArray());
