@@ -81,7 +81,7 @@ public class DarylSystemTesterRobotApplication {
 					
 					
 				}
-				/*
+				
 				if(robot.getRobot().startsWith("RNA_I_" + robot.getActivo())) {
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					RnaInvTester rnaInvTester = context.getBean(RnaInvTester.class);
@@ -149,7 +149,7 @@ public class DarylSystemTesterRobotApplication {
 					arimaCInvTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
 				}
-				*/
+				
 				
 				System.out.println("=============INICIO CALCULO DE LOS RESÚMENES============== " + robot.getRobot() + " ================================================================");
 				ControlHistoricoOperacionesBacktest controlHistoricoOperacionesBacktest = context.getBean(ControlHistoricoOperacionesBacktest.class);
