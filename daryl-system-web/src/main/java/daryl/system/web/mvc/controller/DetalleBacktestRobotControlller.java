@@ -27,7 +27,17 @@ public class DetalleBacktestRobotControlller {
 	IDetalleBacktestRobotService detalleBacktestRobotService;
 	@Autowired
 	ITotalPipsRobotsService totalPipsRobotsService;
- 
+
+	@GetMapping("/backtest")
+    public ModelAndView init() {
+		
+		ModelAndView view = new ModelAndView("detalle_backtest_robot");
+		
+		return view;
+		
+	}
+	
+	
 	@GetMapping("/backtest/{robot}")
     public ModelAndView main(@PathVariable String robot, Model model) {
 

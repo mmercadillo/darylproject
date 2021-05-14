@@ -16,20 +16,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import daryl.system.web.mvc.dto.HistoricoParaChartDto;
-import daryl.system.web.services.IChartDataRobotService;
+import daryl.system.web.mvc.dto.HistoricoBacktestParaChartDto;
+import daryl.system.web.services.IChartDataBacktestRobotService;
 
 @RestController
-public class ChartControlller {
+public class BacktestChartControlller {
 
 	@Autowired
-	IChartDataRobotService charDataRobotService;
+	IChartDataBacktestRobotService chartDataBacktestRobotService;
 
  
-	@GetMapping("/chart/{robot}/em")
+	@GetMapping("/backtest/chart/{robot}/em")
     public void chartEspMat(@PathVariable String robot, HttpServletResponse response) {
 
-		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeEspMat(charDataRobotService.findListaParaChartByRobot(robot));
+		List<Double> historicoParaChartDto = HistoricoBacktestParaChartDto.getDtoParaChartDeEspMat(chartDataBacktestRobotService.findListaParaChartByRobot(robot));
 
 		if(historicoParaChartDto.size() > 0) {
 			historicoParaChartDto = historicoParaChartDto.subList(0, historicoParaChartDto.size());
@@ -66,10 +66,10 @@ public class ChartControlller {
 
     }
 	
-	@GetMapping("/chart/{robot}/total")
+	@GetMapping("/backtest/chart/{robot}/total")
     public void chartTotal(@PathVariable String robot, HttpServletResponse response) {
 
-		List<Long> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
+		List<Long> historicoParaChartDto = HistoricoBacktestParaChartDto.getDtoParaChartDeTotales(chartDataBacktestRobotService.findListaParaChartByRobot(robot));
 
 		
 		List<Double> periodos = new ArrayList<Double>();
