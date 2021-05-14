@@ -65,14 +65,12 @@ public class DarylSystemTesterRobotApplication {
 			
 			//Para robots de tipo RNA
 			for (Robot robot : robots) {
-
-				if(robot.getRobot().startsWith("ARIMA_B_" + robot.getActivo()) == false) continue;
+				if(robot.getRobot().contains("240") == false) continue;
 				
 				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(robot.getTimeframe(), robot.getActivo());
 				List<Datos> datosParaTest = toDatosList(historico);
 
 				System.out.println("================================================== " + robot.getRobot() + " =============================================================================");
-				
 				
 				if(robot.getRobot().startsWith("RNA_I_" + robot.getActivo())) {
 					

@@ -169,10 +169,10 @@ public class RnaTester extends Tester implements Runnable{
 				opBt.setFcierre(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraCierre).getTime());
 		        
 				opBt.setProfit(0.0);
-		        if(forecast > prediccionAnterior) {
+		        if(forecast > prediccionAnterior && cierres.get(i).getVolumen() < cierres.get(i-1).getVolumen()) {
 		        	opBt.setTipo(TipoOrden.BUY);
 					opBt.setProfit(cierre - apertura);
-		        }else if(forecast < prediccionAnterior) {
+		        }else if(forecast < prediccionAnterior  && cierres.get(i).getVolumen() < cierres.get(i-1).getVolumen()) {
 		        	opBt.setTipo(TipoOrden.SELL);
 					opBt.setProfit(apertura - cierre);
 		        }
