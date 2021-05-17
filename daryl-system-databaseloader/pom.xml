@@ -94,15 +94,15 @@
 	<profiles>
 		<profile>
 			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
           	<properties>
 				<profile.name>dev</profile.name>
           	</properties>
 		</profile>
 		<profile>
 			<id>tragsa</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 			<properties>
 				<profile.name>tragsa</profile.name>
 			</properties>
