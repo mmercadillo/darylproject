@@ -1,14 +1,12 @@
 package daryl.system.backtest.robot.tester;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
+import org.apache.commons.lang3.SerializationUtils;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +14,15 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.MaxMinNormalizer;
 
-import daryl.system.backtest.robot.repository.IArimaConfigRepository;
 import daryl.system.backtest.robot.repository.IHistoricoOperacionesBacktestRepository;
+import daryl.system.backtest.robot.repository.IRnaConfigRepository;
 import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.TipoOrden;
+import daryl.system.model.RnaConfig;
 import daryl.system.model.Robot;
 import daryl.system.model.backtest.HistoricoOperacionesBacktest;
 
@@ -37,28 +36,39 @@ public class RnaTester extends Tester implements Runnable{
 	@Autowired
 	private IHistoricoOperacionesBacktestRepository operacionBacktestRepository;
 	@Autowired
-	IArimaConfigRepository arimaConfigRepository;
+	IRnaConfigRepository rnaConfigRepository;
 	@Autowired
 	ConfigData config;
 	@Autowired
 	ApplicationContext ctx;
 
 	private Robot robot;
-	private List<Datos> datosParaTest;
-	private List<Datos> cierres;
+	private BarSeries datosParaTest;
+	private BarSeries cierres;
+	
+	
 	private NeuralNetwork neuralNetwork;
 
 	public RnaTester() {
 	}
 	
-	public void init(Robot robot, List<Datos> datosParaTest, int inicio) {
+	public void init(Robot robot, BarSeries datosParaTest, int inicio) {
 
 		this.robot = robot;
 		this.datosParaTest = datosParaTest;
-		this.cierres =  this.datosParaTest.subList(0, inicio).stream().map(d -> d).collect(Collectors.toList());
+		this.cierres =  this.datosParaTest.getSubSeries(0, inicio);
+
 		//Dejamos los datos excepto los quitados anteriormente
-		this.datosParaTest = this.datosParaTest.subList(inicio, this.datosParaTest.size());
+		this.datosParaTest = this.datosParaTest.getSubSeries(inicio, this.datosParaTest.getBarCount());
+
+		RnaConfig rnaConfig = rnaConfigRepository.findRnaConfigByRobot(robot.getRobot());
+		try {
+			this.neuralNetwork = rnaFromByteArray(rnaConfig.getRna());
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
 		
+		/*
 		File rna = null;
 		System.out.println("SE CARGA EL FICHERO: " + this.robot.getFicheroRna());
 		try {
@@ -72,28 +82,29 @@ public class RnaTester extends Tester implements Runnable{
 	        e.printStackTrace();
 		}
 		this.neuralNetwork = NeuralNetwork.createFromFile(rna);
+		*/
 	}
 	
 	
-	private Double getPrediccionAnterior(List<Datos> cierres) {
+	private Double getPrediccionAnterior(BarSeries cierres) {
 		
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(cierres, Mode.CLOSE);
+		MaxMinNormalizer darylNormalizer = new MaxMinNormalizer(cierres, Mode.CLOSE);
 		List<Double> inputs = new ArrayList<Double>();
 			
 		int index = 0;
 		do {
 			index++;
 			if(this.robot.getMode() == Mode.CLOSE) {
-				inputs.add(darylNormalizer.normData(cierres.get(cierres.size()-index).getCierre()));
+				inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getClosePrice().doubleValue()));
 			}
 			if(this.robot.getMode() == Mode.HIGH) {
-				inputs.add(darylNormalizer.normData(cierres.get(cierres.size()-index).getMaximo()));
+				inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getHighPrice().doubleValue()));
 			}
 			if(this.robot.getMode() == Mode.LOW) {
-				inputs.add(darylNormalizer.normData(cierres.get(cierres.size()-index).getMinimo()));
+				inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getLowPrice().doubleValue()));
 			}
 			if(this.robot.getMode() == Mode.OPEN) {
-				inputs.add(darylNormalizer.normData(cierres.get(cierres.size()-index).getApertura()));
+				inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getOpenPrice().doubleValue()));
 			}			
 		}while(index < this.robot.getNeuronasEntrada());
 		
@@ -113,9 +124,9 @@ public class RnaTester extends Tester implements Runnable{
 	public  void run() {
 
 		//Recorremos los datos 
-		for (int i = 0; i < datosParaTest.size()-1; i++) {
+		for (int i = 0; i < datosParaTest.getBarCount()-1; i++) {
 			
-			cierres.add(datosParaTest.get(i));
+			this.cierres.addBar(datosParaTest.getBar(i));
 			
 			try {
 				
@@ -123,25 +134,25 @@ public class RnaTester extends Tester implements Runnable{
 				opBt.setRobot(this.robot.getRobot());
 				
 
-				Double prediccionAnterior = getPrediccionAnterior(cierres.subList(0, cierres.size()-1));
+				Double prediccionAnterior = getPrediccionAnterior(cierres.getSubSeries(0, cierres.getBarCount()-1));
 				
-				DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(cierres, Mode.CLOSE);
+				MaxMinNormalizer darylNormalizer = new MaxMinNormalizer(cierres, Mode.CLOSE);
 				
 				List<Double> inputs = new ArrayList<Double>();
 				int index = 0;
 				do {
 					index++;
 					if(this.robot.getMode() == Mode.CLOSE) {
-						inputs.add(darylNormalizer.normData(cierres.get(cierres.size()-index).getCierre()));
+						inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getClosePrice().doubleValue()));
 					}
 					if(this.robot.getMode() == Mode.HIGH) {
-						inputs.add(darylNormalizer.normData(cierres.get(cierres.size()-index).getMaximo()));
+						inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getHighPrice().doubleValue()));
 					}
 					if(this.robot.getMode() == Mode.LOW) {
-						inputs.add(darylNormalizer.normData(cierres.get(cierres.size()-index).getMinimo()));
+						inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getLowPrice().doubleValue()));
 					}
 					if(this.robot.getMode() == Mode.OPEN) {
-						inputs.add(darylNormalizer.normData(cierres.get(cierres.size()-index).getApertura()));
+						inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getOpenPrice().doubleValue()));
 					}			
 				}while(index < this.robot.getNeuronasEntrada());
 
@@ -155,24 +166,23 @@ public class RnaTester extends Tester implements Runnable{
 		        //double predicted = interpretOutput(networkOutput);
 		        Double forecast = darylNormalizer.denormData(networkOutput[0]);
 		        		        
-				Double apertura = datosParaTest.get(i).getCierre();
-				Double cierre = datosParaTest.get(i+1).getCierre(); 
+				
+				Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue();
+				Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue(); 
 				opBt.setApertura(apertura);
 				opBt.setCierre(cierre);
 				
-				String fechaHoraApertura = datosParaTest.get(i).getFecha() + " " + datosParaTest.get(i).getHora();
-				String fechaHoraCierre = datosParaTest.get(i+1).getFecha() + " " + datosParaTest.get(i+1).getHora();
-				opBt.setFaperturaTxt(fechaHoraApertura);
-				opBt.setFcierreTxt(fechaHoraCierre);
-				
-				opBt.setFapertura(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraApertura).getTime());
-				opBt.setFcierre(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraCierre).getTime());
+				Long fechaHoraAperturaMillis = datosParaTest.getBar(i).getEndTime().toEpochSecond() * 1000;
+				Long fechaHoraCierreMillis = datosParaTest.getBar(i+1).getEndTime().toEpochSecond() * 1000;
+
+				opBt.setFapertura(fechaHoraAperturaMillis);
+				opBt.setFcierre(fechaHoraCierreMillis);
 		        
 				opBt.setProfit(0.0);
-		        if(forecast > prediccionAnterior && cierres.get(i).getVolumen() < cierres.get(i-1).getVolumen()) {
+		        if(forecast > prediccionAnterior) {
 		        	opBt.setTipo(TipoOrden.BUY);
 					opBt.setProfit(cierre - apertura);
-		        }else if(forecast < prediccionAnterior  && cierres.get(i).getVolumen() < cierres.get(i-1).getVolumen()) {
+		        }else if(forecast < prediccionAnterior ) {
 		        	opBt.setTipo(TipoOrden.SELL);
 					opBt.setProfit(apertura - cierre);
 		        }
@@ -192,7 +202,12 @@ public class RnaTester extends Tester implements Runnable{
 		}
 	
 	}
+	public NeuralNetwork rnaFromByteArray(byte[] byteArray) throws IOException, ClassNotFoundException {
+		
+		NeuralNetwork rna = (NeuralNetwork)SerializationUtils.deserialize(byteArray);
+		return rna;
 
+	}
 
 
 	

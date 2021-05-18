@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.ta4j.core.BarSeries;
 
 import daryl.system.backtest.robot.repository.IArimaConfigRepository;
 import daryl.system.backtest.robot.repository.IHistoricoOperacionesBacktestRepository;
@@ -39,36 +40,44 @@ public class ArimaDTester extends Tester implements Runnable{
 	@Autowired
 	ConfigData config;
 
-	
 	private Robot robot;
-	private List<Datos> datosParaTest;
-	List<Double> cierres;
+	private BarSeries datosParaTest;
+	private BarSeries cierres;
 
 	public ArimaDTester() {
 	}
 	
-	public void init(Robot robot, List<Datos> datosParaTest, int inicio) {
+	public void init(Robot robot, BarSeries datosParaTest, int inicio) {
 
 		this.robot = robot;
 		this.datosParaTest = datosParaTest;
-		this.cierres =  this.datosParaTest.subList(0, inicio).stream().map(d -> d.getCierre()).collect(Collectors.toList());
+		this.cierres =  this.datosParaTest.getSubSeries(0, inicio);
+		
+		
 		//Dejamos los datos excepto los quitados anteriormente
-		this.datosParaTest = this.datosParaTest.subList(inicio, this.datosParaTest.size());
+		this.datosParaTest = this.datosParaTest.getSubSeries(inicio, this.datosParaTest.getBarCount());
 	}
 	
 
-	private Double getPrediccionAnterior(List<Double> cierresAnt, DefaultArimaProcess arimaProcess, ArimaConfig arimaConfig) {
+	private Double getPrediccionAnterior(BarSeries cierresAnt, DefaultArimaProcess arimaProcess, ArimaConfig arimaConfig) {
 		
 		
-    	List<Double> aux = cierresAnt;
-    	if(cierresAnt.size() > arimaConfig.getInicio()) {
-    		aux = cierresAnt.subList((cierresAnt.size()-arimaConfig.getInicio()), cierresAnt.size());
+    	//List<Double> aux = cierresAnt;
+    	//if(cierresAnt.size() > arimaConfig.getInicio()) {
+    	//	aux = cierresAnt.subList((cierresAnt.size()-arimaConfig.getInicio()), cierresAnt.size());
+    	//}
+
+		//double[] observations = new double[aux.size()];
+		//for(int i = 0; i < aux.size(); i++) {
+		//	observations[i] = aux.get(i).doubleValue();
+		//}
+		
+		BarSeries aux = cierres;
+    	if(cierres.getBarCount() > arimaConfig.getInicio()) {
+    		aux = cierres.getSubSeries((cierres.getBarCount()-arimaConfig.getInicio()), cierres.getBarCount());
     	}
 
-		double[] observations = new double[aux.size()];
-		for(int i = 0; i < aux.size(); i++) {
-			observations[i] = aux.get(i).doubleValue();
-		}
+    	double[] observations = aux.getBarData().stream().mapToDouble(bar -> bar.getClosePrice().doubleValue()).toArray();
 		
 		ArimaForecaster arimaForecaster = null;
 		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);
@@ -132,9 +141,9 @@ public class ArimaDTester extends Tester implements Runnable{
 
 
 		//Recorremos los datos 
-		for (int i = 0; i < datosParaTest.size()-1; i++) {
+		for (int i = 0; i < datosParaTest.getBarCount()-1; i++) {
 			
-			cierres.add(datosParaTest.get(i).getCierre());
+			this.cierres.addBar(datosParaTest.getBar(i));
 			
 			try {
 				
@@ -148,18 +157,24 @@ public class ArimaDTester extends Tester implements Runnable{
 					DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 					
 					
-					Double prediccionAnterior = getPrediccionAnterior(cierres.subList(0, cierres.size()-1), arimaProcess, arimaConfig);
+					Double prediccionAnterior = getPrediccionAnterior(cierres.getSubSeries(0, cierres.getBarCount()-1), arimaProcess, arimaConfig);
 		
-			    	List<Double> aux = cierres;
-			    	if(cierres.size() > arimaConfig.getInicio()) {
-			    		aux = cierres.subList((cierres.size()-arimaConfig.getInicio()), cierres.size());
+					BarSeries aux = cierres;
+			    	if(cierres.getBarCount() > arimaConfig.getInicio()) {
+			    		aux = cierres.getSubSeries((cierres.getBarCount()-arimaConfig.getInicio()), cierres.getBarCount());
 			    	}
+					
+			    	//List<Double> aux = cierres;
+			    	//if(cierres.size() > arimaConfig.getInicio()) {
+			    	//	aux = cierres.subList((cierres.size()-arimaConfig.getInicio()), cierres.size());
+			    	//}
 			    	
-			    	double[] observations = new double[aux.size()];
-			    	for(int j = 0; j < aux.size(); j++) {
-			    		observations[j] = aux.get(j).doubleValue();
-			    	}
+			    	//double[] observations = new double[aux.size()];
+			    	//for(int j = 0; j < aux.size(); j++) {
+			    	//	observations[j] = aux.get(j).doubleValue();
+			    	//}
 		
+			    	double[] observations = aux.getBarData().stream().mapToDouble(bar -> bar.getClosePrice().doubleValue()).toArray();
 			    	ArimaForecaster arimaForecaster = null;
 		        	try {
 		        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
@@ -167,18 +182,16 @@ public class ArimaDTester extends Tester implements Runnable{
 				        //logger.info("Robot -> " + this.robot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
 				        
 						
-						Double apertura = datosParaTest.get(i).getCierre();
-						Double cierre = datosParaTest.get(i+1).getCierre(); 
+						Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue();
+						Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue(); 
 						opBt.setApertura(apertura);
 						opBt.setCierre(cierre);
 						
-						String fechaHoraApertura = datosParaTest.get(i).getFecha() + " " + datosParaTest.get(i).getHora();
-						String fechaHoraCierre = datosParaTest.get(i+1).getFecha() + " " + datosParaTest.get(i+1).getHora();
-						opBt.setFaperturaTxt(fechaHoraApertura);
-						opBt.setFcierreTxt(fechaHoraCierre);
-						
-						opBt.setFapertura(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraApertura).getTime());
-						opBt.setFcierre(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").parse(fechaHoraCierre).getTime());
+						Long fechaHoraAperturaMillis = datosParaTest.getBar(i).getEndTime().toEpochSecond() * 1000;
+						Long fechaHoraCierreMillis = datosParaTest.getBar(i+1).getEndTime().toEpochSecond() * 1000;
+
+						opBt.setFapertura(fechaHoraAperturaMillis);
+						opBt.setFcierre(fechaHoraCierreMillis);
 				        
 						opBt.setProfit(0.0);
 						if(forecast > prediccionAnterior) {
