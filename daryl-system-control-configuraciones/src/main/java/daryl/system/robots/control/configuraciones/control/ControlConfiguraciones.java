@@ -36,12 +36,10 @@ public class ControlConfiguraciones {
 	IArimaConfigCalcsRepository arimaConfigCalcsRepository;
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
-
 	@Autowired
 	IRnaConfigCalcsRepository rnaConfigCalcsRepository;
 	@Autowired
 	IRnaConfigRepository rnaConfigRepository;
-	
 	@Autowired
 	IVarianceConfigCalcsRepository varianceConfigCalcsRepository;
 	@Autowired
