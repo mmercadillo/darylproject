@@ -24,7 +24,6 @@ import daryl.system.robots.variance.calculator.forecaster.VarianceStockPredictio
 @EntityScan("daryl.system.model")
 public class DarylSystemVarianceCalculatorApplication {
 
-
 	@Autowired
 	Logger logger;
 	
