@@ -3,7 +3,6 @@ package daryl.system.backtest.robot;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,7 +32,6 @@ import daryl.system.backtest.robot.tester.ArimaDInvTester;
 import daryl.system.backtest.robot.tester.ArimaDTester;
 import daryl.system.backtest.robot.tester.RnaInvTester;
 import daryl.system.backtest.robot.tester.RnaTester;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
 
@@ -174,6 +172,7 @@ public class DarylSystemTesterRobotApplication {
 				controlHistoricoOperacionesBacktest.calcularMaximaRachaPerdedora();
 				controlHistoricoOperacionesBacktest.calcularMaxMinDD();
 				System.out.println("=============FIN CALCULO DE LOS RESÚMENES================= " + robot.getRobot() + " ================================================================");
+				
 			}
 			
 		}
@@ -181,28 +180,6 @@ public class DarylSystemTesterRobotApplication {
 		
 	}
 
-	private static List<Datos> toDatosList(List<Historico> historico){
-		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (Historico hist : historico) {
-			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
-			
-		}
-		
-		return datos;
-		
-		
-	}
 	
 	private static BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
 		
