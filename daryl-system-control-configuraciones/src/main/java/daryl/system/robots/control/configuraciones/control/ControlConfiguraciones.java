@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.configuration.ConfigData;
@@ -46,7 +47,7 @@ public class ControlConfiguraciones {
 	@Autowired
 	IVarianceConfigRepository varianceConfigRepository;
 
-    //@Scheduled(fixedDelay = 600000, initialDelay = 1000)
+    @Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
     @Transactional
 	public void controlArimaCConfiguration() {
     	
@@ -84,7 +85,7 @@ public class ControlConfiguraciones {
     	
     }
     
-    //@Scheduled(fixedDelay = 600000, initialDelay = 1000)
+    @Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
     @Transactional
 	public void controlVarianceConfiguration() {
     	
@@ -124,7 +125,7 @@ public class ControlConfiguraciones {
     	
     }
 
-    //@Scheduled(fixedDelay = 600000, initialDelay = 1000)
+    @Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
     @Transactional
 	public void controlRnaConfiguration() {
     	
