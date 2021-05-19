@@ -57,8 +57,8 @@ public class DarylSystemDatabaseLoaderApplication {
 	    //loadNdx(context);
 	    //loadWti(context);
 	    //loadXauUsd(context);
-	    //loadGeneral(context);
-	    loadCombinaciones(context);
+	    loadGeneral(context);
+	    //loadCombinaciones(context);
 	}
 	
 	static void loadCombinaciones(ApplicationContext context) {

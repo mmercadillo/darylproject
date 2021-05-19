@@ -30,7 +30,6 @@
 								Listado Robots
 							</a>
 						</li>
-						</li>
 						<li th:class="${robotsActive == true ? 'active' : ''}">
 							<a th:href="@{/robots/cuenta}">
 								<i class="icon-user"></i>
@@ -41,6 +40,12 @@
 							<a th:href="@{/demolab}">
 								<i class="icon-user"></i>
 								Demo Lab 
+							</a>
+						</li>
+						<li th:class="${detalleRobotBacktestActive == true ? 'active' : ''}">
+							<a th:href="@{/backtest/RNA_AUDCAD_60}">
+								<i class="icon-user"></i>
+								Backtest
 							</a>
 						</li>
 					</ul>

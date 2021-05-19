@@ -32,10 +32,10 @@ public class HistoricoParaChartDto{
 
 	
 	
-	public static List<Long> getDtoParaChartDeTotales(List<HistoricoOperaciones> historico) {
+	public static List<Double> getDtoParaChartDeTotales(List<HistoricoOperaciones> historico) {
 
-		List<Long> datosParaChart = new ArrayList<Long>();
-		Long acumulado = 0L;
+		List<Double> datosParaChart = new ArrayList<Double>();
+		Double acumulado = 0.0;
 		if(historico != null && historico.size() > 0) {
 			for (HistoricoOperaciones hist : historico) {
 				acumulado += Math.round(hist.getProfit());
@@ -49,7 +49,6 @@ public class HistoricoParaChartDto{
 	public static List<Double> getDtoParaChartDeEspMat(List<HistoricoOperaciones> historico) {
 
 		List<Double> datosParaChart = new ArrayList<Double>();
-		Long acumulado = 0L;
 		Long opsWin = 0L;
 		Long opsLoss = 0L;
 		Long opsTotales = 0L;

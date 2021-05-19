@@ -11,4 +11,5 @@ import daryl.system.model.Robot;
 public interface IRobotsRepository extends JpaRepository<Robot, Long> {
 
 	public List<Robot> findAllByOrderByRobotAsc();
+	Robot findRobotByRobot(String robot);
 }

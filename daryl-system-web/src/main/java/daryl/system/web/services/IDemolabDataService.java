@@ -9,5 +9,5 @@ import daryl.system.web.mvc.controller.DemolabController;
 
 public interface IDemolabDataService {
 	List<DemolabOps> findListaParaChartDemolabByRobot(String robot);
-	
+	List<DemolabOps> findAllByOrderByFcierre();
 }

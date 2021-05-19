@@ -18,18 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import daryl.system.web.mvc.dto.HistoricoParaChartDto;
 import daryl.system.web.services.IChartDataRobotService;
-import daryl.system.web.services.IDetalleRobotService;
-import daryl.system.web.services.ITotalPipsRobotsService;
 
 @RestController
 public class ChartControlller {
 
 	@Autowired
 	IChartDataRobotService charDataRobotService;
-	@Autowired
-	IDetalleRobotService detalleService;
-	@Autowired
-	ITotalPipsRobotsService totalPipsRobotsService;
+
  
 	@GetMapping("/chart/{robot}/em")
     public void chartEspMat(@PathVariable String robot, HttpServletResponse response) {
@@ -74,7 +69,7 @@ public class ChartControlller {
 	@GetMapping("/chart/{robot}/total")
     public void chartTotal(@PathVariable String robot, HttpServletResponse response) {
 
-		List<Long> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
+		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
 
 		
 		List<Double> periodos = new ArrayList<Double>();

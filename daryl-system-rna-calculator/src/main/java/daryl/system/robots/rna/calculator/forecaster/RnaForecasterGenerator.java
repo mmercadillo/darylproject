@@ -385,22 +385,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		
 		byte[] bytesFromRna = SerializationUtils.serialize(rna);
 		return bytesFromRna;
-		/*
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream out = null;
-		try {
-			out = new ObjectOutputStream(bos);   
-			out.writeObject(rna);
-			out.flush();
-			byte[] bytesFromRna = bos.toByteArray();
-			return bytesFromRna;
-		} finally {
-			try {
-				bos.close();
-			}catch (IOException ex) {
-			}
-		}
-		*/
+
 		
 	}
 	
@@ -408,26 +393,7 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		
 		NeuralNetwork rna = (NeuralNetwork)SerializationUtils.deserialize(byteArray);
 		return rna;
-		/*
-		ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
-		ObjectInput in = null;
-		try {
-			in = new ObjectInputStream(bis);
-			NeuralNetwork rna = (NeuralNetwork)in.readObject(); 
-			
-			return rna;
-			
-			
-		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-			}catch (IOException ex) {
-		    // ignore close exception
-			}
-		}
-		*/
+
 	}
 	
 	

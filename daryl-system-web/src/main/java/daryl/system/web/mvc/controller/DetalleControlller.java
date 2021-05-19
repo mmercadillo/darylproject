@@ -36,7 +36,7 @@ public class DetalleControlller {
 		
 		//Datos resumen del robot
 		view.addObject("bot", robot);
-		List<Long> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
+		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
 		view.addObject("datosParaChart", historicoParaChartDto);
 		
 		ResumenRobot resumenRobot = detalleService.findResumenRobotByRobot(robot);

@@ -13,6 +13,8 @@ public enum TipoRobot {
 	RNA,
 	RNA_I,
 	VARIANCE,
-	VARIANCE_B;
+	VARIANCE_I,
+	VARIANCE_B,
+	VARIANCE_B_I;
 
 }

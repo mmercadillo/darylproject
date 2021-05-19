@@ -24,7 +24,6 @@ import daryl.system.robots.variance.calculator.forecaster.VarianceStockPredictio
 @EntityScan("daryl.system.model")
 public class DarylSystemVarianceCalculatorApplication {
 
-
 	@Autowired
 	Logger logger;
 	
@@ -46,12 +45,10 @@ public class DarylSystemVarianceCalculatorApplication {
 		
 		
 		ExecutorService servicio = Executors.newFixedThreadPool(30);
-		//4-20-120-480
-		
-		
+
 		//XAUUSD
 		VarianceStockPrediction cspXAUUSD60 = context.getBean(VarianceStockPrediction.class);
-		cspXAUUSD60.init(Activo.XAUUSD, Timeframes.PERIOD_H1, "VARIANCE_XAUUSD_600", 480);
+		cspXAUUSD60.init(Activo.XAUUSD, Timeframes.PERIOD_H1, "VARIANCE_XAUUSD_60", 480);
 		servicio.submit(cspXAUUSD60);
 		System.out.println("cspXAUUSD60 cargado");
 		
@@ -69,7 +66,6 @@ public class DarylSystemVarianceCalculatorApplication {
 		cspXAUUSD10080.init(Activo.XAUUSD, Timeframes.PERIOD_W1, "VARIANCE_XAUUSD_10080", 4);
 		servicio.submit(cspXAUUSD10080);
 		System.out.println("cspXAUUSD10080 cargado");
-		
 		
 		//GDAXI
 		VarianceStockPrediction cspGDAXI60 = context.getBean(VarianceStockPrediction.class);
@@ -133,7 +129,6 @@ public class DarylSystemVarianceCalculatorApplication {
 		cspXTIUSD10080.init(Activo.XTIUSD, Timeframes.PERIOD_W1, "VARIANCE_WTI_10080", 4);
 		servicio.submit(cspXTIUSD10080);
 		System.out.println("cspXTIUSD10080 cargado");
-		
 		
 		//EURUSD
 		VarianceStockPrediction cspEURUSD60 = context.getBean(VarianceStockPrediction.class);
