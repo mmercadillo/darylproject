@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
   
-  	<groupId>daryl.system.robots</groupId>
-  	<artifactId>robot-arima-a</artifactId>
+  	<groupId>daryl.system</groupId>
+  	<artifactId>backtest-robot</artifactId>
   	<version>1.0.6</version>
   	<name>daryl-system-backtest-robot</name>
   	<description>Robot Arima A</description>
@@ -76,14 +76,7 @@
 			<optional>true</optional>
 		</dependency>
 		
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-activemq</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-broker</artifactId>
-        </dependency>
+
 	</dependencies>
 
 
