@@ -25,6 +25,11 @@ public class RobotsServiceImpl implements IRobotsService {
 	public List<Robot> findAllByOrderByRobotAsc() {
 		return repository.findAllByOrderByRobotAsc();
 	}
+
+	@Override
+	public Robot findRobotByRobot(String robot) {
+		return repository.findRobotByRobot(robot);
+	}
 	
 
 	

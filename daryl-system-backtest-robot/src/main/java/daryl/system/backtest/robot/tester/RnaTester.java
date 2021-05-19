@@ -168,9 +168,8 @@ public class RnaTester extends Tester implements Runnable{
 		        //double predicted = interpretOutput(networkOutput);
 		        Double forecast = darylNormalizer.denormData(networkOutput[0]);
 		        		        
-				
-				Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue();
-				Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue(); 
+				Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador();
+				Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador(); 
 				opBt.setApertura(apertura);
 				opBt.setCierre(cierre);
 				

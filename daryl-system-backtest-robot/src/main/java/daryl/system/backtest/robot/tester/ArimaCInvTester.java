@@ -146,8 +146,8 @@ public class ArimaCInvTester extends Tester implements Runnable{
 		        		arimaForecaster = new DefaultArimaForecaster(arimaProcess, observations);	        	
 				        double forecast = arimaForecaster.next();				        
 						
-						Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue();
-						Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue(); 
+						Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador();
+						Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador(); 
 						opBt.setApertura(apertura);
 						opBt.setCierre(cierre);
 						

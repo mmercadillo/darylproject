@@ -145,8 +145,8 @@ public class ArimaCTester extends Tester implements Runnable{
 				        //logger.info("Robot -> " + this.robot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + datos.get(datos.size()-1));
 				        
 						
-						Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue();
-						Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue(); 
+						Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador();
+						Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador(); 
 						opBt.setApertura(apertura);
 						opBt.setCierre(cierre);
 						

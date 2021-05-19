@@ -99,8 +99,8 @@ public class ArimaBInvTester extends Tester implements Runnable{
 				double forecast = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
 				//logger.info("Robot -> " + robot + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + cierres.get(cierres.size()-1));
 
-				Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue();
-				Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue(); 
+				Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador();
+				Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador(); 
 				opBt.setApertura(apertura);
 				opBt.setCierre(cierre);
 				

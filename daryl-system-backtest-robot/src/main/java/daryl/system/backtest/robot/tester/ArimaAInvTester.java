@@ -80,8 +80,8 @@ public class ArimaAInvTester extends Tester implements Runnable{
 				//logger.info("Robot -> " + robot + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + cierres.get(cierres.size()-1));
 
 
-				Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue();
-				Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue(); 
+				Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador();
+				Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador(); 
 				opBt.setApertura(apertura);
 				opBt.setCierre(cierre);
 				
@@ -100,7 +100,7 @@ public class ArimaAInvTester extends Tester implements Runnable{
 				if(forecast > cierres.getBar(cierres.getBarCount()-1).getClosePrice().doubleValue()) {
 
 					opBt.setTipo(TipoOrden.SELL);
-					opBt.setProfit(apertura - cierre);
+					opBt.setProfit(apertura - cierre );
 
 										
 				}else if(forecast < cierres.getBar(cierres.getBarCount()-1).getClosePrice().doubleValue()) {
@@ -109,6 +109,9 @@ public class ArimaAInvTester extends Tester implements Runnable{
 					opBt.setProfit(cierre - apertura);
 					
 				}
+				
+				
+				
 				opBt.setSwap(0.0);
 				opBt.setComision(0.0);
 

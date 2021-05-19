@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import daryl.system.model.Robot;
 import daryl.system.model.backtest.ResumenRobotBacktest;
 import daryl.system.web.mvc.dto.HistoricoParaChartDto;
 import daryl.system.web.mvc.dto.ResumenRobotBacktestDto;
@@ -16,6 +17,7 @@ import daryl.system.web.mvc.dto.ResumenRobotDto;
 import daryl.system.web.mvc.dto.TotalDto;
 import daryl.system.web.services.IChartDataRobotService;
 import daryl.system.web.services.IDetalleBacktestRobotService;
+import daryl.system.web.services.IRobotsService;
 import daryl.system.web.services.ITotalPipsRobotsService;
 
 @RestController
@@ -27,7 +29,9 @@ public class DetalleBacktestRobotControlller {
 	IDetalleBacktestRobotService detalleBacktestRobotService;
 	@Autowired
 	ITotalPipsRobotsService totalPipsRobotsService;
-
+	@Autowired
+	IRobotsService robotsService;
+	
 	@GetMapping("/backtest")
     public ModelAndView init() {
 		
@@ -44,7 +48,7 @@ public class DetalleBacktestRobotControlller {
 		
 		//Datos resumen del robot
 		view.addObject("bot", robot);
-		List<Long> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
+		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
 		view.addObject("datosParaChart", historicoParaChartDto);
 		
 		ResumenRobotBacktest resumenBacktestRobot = detalleBacktestRobotService.findResumenRobotBacktestByRobot(robot);

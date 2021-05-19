@@ -69,7 +69,7 @@ public class ChartControlller {
 	@GetMapping("/chart/{robot}/total")
     public void chartTotal(@PathVariable String robot, HttpServletResponse response) {
 
-		List<Long> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
+		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
 
 		
 		List<Double> periodos = new ArrayList<Double>();

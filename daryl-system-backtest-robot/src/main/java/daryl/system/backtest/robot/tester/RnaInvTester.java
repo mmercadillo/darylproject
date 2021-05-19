@@ -166,9 +166,8 @@ public class RnaInvTester extends Tester implements Runnable{
 		        double forecast = darylNormalizer.denormData(networkOutput[0]);
 		        //logger.info("Robot -> " + this.robot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
 		        
-				
-				Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue();
-				Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue(); 
+				Double apertura = datosParaTest.getBar(i).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador();
+				Double cierre = datosParaTest.getBar(i+1).getClosePrice().doubleValue() / robot.getActivo().getMultiplicador(); 
 				opBt.setApertura(apertura);
 				opBt.setCierre(cierre);
 				
