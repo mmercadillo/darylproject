@@ -184,7 +184,6 @@ public class DarylSystemTesterRobotApplication {
 	private static BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
 		
 		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
-			
 		for (Historico hist : historico) {
 			
 			Long millis = hist.getFechaHora();

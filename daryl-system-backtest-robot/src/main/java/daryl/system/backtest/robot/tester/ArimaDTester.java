@@ -1,6 +1,7 @@
 package daryl.system.backtest.robot.tester;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -192,6 +193,10 @@ public class ArimaDTester extends Tester implements Runnable{
 
 						opBt.setFapertura(fechaHoraAperturaMillis);
 						opBt.setFcierre(fechaHoraCierreMillis);
+						
+
+						opBt.setFaperturaTxt(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(fechaHoraAperturaMillis)));
+						opBt.setFcierreTxt(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(fechaHoraCierreMillis)));
 				        
 						opBt.setProfit(0.0);
 						if(forecast > prediccionAnterior) {

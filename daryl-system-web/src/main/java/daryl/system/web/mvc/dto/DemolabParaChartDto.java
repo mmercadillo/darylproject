@@ -33,10 +33,10 @@ public class DemolabParaChartDto{
 
 	
 	
-	public static List<Long> getDtoParaChartDeTotales(List<DemolabOps> historico) {
+	public static List<Double> getDtoParaChartDeTotales(List<DemolabOps> historico) {
 
-		List<Long> datosParaChart = new ArrayList<Long>();
-		Long acumulado = 0L;
+		List<Double> datosParaChart = new ArrayList<Double>();
+		Double acumulado = 0.0;
 		if(historico != null && historico.size() > 0) {
 			for (DemolabOps hist : historico) {
 				acumulado += Math.round(hist.getProfit());

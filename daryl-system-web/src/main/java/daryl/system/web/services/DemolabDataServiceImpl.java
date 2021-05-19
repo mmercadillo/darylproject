@@ -23,4 +23,9 @@ public class DemolabDataServiceImpl implements IDemolabDataService {
 		return repository.findListaParaChartDemolabByRobot(robot);
 	}
 
+	@Transactional
+	public List<DemolabOps> findAllByOrderByFcierre() {
+		return repository.findAllByOrderByFcierreAsc();
+	}
+	
 }

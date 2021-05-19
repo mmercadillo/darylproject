@@ -1,6 +1,7 @@
 package daryl.system.backtest.robot.tester;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,15 @@ public class ArimaBInvTester extends Tester implements Runnable{
 
 	private double getPrediccionAnterior(BarSeries cierresAnt) {
 		
-		double[] datos = cierresAnt.getBarData().stream().mapToDouble(bar -> bar.getClosePrice().doubleValue()).toArray();
+		BarSeries serieParaCalculo = null;
+		try {
+			serieParaCalculo = cierresAnt.getSubSeries(cierresAnt.getBarCount()-1000, cierresAnt.getBarCount());
+		}catch (Exception e) {
+			serieParaCalculo = cierresAnt;
+		}
+		
+		
+		double[] datos = serieParaCalculo.getBarData().stream().mapToDouble(bar -> bar.getClosePrice().doubleValue()).toArray();
 		ARIMA arima=new ARIMA(datos);
 		int []model=arima.getARIMAmodel();
 		double prediccionAnterior = (double)arima.aftDeal(arima.predictValue(model[0],model[1]));
@@ -64,11 +73,16 @@ public class ArimaBInvTester extends Tester implements Runnable{
 
 	public  void run() {
 
-
+		BarSeries serieParaCalculo = null;
 		//Recorremos los datos 
 		for (int i = 0; i < datosParaTest.getBarCount()-1; i++) {
 			
 			this.cierres.addBar(datosParaTest.getBar(i));
+			try {
+				serieParaCalculo = this.cierres.getSubSeries(this.cierres.getBarCount()-1000, this.cierres.getBarCount());
+			}catch (Exception e) {
+				serieParaCalculo = this.cierres;
+			}
 			
 			try {
 				
@@ -96,6 +110,9 @@ public class ArimaBInvTester extends Tester implements Runnable{
 				opBt.setFapertura(fechaHoraAperturaMillis);
 				opBt.setFcierre(fechaHoraCierreMillis);
 
+
+				opBt.setFaperturaTxt(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(fechaHoraAperturaMillis)));
+				opBt.setFcierreTxt(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(fechaHoraCierreMillis)));
 				
 				opBt.setProfit(0.0);
 				if(forecast > prediccionAnterior) {

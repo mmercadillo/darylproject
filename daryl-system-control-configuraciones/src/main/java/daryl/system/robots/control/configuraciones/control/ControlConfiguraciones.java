@@ -49,6 +49,7 @@ public class ControlConfiguraciones {
     @Transactional
 	public void controlArimaCConfiguration() {
     	
+    	System.out.println("ACTUALIZANDO CONFIG ARIMA C");
     	List<ArimaConfig> configs = arimaConfigRepository.findAll();
     	for(ArimaConfig arimaConfig : configs) {
     		
@@ -80,6 +81,7 @@ public class ControlConfiguraciones {
     			}	
     		}
     	}
+    	System.out.println("ACTUALIZADA CONFIG ARIMA C");
     	
     }
     
@@ -87,6 +89,7 @@ public class ControlConfiguraciones {
     @Transactional
 	public void controlVarianceConfiguration() {
     	
+    	System.out.println("ACTUALIZANDO CONFIG VARIANCE");
     	List<VarianceConfig> configs = varianceConfigRepository.findAll();
     	for(VarianceConfig varianceConfig : configs) {
     		
@@ -120,6 +123,7 @@ public class ControlConfiguraciones {
     		}
     			
     	}
+    	System.out.println("ACTUALIZADA CONFIG VARIANCE");
     	
     }
 
@@ -127,6 +131,7 @@ public class ControlConfiguraciones {
     @Transactional
 	public void controlRnaConfiguration() {
     	
+    	System.out.println("ACTUALIZANDO CONFIG RNA");
     	List<RnaConfig> configs = rnaConfigRepository.findAll();
     	for(RnaConfig rnaConfig : configs) {
     		
@@ -160,6 +165,7 @@ public class ControlConfiguraciones {
     		}
     			
     	}
+    	System.out.println("ACTUALIZADA CONFIG RNA");
     	
     }
 

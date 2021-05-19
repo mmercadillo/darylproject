@@ -1,8 +1,10 @@
 package daryl.system.backtest.robot.tester;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -44,6 +46,7 @@ public class RnaInvTester extends Tester implements Runnable{
 	private Robot robot;
 	private BarSeries datosParaTest;
 	private BarSeries cierres;
+	RnaConfig rnaConfig;
 	
 	private NeuralNetwork neuralNetwork;
 
@@ -59,7 +62,7 @@ public class RnaInvTester extends Tester implements Runnable{
 		//Dejamos los datos excepto los quitados anteriormente
 		this.datosParaTest = this.datosParaTest.getSubSeries(inicio, this.datosParaTest.getBarCount());
 
-		RnaConfig rnaConfig = rnaConfigRepository.findRnaConfigByRobot(robot.getRobot());
+		rnaConfig = rnaConfigRepository.findRnaConfigByRobot(robot.getRnaConfig());
 		try {
 			this.neuralNetwork = rnaFromByteArray(rnaConfig.getRna());
 		} catch (ClassNotFoundException | IOException e) {
@@ -103,7 +106,7 @@ public class RnaInvTester extends Tester implements Runnable{
 			if(this.robot.getMode() == Mode.OPEN) {
 				inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getOpenPrice().doubleValue()));
 			}			
-		}while(index < this.robot.getNeuronasEntrada());
+		}while(index < this.rnaConfig.getNeuronasEntrada());
 		
 		Collections.reverse(inputs);
 		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
@@ -150,7 +153,7 @@ public class RnaInvTester extends Tester implements Runnable{
 					if(this.robot.getMode() == Mode.OPEN) {
 						inputs.add(darylNormalizer.normData(cierres.getBar(cierres.getBarCount()-index).getOpenPrice().doubleValue()));
 					}			
-				}while(index < this.robot.getNeuronasEntrada());
+				}while(index < this.rnaConfig.getNeuronasEntrada());
 
 				Collections.reverse(inputs);
 
@@ -175,6 +178,10 @@ public class RnaInvTester extends Tester implements Runnable{
 				opBt.setFapertura(fechaHoraAperturaMillis);
 				opBt.setFcierre(fechaHoraCierreMillis);
 		        
+
+				opBt.setFaperturaTxt(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(fechaHoraAperturaMillis)));
+				opBt.setFcierreTxt(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(fechaHoraCierreMillis)));
+				
 				opBt.setProfit(0.0);
 		        if(forecast > prediccionAnterior) {
 		        	opBt.setTipo(TipoOrden.SELL);

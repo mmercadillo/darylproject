@@ -54,6 +54,13 @@ public class ArimaBTester extends Tester implements Runnable{
 
 	private double getPrediccionAnterior(BarSeries cierresAnt) {
 		
+		BarSeries serieParaCalculo = null;
+		try {
+			serieParaCalculo = cierresAnt.getSubSeries(cierresAnt.getBarCount()-1000, cierresAnt.getBarCount());
+		}catch (Exception e) {
+			serieParaCalculo = cierresAnt;
+		}
+		
 		double[] datos = cierresAnt.getBarData().stream().mapToDouble(bar -> bar.getClosePrice().doubleValue()).toArray();
 		ARIMA arima=new ARIMA(datos);
 		int []model=arima.getARIMAmodel();
@@ -64,11 +71,16 @@ public class ArimaBTester extends Tester implements Runnable{
 
 	public  void run() {
 
-
+		BarSeries serieParaCalculo = null;
 		//Recorremos los datos 
 		for (int i = 0; i < datosParaTest.getBarCount()-1; i++) {
 			
 			this.cierres.addBar(datosParaTest.getBar(i));
+			try {
+				serieParaCalculo = this.cierres.getSubSeries(this.cierres.getBarCount()-1000, this.cierres.getBarCount());
+			}catch (Exception e) {
+				serieParaCalculo = this.cierres;
+			}
 			
 			try {
 				
@@ -77,7 +89,7 @@ public class ArimaBTester extends Tester implements Runnable{
 				
 				double prediccionAnterior = getPrediccionAnterior(cierres.getSubSeries(0, cierres.getBarCount()-1));
 				
-				double[] datos = cierres.getBarData().stream().mapToDouble(bar -> bar.getClosePrice().doubleValue()).toArray();
+				double[] datos = serieParaCalculo.getBarData().stream().mapToDouble(bar -> bar.getClosePrice().doubleValue()).toArray();
 				ARIMA arima=new ARIMA(datos);
 				
 				int []model=arima.getARIMAmodel();

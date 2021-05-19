@@ -1,6 +1,7 @@
 package daryl.system.backtest.robot.tester;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -113,6 +114,7 @@ public class ArimaCInvTester extends Tester implements Runnable{
 		for (int i = 0; i < datosParaTest.getBarCount()-1; i++) {
 			
 			this.cierres.addBar(datosParaTest.getBar(i));
+
 			
 			try {
 				
@@ -154,6 +156,10 @@ public class ArimaCInvTester extends Tester implements Runnable{
 
 						opBt.setFapertura(fechaHoraAperturaMillis);
 						opBt.setFcierre(fechaHoraCierreMillis);
+						
+
+						opBt.setFaperturaTxt(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(fechaHoraAperturaMillis)));
+						opBt.setFcierreTxt(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(fechaHoraCierreMillis)));
 				        
 						opBt.setProfit(0.0);
 				        if(forecast > cierres.getBar(cierres.getBarCount()-1).getClosePrice().doubleValue()) {
