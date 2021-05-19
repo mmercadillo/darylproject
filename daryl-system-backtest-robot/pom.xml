@@ -76,7 +76,14 @@
 			<optional>true</optional>
 		</dependency>
 		
-
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+        </dependency>
 	</dependencies>
 
 
@@ -112,15 +119,16 @@
 	<profiles>
 		<profile>
 			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
           	<properties>
 				<profile.name>dev</profile.name>
           	</properties>
 		</profile>
 		<profile>
 			<id>tragsa</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+
 			<properties>
 				<profile.name>tragsa</profile.name>
 			</properties>
