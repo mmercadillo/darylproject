@@ -13,7 +13,7 @@
 	<groupId>daryl.system.robots</groupId>
 	<artifactId>rna-calculator</artifactId>
 	<version>1.0.6</version>
-	<name>daryl-system-variance-calculator</name>
+	<name>daryl-system-rna-calculator</name>
 	<description>Cálculo de las RNA,s del sistema RNA sobre el cierre</description>
   	
   	<properties>
