@@ -30,7 +30,7 @@ public class OrdenDto{
 	@Getter @Setter
 	private String hora;
 	@Getter @Setter
-	private String lab;	
+	private String labRobot;	
 	
 	public static OrdenDto getDto(Orden orden) {
 		
@@ -43,7 +43,7 @@ public class OrdenDto{
 		ordenDto.setRobot(orden.getRobot());
 		ordenDto.setFecha(orden.getFecha());
 		ordenDto.setHora(orden.getHora());
-		ordenDto.setLab(getLabComment(orden.getRobot()).trim());
+		ordenDto.setLabRobot(getLabComment(orden.getRobot()).trim());
 		return ordenDto;
 		
 	}
