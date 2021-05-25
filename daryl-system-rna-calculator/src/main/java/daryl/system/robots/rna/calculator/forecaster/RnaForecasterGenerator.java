@@ -73,19 +73,18 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 	
 	private final int neuronasSalida = 1;
 	
-	private String[] transferFunctionTypes = {"LINEAR", "RAMP", "STEP", "SIGMOID", "TANH", "GAUSSIAN", "TRAPEZOID", "SGN", "SIN", "LOG", "RECTIFIED"};
+	private String[] transferFunctionTypes = {"LINEAR", "SIGMOID", "TANH", "GAUSSIAN", "LOG", "RECTIFIED", "RAMP", "STEP", "TRAPEZOID", "SGN", "SIN"};
 	
 	private Double maxError = 0.0000001;
 	private Integer maxIterations = 100;
 
-	private String rutaRna = "F:\\DarylWorkspace\\Rnas\\";
 	
 	/////////////////////////////////////////////////////
 	
 	//Parámetros para la creación de los Datasets*/
-	private Double pctLearning = 0.5;
+	private Double pctLearning = 0.70;
 	private Double pctTest = 0.05;
-	private Double pctForecast = 0.45;
+	private Double pctForecast = 0.25;
 	//////////////////////////////
 	
 	
@@ -333,7 +332,6 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 										rnaConfig.setLastPasoMomentum(pasoMomentum);
 										rnaConfig.setLastHiddenNeurons(hiddenNeurons);
 										rnaConfig.setLastTransferFunctionType(fncTransf);
-										rnaConfig.setLastBias(bias);
 										rnaConfig.setLastBias(bias);
 										
 										Long fechaHoraMillis = System.currentTimeMillis();
