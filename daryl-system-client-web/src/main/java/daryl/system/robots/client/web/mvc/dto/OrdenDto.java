@@ -29,6 +29,8 @@ public class OrdenDto{
 	private String fecha;
 	@Getter @Setter
 	private String hora;
+	@Getter @Setter
+	private String lab;	
 	
 	public static OrdenDto getDto(Orden orden) {
 		
@@ -41,9 +43,24 @@ public class OrdenDto{
 		ordenDto.setRobot(orden.getRobot());
 		ordenDto.setFecha(orden.getFecha());
 		ordenDto.setHora(orden.getHora());
-			
+		ordenDto.setLab(getLabComment(orden.getRobot()).trim());
 		return ordenDto;
 		
 	}
+	
+	private static String getLabComment(String robot) {
+		
+		
+		String labComment = robot	.replace("ARIMA", "ARI")
+									.replace("XAUUSD", "XU")
+									.replace("GDAXI", "GD")
+									.replace("NDX", "ND")
+									.replace("WTI", "WT")
+									.replace("AUDCAD", "AC")
+									.replace("EURUSD", "EU");
+		return labComment;
+		
+	}
+	
 	
 }
