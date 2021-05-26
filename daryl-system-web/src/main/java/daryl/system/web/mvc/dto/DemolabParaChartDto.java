@@ -39,8 +39,10 @@ public class DemolabParaChartDto{
 		Double acumulado = 0.0;
 		if(historico != null && historico.size() > 0) {
 			for (DemolabOps hist : historico) {
-				acumulado += Math.round(hist.getProfit());
-				datosParaChart.add(acumulado);
+				if(!hist.getComentario().trim().equals("")) {
+					acumulado += Math.round(hist.getProfit());
+					datosParaChart.add(acumulado);
+				}
 			} 
 		}
 		return datosParaChart;
@@ -67,37 +69,37 @@ public class DemolabParaChartDto{
 		
 		if(historico != null && historico.size() > 0) {
 			for (DemolabOps hist : historico) {
-				
-				opsTotales += 1;
-				if(hist.getProfit() > 0) {
-					opsWin += 1;
-					ganacias += hist.getProfit();
-				}else {
-					opsLoss += 1;
-					perdidas += hist.getProfit();
+				if(!hist.getComentario().trim().equals("")) {
+					opsTotales += 1;
+					if(hist.getProfit() > 0) {
+						opsWin += 1;
+						ganacias += hist.getProfit();
+					}else {
+						opsLoss += 1;
+						perdidas += hist.getProfit();
+					}
+					
+					double em = 0.0;
+					try {
+						
+						double perdidaMediaPorOpLoss = (double)perdidas / (double)opsLoss;
+						double gananciaMediaPorOpWin = (double)ganacias / (double)opsWin;
+	
+						double probWin = (double)opsWin / (double)opsTotales;
+						double probLoss = (double)opsLoss / (double)opsTotales;
+	
+						em = (gananciaMediaPorOpWin * probWin) + (perdidaMediaPorOpLoss * probLoss);
+						datosParaChart.add(em);
+						
+						pMedia = perdidaMediaPorOpLoss;
+						gMedia = gananciaMediaPorOpWin;
+						pWin = probWin;
+						pLoss = probLoss;
+						
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-				
-				double em = 0.0;
-				try {
-					
-					double perdidaMediaPorOpLoss = (double)perdidas / (double)opsLoss;
-					double gananciaMediaPorOpWin = (double)ganacias / (double)opsWin;
-
-					double probWin = (double)opsWin / (double)opsTotales;
-					double probLoss = (double)opsLoss / (double)opsTotales;
-
-					em = (gananciaMediaPorOpWin * probWin) + (perdidaMediaPorOpLoss * probLoss);
-					datosParaChart.add(em);
-					
-					pMedia = perdidaMediaPorOpLoss;
-					gMedia = gananciaMediaPorOpWin;
-					pWin = probWin;
-					pLoss = probLoss;
-					
-				}catch (Exception e) {
-					e.printStackTrace();
-				}
-				
 
 				
 			} 
