@@ -31,6 +31,9 @@ public class ControlHistoricoOperacionesDemolab {
 	@Autowired
 	IResumenRobotDemolabRepository resumenRobotDemolabRepository;
 
+
+	
+	
     @Scheduled(fixedDelay = 300000, initialDelay = 1000)
     @Transactional
 	public void calcularMaxMinDD() {

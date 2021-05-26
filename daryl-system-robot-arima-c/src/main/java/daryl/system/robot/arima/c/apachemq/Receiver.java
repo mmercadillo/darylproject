@@ -34,6 +34,7 @@ public class Receiver {
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	
 	@JmsListener(destination = "CHNL_ARIMA_C")
 	public void receiveMessage(String robotJson) {
 		
