@@ -142,7 +142,8 @@ public abstract class ArimaPredictor {
 			orden.setHora(config.getHoraInString(millis));
 		
 		//recuperamos la orden existente en TF 10080
-		Orden orden10080 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getArimaConfig());
+		String estrategia = "ARIMA_C_" + robot.getActivo() + "10080";
+		Orden orden10080 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
 			
 		if(orden10080.getTipoOrden() == TipoOrden.SELL) {
 			if(prediccion <= 0.0 && inv == Boolean.FALSE) {
