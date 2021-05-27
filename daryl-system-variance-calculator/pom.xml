@@ -21,9 +21,15 @@
 		<daryl.system.comun>1.0.6</daryl.system.comun>
 		<daryl.system.model>1.0.6</daryl.system.model>
 		<daryl.system.variance-base>1.0.6</daryl.system.variance-base>
+		<daryl.system.ta4j>1.0.6</daryl.system.ta4j>
 	</properties> 
+	
 	<dependencies>
-		
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>ta4j</artifactId>
+			<version>${daryl.system.ta4j}</version>
+		</dependency>
 		<!-- Daryl System Dependencies -->
 		<dependency>
 			<groupId>daryl.system</groupId>
