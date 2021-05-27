@@ -20,11 +20,17 @@
 		<daryl.system.comun>1.0.6</daryl.system.comun>
 		<daryl.system.model>1.0.6</daryl.system.model>
 		<daryl.system.arima-base>1.0.6</daryl.system.arima-base>
+		<daryl.system.ta4j>1.0.6</daryl.system.ta4j>
 	</properties>  
   
   	<dependencies>
   
 		<!-- Daryl System Dependencies -->
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>ta4j</artifactId>
+			<version>${daryl.system.ta4j}</version>
+		</dependency>
 		<dependency>
 			<groupId>daryl.system</groupId>
 			<artifactId>comun</artifactId>

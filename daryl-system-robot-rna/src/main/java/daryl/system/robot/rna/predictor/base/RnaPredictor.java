@@ -2,12 +2,14 @@ package daryl.system.robot.rna.predictor.base;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ta4j.core.MaxMinNormalizer;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.Datos;
@@ -39,6 +41,35 @@ public abstract class RnaPredictor {
 
 	protected abstract Double calcularPrediccion(Robot robot) throws IOException;
 
+	protected Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Double> datosForecast, MaxMinNormalizer darylNormalizer) {
+	//private Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
+
+		List<Double> inputs = new ArrayList<Double>();
+			
+		int index = 1;
+		do {
+			index++;
+			inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index)));	
+		}while(index < bot.getNeuronasEntrada()+1);
+		//}while(index < neuronasEntrada+1);
+		
+			
+		Collections.reverse(inputs);
+
+		
+		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
+		neuralNetwork.calculate();
+		
+        // get network output
+        double[] networkOutput = neuralNetwork.getOutput();
+        //double predicted = interpretOutput(networkOutput);
+        double prediccionAnterior =  darylNormalizer.denormData(networkOutput[0]);
+
+        logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+        return prediccionAnterior;
+	}
+	
+	
 	protected RnaConfig getRnaConfig(Robot robot) {
 		
 		return rnaConfigRepository.findRnaConfigByRobot(robot.getRnaConfig());

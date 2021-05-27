@@ -1,6 +1,5 @@
 package daryl.system.robot.arima.a.predictor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //logger;
@@ -8,15 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.MaxMinNormalizer;
 
 import daryl.arima.gen.ARIMA;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.HistAudCad;
+import daryl.system.model.historicos.Historico;
 import daryl.system.robot.arima.a.predictor.base.ArimaPredictor;
-import daryl.system.robot.arima.a.repository.IHistAudCadRepository;
+import daryl.system.robot.arima.a.repository.IHistoricoRepository;
 import lombok.ToString;
 
 @Component
@@ -24,8 +23,9 @@ import lombok.ToString;
 @ToString
 public class ArimaAudcad  extends ArimaPredictor{
 	
+
 	@Autowired
-	private IHistAudCadRepository histAudCadRepository;
+	private IHistoricoRepository historicoRepository; 
 	
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
@@ -33,18 +33,11 @@ public class ArimaAudcad  extends ArimaPredictor{
 		
 		Double prediccion = 0.0;
 		
-		List<HistAudCad> historico = histAudCadRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
-		List<Datos> datosForecast = toDatosList(historico);
-		
-		//Recuperamos los cierres de cada Dato
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+		BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+		MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
-		
-		datos.stream().forEach(dato -> {
-			int pos = datos.indexOf(dato);
-			datos.set(pos, dato * 10000);
-		});
-		
+				
 		try {
 			
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());
@@ -70,30 +63,6 @@ public class ArimaAudcad  extends ArimaPredictor{
 	
 	}
 
-	
-	private List<Datos> toDatosList(List<HistAudCad> historico){
-		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (HistAudCad hist : historico) {
-			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
-			
-		}
-		
-		return datos;
-		
-		
-	}
-	
 
 	
 }

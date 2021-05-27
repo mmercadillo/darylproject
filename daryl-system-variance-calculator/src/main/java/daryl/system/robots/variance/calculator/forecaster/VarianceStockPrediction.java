@@ -1,19 +1,21 @@
 package daryl.system.robots.variance.calculator.forecaster;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.BaseBarSeriesBuilder;
 
 import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.VarianceConfigCalcs;
@@ -54,25 +56,27 @@ public class VarianceStockPrediction implements Runnable{
 		this.inicio = inicio;
 	}
 	
-	private List<Datos> toDatosList(List<Historico> historico){
+	
+	private static BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
 		
-		List<Datos> datos = new ArrayList<Datos>();
-		
+		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
 		for (Historico hist : historico) {
 			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
+			Long millis = hist.getFechaHora();
+			
+			Instant instant = Instant.ofEpochMilli(millis);
+			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+			
+			series.addBar(	barDateTime, 
+							hist.getApertura() * multiplicador, 
+							hist.getMaximo() * multiplicador, 
+							hist.getMinimo() * multiplicador, 
+							hist.getCierre() * multiplicador, 
+							hist.getVolumen() * multiplicador);
 			
 		}
 		
-		return datos;
+		return series;
 		
 		
 	}
@@ -85,34 +89,10 @@ public class VarianceStockPrediction implements Runnable{
 	    	//Cargamos las cotizaciones
 	    	System.out.println("Cargando cotizaciones para: " + robot);
 			if(datos == null) {
-		    	/*
-				//Cargamos la segunda lista
-				File ficherodatos2 = new File(BASE_PATH + DATA);
-		    	try(BufferedReader reader = new BufferedReader(new FileReader(ficherodatos2))){
-		    		datos = new ArrayList<Double>();
-		    		String leido;
-		    		boolean encabezado = true;
-		    		while( (leido = reader.readLine()) != null  ) {
-		    			if(encabezado == true) {
-		    				encabezado = false;
-		    				continue;
-		    			}
-		    			String[] partes = leido.split(",");
-		    			datos.add(new Double(partes[5]));
-		    			
-		    		}
-		    	} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		    	*/
 				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.activo);
-				List<Datos> datosForecast = toDatosList(historico);
-				DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
-				datos = darylNormalizer.getDatos();
+				BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + this.timeframe + "_" + this.activo, 1);
+				this.datos = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+
 		    	
 			}
 			System.out.println("Cotizaciones cargadas para: " + robot);

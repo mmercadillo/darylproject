@@ -3,6 +3,9 @@ package daryl.system.robots.rna.calculator.forecaster;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,16 +28,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.BaseBarSeriesBuilder;
+import org.ta4j.core.MaxMinNormalizer;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.DataSetLoader;
 import daryl.system.comun.dataset.DataSetLoader3C;
 import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
-import daryl.system.model.RnaConfig;
 import daryl.system.model.RnaConfigCalcs;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robots.rna.calculator.repository.IHistoricoRepository;
@@ -92,8 +96,8 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 	private DataSet testSet;
 	private DataSet forecastSet;
 	
-	List<Datos> datosForecast;
-	DarylMaxMinNormalizer darylNormalizer;
+	BarSeries datosForecast;
+	MaxMinNormalizer darylNormalizer;
 	
 
 	private List<Double> normalizeDataForLearning;
@@ -121,36 +125,41 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		loadData();
 		logger.info("Datos cargados de -> " + this.robot);
 	}
+
 	
-	private List<Datos> toDatosList(List<Historico> historico){
+	
+	private static BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
 		
-		List<Datos> datos = new ArrayList<Datos>();
-		
+		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
 		for (Historico hist : historico) {
 			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
+			Long millis = hist.getFechaHora();
+			
+			Instant instant = Instant.ofEpochMilli(millis);
+			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+			
+			series.addBar(	barDateTime, 
+							hist.getApertura() * multiplicador, 
+							hist.getMaximo() * multiplicador, 
+							hist.getMinimo() * multiplicador, 
+							hist.getCierre() * multiplicador, 
+							hist.getVolumen() * multiplicador);
 			
 		}
 		
-		return datos;
+		return series;
 		
 		
 	}
 	
+	
+	
 	public  void loadData() {
 		
 		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo);
-		this.datosForecast = toDatosList(historico);
+		this.datosForecast = generateBarList(historico,  "BarSeries_" + this.timeframe + "_" + this.tipoActivo, 1);
 		
-		this.darylNormalizer = new DarylMaxMinNormalizer(this.datosForecast, Mode.CLOSE);
+		this.darylNormalizer = new MaxMinNormalizer(this.datosForecast, Mode.CLOSE);
 		List<Double> normalizedData = darylNormalizer.getNormalizedList();
 		
 		
@@ -162,14 +171,11 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		
 		
 		int diff = totalDatos - totalDatosLearn - totalDatosTest - totalDatosForecast;
-		
-		//System.out.println(totalDatos + "-" + totalDatosLearn + "-" + totalDatosTest + "-" + totalDatosForecast);
+
 		
 		this.normalizeDataForLearning = normalizedData.subList(1, totalDatosLearn);
 		this.normalizeDataForTest = normalizedData.subList(totalDatosLearn, totalDatosLearn + totalDatosTest);
 		this.normalizeDataForForecast = normalizedData.subList(totalDatosLearn + totalDatosTest, totalDatosLearn + totalDatosTest + totalDatosForecast + diff);
-
-		//System.out.println(normalizeDataForLearning.size() + "-" + normalizeDataForTest.size() + "-" + normalizeDataForForecast.size());
 		
 		
 	}
