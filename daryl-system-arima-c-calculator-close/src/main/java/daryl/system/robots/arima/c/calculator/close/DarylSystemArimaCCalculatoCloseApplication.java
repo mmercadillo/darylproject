@@ -58,31 +58,7 @@ public class DarylSystemArimaCCalculatoCloseApplication {
     public Logger darylLogger() {
         return LoggerFactory.getLogger("daryl");
     }
-	
-	/*
-	private static List<Datos> toDatosList(List<Historico> historico){
-		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (Historico hist : historico) {
-			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
-			
-		}
-		
-		return datos;
-		
-		
-	}
-	*/
+
 	
 	private static BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
 		
