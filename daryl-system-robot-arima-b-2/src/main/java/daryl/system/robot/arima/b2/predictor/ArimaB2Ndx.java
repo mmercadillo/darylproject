@@ -1,21 +1,24 @@
 package daryl.system.robot.arima.b2.predictor;
 
-import java.util.ArrayList;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.BaseBarSeriesBuilder;
+import org.ta4j.core.MaxMinNormalizer;
 
 import daryl.arima.gen.ARIMA;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.HistNdx;
+import daryl.system.model.historicos.Historico;
 import daryl.system.robot.arima.b2.predictor.base.ArimaPredictor;
-import daryl.system.robot.arima.b2.repository.IHistNdxRepository;
+import daryl.system.robot.arima.b2.repository.IHistoricoRepository;
 import lombok.ToString;
 
 @Component
@@ -26,18 +29,15 @@ public class ArimaB2Ndx  extends ArimaPredictor{
 
 
 	@Autowired
-	private IHistNdxRepository histNdxRepository;
+	private IHistoricoRepository historicoRepository; 
 	
-
-	private Integer getPrediccionAnterior(List<Datos> datosForecast) {
+	private Integer getPrediccionAnterior(List<Double> datosForecast) {
 		
 		//Lista para prediccionAnterior
-		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
-		//Recuperamos los cierres de cada Dato
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecastAnterior, Mode.CLOSE);
-		List<Double> datosAnterior = darylNormalizer.getDatos();
-
-		ARIMA arima=new ARIMA(datosAnterior.stream().mapToDouble(Double::new).toArray());
+		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
+		
+		
+		ARIMA arima=new ARIMA(datosForecastAnterior.stream().mapToDouble(Double::new).toArray());
 		int []model=arima.getARIMAmodel();
 		Integer prediccionAnterior = arima.aftDeal(arima.predictValue(model[0],model[1]));
 		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
@@ -51,14 +51,12 @@ public class ArimaB2Ndx  extends ArimaPredictor{
 		
 		try {
 		
-			List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
-			List<Datos> datosForecast = toDatosList(historico);
-			
-			Integer prediccionAnterior = getPrediccionAnterior(datosForecast);
-			
-			//Recuperamos los cierres de cada Dato
-			DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+			BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+			MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 			List<Double> datos = darylNormalizer.getDatos();
+		
+			Integer prediccionAnterior = getPrediccionAnterior(datos);
 			
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());
 			
@@ -83,7 +81,7 @@ public class ArimaB2Ndx  extends ArimaPredictor{
 	
 	}
 
-	
+	/*
 	private List<Datos> toDatosList(List<HistNdx> historico){
 		
 		List<Datos> datos = new ArrayList<Datos>();
@@ -103,6 +101,31 @@ public class ArimaB2Ndx  extends ArimaPredictor{
 		}
 		
 		return datos;
+		
+		
+	}
+	 */
+	
+	private BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
+		
+		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
+		for (Historico hist : historico) {
+			
+			Long millis = hist.getFechaHora();
+			
+			Instant instant = Instant.ofEpochMilli(millis);
+			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+			
+			series.addBar(	barDateTime, 
+							hist.getApertura() * multiplicador, 
+							hist.getMaximo() * multiplicador, 
+							hist.getMinimo() * multiplicador, 
+							hist.getCierre() * multiplicador, 
+							hist.getVolumen() * multiplicador);
+			
+		}
+		
+		return series;
 		
 		
 	}
