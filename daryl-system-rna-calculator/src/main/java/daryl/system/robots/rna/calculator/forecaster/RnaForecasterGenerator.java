@@ -162,14 +162,11 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		
 		
 		int diff = totalDatos - totalDatosLearn - totalDatosTest - totalDatosForecast;
-		
-		//System.out.println(totalDatos + "-" + totalDatosLearn + "-" + totalDatosTest + "-" + totalDatosForecast);
+
 		
 		this.normalizeDataForLearning = normalizedData.subList(1, totalDatosLearn);
 		this.normalizeDataForTest = normalizedData.subList(totalDatosLearn, totalDatosLearn + totalDatosTest);
 		this.normalizeDataForForecast = normalizedData.subList(totalDatosLearn + totalDatosTest, totalDatosLearn + totalDatosTest + totalDatosForecast + diff);
-
-		//System.out.println(normalizeDataForLearning.size() + "-" + normalizeDataForTest.size() + "-" + normalizeDataForForecast.size());
 		
 		
 	}

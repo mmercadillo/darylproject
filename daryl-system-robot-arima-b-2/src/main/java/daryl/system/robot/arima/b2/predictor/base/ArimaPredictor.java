@@ -96,29 +96,31 @@ public abstract class ArimaPredictor {
 		String estrategia = "ARIMA_B_" + robot.getActivo() + "_10080";
 		Orden orden10080 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
 			
-		if(orden10080.getTipoOrden() == TipoOrden.SELL) {
-			if(prediccion <= 0.0 && inv == Boolean.FALSE) {
-				orden.setTipoOrden(TipoOrden.SELL);
-			}else {
+		if(orden10080 != null) {
+			if(orden10080.getTipoOrden() == TipoOrden.SELL) {
+				if(prediccion <= 0.0 && inv == Boolean.FALSE) {
+					orden.setTipoOrden(TipoOrden.SELL);
+				}else {
+					
+				}
 				
-			}
-			
-			if(prediccion >= 0.0 && inv == Boolean.TRUE) {
-				orden.setTipoOrden(TipoOrden.SELL);
-			}else {
-				//orden.setTipoOrden(TipoOrden.CLOSE);
-			}
-		}else if(orden10080.getTipoOrden() == TipoOrden.BUY) {
-			if(prediccion >= 0.0 && inv == Boolean.FALSE) {
-				orden.setTipoOrden(TipoOrden.BUY);
-			}else {
-				//orden.setTipoOrden(TipoOrden.CLOSE);
-			}
-			
-			if(prediccion <= 0.0 && inv == Boolean.TRUE) {
-				orden.setTipoOrden(TipoOrden.BUY);
-			}else {
-				//orden.setTipoOrden(TipoOrden.CLOSE);
+				if(prediccion >= 0.0 && inv == Boolean.TRUE) {
+					orden.setTipoOrden(TipoOrden.SELL);
+				}else {
+					//orden.setTipoOrden(TipoOrden.CLOSE);
+				}
+			}else if(orden10080.getTipoOrden() == TipoOrden.BUY) {
+				if(prediccion >= 0.0 && inv == Boolean.FALSE) {
+					orden.setTipoOrden(TipoOrden.BUY);
+				}else {
+					//orden.setTipoOrden(TipoOrden.CLOSE);
+				}
+				
+				if(prediccion <= 0.0 && inv == Boolean.TRUE) {
+					orden.setTipoOrden(TipoOrden.BUY);
+				}else {
+					//orden.setTipoOrden(TipoOrden.CLOSE);
+				}
 			}
 		}
 
