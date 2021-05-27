@@ -1,15 +1,18 @@
 package daryl.system.robot.arima.c.predictor.base;
 
-import java.util.ArrayList;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.espy.arima.ArimaProcess;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.BaseBarSeriesBuilder;
 
 import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
@@ -34,7 +37,30 @@ public abstract class ArimaPredictor {
 
 	protected abstract Double calcularPrediccion(Robot robot);
 
-
+	
+	protected BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
+		
+		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
+		for (Historico hist : historico) {
+			
+			Long millis = hist.getFechaHora();
+			
+			Instant instant = Instant.ofEpochMilli(millis);
+			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+			
+			series.addBar(	barDateTime, 
+							hist.getApertura() * multiplicador, 
+							hist.getMaximo() * multiplicador, 
+							hist.getMinimo() * multiplicador, 
+							hist.getCierre() * multiplicador, 
+							hist.getVolumen() * multiplicador);
+			
+		}
+		
+		return series;
+		
+		
+	}
 
 	protected ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
 

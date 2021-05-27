@@ -1,8 +1,5 @@
 package daryl.system.robot.arima.d.predictor;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.espy.arima.ArimaForecaster;
@@ -13,7 +10,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.MaxMinNormalizer;
 
 import daryl.system.comun.dataset.enums.Mode;
@@ -121,54 +117,7 @@ public class ArimaDXauUsd  extends ArimaPredictor{
 	
 	}
 
-	/*
-	private List<Datos> toDatosList(List<HistXauUsd> historico){
-		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (HistXauUsd hist : historico) {
-			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
-			
-		}
-		
-		return datos;
-		
-		
-	}
-	*/
-	
-	private BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
-		
-		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
-		for (Historico hist : historico) {
-			
-			Long millis = hist.getFechaHora();
-			
-			Instant instant = Instant.ofEpochMilli(millis);
-			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-			
-			series.addBar(	barDateTime, 
-							hist.getApertura() * multiplicador, 
-							hist.getMaximo() * multiplicador, 
-							hist.getMinimo() * multiplicador, 
-							hist.getCierre() * multiplicador, 
-							hist.getVolumen() * multiplicador);
-			
-		}
-		
-		return series;
-		
-		
-	}
+
 
 	
 	
