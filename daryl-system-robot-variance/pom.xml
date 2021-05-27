@@ -27,6 +27,11 @@
 	</properties>
 	
 	<dependencies>
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>ta4j</artifactId>
+			<version>${daryl.system.ta4j}</version>
+		</dependency>    
     	<dependency>
     		<groupId>com.google.code.gson</groupId>
     		<artifactId>gson</artifactId>

@@ -1,20 +1,19 @@
 package daryl.system.robot.variance.b.predictor.base;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.Historico;
+import daryl.system.model.VarianceConfig;
 import daryl.system.robot.variance.b.repository.IOrdenRepository;
 import daryl.system.robot.variance.b.repository.IPrediccionRepository;
+import daryl.variance.StockPredict;
 
 public abstract class VariancePredictor {
 
@@ -32,7 +31,28 @@ public abstract class VariancePredictor {
 
 	protected abstract Double calcularPrediccion(Robot robot);
 
+	protected Double getPrediccionAnterior(List<Double> datosForecast, VarianceConfig varianceConfig) throws Exception {
+		
+		//Lista para prediccionAnterior
+		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
 
+		
+		int n = varianceConfig.getN();
+		int offset = varianceConfig.getOffset();
+		double alpha = varianceConfig.getAlpha();
+		double beta = varianceConfig.getBeta();
+		int m = varianceConfig.getLastM();
+		
+		StockPredict stock = new StockPredict(datosForecastAnterior, offset, n, alpha, beta, m);
+		double[] priceVariance = stock.getPriceVariance();
+		
+		double prediccionAnterior = priceVariance[0];
+
+		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+		return prediccionAnterior;
+
+	}
+	
 	
 	private void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
@@ -128,27 +148,6 @@ public abstract class VariancePredictor {
 		
 	}
 
-	protected List<Datos> toListOfDatos(List<Historico> historico){
-		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (Historico hist : historico) {
-			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
-			
-		}
-		
-		return datos;
-		
-		
-	}
+
 	
 }

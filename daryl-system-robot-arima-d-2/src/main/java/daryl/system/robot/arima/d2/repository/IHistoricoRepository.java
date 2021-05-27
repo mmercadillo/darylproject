@@ -1,4 +1,4 @@
-package daryl.system.robot.variance.b.repository;
+package daryl.system.robot.arima.d2.repository;
 
 import java.util.List;
 
