@@ -145,7 +145,6 @@ public abstract class ArimaPredictor {
 		String estrategia = "ARIMA_C_" + robot.getActivo() + "_10080";
 		Orden orden10080 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
 			
-		
 		if(orden10080.getTipoOrden() == TipoOrden.SELL) {
 			if(prediccion <= 0.0 && inv == Boolean.FALSE) {
 				orden.setTipoOrden(TipoOrden.SELL);
