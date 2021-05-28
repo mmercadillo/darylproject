@@ -3,7 +3,7 @@ package org.ta4j.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.enums.Mode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -13,7 +13,7 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.MaxMinNormalizer;
 
-import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
 import daryl.system.model.VarianceConfig;
 import daryl.system.model.historicos.Historico;

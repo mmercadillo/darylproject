@@ -11,7 +11,7 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
 
 import daryl.arima.gen.ARIMA;
-import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robot.arima.a2.predictor.base.ArimaPredictor;

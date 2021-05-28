@@ -22,7 +22,7 @@ import org.ta4j.core.MaxMinNormalizer;
 import daryl.system.backtest.robot.repository.IHistoricoOperacionesBacktestRepository;
 import daryl.system.backtest.robot.repository.IRnaConfigRepository;
 import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.enums.Mode;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.RnaConfig;
 import daryl.system.model.Robot;
