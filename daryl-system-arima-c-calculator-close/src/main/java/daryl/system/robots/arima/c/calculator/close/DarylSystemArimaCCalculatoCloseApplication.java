@@ -24,9 +24,9 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeriesBuilder;
 
 import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Activo;
+import daryl.system.comun.enums.Mode;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.CombinacionArimaC;
 import daryl.system.model.historicos.Historico;

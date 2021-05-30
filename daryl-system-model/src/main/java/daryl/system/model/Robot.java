@@ -11,9 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import daryl.system.comun.dataset.enums.Mode;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.CanalAmq;
+import daryl.system.comun.enums.Mode;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoRobot;
 import lombok.Getter;

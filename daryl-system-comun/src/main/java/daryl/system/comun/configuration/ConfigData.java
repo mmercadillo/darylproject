@@ -5,11 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import daryl.system.comun.enums.Timeframes;
-import daryl.system.comun.exceptions.SistemaException;
 
 @Component
 public class ConfigData {

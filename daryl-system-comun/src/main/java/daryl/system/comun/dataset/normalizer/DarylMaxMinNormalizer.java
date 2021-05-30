@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.enums.Mode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
