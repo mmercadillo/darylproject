@@ -23,7 +23,6 @@ import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
-import daryl.system.robot.rna.repository.IHistXauUsdRepository;
 import daryl.system.robot.rna.repository.IHistoricoRepository;
 import lombok.ToString;
 
@@ -34,8 +33,6 @@ public class RnaXauUsd  extends RnaPredictor{
 
 	@Autowired
 	ApplicationContext ctx;
-	@Autowired
-	private IHistXauUsdRepository histXauUsdRepository;
 	@Autowired
 	private IHistoricoRepository historicoRepository; 
 	
