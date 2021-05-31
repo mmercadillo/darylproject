@@ -10,6 +10,7 @@ import daryl.system.model.Robot;
 @Repository
 public interface IRobotsRepository extends JpaRepository<Robot, Long> {
 
-	public List<Robot> findAllByOrderByRobotAsc();
+	List<Robot> findAllByOrderByRobotAsc();
 	Robot findRobotByRobot(String robot);
+	List<Robot> findRobotByRobotContainingIgnoreCaseOrderByRobotDesc(String robot);
 }

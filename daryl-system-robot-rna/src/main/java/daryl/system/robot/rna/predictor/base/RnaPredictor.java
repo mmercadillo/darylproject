@@ -12,13 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.ta4j.core.MaxMinNormalizer;
 
 import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
 import daryl.system.model.RnaConfig;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.Historico;
 import daryl.system.robot.rna.repository.IOrdenRepository;
 import daryl.system.robot.rna.repository.IPrediccionRepository;
 import daryl.system.robot.rna.repository.IRnaConfigRepository;
@@ -177,27 +175,6 @@ public abstract class RnaPredictor {
 		
 	}
 	
-	protected List<Datos> toListOfDatos(List<Historico> historico){
-		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (Historico hist : historico) {
-			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
-			
-		}
-		
-		return datos;
-		
-		
-	}
+
 
 }

@@ -35,7 +35,6 @@ import org.ta4j.core.MaxMinNormalizer;
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.DataSetLoader;
 import daryl.system.comun.dataset.DataSetLoader3C;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Mode;
 import daryl.system.comun.enums.Timeframes;
