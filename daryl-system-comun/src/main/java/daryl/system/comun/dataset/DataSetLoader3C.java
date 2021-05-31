@@ -6,7 +6,6 @@ import java.util.stream.Stream;
 
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.data.DataSetRow;
-import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.aprendizaje.DatoAprendizaje;
 import daryl.system.comun.enums.Mode;

@@ -19,11 +19,8 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.MaxMinNormalizer;
 
-import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
 import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.repository.IHistXauUsdRepository;
