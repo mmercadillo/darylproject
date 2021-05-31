@@ -6,10 +6,10 @@ import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,7 +17,6 @@ import daryl.system.model.ResumenRobot;
 import daryl.system.model.Robot;
 import daryl.system.model.dto.RobotDto;
 import daryl.system.web.mvc.dto.ResumenRobotDto;
-import daryl.system.web.mvc.dto.RobotsCuentaDto;
 import daryl.system.web.services.IResumenRobotService;
 import daryl.system.web.services.IRobotsService;
 import daryl.system.web.services.ITotalPipsRobotsService;
@@ -118,7 +117,7 @@ public class ListadoRobotsController {
         return view; 
     }
 	
-	@GetMapping("/robots/buscar")
+	@PostMapping("/robots/buscar")
     public ModelAndView buscar(@ModelAttribute RobotDto rdto) {
 
 		ModelAndView view = new ModelAndView("listado_robots", "robot", rdto);
