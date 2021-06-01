@@ -39,8 +39,7 @@ public abstract class RnaPredictor {
 
 	protected abstract Double calcularPrediccion(Robot robot) throws IOException;
 
-	protected Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Double> datosForecast, MaxMinNormalizer darylNormalizer) {
-	//private Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
+	protected Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Double> datosForecast, MaxMinNormalizer darylNormalizer) {
 
 		List<Double> inputs = new ArrayList<Double>();
 			
@@ -48,8 +47,7 @@ public abstract class RnaPredictor {
 		do {
 			index++;
 			inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index)));	
-		}while(index < bot.getNeuronasEntrada()+1);
-		//}while(index < neuronasEntrada+1);
+		}while(index < neuronasEntrada+1);
 		
 			
 		Collections.reverse(inputs);
