@@ -1,8 +1,5 @@
 package daryl.system.robot.variance.predictor;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +7,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.MaxMinNormalizer;
+import org.ta4j.core.utils.BarSeriesUtils;
 
 import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
@@ -40,7 +37,7 @@ public class VarianceWti  extends VariancePredictor{
 
 		
 		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
-		BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+		BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 		MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
 
@@ -86,31 +83,6 @@ public class VarianceWti  extends VariancePredictor{
 		return prediccion;
 		
 	}
-	
 
-	private BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
-		
-		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
-		for (Historico hist : historico) {
-			
-			Long millis = hist.getFechaHora();
-			
-			Instant instant = Instant.ofEpochMilli(millis);
-			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-			
-			series.addBar(	barDateTime, 
-							hist.getApertura() * multiplicador, 
-							hist.getMaximo() * multiplicador, 
-							hist.getMinimo() * multiplicador, 
-							hist.getCierre() * multiplicador, 
-							hist.getVolumen() * multiplicador);
-			
-		}
-		
-		return series;
-		
-		
-	}
-	
 	
 }

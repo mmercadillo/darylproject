@@ -2,10 +2,6 @@ package daryl.system.backtest.robot.tester;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +13,6 @@ import org.ta4j.core.BarSeries;
 import daryl.arima.gen.ARIMA;
 import daryl.system.backtest.robot.repository.IHistoricoOperacionesBacktestRepository;
 import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Robot;
 import daryl.system.model.backtest.HistoricoOperacionesBacktest;

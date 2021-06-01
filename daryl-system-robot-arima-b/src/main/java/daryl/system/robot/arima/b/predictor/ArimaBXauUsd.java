@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
+import org.ta4j.core.utils.BarSeriesUtils;
 
 import daryl.arima.gen.ARIMA;
 import daryl.system.comun.enums.Mode;
@@ -35,7 +36,7 @@ public class ArimaBXauUsd  extends ArimaPredictor{
 		try {
 			
 			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
-			BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+			BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 			MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 			List<Double> datos = darylNormalizer.getDatos();
 			

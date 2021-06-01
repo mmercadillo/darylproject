@@ -356,4 +356,6 @@ public interface BarSeries extends Serializable {
      */
     Function<Number, Num> function();
 
+	
+
 }
