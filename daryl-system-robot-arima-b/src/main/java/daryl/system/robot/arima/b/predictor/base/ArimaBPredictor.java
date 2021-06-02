@@ -1,22 +1,30 @@
-package daryl.system.robot.arima.a2.predictor.base;
+package daryl.system.robot.arima.b.predictor.base;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.MaxMinNormalizer;
+import org.ta4j.core.utils.BarSeriesUtils;
 
+import daryl.arima.gen.ARIMA;
 import daryl.system.comun.configuration.ConfigData;
+import daryl.system.comun.enums.Mode;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
 import daryl.system.model.Robot;
-import daryl.system.robot.arima.a2.repository.IOrdenRepository;
-import daryl.system.robot.arima.a2.repository.IPrediccionRepository;
+import daryl.system.model.historicos.Historico;
+import daryl.system.robot.arima.b.repository.IHistoricoRepository;
+import daryl.system.robot.arima.b.repository.IOrdenRepository;
+import daryl.system.robot.arima.b.repository.IPrediccionRepository;
 
-public abstract class ArimaPredictor {
-
+public abstract class ArimaBPredictor {
 
 	@Autowired
 	protected Logger logger;
-	
+
 	@Autowired
 	protected ConfigData config;
 		
@@ -24,10 +32,61 @@ public abstract class ArimaPredictor {
 	protected IOrdenRepository ordenRepository;
 	@Autowired
 	protected IPrediccionRepository prediccionRepository;
+	@Autowired
+	protected IHistoricoRepository historicoRepository; 
 
-	protected abstract Double calcularPrediccion(Robot robot);
+	
+	protected Double calcularPrediccion(Robot bot) {
+		
 
+		Double prediccion = 0.0;
+		try {
+		
+			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+			BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+			MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
+			List<Double> datos = darylNormalizer.getDatos();
+			
+			Integer prediccionAnterior = getPrediccionAnterior(datos);
+			
+			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());
+			
+			int []model=arima.getARIMAmodel();
 
+			Integer forecast = arima.aftDeal(arima.predictValue(model[0],model[1]));
+			logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
+			if(forecast > prediccionAnterior) {
+				prediccion = 1.0;
+			}else if(forecast < prediccionAnterior) {
+				prediccion = -1.0;
+			}else {
+				prediccion = 0.0;
+			}
+
+		}catch (Exception e) {
+			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
+		}
+
+		
+		return prediccion;
+	
+	}
+	
+	protected Integer getPrediccionAnterior(List<Double> datosForecast) {
+		
+		//Lista para prediccionAnterior
+		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
+		
+		
+		ARIMA arima=new ARIMA(datosForecastAnterior.stream().mapToDouble(Double::new).toArray());
+		int []model=arima.getARIMAmodel();
+		Integer prediccionAnterior = arima.aftDeal(arima.predictValue(model[0],model[1]));
+		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+		return prediccionAnterior;
+	}
+	
+
+	
 
 	private void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
@@ -87,38 +146,15 @@ public abstract class ArimaPredictor {
 			orden.setRobot(robot.getRobot());
 			orden.setFecha(config.getFechaInString(millis));
 			orden.setHora(config.getHoraInString(millis));
-			
-			//recuperamos la orden existente en TF 10080
-			String estrategia = "ARIMA_" + robot.getActivo() + "_10080";
-			Orden orden10080 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
-			
-			if(orden10080 != null) {
-				if(orden10080.getTipoOrden() == TipoOrden.SELL) {
-					if(prediccion <= 0.0 && inv == Boolean.FALSE) {
-						orden.setTipoOrden(TipoOrden.SELL);
-					}else {
-						
-					}
-					
-					if(prediccion >= 0.0 && inv == Boolean.TRUE) {
-						orden.setTipoOrden(TipoOrden.SELL);
-					}else {
-						//orden.setTipoOrden(TipoOrden.CLOSE);
-					}
-				}else if(orden10080.getTipoOrden() == TipoOrden.BUY) {
-					if(prediccion >= 0.0 && inv == Boolean.FALSE) {
-						orden.setTipoOrden(TipoOrden.BUY);
-					}else {
-						//orden.setTipoOrden(TipoOrden.CLOSE);
-					}
-					
-					if(prediccion <= 0.0 && inv == Boolean.TRUE) {
-						orden.setTipoOrden(TipoOrden.BUY);
-					}else {
-						//orden.setTipoOrden(TipoOrden.CLOSE);
-					}
-				}
-			}
+		if(prediccion < 0.0) {
+			orden.setTipoOrden(TipoOrden.SELL);
+			if(inv == Boolean.TRUE) orden.setTipoOrden(TipoOrden.BUY);
+		}else if(prediccion > 0.0) {
+			orden.setTipoOrden(TipoOrden.BUY);
+			if(inv == Boolean.TRUE) orden.setTipoOrden(TipoOrden.SELL);
+		}else {
+			orden.setTipoOrden(TipoOrden.CLOSE);	
+		}
 		
 		return orden;
 	}
@@ -145,5 +181,6 @@ public abstract class ArimaPredictor {
 
 		
 	}
+
 
 }

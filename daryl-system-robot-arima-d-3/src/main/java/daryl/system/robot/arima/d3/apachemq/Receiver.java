@@ -19,7 +19,7 @@ import daryl.system.robot.arima.d3.predictor.ArimaD3Gdaxi;
 import daryl.system.robot.arima.d3.predictor.ArimaD3Ndx;
 import daryl.system.robot.arima.d3.predictor.ArimaD3XauUsd;
 import daryl.system.robot.arima.d3.predictor.ArimaD3XtiUsd;
-import daryl.system.robot.arima.d3.predictor.base.ArimaPredictor;
+import daryl.system.robot.arima.d3.predictor.base.ArimaD3Predictor;
 
 @Component
 public class Receiver {
@@ -39,7 +39,7 @@ public class Receiver {
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 
-		ArimaPredictor predictor = null;
+		ArimaD3Predictor predictor = null;
 		
 		if(robot.getActivo() == Activo.GDAXI) {
 			try{
