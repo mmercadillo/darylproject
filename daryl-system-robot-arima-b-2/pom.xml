@@ -12,7 +12,7 @@
   	<groupId>daryl.system.robots</groupId>
   	<artifactId>robot-arima-b</artifactId>
   	<version>1.0.7</version>
-  	<name>daryl-system-robot-aima-b</name>
+  	<name>daryl-system-robot-aima-b-2</name>
   	<description>Robot Arima B</description>
 
    	<properties>
