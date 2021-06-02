@@ -2,7 +2,7 @@
 	<configuration>
 	 
 	    <property name="LOGS" value="F:/DarylSystem/logs" />
-	    <property name="APP" value="daryl-system-robot-arima-c3" />
+	    <property name="APP" value="daryl-system-robot-arima-c-3" />
 
 	    <appender name="Console"
 	        class="ch.qos.logback.core.ConsoleAppender">

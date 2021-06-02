@@ -10,10 +10,10 @@
 	</parent>
   
   	<groupId>daryl.system.robots</groupId>
-  	<artifactId>robot-arima-b</artifactId>
+  	<artifactId>robot-arima-b-2</artifactId>
   	<version>1.0.7</version>
   	<name>daryl-system-robot-aima-b-2</name>
-  	<description>Robot Arima B</description>
+  	<description>Robot Arima B 2</description>
 
    	<properties>
 		<java.version>1.8</java.version>
