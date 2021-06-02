@@ -159,7 +159,7 @@ public abstract class Variance3Predictor {
 			
 			
 		//recuperamos la orden existente en TF 1440
-		String estrategia = "VARIANCE_" + robot.getActivo() + "_14400";
+		String estrategia = "VARIANCE_" + robot.getActivo() + "_1440";
 		Orden orden1440 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
 			
 		if(orden1440 != null) {
