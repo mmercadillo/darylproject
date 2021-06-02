@@ -1,4 +1,4 @@
-package daryl.system.robot.variance.apachemq;
+package daryl.system.robot.variance2.apachemq;
 
 import java.util.Date;
 
@@ -13,13 +13,13 @@ import com.google.gson.Gson;
 
 import daryl.system.comun.enums.Activo;
 import daryl.system.model.Robot;
-import daryl.system.robot.variance.predictor.VarianceAudcad;
-import daryl.system.robot.variance.predictor.VarianceEurusd;
-import daryl.system.robot.variance.predictor.VarianceGdaxi;
-import daryl.system.robot.variance.predictor.VarianceNdx;
-import daryl.system.robot.variance.predictor.VarianceXtiUsd;
-import daryl.system.robot.variance.predictor.VarianceXauUsd;
-import daryl.system.robot.variance.predictor.base.VariancePredictor;
+import daryl.system.robot.variance2.predictor.Variance2Audcad;
+import daryl.system.robot.variance2.predictor.Variance2Eurusd;
+import daryl.system.robot.variance2.predictor.Variance2Gdaxi;
+import daryl.system.robot.variance2.predictor.Variance2Ndx;
+import daryl.system.robot.variance2.predictor.Variance2XtiUsd;
+import daryl.system.robot.variance2.predictor.Variance2XauUsd;
+import daryl.system.robot.variance2.predictor.base.Variance2Predictor;
 
 @Component
 public class Receiver {
@@ -33,17 +33,17 @@ public class Receiver {
 	@Autowired
 	private ApplicationContext applicationContext;
 
-	@JmsListener(destination = "CHNL_VARIANCE")
+	@JmsListener(destination = "CHNL_VARIANCE_2")
 	public void receiveMessage(String robotJson) {
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 
-		VariancePredictor predictor = null;
+		Variance2Predictor predictor = null;
 		
 		if(robot.getActivo() == Activo.GDAXI) {
 			try{
-				predictor = applicationContext.getBean(VarianceGdaxi.class);
+				predictor = applicationContext.getBean(Variance2Gdaxi.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -51,7 +51,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.NDX) {
 			try{
-				predictor = applicationContext.getBean(VarianceNdx.class);
+				predictor = applicationContext.getBean(Variance2Ndx.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -59,7 +59,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.XAUUSD) {
 			try{
-				predictor = applicationContext.getBean(VarianceXauUsd.class);
+				predictor = applicationContext.getBean(Variance2XauUsd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -67,7 +67,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.AUDCAD) {
 			try{
-				predictor = applicationContext.getBean(VarianceAudcad.class);
+				predictor = applicationContext.getBean(Variance2Audcad.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -75,7 +75,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.EURUSD) {
 			try{
-				predictor = applicationContext.getBean(VarianceEurusd.class);
+				predictor = applicationContext.getBean(Variance2Eurusd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -83,7 +83,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.XTIUSD) {
 			try{
-				predictor = applicationContext.getBean(VarianceXtiUsd.class);
+				predictor = applicationContext.getBean(Variance2XtiUsd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
