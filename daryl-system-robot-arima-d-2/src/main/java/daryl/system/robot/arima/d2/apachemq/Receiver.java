@@ -17,8 +17,8 @@ import daryl.system.robot.arima.d2.predictor.ArimaD2Audcad;
 import daryl.system.robot.arima.d2.predictor.ArimaD2Eurusd;
 import daryl.system.robot.arima.d2.predictor.ArimaD2Gdaxi;
 import daryl.system.robot.arima.d2.predictor.ArimaD2Ndx;
-import daryl.system.robot.arima.d2.predictor.ArimaD2Wti;
 import daryl.system.robot.arima.d2.predictor.ArimaD2XauUsd;
+import daryl.system.robot.arima.d2.predictor.ArimaD2XtiUsd;
 import daryl.system.robot.arima.d2.predictor.base.ArimaPredictor;
 
 @Component
@@ -73,10 +73,10 @@ public class Receiver {
 				logger.error(e.getMessage(), e);		
 			}
 		}
-		/*
+		
 		if(robot.getActivo() == Activo.EURUSD) {
 			try{
-				predictor = applicationContext.getBean(ArimaDEurusd.class);
+				predictor = applicationContext.getBean(ArimaD2Eurusd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -84,13 +84,13 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.XTIUSD) {
 			try{
-				predictor = applicationContext.getBean(ArimaDWti.class);
+				predictor = applicationContext.getBean(ArimaD2XtiUsd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
-		*/
+		
 
 	}
 

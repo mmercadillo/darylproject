@@ -13,9 +13,12 @@ import com.google.gson.Gson;
 
 import daryl.system.comun.enums.Activo;
 import daryl.system.model.Robot;
+import daryl.system.robot.arima.a2.predictor.Arima2Audcad;
+import daryl.system.robot.arima.a2.predictor.Arima2Eurusd;
 import daryl.system.robot.arima.a2.predictor.Arima2Gdaxi;
 import daryl.system.robot.arima.a2.predictor.Arima2Ndx;
 import daryl.system.robot.arima.a2.predictor.Arima2XauUsd;
+import daryl.system.robot.arima.a2.predictor.Arima2XtiUsd;
 import daryl.system.robot.arima.a2.predictor.base.ArimaPredictor;
 
 @Component
@@ -63,7 +66,6 @@ public class Receiver {
 				logger.error(e.getMessage(), e);		
 			}
 		}
-		/*
 		if(robot.getActivo() == Activo.AUDCAD) {
 			try{
 				predictor = applicationContext.getBean(Arima2Audcad.class);
@@ -80,7 +82,15 @@ public class Receiver {
 				logger.error(e.getMessage(), e);		
 			}
 		}
-		*/
+		if(robot.getActivo() == Activo.XTIUSD) {
+			try{
+				predictor = applicationContext.getBean(Arima2XtiUsd.class);
+				predictor.calculate(robot);
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+		}
+		
 	}
 
 	

@@ -1,4 +1,4 @@
-package daryl.system.robot.arima.a3.predictor;
+package daryl.system.robot.arima.a2.predictor;
 
 import java.util.List;
 
@@ -15,14 +15,14 @@ import daryl.arima.gen.ARIMA;
 import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
-import daryl.system.robot.arima.a3.predictor.base.ArimaPredictor;
-import daryl.system.robot.arima.a3.repository.IHistoricoRepository;
+import daryl.system.robot.arima.a2.predictor.base.ArimaPredictor;
+import daryl.system.robot.arima.a2.repository.IHistoricoRepository;
 import lombok.ToString;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
-public class Arima2XauUsd  extends ArimaPredictor{
+public class Arima2XtiUsd  extends ArimaPredictor{
 
 
 	@Autowired

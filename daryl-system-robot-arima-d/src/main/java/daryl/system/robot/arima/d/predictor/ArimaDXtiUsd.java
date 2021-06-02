@@ -25,7 +25,7 @@ import lombok.ToString;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
-public class ArimaDWti  extends ArimaPredictor{
+public class ArimaDXtiUsd  extends ArimaPredictor{
 	
 
 	
