@@ -9,14 +9,20 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
+import org.ta4j.core.utils.BarSeriesUtils;
 
 import daryl.system.comun.configuration.ConfigData;
+import daryl.system.comun.enums.Mode;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
 import daryl.system.model.RnaConfig;
 import daryl.system.model.Robot;
+import daryl.system.model.historicos.Historico;
+import daryl.system.robot.rna.repository.IHistoricoRepository;
 import daryl.system.robot.rna.repository.IOrdenRepository;
 import daryl.system.robot.rna.repository.IPrediccionRepository;
 import daryl.system.robot.rna.repository.IRnaConfigRepository;
@@ -37,7 +43,63 @@ public abstract class RnaPredictor {
 	@Autowired
 	private IRnaConfigRepository rnaConfigRepository;
 
-	protected abstract Double calcularPrediccion(Robot robot) throws IOException;
+
+	@Autowired
+	private IHistoricoRepository historicoRepository; 
+
+	protected Double calcularPrediccion(Robot bot) throws IOException {
+
+		Double prediccion = 0.0;
+		RnaConfig rnaConfig = getRnaConfig(bot);
+		
+		if(rnaConfig != null) {
+		
+			NeuralNetwork neuralNetwork  = null;
+			try {
+				neuralNetwork = rnaFromByteArray(rnaConfig.getRna());
+			} catch (ClassNotFoundException | IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			if(neuralNetwork != null) {		
+							
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
+				List<Double> datos = darylNormalizer.getDatos();
+						
+				Double prediccionAnterior = getPrediccionAnterior(rnaConfig.getNeuronasEntrada(), bot, neuralNetwork, datos, darylNormalizer);
+				
+				List<Double> inputs = new ArrayList<Double>();
+				int index = 0;
+				do {
+					index++;
+					inputs.add(darylNormalizer.normData(datos.get(datos.size()-index)));		
+				}while(index < rnaConfig.getNeuronasEntrada());
+		
+				Collections.reverse(inputs);
+						
+				neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
+				neuralNetwork.calculate();
+				
+		        double[] networkOutput = neuralNetwork.getOutput();
+		        double forecast = darylNormalizer.denormData(networkOutput[0]);
+		        logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
+		        
+		        if(forecast > prediccionAnterior) {
+		        	prediccion = 1.0;
+		        }else if(forecast < prediccionAnterior) {
+		        	prediccion = -1.0;
+		        }
+		        
+			}
+		}
+		
+        return prediccion;
+	
+	}
+
+
 
 	protected Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Double> datosForecast, MaxMinNormalizer darylNormalizer) {
 

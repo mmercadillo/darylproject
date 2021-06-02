@@ -18,7 +18,7 @@ import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
 import daryl.system.model.VarianceConfig;
 import daryl.system.model.historicos.Historico;
-import daryl.system.robot.variance.b.predictor.base.VariancePredictor;
+import daryl.system.robot.variance.b.predictor.base.VarianceBPredictor;
 import daryl.system.robot.variance.b.repository.IHistoricoRepository;
 import daryl.system.robot.variance.b.repository.IVarianceConfigRepository;
 import daryl.variance.StockPredict;
@@ -27,7 +27,7 @@ import lombok.ToString;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
-public class VarianceBAudcad  extends VariancePredictor{
+public class VarianceBAudcad  extends VarianceBPredictor{
 
 	
 	@Autowired
