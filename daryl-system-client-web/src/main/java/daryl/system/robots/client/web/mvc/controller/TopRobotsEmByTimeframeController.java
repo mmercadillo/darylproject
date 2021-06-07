@@ -24,7 +24,7 @@ public class TopRobotsEmByTimeframeController {
 	
 		
 		//Card con el top5 en esperanza matemática con tf 60
-		List<ResumenRobot> top5EspMat = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("60",5);
+		List<ResumenRobot> top5EspMat = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("60",10);
 		List<ResumenRobotDto> resumenes = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top5EspMat) {
 			if(resumen != null) resumenes.add(ResumenRobotDto.getDto(resumen));
@@ -43,7 +43,7 @@ public class TopRobotsEmByTimeframeController {
 
 		
 		//Card con el top5 en esperanza matemática con tf 60
-		List<ResumenRobot> top5EspMat = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("240",5);
+		List<ResumenRobot> top5EspMat = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("240",10);
 		List<ResumenRobotDto> resumenes = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top5EspMat) {
 			if(resumen != null) resumenes.add(ResumenRobotDto.getDto(resumen));
