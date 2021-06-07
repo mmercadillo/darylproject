@@ -24,5 +24,4 @@ public enum TipoRobot {
 	ARIMA_B2_I,
 	ARIMA_A2,
 	ARIMA_A2_I;
-
 }

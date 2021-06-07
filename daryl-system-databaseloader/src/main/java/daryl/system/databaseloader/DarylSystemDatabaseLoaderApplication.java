@@ -51,13 +51,12 @@ public class DarylSystemDatabaseLoaderApplication {
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
-	    //loadAudCad(context);
+	    loadAudCad(context);
 	    //loadEurUsd(context);
-	    //loadGdaxi(context);
 	    //loadNdx(context);
 	    //loadWti(context);
 	    //loadXauUsd(context);
-	    loadGeneral(context);
+	    //loadGeneral(context);
 	    //loadCombinaciones(context);
 	}
 	
