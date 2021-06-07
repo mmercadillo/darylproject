@@ -2,6 +2,9 @@ package daryl.system.robot.rna.predictor;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,18 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.BaseBarSeriesBuilder;
+import org.ta4j.core.MaxMinNormalizer;
 
-import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
+import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.HistNdx;
+import daryl.system.model.historicos.Historico;
 import daryl.system.robot.rna.predictor.base.RnaPredictor;
 import daryl.system.robot.rna.repository.IHistNdxRepository;
+import daryl.system.robot.rna.repository.IHistoricoRepository;
 import lombok.ToString;
 
 @Component
@@ -34,45 +36,9 @@ public class RnaNdx  extends RnaPredictor{
 	ApplicationContext ctx;
 	@Autowired
 	private IHistNdxRepository histNdxRepository;
+	@Autowired
+	private IHistoricoRepository historicoRepository; 
 	
-
-	private Double getPrediccionAnterior(Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
-	//private Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Datos> datosForecast) {
-		
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
-		List<Double> inputs = new ArrayList<Double>();
-			
-		int index = 1;
-		do {
-			index++;
-			if(bot.getMode() == Mode.CLOSE) {
-				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getCierre()));
-			}
-			if(bot.getMode() == Mode.HIGH) {
-				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getMaximo()));
-			}
-			if(bot.getMode() == Mode.LOW) {
-				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getMinimo()));
-			}
-			if(bot.getMode() == Mode.OPEN) {
-				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getApertura()));
-			}			
-		}while(index < bot.getNeuronasEntrada()+1);			
-		//}while(index < neuronasEntrada+1);
-		
-		Collections.reverse(inputs);
-		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
-		neuralNetwork.calculate();
-		
-        // get network output
-        double[] networkOutput = neuralNetwork.getOutput();
-        //double predicted = interpretOutput(networkOutput);
-        double prediccionAnterior =  darylNormalizer.denormData(networkOutput[0]);
-
-        logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
-        return prediccionAnterior;
-	}
-
 
 
 	@Override
@@ -98,33 +64,23 @@ public class RnaNdx  extends RnaPredictor{
 		
 		NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(rna);
 		
-		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
-		
-		List<Datos> datosForecast = toDatosList(historico);
+		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+		BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+		MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
+		List<Double> datos = darylNormalizer.getDatos();
 		
 		//Double prediccionAnterior = getPrediccionAnterior(rnaConfig.getNeuronasEntrada(), bot, neuralNetwork, datosForecast);
-		Double prediccionAnterior = getPrediccionAnterior(bot, neuralNetwork, datosForecast);
+		Double prediccionAnterior = getPrediccionAnterior(bot, neuralNetwork, datos, darylNormalizer);
 
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+
 		
 		List<Double> inputs = new ArrayList<Double>();
 		int index = 0;
 		do {
 			index++;
-			if(bot.getMode() == Mode.CLOSE) {
-				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getCierre()));
-			}
-			if(bot.getMode() == Mode.HIGH) {
-				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getMaximo()));
-			}
-			if(bot.getMode() == Mode.LOW) {
-				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getMinimo()));
-			}
-			if(bot.getMode() == Mode.OPEN) {
-				inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index).getApertura()));
-			}			
-		}while(index < bot.getNeuronasEntrada());
+			inputs.add(darylNormalizer.normData(datos.get(datos.size()-index)));		
 		//}while(index < rnaConfig.getNeuronasEntrada());
+		}while(index < bot.getNeuronasEntrada());
 
 		Collections.reverse(inputs);
 
@@ -149,27 +105,29 @@ public class RnaNdx  extends RnaPredictor{
 	}
 
 	
-	private List<Datos> toDatosList(List<HistNdx> historico){
+	private BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
 		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (HistNdx hist : historico) {
+		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
+		for (Historico hist : historico) {
 			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
+			Long millis = hist.getFechaHora();
+			
+			Instant instant = Instant.ofEpochMilli(millis);
+			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+			
+			series.addBar(	barDateTime, 
+							hist.getApertura() * multiplicador, 
+							hist.getMaximo() * multiplicador, 
+							hist.getMinimo() * multiplicador, 
+							hist.getCierre() * multiplicador, 
+							hist.getVolumen() * multiplicador);
 			
 		}
 		
-		return datos;
+		return series;
 		
 		
 	}
+	
 
 }

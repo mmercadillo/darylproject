@@ -23,10 +23,16 @@
 		<daryl.system.variance-base>1.0.6</daryl.system.variance-base>
 		<neuroph.version>2.98</neuroph.version>
 		<commons.lang3.version>3.11</commons.lang3.version>
+		<daryl.system.ta4j>1.0.6</daryl.system.ta4j>
 	</properties> 
 	<dependencies>
 		
 		<!-- Daryl System Dependencies -->
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>ta4j</artifactId>
+			<version>${daryl.system.ta4j}</version>
+		</dependency>
 		<dependency>
 			<groupId>daryl.system</groupId>
 			<artifactId>comun</artifactId>

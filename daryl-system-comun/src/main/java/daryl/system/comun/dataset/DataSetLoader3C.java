@@ -6,10 +6,9 @@ import java.util.stream.Stream;
 
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.data.DataSetRow;
-import org.springframework.stereotype.Component;
 
 import daryl.system.comun.dataset.aprendizaje.DatoAprendizaje;
-import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.enums.Mode;
 
 
 public final class DataSetLoader3C extends DataSetLoader{

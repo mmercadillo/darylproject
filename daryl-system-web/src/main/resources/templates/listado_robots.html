@@ -185,6 +185,39 @@ License: You must have a valid license purchased only from themeforest(the above
 			</div>
 			<div class="row">
 				<div class="col-md-12">
+					<div class="portlet box green-haze">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-settings"></i> Buscador
+							</div>
+						</div>
+						<div class="portlet-body form">
+							<div class="skin skin-square">
+								<form action="#" th:action="@{/robots/buscar}" th:object="${robot}" method="post" class="form-horizontal" role="form">
+									<div class="form-body">
+										<div class="form-group">
+											<div class="col-md-12">
+												<label class="col-md-3 control-label">Robot:</label>
+												<div class="col-md-9">
+													<input type="text" th:field="*{robot}" class="form-control input-circle" placeholder="Introduce el nombre del robot"/>
+													<span class="help-block">
+													Busca los robots que contengan el texto introducido.</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-actions">
+										<button type="submit" class="btn blue">Buscar</button>
+										<!-- <button type="reset" class="btn default">Cancel</button>-->
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
 					<!-- BEGIN CONDENSED TABLE PORTLET-->
 					<div class="portlet box green">
 						<div class="portlet-title">

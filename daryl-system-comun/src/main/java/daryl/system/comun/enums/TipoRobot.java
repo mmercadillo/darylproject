@@ -16,12 +16,12 @@ public enum TipoRobot {
 	VARIANCE_I,
 	VARIANCE_B,
 	VARIANCE_B_I,
+	ARIMA_D2,
+	ARIMA_D2_I,
 	ARIMA_C2,
 	ARIMA_C2_I,
 	ARIMA_B2,
 	ARIMA_B2_I,
 	ARIMA_A2,
-	ARIMA_A2_I
-	;
-
+	ARIMA_A2_I;
 }

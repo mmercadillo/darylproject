@@ -1,21 +1,20 @@
 package daryl.system.robot.arima.b.predictor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.MaxMinNormalizer;
 
 import daryl.arima.gen.ARIMA;
-import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
+import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.HistEurUsd;
+import daryl.system.model.historicos.Historico;
 import daryl.system.robot.arima.b.predictor.base.ArimaPredictor;
-import daryl.system.robot.arima.b.repository.IHistEurUsdRepository;
+import daryl.system.robot.arima.b.repository.IHistoricoRepository;
 import lombok.ToString;
 
 @Component
@@ -23,27 +22,10 @@ import lombok.ToString;
 @ToString
 public class ArimaBEurusd  extends ArimaPredictor{
 	
+
 	@Autowired
-	private IHistEurUsdRepository histEurUsdRepository;
+	private IHistoricoRepository historicoRepository; 
 
-
-	private Integer getPrediccionAnterior(List<Datos> datosForecast) {
-		
-		//Lista para prediccionAnterior
-		List<Datos> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
-		//Recuperamos los cierres de cada Dato
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecastAnterior, Mode.CLOSE);
-		List<Double> datosAnterior = darylNormalizer.getDatos();
-		datosAnterior.stream().forEach(dato -> {
-			int pos = datosAnterior.indexOf(dato);
-			datosAnterior.set(pos, dato * 10000);
-		});
-		ARIMA arima=new ARIMA(datosAnterior.stream().mapToDouble(Double::new).toArray());
-		int []model=arima.getARIMAmodel();
-		Integer prediccionAnterior = arima.aftDeal(arima.predictValue(model[0],model[1]));
-		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
-		return prediccionAnterior;
-	}
 	
 	@Override
 	protected Double calcularPrediccion(Robot bot) {
@@ -52,20 +34,13 @@ public class ArimaBEurusd  extends ArimaPredictor{
 		Double prediccion = 0.0;
 		try {
 		
-			List<HistEurUsd> historico = histEurUsdRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
-			List<Datos> datosForecast = toDatosList(historico);
-			
-			Integer prediccionAnterior = getPrediccionAnterior(datosForecast);
-			
-			//Recuperamos los cierres de cada Dato
-			DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
+			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+			BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+			MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 			List<Double> datos = darylNormalizer.getDatos();
 			
-			datos.stream().forEach(dato -> {
-				int pos = datos.indexOf(dato);
-				datos.set(pos, dato * 10000);
-			});
-		
+			Integer prediccionAnterior = getPrediccionAnterior(datos);
+			
 			ARIMA arima=new ARIMA(datos.stream().mapToDouble(Double::new).toArray());
 			
 			int []model=arima.getARIMAmodel();
@@ -89,29 +64,6 @@ public class ArimaBEurusd  extends ArimaPredictor{
 	
 	}
 
-	
-	private List<Datos> toDatosList(List<HistEurUsd> historico){
-		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (HistEurUsd hist : historico) {
-			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
-			
-		}
-		
-		return datos;
-		
-		
-	}
 	
 
 }

@@ -1,6 +1,5 @@
 package daryl.system.robot.arima.c.predictor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.espy.arima.ArimaForecaster;
@@ -10,16 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.MaxMinNormalizer;
 
-import daryl.system.comun.dataset.Datos;
-import daryl.system.comun.dataset.enums.Mode;
-import daryl.system.comun.dataset.normalizer.DarylMaxMinNormalizer;
+import daryl.system.comun.enums.Mode;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.HistNdx;
+import daryl.system.model.historicos.Historico;
 import daryl.system.robot.arima.c.predictor.base.ArimaPredictor;
 import daryl.system.robot.arima.c.repository.IArimaConfigRepository;
-import daryl.system.robot.arima.c.repository.IHistNdxRepository;
+import daryl.system.robot.arima.c.repository.IHistoricoRepository;
 import lombok.ToString;
 
 @Component
@@ -31,7 +30,7 @@ public class ArimaCNdx  extends ArimaPredictor{
 	@Autowired
 	IArimaConfigRepository arimaConfigRepository;
 	@Autowired
-	private IHistNdxRepository histNdxRepository;
+	private IHistoricoRepository historicoRepository; 
 
 
 	@Override
@@ -39,13 +38,10 @@ public class ArimaCNdx  extends ArimaPredictor{
 
 		Double prediccion = 0.0;
 
-		List<HistNdx> historico = histNdxRepository.findAllByTimeframeOrderByFechaHoraAsc(bot.getTimeframe());
 		
-		
-		List<Datos> datosForecast = toDatosList(historico);
-		//Recuperamos los cierres de cada Dato
-		DarylMaxMinNormalizer darylNormalizer = new DarylMaxMinNormalizer(datosForecast, Mode.CLOSE);
-		
+		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+		BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+		MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
 		
 		
@@ -97,29 +93,5 @@ public class ArimaCNdx  extends ArimaPredictor{
 	
 	}
 
-	
-	private List<Datos> toDatosList(List<HistNdx> historico){
-		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (HistNdx hist : historico) {
-			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
-			
-		}
-		
-		return datos;
-		
-		
-	}
 
-	
 }

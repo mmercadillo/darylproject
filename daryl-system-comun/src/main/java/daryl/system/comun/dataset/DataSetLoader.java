@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.neuroph.core.data.DataSet;
 
-import daryl.system.comun.dataset.enums.Mode;
+import daryl.system.comun.enums.Mode;
 
 
 

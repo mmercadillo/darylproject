@@ -12,5 +12,7 @@ import daryl.system.model.historicos.Historico;
 @Repository
 public interface IHistoricoRepository extends JpaRepository<Historico, Long> {
 
+	Historico findFirstByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes tf, Activo activo);
 	List<Historico> findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes tf, Activo activo);
+	
 }

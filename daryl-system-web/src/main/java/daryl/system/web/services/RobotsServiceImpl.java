@@ -30,6 +30,11 @@ public class RobotsServiceImpl implements IRobotsService {
 	public Robot findRobotByRobot(String robot) {
 		return repository.findRobotByRobot(robot);
 	}
+
+	@Override
+	public List<Robot> findRobotByRobotContainingIgnoreCaseOrderByRobotDesc(String robot) {
+		return repository.findRobotByRobotContainingIgnoreCaseOrderByRobotDesc(robot);
+	}
 	
 
 	
