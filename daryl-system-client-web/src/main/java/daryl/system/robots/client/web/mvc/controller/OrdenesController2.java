@@ -32,7 +32,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/em/tf60/{cta}")
     public List<OrdenDto> ordenesEmTf60(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("60",5);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("60",10);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -58,7 +58,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/em/tf240/{cta}")
     public List<OrdenDto> ordenesEmTf240(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("240",5);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("240",10);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -135,7 +135,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/total/tf60/{cta}")
     public List<OrdenDto> ordenesTotalTf60(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc("60",5);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc("60",10);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -160,7 +160,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/total/tf240/{cta}")
     public List<OrdenDto> ordenesTotalTf240(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc("240",5);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc("240",10);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
