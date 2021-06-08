@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.MaxMinNormalizer;
+import org.ta4j.core.utils.BarSeriesUtils;
 
 import daryl.system.comun.enums.Mode;
 import daryl.system.model.Robot;
 import daryl.system.model.VarianceConfig;
 import daryl.system.model.historicos.Historico;
-import daryl.system.robot.variance.b.predictor.base.VariancePredictor;
+import daryl.system.robot.variance.b.predictor.base.VarianceBPredictor;
 import daryl.system.robot.variance.b.repository.IHistoricoRepository;
 import daryl.system.robot.variance.b.repository.IVarianceConfigRepository;
 import daryl.variance.StockPredict;
@@ -26,7 +27,7 @@ import lombok.ToString;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
-public class VarianceBAudcad  extends VariancePredictor{
+public class VarianceBAudcad  extends VarianceBPredictor{
 
 	
 	@Autowired
@@ -49,7 +50,7 @@ public class VarianceBAudcad  extends VariancePredictor{
 			if(varianceConfig != null) {
 			
 				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
-				BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
+				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
 				
@@ -91,31 +92,6 @@ public class VarianceBAudcad  extends VariancePredictor{
 		}
 
 		return prediccion;
-		
-	}
-	
-
-	private BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
-		
-		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
-		for (Historico hist : historico) {
-			
-			Long millis = hist.getFechaHora();
-			
-			Instant instant = Instant.ofEpochMilli(millis);
-			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-			
-			series.addBar(	barDateTime, 
-							hist.getApertura() * multiplicador, 
-							hist.getMaximo() * multiplicador, 
-							hist.getMinimo() * multiplicador, 
-							hist.getCierre() * multiplicador, 
-							hist.getVolumen() * multiplicador);
-			
-		}
-		
-		return series;
-		
 		
 	}
 	

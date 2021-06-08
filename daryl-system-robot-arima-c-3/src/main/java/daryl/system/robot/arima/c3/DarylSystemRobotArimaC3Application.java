@@ -1,0 +1,59 @@
+package daryl.system.robot.arima.c3;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import daryl.system.comun.enums.Timeframes;
+import daryl.system.model.Robot;
+import daryl.system.robot.arima.c3.predictor.ArimaC3Gdaxi;
+
+@SpringBootApplication(scanBasePackages = {"daryl.system"})
+@EnableJpaRepositories
+@EntityScan("daryl.system.model")
+@EnableJms
+@EnableTransactionManagement
+public class DarylSystemRobotArimaC3Application {
+
+	
+	
+	public static void main(String[] args) {
+		
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemRobotArimaC3Application.class);
+	    builder.headless(false);
+	    ConfigurableApplicationContext context = builder.run(args);
+	    //test(context);
+	}
+
+	
+	public static void test(ConfigurableApplicationContext context) {
+		
+		String robot = "ARIMA_C_GDAXI_60";
+		Robot bot = new Robot();
+			bot.setInverso(true);
+			bot.setRobot(robot);
+			bot.setArimaConfig(robot);
+			bot.setTimeframe(Timeframes.PERIOD_H1);
+		
+		ArimaC3Gdaxi a = context.getBean(ArimaC3Gdaxi.class);
+			a.calculate(bot);
+		
+		
+		
+		System.out.println(a);
+		
+	}
+	
+	
+	@Bean
+    public Logger darylLogger() {
+        return LoggerFactory.getLogger("daryl");
+    }
+}

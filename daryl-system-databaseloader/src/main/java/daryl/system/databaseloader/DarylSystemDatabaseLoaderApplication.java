@@ -18,14 +18,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import daryl.system.comun.enums.Timeframes;
-import daryl.system.databaseloader.loaders.AudCadLoader;
 import daryl.system.databaseloader.loaders.CombinacionesLoader;
-import daryl.system.databaseloader.loaders.EurUsdLoader;
-import daryl.system.databaseloader.loaders.GdaxiLoader;
 import daryl.system.databaseloader.loaders.GeneralLoader;
-import daryl.system.databaseloader.loaders.NdxLoader;
-import daryl.system.databaseloader.loaders.WtiLoader;
-import daryl.system.databaseloader.loaders.XauUsdLoader;
 import daryl.system.databaseloader.util.Combinaciones;
 import daryl.system.databaseloader.util.Ordenacion;
 
@@ -51,13 +45,17 @@ public class DarylSystemDatabaseLoaderApplication {
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
-	    loadAudCad(context);
+
+	    loadGeneral(context);
+
+	    //loadAudCad(context);
 	    //loadEurUsd(context);
 	    //loadNdx(context);
 	    //loadWti(context);
 	    //loadXauUsd(context);
 	    //loadGeneral(context);
 	    //loadCombinaciones(context);
+
 	}
 	
 	static void loadCombinaciones(ApplicationContext context) {
@@ -104,90 +102,7 @@ public class DarylSystemDatabaseLoaderApplication {
 		
 	}
 
-	static void loadAudCad(ApplicationContext context) {
-	    AudCadLoader loader = context.getBean(AudCadLoader.class);
-	    try {
-	    	loader.load(Timeframes.PERIOD_H1);
-	    	loader.load(Timeframes.PERIOD_H4);
-			loader.load(Timeframes.PERIOD_D1);
-			loader.load(Timeframes.PERIOD_W1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
 
-	static void loadEurUsd(ApplicationContext context) {
-	    EurUsdLoader loader = context.getBean(EurUsdLoader.class);
-	    try {
-	    	loader.load(Timeframes.PERIOD_H1);
-	    	loader.load(Timeframes.PERIOD_H4);
-			loader.load(Timeframes.PERIOD_D1);
-			loader.load(Timeframes.PERIOD_W1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	static void loadXauUsd(ApplicationContext context) {
-	    XauUsdLoader loader = context.getBean(XauUsdLoader.class);
-	    try {
-	    	loader.load(Timeframes.PERIOD_H1);
-	    	loader.load(Timeframes.PERIOD_H4);
-			loader.load(Timeframes.PERIOD_D1);
-			loader.load(Timeframes.PERIOD_W1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	static void loadGdaxi(ApplicationContext context) {
-	    GdaxiLoader loader = context.getBean(GdaxiLoader.class);
-	    try {
-	    	loader.load(Timeframes.PERIOD_H1);
-	    	loader.load(Timeframes.PERIOD_H4);
-			loader.load(Timeframes.PERIOD_D1);
-			loader.load(Timeframes.PERIOD_W1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	static void loadNdx(ApplicationContext context) {
-	    NdxLoader loader = context.getBean(NdxLoader.class);
-	    try {
-	    	loader.load(Timeframes.PERIOD_H1);
-	    	loader.load(Timeframes.PERIOD_H4);
-			loader.load(Timeframes.PERIOD_D1);
-			loader.load(Timeframes.PERIOD_W1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	static void loadWti(ApplicationContext context) {
-	    WtiLoader loader = context.getBean(WtiLoader.class);
-	    try {
-	    	loader.load(Timeframes.PERIOD_H1);
-	    	loader.load(Timeframes.PERIOD_H4);
-			loader.load(Timeframes.PERIOD_D1);
-			loader.load(Timeframes.PERIOD_W1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	static void loadGeneral(ApplicationContext context) {
 	    GeneralLoader loader = context.getBean(GeneralLoader.class);
 	    try {

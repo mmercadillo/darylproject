@@ -18,6 +18,7 @@ import daryl.system.robot.arima.a.predictor.ArimaEurusd;
 import daryl.system.robot.arima.a.predictor.ArimaGdaxi;
 import daryl.system.robot.arima.a.predictor.ArimaNdx;
 import daryl.system.robot.arima.a.predictor.ArimaXauUsd;
+import daryl.system.robot.arima.a.predictor.ArimaXtiUsd;
 import daryl.system.robot.arima.a.predictor.base.ArimaPredictor;
 
 @Component
@@ -76,6 +77,14 @@ public class Receiver {
 		if(robot.getActivo() == Activo.EURUSD) {
 			try{
 				predictor = applicationContext.getBean(ArimaEurusd.class);
+				predictor.calculate(robot);
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+		}
+		if(robot.getActivo() == Activo.XTIUSD) {
+			try{
+				predictor = applicationContext.getBean(ArimaXtiUsd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		

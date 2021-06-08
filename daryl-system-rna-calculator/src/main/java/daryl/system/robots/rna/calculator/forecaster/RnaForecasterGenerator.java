@@ -3,9 +3,6 @@ package daryl.system.robots.rna.calculator.forecaster;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +26,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.MaxMinNormalizer;
+import org.ta4j.core.utils.BarSeriesUtils;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.dataset.DataSetLoader;
@@ -127,36 +124,10 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 
 	
 	
-	private static BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
-		
-		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
-		for (Historico hist : historico) {
-			
-			Long millis = hist.getFechaHora();
-			
-			Instant instant = Instant.ofEpochMilli(millis);
-			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-			
-			series.addBar(	barDateTime, 
-							hist.getApertura() * multiplicador, 
-							hist.getMaximo() * multiplicador, 
-							hist.getMinimo() * multiplicador, 
-							hist.getCierre() * multiplicador, 
-							hist.getVolumen() * multiplicador);
-			
-		}
-		
-		return series;
-		
-		
-	}
-	
-	
-	
 	public  void loadData() {
 		
 		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo);
-		this.datosForecast = generateBarList(historico,  "BarSeries_" + this.timeframe + "_" + this.tipoActivo, 1);
+		this.datosForecast = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + this.timeframe + "_" + this.tipoActivo, 1);
 		
 		this.darylNormalizer = new MaxMinNormalizer(this.datosForecast, Mode.CLOSE);
 		List<Double> normalizedData = darylNormalizer.getNormalizedList();

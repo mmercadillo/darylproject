@@ -19,21 +19,9 @@ import daryl.system.comun.exceptions.SistemaException;
 import daryl.system.control.contizaciones.zeromq.Sender;
 import daryl.system.control.contizaciones.zeromq.model.Cotizacion;
 import daryl.system.control.contizaciones.zeromq.model.HistoricosUtil;
-import daryl.system.control.contizaciones.zeromq.repository.IHistAudCadRepository;
-import daryl.system.control.contizaciones.zeromq.repository.IHistEurUsdRepository;
-import daryl.system.control.contizaciones.zeromq.repository.IHistGdaxiRepository;
-import daryl.system.control.contizaciones.zeromq.repository.IHistNdxRepository;
-import daryl.system.control.contizaciones.zeromq.repository.IHistWtiRepository;
-import daryl.system.control.contizaciones.zeromq.repository.IHistXauUsdRepository;
 import daryl.system.control.contizaciones.zeromq.repository.IHistoricoRepository;
 import daryl.system.control.contizaciones.zeromq.repository.IRobotsRepository;
 import daryl.system.model.Robot;
-import daryl.system.model.historicos.HistAudCad;
-import daryl.system.model.historicos.HistEurUsd;
-import daryl.system.model.historicos.HistGdaxi;
-import daryl.system.model.historicos.HistNdx;
-import daryl.system.model.historicos.HistWti;
-import daryl.system.model.historicos.HistXauUsd;
 import daryl.system.model.historicos.Historico;
 
 @Component
@@ -47,19 +35,6 @@ public class ControlCotizaciones extends Thread {
 	@Autowired
 	private Sender sender;
 
-
-	@Autowired
-	protected IHistXauUsdRepository histXauUsdRepository;
-	@Autowired
-	protected IHistGdaxiRepository histGdaxiRepository;
-	@Autowired
-	protected IHistAudCadRepository histAudCadRepository;
-	@Autowired
-	protected IHistNdxRepository histNdxRepository;
-	@Autowired
-	protected IHistEurUsdRepository histEurUsdRepository;
-	@Autowired
-	protected IHistWtiRepository histWtiRepository;	
 	@Autowired
 	protected IHistoricoRepository histRepository;	
 	
@@ -85,9 +60,6 @@ public class ControlCotizaciones extends Thread {
                 // Enviamos la respuesta al cliente python
                 String response = "Datos recibidos, gracias";
                 socket.send(response.getBytes(ZMQ.CHARSET), 0);
-
-                
-                
                 
             }
         }catch (Exception e) {
@@ -155,97 +127,7 @@ public class ControlCotizaciones extends Thread {
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			
-			if(ctzcn.getActivo() == Activo.XAUUSD) {
-				HistXauUsd historico = new HistXauUsd();
-					historico.setFecha(ctzcn.getFecha());
-					historico.setHora(ctzcn.getHora());
-					historico.setApertura(new Double(ctzcn.getApertura()));
-					historico.setMaximo(new Double(ctzcn.getMaximo()));
-					historico.setMinimo(new Double(ctzcn.getMinimo()));
-					historico.setCierre(new Double(ctzcn.getCierre()));
-					historico.setVolumen(new Double(ctzcn.getVolumen()));
-					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
-					historico.setTimeframe(ctzcn.getTimeframe());
-					
-				histXauUsdRepository.save(historico);
-				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
-			}							
-			if(ctzcn.getActivo() == Activo.AUDCAD) {
-				HistAudCad historico = new HistAudCad();
-					historico.setFecha(ctzcn.getFecha());
-					historico.setHora(ctzcn.getHora());
-					historico.setApertura(new Double(ctzcn.getApertura()));
-					historico.setMaximo(new Double(ctzcn.getMaximo()));
-					historico.setMinimo(new Double(ctzcn.getMinimo()));
-					historico.setCierre(new Double(ctzcn.getCierre()));
-					historico.setVolumen(new Double(ctzcn.getVolumen()));
-					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
-					historico.setTimeframe(ctzcn.getTimeframe());
-				
-				histAudCadRepository.save(historico);
-				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
-			}
-			if(ctzcn.getActivo() == Activo.XTIUSD) {
-				HistWti historico = new HistWti();
-					historico.setFecha(ctzcn.getFecha());
-					historico.setHora(ctzcn.getHora());
-					historico.setApertura(new Double(ctzcn.getApertura()));
-					historico.setMaximo(new Double(ctzcn.getMaximo()));
-					historico.setMinimo(new Double(ctzcn.getMinimo()));
-					historico.setCierre(new Double(ctzcn.getCierre()));
-					historico.setVolumen(new Double(ctzcn.getVolumen()));
-					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
-					historico.setTimeframe(ctzcn.getTimeframe());
-				
-				histWtiRepository.save(historico);
-				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
-			}
-			if(ctzcn.getActivo() == Activo.GDAXI) {
-				HistGdaxi historico = new HistGdaxi();
-					historico.setFecha(ctzcn.getFecha());
-					historico.setHora(ctzcn.getHora());
-					historico.setApertura(new Double(ctzcn.getApertura()));
-					historico.setMaximo(new Double(ctzcn.getMaximo()));
-					historico.setMinimo(new Double(ctzcn.getMinimo()));
-					historico.setCierre(new Double(ctzcn.getCierre()));
-					historico.setVolumen(new Double(ctzcn.getVolumen()));
-					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
-					historico.setTimeframe(ctzcn.getTimeframe());
-					
-				histGdaxiRepository.save(historico);
-				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
-			}
-			if(ctzcn.getActivo() == Activo.NDX) {
-				HistNdx historico = new HistNdx();
-					historico.setFecha(ctzcn.getFecha());
-					historico.setHora(ctzcn.getHora());
-					historico.setApertura(new Double(ctzcn.getApertura()));
-					historico.setMaximo(new Double(ctzcn.getMaximo()));
-					historico.setMinimo(new Double(ctzcn.getMinimo()));
-					historico.setCierre(new Double(ctzcn.getCierre()));
-					historico.setVolumen(new Double(ctzcn.getVolumen()));
-					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
-					historico.setTimeframe(ctzcn.getTimeframe());
-					
-				histNdxRepository.save(historico);
-				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
-			}
-			if(ctzcn.getActivo() == Activo.EURUSD) {
-				HistEurUsd historico = new HistEurUsd();
-					historico.setFecha(ctzcn.getFecha());
-					historico.setHora(ctzcn.getHora());
-					historico.setApertura(new Double(ctzcn.getApertura()));
-					historico.setMaximo(new Double(ctzcn.getMaximo()));
-					historico.setMinimo(new Double(ctzcn.getMinimo()));
-					historico.setCierre(new Double(ctzcn.getCierre()));
-					historico.setVolumen(new Double(ctzcn.getVolumen()));
-					historico.setFechaHora(config.getFechaHoraInMillis(ctzcn.getFecha(), ctzcn.getHora()));
-					historico.setTimeframe(ctzcn.getTimeframe());
-					
-				histEurUsdRepository.save(historico);
-				logger.info("COTIZACIÓN PARA EL ACTIVO {} GUARDADA: {}", ctzcn.getActivo(), ctzcn.toString());
-			}
+
 		}catch (Exception e) {
 			logger.error("NO SE HA PODIDO ACTUALIZAR EL HISTORICO DEL ACTIVO: {}", ctzcn.getActivo(), e);
 			throw new SistemaException("No se ha podido actualizar el historico del activo " + ctzcn.getActivo());
@@ -261,54 +143,12 @@ public class ControlCotizaciones extends Thread {
 		
 		try {
 			
-			if(activo == Activo.XAUUSD) {
-				HistXauUsd ultimaCotizacionAlmacenada = histXauUsdRepository.findFirstByTimeframeOrderByFechaHoraDesc(timeframe);
-				//Comparamos las cotizaciones 
-				if(ultimaCotizacionAlmacenada != null && HistoricosUtil.compararContizacionNuevaXauUsd(ultimaCotizacionAlmacenada, cotizacion) == Boolean.TRUE) {
-					noExiste = Boolean.FALSE;
-				}
-				
+			Historico ultimaCotizacionAlmacenada = histRepository.findFirstByTimeframeAndActivoOrderByFechaHoraDesc(timeframe, activo);
+			if(ultimaCotizacionAlmacenada != null && HistoricosUtil.compararContizacionNueva(ultimaCotizacionAlmacenada, cotizacion) == Boolean.TRUE) {
+				noExiste = Boolean.FALSE;
 			}
-			if(activo == Activo.GDAXI) {
-				HistGdaxi ultimaCotizacionAlmacenada = histGdaxiRepository.findFirstByTimeframeOrderByFechaHoraDesc(timeframe);
-				//Comparamos las cotizaciones 
-				if(ultimaCotizacionAlmacenada != null && HistoricosUtil.compararContizacionNuevaGdaxi(ultimaCotizacionAlmacenada, cotizacion) == Boolean.TRUE) {
-					noExiste = Boolean.FALSE;
-				}
-				
-			}
-			if(activo == Activo.AUDCAD) {
-				HistAudCad ultimaCotizacionAlmacenada = histAudCadRepository.findFirstByTimeframeOrderByFechaHoraDesc(timeframe);
-				//Comparamos las cotizaciones 
-				if(ultimaCotizacionAlmacenada != null && HistoricosUtil.compararContizacionNuevaAudCad(ultimaCotizacionAlmacenada, cotizacion) == Boolean.TRUE) {
-					noExiste = Boolean.FALSE;
-				}
-				
-			}
-			if(activo == Activo.XTIUSD) {
-				HistWti ultimaCotizacionAlmacenada = histWtiRepository.findFirstByTimeframeOrderByFechaHoraDesc(timeframe);
-				//Comparamos las cotizaciones 
-				if(ultimaCotizacionAlmacenada != null && HistoricosUtil.compararContizacionNuevaWti(ultimaCotizacionAlmacenada, cotizacion) == Boolean.TRUE) {
-					noExiste = Boolean.FALSE;
-				}
-				
-			}
-			if(activo == Activo.NDX) {
-				HistNdx ultimaCotizacionAlmacenada = histNdxRepository.findFirstByTimeframeOrderByFechaHoraDesc(timeframe);
-				//Comparamos las cotizaciones 
-				if(ultimaCotizacionAlmacenada != null && HistoricosUtil.compararContizacionNuevaNdx(ultimaCotizacionAlmacenada, cotizacion) == Boolean.TRUE) {
-					noExiste = Boolean.FALSE;
-				}
-				
-			}	
-			if(activo == Activo.EURUSD) {
-				HistEurUsd ultimaCotizacionAlmacenada = histEurUsdRepository.findFirstByTimeframeOrderByFechaHoraDesc(timeframe);
-				//Comparamos las cotizaciones 
-				if(ultimaCotizacionAlmacenada != null && HistoricosUtil.compararContizacionNuevaEurUsd(ultimaCotizacionAlmacenada, cotizacion) == Boolean.TRUE) {
-					noExiste = Boolean.FALSE;
-				}
-				
-			}	
+			
+	
 		}catch (Exception e) {
 			logger.error("ERROR AL COMPROBAR LA ÚLTIMA COTIZACIÓN ALMACENADA: {}", activo.name(), e);
 			throw new SistemaException("No se ha podido recuperar la cotizacion de Checking del activo " + activo.name(), e);

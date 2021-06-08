@@ -1,8 +1,5 @@
 package daryl.system.backtest.robot;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,8 +13,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseBarSeriesBuilder;
+import org.ta4j.core.utils.BarSeriesUtils;
 
 import daryl.system.backtest.robot.repository.IHistoricoRepository;
 import daryl.system.backtest.robot.repository.IRobotsRepository;
@@ -78,7 +74,7 @@ public class DarylSystemTesterRobotApplication {
 					
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					RnaInvTester rnaInvTester = context.getBean(RnaInvTester.class);
-					rnaInvTester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
+					rnaInvTester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
 					//servicio.submit(rnaInvTester);
 					rnaInvTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -87,7 +83,7 @@ public class DarylSystemTesterRobotApplication {
 					
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					RnaTester rnaTester = context.getBean(RnaTester.class);
-					rnaTester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
+					rnaTester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
 					//servicio.submit(rnaTester);
 					rnaTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -96,7 +92,7 @@ public class DarylSystemTesterRobotApplication {
 					
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					ArimaDTester arimaDTester = context.getBean(ArimaDTester.class);
-					arimaDTester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
+					arimaDTester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
 					//servicio.submit(arimaCTester);
 					arimaDTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -105,7 +101,7 @@ public class DarylSystemTesterRobotApplication {
 				
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					ArimaDInvTester arimaDInvTester = context.getBean(ArimaDInvTester.class);
-					arimaDInvTester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
+					arimaDInvTester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
 					//servicio.submit(arimaCInvTester);
 					arimaDInvTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -114,7 +110,7 @@ public class DarylSystemTesterRobotApplication {
 					
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					ArimaCInvTester arimaCInvTester = context.getBean(ArimaCInvTester.class);
-					arimaCInvTester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
+					arimaCInvTester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
 					//servicio.submit(arimaCInvTester);
 					arimaCInvTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -123,7 +119,7 @@ public class DarylSystemTesterRobotApplication {
 					
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					ArimaCTester arimaCTester = context.getBean(ArimaCTester.class);
-					arimaCTester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
+					arimaCTester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
 					//servicio.submit(arimaCTester);
 					arimaCTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -132,7 +128,7 @@ public class DarylSystemTesterRobotApplication {
 					
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					ArimaBInvTester arimaBInvTester = context.getBean(ArimaBInvTester.class);
-					arimaBInvTester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
+					arimaBInvTester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
 					//servicio.submit(arimaBInvTester);
 					arimaBInvTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -141,7 +137,7 @@ public class DarylSystemTesterRobotApplication {
 					
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					ArimaBTester arimaBTester = context.getBean(ArimaBTester.class);
-					arimaBTester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 100);
+					arimaBTester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 100);
 					//servicio.submit(arimaBTester);
 					arimaBTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -149,7 +145,7 @@ public class DarylSystemTesterRobotApplication {
 				} else if(robot.getRobot().startsWith("ARIMA_I_" + robot.getActivo())) {
 
 					ArimaAInvTester arimaAInvTester = context.getBean(ArimaAInvTester.class);
-					arimaAInvTester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
+					arimaAInvTester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
 					//servicio.submit(arimaAInvTester);
 					arimaAInvTester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -158,7 +154,7 @@ public class DarylSystemTesterRobotApplication {
 					
 					System.out.println("=============EMPIEZA===================== " + robot.getRobot() + " =============================================================================");
 					ArimaATester arimaATester = context.getBean(ArimaATester.class);
-					arimaATester.init(robot, generateBarList(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
+					arimaATester.init(robot, BarSeriesUtils.generateBarListFromHistorico(historico, "BarSeries_" + robot.getActivo(), robot.getActivo().getMultiplicador()), 20);
 					//servicio.submit(arimaATester);
 					arimaATester.run();
 					System.out.println("=============TERMINA===================== " + robot.getRobot() + " =============================================================================");
@@ -180,29 +176,6 @@ public class DarylSystemTesterRobotApplication {
 		
 	}
 
-	
-	private static BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
-		
-		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
-		for (Historico hist : historico) {
-			
-			Long millis = hist.getFechaHora();
-			
-			Instant instant = Instant.ofEpochMilli(millis);
-			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-			
-			series.addBar(	barDateTime, 
-							hist.getApertura() * multiplicador, 
-							hist.getMaximo() * multiplicador, 
-							hist.getMinimo() * multiplicador, 
-							hist.getCierre() * multiplicador, 
-							hist.getVolumen() * multiplicador);
-			
-		}
-		
-		return series;
-		
-		
-	}
+
 	
 }

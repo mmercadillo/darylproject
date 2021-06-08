@@ -24,6 +24,8 @@
 package org.ta4j.core.utils;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,12 +36,15 @@ import java.util.function.Function;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
+import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.ConvertibleBaseBarBuilder;
 import org.ta4j.core.aggregator.BarAggregator;
 import org.ta4j.core.aggregator.BarSeriesAggregator;
 import org.ta4j.core.aggregator.BaseBarSeriesAggregator;
 import org.ta4j.core.aggregator.DurationBarAggregator;
 import org.ta4j.core.num.Num;
+
+import daryl.system.model.historicos.Historico;
 
 /**
  * Common utilities and helper methods for BarSeries.
@@ -227,5 +232,29 @@ public final class BarSeriesUtils {
         }
         return bars;
     }
+    
+    public static BarSeries generateBarListFromHistorico(List<Historico> historico, String name, int multiplicador){
+		
+		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
+		for (Historico hist : historico) {
+			
+			Long millis = hist.getFechaHora();
+			
+			Instant instant = Instant.ofEpochMilli(millis);
+			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+			
+			series.addBar(	barDateTime, 
+							hist.getApertura() * multiplicador, 
+							hist.getMaximo() * multiplicador, 
+							hist.getMinimo() * multiplicador, 
+							hist.getCierre() * multiplicador, 
+							hist.getVolumen() * multiplicador);
+			
+		}
+		
+		return series;
+		
+		
+	}
 
 }

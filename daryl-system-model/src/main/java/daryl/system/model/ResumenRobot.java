@@ -122,4 +122,8 @@ public class ResumenRobot implements Serializable{
 	@Getter @Setter
 	private Double espmatAnterior = 0.0;
 	
+	//Z-score
+	@Column(nullable = true)
+	@Getter @Setter
+	private Double zScore = 0.0;
 }

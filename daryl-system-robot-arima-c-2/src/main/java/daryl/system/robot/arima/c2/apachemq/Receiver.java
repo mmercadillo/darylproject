@@ -14,10 +14,13 @@ import com.google.gson.Gson;
 
 import daryl.system.comun.enums.Activo;
 import daryl.system.model.Robot;
+import daryl.system.robot.arima.c2.predictor.ArimaC2Audcad;
+import daryl.system.robot.arima.c2.predictor.ArimaC2Eurusd;
 import daryl.system.robot.arima.c2.predictor.ArimaC2Gdaxi;
 import daryl.system.robot.arima.c2.predictor.ArimaC2Ndx;
 import daryl.system.robot.arima.c2.predictor.ArimaC2XauUsd;
-import daryl.system.robot.arima.c2.predictor.base.ArimaPredictor;
+import daryl.system.robot.arima.c2.predictor.ArimaC2XtiUsd;
+import daryl.system.robot.arima.c2.predictor.base.ArimaC2Predictor;
 
 @Component
 public class Receiver {
@@ -38,7 +41,7 @@ public class Receiver {
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal()+ " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 		
-		ArimaPredictor predictor = null;
+		ArimaC2Predictor predictor = null;
 		if(robot.getActivo() == Activo.GDAXI) {
 			try{
 				predictor = applicationContext.getBean(ArimaC2Gdaxi.class);
@@ -63,9 +66,9 @@ public class Receiver {
 				logger.error(e.getMessage(), e);		
 			}
 		}
-		/*if(robot.getActivo() == Activo.AUDCAD) {
+		if(robot.getActivo() == Activo.AUDCAD) {
 			try{
-				predictor = applicationContext.getBean(ArimaCAudcad.class);
+				predictor = applicationContext.getBean(ArimaC2Audcad.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -73,7 +76,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.EURUSD) {
 			try{
-				predictor = applicationContext.getBean(ArimaCEurusd.class);
+				predictor = applicationContext.getBean(ArimaC2Eurusd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -81,12 +84,12 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.XTIUSD) {
 			try{
-				predictor = applicationContext.getBean(ArimaCWti.class);
+				predictor = applicationContext.getBean(ArimaC2XtiUsd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
-		}*/
+		}
 		
 	}
 	

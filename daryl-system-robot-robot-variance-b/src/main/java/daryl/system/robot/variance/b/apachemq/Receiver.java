@@ -19,7 +19,7 @@ import daryl.system.robot.variance.b.predictor.VarianceBGdaxi;
 import daryl.system.robot.variance.b.predictor.VarianceBNdx;
 import daryl.system.robot.variance.b.predictor.VarianceBWti;
 import daryl.system.robot.variance.b.predictor.VarianceBXauUsd;
-import daryl.system.robot.variance.b.predictor.base.VariancePredictor;
+import daryl.system.robot.variance.b.predictor.base.VarianceBPredictor;
 
 @Component
 public class Receiver {
@@ -33,13 +33,13 @@ public class Receiver {
 	@Autowired
 	private ApplicationContext applicationContext;
 
-	@JmsListener(destination = "CHNL_VARIANCE")
+	@JmsListener(destination = "CHNL_VARIANCE_B")
 	public void receiveMessage(String robotJson) {
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 
-		VariancePredictor predictor = null;
+		VarianceBPredictor predictor = null;
 		
 		if(robot.getActivo() == Activo.GDAXI) {
 			try{

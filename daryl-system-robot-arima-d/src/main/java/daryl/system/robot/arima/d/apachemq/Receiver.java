@@ -17,9 +17,9 @@ import daryl.system.robot.arima.d.predictor.ArimaDAudcad;
 import daryl.system.robot.arima.d.predictor.ArimaDEurusd;
 import daryl.system.robot.arima.d.predictor.ArimaDGdaxi;
 import daryl.system.robot.arima.d.predictor.ArimaDNdx;
-import daryl.system.robot.arima.d.predictor.ArimaDWti;
+import daryl.system.robot.arima.d.predictor.ArimaDXtiUsd;
 import daryl.system.robot.arima.d.predictor.ArimaDXauUsd;
-import daryl.system.robot.arima.d.predictor.base.ArimaPredictor;
+import daryl.system.robot.arima.d.predictor.base.ArimaDPredictor;
 
 @Component
 public class Receiver {
@@ -39,7 +39,7 @@ public class Receiver {
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 
-		ArimaPredictor predictor = null;
+		ArimaDPredictor predictor = null;
 		
 		if(robot.getActivo() == Activo.GDAXI) {
 			try{
@@ -83,7 +83,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.XTIUSD) {
 			try{
-				predictor = applicationContext.getBean(ArimaDWti.class);
+				predictor = applicationContext.getBean(ArimaDXtiUsd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		

@@ -17,7 +17,7 @@ import daryl.system.robot.variance.predictor.VarianceAudcad;
 import daryl.system.robot.variance.predictor.VarianceEurusd;
 import daryl.system.robot.variance.predictor.VarianceGdaxi;
 import daryl.system.robot.variance.predictor.VarianceNdx;
-import daryl.system.robot.variance.predictor.VarianceWti;
+import daryl.system.robot.variance.predictor.VarianceXtiUsd;
 import daryl.system.robot.variance.predictor.VarianceXauUsd;
 import daryl.system.robot.variance.predictor.base.VariancePredictor;
 
@@ -83,7 +83,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.XTIUSD) {
 			try{
-				predictor = applicationContext.getBean(VarianceWti.class);
+				predictor = applicationContext.getBean(VarianceXtiUsd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
