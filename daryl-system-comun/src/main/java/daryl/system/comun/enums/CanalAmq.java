@@ -1,3 +1,4 @@
+
 package daryl.system.comun.enums;
 
 public enum CanalAmq {
