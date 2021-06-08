@@ -1,17 +1,18 @@
-package daryl.system.robot.variance.b2.predictor;
+package daryl.system.robot.variance.b3.predictor;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import daryl.system.robot.variance.b2.predictor.base.VarianceB2Predictor;
+import daryl.system.robot.variance.b3.predictor.base.VarianceB3Predictor;
 import lombok.ToString;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
-public class VarianceB2Audcad  extends VarianceB2Predictor{
-
+public class VarianceB3Eurusd  extends VarianceB3Predictor{
 	
+
+
 	
 }
