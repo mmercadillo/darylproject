@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<configuration>
 	 
-	    <property name="LOGS" value="C:/Users/Admin/Desktop/DarylWorkspace/logs" />
-	    <property name="APP" value="daryl-system-robot-aima-b" />
+	    <property name="LOGS" value="/Volumes/Macintosh HD/logs" />
+	    <property name="APP" value="daryl-system-robot-arima-b" />
 
 	    <appender name="Console"
 	        class="ch.qos.logback.core.ConsoleAppender">

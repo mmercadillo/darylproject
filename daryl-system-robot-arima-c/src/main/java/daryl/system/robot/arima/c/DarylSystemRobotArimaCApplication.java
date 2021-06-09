@@ -30,27 +30,9 @@ public class DarylSystemRobotArimaCApplication {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemRobotArimaCApplication.class);
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
-	    //test(context);
+
 	}
 
-	
-	public static void test(ConfigurableApplicationContext context) {
-		
-		String robot = "ARIMA_C_GDAXI_60";
-		Robot bot = new Robot();
-			bot.setInverso(true);
-			bot.setRobot(robot);
-			bot.setArimaConfig(robot);
-			bot.setTimeframe(Timeframes.PERIOD_H1);
-		
-		ArimaCGdaxi a = context.getBean(ArimaCGdaxi.class);
-			a.calculate(bot);
-		
-		
-		
-		System.out.println(a);
-		
-	}
 	
 	
 	@Bean

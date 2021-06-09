@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<configuration>
 	 
-	    <property name="LOGS" value="F:/DarylSystem/logs" />
+	    <property name="LOGS" value="/Volumes/Macintosh HD/logs" />
 	    <property name="APP" value="daryl-system-robot-arima-c-3" />
 
 	    <appender name="Console"

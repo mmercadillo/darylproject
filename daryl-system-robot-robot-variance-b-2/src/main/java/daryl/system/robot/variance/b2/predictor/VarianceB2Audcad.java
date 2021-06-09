@@ -1,27 +1,10 @@
 package daryl.system.robot.variance.b2.predictor;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseBarSeriesBuilder;
-import org.ta4j.core.MaxMinNormalizer;
-import org.ta4j.core.utils.BarSeriesUtils;
 
-import daryl.system.comun.enums.Mode;
-import daryl.system.model.Robot;
-import daryl.system.model.VarianceConfig;
-import daryl.system.model.historicos.Historico;
 import daryl.system.robot.variance.b2.predictor.base.VarianceB2Predictor;
-import daryl.system.robot.variance.b2.repository.IHistoricoRepository;
-import daryl.system.robot.variance.b2.repository.IVarianceConfigRepository;
-import daryl.variance.StockPredict;
 import lombok.ToString;
 
 @Component
@@ -30,71 +13,5 @@ import lombok.ToString;
 public class VarianceB2Audcad  extends VarianceB2Predictor{
 
 	
-	@Autowired
-	IVarianceConfigRepository varianceConfigRepository;
-	@Autowired
-	private IHistoricoRepository historicoRepository; 
-
-	
-
-	@Override
-	protected Double calcularPrediccion(Robot bot) {
-		
-		Double prediccion = 0.0;
-		
-		try {
-			
-			
-			
-			VarianceConfig varianceConfig = varianceConfigRepository.findVarianceConfigByRobot(bot.getVarianceConfig());
-			if(varianceConfig != null) {
-			
-				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
-				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
-				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
-				List<Double> datos = darylNormalizer.getDatos();
-				
-				Double prediccionAnterior = getPrediccionAnterior(datos, varianceConfig);
-				
-				
-				
-				int n = varianceConfig.getN();
-				int offset = varianceConfig.getOffset();
-				double alpha = varianceConfig.getAlpha();
-				double beta = varianceConfig.getBeta();
-				int m = varianceConfig.getLastM();
-				
-				try {
-	        		
-	        		
-	        		StockPredict stock = new StockPredict(datos, offset, n, alpha, beta, m);
-	        		double[] priceVariance = stock.getPriceVariance();
-	        		
-	        		double forecast = priceVariance[0];
-	        		logger.info("Robot -> " + bot.getRobot() + " PREDICCIÓN -> " + forecast + " ANTERIOR -> " + prediccionAnterior);
-	        		if(forecast > prediccionAnterior) {
-			        	prediccion = 1.0;
-			        }
-			        if(forecast < prediccionAnterior) {
-			        	prediccion = -1.0;
-			        }
-	        		
-	        	}catch (Exception e) {
-	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
-	        	}
-				
-			}else {
-				logger.info("No existe config para el robot: {}", bot.getRobot());
-			}
-			
-		}catch (Exception e) {
-			logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
-		}
-
-		return prediccion;
-		
-	}
-	
-
 	
 }

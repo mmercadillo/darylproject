@@ -240,7 +240,7 @@ public abstract class ArimaD3Predictor {
 
 			
 			//recuperamos la orden existente en TF 10080
-			String estrategia = "ARIMA_D_" + robot.getActivo() + "_14400";
+			String estrategia = "ARIMA_D_" + robot.getActivo() + "_1440";
 			Orden orden1440 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
 				
 			if(orden1440 != null) {
