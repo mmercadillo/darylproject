@@ -98,12 +98,12 @@
           	<properties>
 				<profile.name>dev</profile.name>
           	</properties>
+          	<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 		<profile>
 			<id>tragsa</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 			<properties>
 				<profile.name>tragsa</profile.name>
 			</properties>

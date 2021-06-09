@@ -108,5 +108,29 @@
 			</plugin>
 		</plugins>
 	</build> 
+	
+	<profiles>
+		<profile>
+			<id>dev</id>
+          	<properties>
+				<profile.name>dev</profile.name>
+          	</properties>
+          	<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>tragsa</id>
+			<properties>
+				<profile.name>tragsa</profile.name>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<profile.name>prod</profile.name>
+			</properties>
+		</profile>		
+	</profiles>
 
 </project>
