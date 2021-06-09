@@ -137,6 +137,12 @@
 				<profile.name>prod</profile.name>
 			</properties>
 		</profile>		
-	</profiles>   
+		<profile>
+			<id>fuji</id>
+			<properties>
+				<profile.name>fuji</profile.name>
+			</properties>
+		</profile>	
+	</profiles>  
 
 </project>

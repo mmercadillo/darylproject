@@ -118,12 +118,12 @@
 	<profiles>
 		<profile>
 			<id>dev</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
           	<properties>
 				<profile.name>dev</profile.name>
           	</properties>
+          	<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 		<profile>
 			<id>tragsa</id>
@@ -137,8 +137,13 @@
 				<profile.name>prod</profile.name>
 			</properties>
 		</profile>		
-	</profiles>    
-  
+		<profile>
+			<id>fuji</id>
+			<properties>
+				<profile.name>fuji</profile.name>
+			</properties>
+		</profile>	
+	</profiles>
   
   
 </project>
