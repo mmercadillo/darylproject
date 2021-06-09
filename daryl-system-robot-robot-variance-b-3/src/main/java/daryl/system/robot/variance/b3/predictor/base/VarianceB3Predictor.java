@@ -182,7 +182,7 @@ public abstract class VarianceB3Predictor {
 			orden.setHora(config.getHoraInString(millis));
 			
 			//recuperamos la orden existente en TF 10080
-			String estrategia = "VARIANCE_B_" + robot.getActivo() + "_144s0";
+			String estrategia = "VARIANCE_B_" + robot.getActivo() + "_1440";
 			Orden orden10080 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
 				
 			if(orden10080 != null) {

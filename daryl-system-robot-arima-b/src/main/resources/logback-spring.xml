@@ -2,7 +2,7 @@
 	<configuration>
 	 
 	    <property name="LOGS" value="/Volumes/Macintosh HD/logs" />
-	    <property name="APP" value="daryl-system-robot-aima-b" />
+	    <property name="APP" value="daryl-system-robot-arima-b" />
 
 	    <appender name="Console"
 	        class="ch.qos.logback.core.ConsoleAppender">

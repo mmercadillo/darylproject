@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(0)
-public class DarylSystemRobotVarianceApplicationListener implements ApplicationListener<ApplicationReadyEvent>{
+public class DarylSystemRobotVariance3ApplicationListener implements ApplicationListener<ApplicationReadyEvent>{
 
 	@Autowired
 	Logger logger;
