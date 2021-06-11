@@ -18,13 +18,18 @@
   	
   	<properties>
 		<java.version>1.8</java.version>
-		<daryl.system.comun>1.0.6</daryl.system.comun>
-		<daryl.system.model>1.0.6</daryl.system.model>
-		<daryl.system.variance-base>1.0.6</daryl.system.variance-base>
+		<daryl.system.comun>1.0.7</daryl.system.comun>
+		<daryl.system.model>1.0.7</daryl.system.model>
+		<daryl.system.ta4j>1.0.7</daryl.system.ta4j>
 	</properties> 
 	<dependencies>
 		
 		<!-- Daryl System Dependencies -->
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>ta4j</artifactId>
+			<version>${daryl.system.ta4j}</version>
+		</dependency>
 		<dependency>
 			<groupId>daryl.system</groupId>
 			<artifactId>comun</artifactId>
@@ -80,6 +85,15 @@
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-math3</artifactId>
     <version>3.6</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
+
+<!-- https://mvnrepository.com/artifact/org.json/json -->
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20210307</version>
 </dependency>
 
 	</dependencies>

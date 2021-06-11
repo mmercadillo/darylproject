@@ -3,6 +3,7 @@ package daryl.system.comun.configuration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
@@ -17,6 +18,8 @@ public class ConfigData {
 	public static final String ZEROMQ_SERVER_URL_FROM_JAVA = "tcp://127.0.0.1:5556";
 	
 	public static final String BASE_PATH_RNAS = "classpath:rnas/";
+	
+	public static final String HORA_CIERRE_OPS = "21:30:00";
 	
 	
 	//private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -50,6 +53,31 @@ public class ConfigData {
 	
 	public String getHoraInString(Date fecha) {
 		return sdfHoraSolo.format(fecha);
+	}
+	public Boolean checkFechaHoraOperaciones() {
+		
+		Boolean operar = Boolean.TRUE;
+		
+		Calendar c = Calendar.getInstance();
+		
+		if(c.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
+			
+			if(c.get(Calendar.HOUR_OF_DAY) >= 21 && c.get(Calendar.MINUTE) >= 30) {
+				operar = Boolean.FALSE;
+			}
+			if(c.get(Calendar.HOUR_OF_DAY) >= 22) {
+				operar = Boolean.FALSE;
+			}			
+			
+		}
+		if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			operar = Boolean.FALSE;
+		}
+		
+		
+		
+		return operar;
+		
 	}
 
 	

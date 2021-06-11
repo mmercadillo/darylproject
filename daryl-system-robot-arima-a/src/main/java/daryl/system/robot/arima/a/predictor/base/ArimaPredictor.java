@@ -142,6 +142,9 @@ public abstract class ArimaPredictor {
 			orden.setTipoOrden(TipoOrden.CLOSE);	
 		}
 		
+		
+		
+		
 		return orden;
 	}
 
