@@ -15,12 +15,15 @@ import com.google.gson.Gson;
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
+import daryl.system.comun.enums.TipoOrden;
 import daryl.system.comun.exceptions.SistemaException;
 import daryl.system.control.contizaciones.zeromq.Sender;
 import daryl.system.control.contizaciones.zeromq.model.Cotizacion;
 import daryl.system.control.contizaciones.zeromq.model.HistoricosUtil;
 import daryl.system.control.contizaciones.zeromq.repository.IHistoricoRepository;
+import daryl.system.control.contizaciones.zeromq.repository.IOrdenRepository;
 import daryl.system.control.contizaciones.zeromq.repository.IRobotsRepository;
+import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
 
@@ -36,11 +39,12 @@ public class ControlCotizaciones extends Thread {
 	private Sender sender;
 
 	@Autowired
-	protected IHistoricoRepository histRepository;	
-	
+	private IHistoricoRepository histRepository;	
 	@Autowired
 	private IRobotsRepository robotsRepository;
-
+	@Autowired
+	private IOrdenRepository ordenRepository;
+	
 	public void run() {
     	
 		try (ZContext context = new ZContext()) {
@@ -83,11 +87,26 @@ public class ControlCotizaciones extends Thread {
 					List<Robot> robots = robotsRepository.findRobotsByActivoAndTimeframe(ctzcn.getActivo(), ctzcn.getTimeframe());
 					for(Robot robot : robots) {
 						
-						if(robot.getRobotActivo() == Boolean.TRUE) {
+						if(robot.getRobotActivo() == Boolean.TRUE && config.checkFechaHoraOperaciones() == Boolean.TRUE) {
 							logger.info("SE ENVIA SEÑAL AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
 							sender.send(robot.getCanal().name(), new Gson().toJson(robot));
 							logger.info("SEÑAL ENVIADA AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
 						}
+						
+						//Cerramos todas las operaciones de cada robot
+						try {
+							long millis = System.currentTimeMillis();
+							
+							Orden orden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+							orden.setFecha(config.getFechaInString(millis));
+							orden.setHora(config.getHoraInString(millis));
+							orden.setTipoOrden(TipoOrden.CLOSE);
+							ordenRepository.save(orden);
+							logger.info("ORDEN CERRADA POR CIERRE DE MERCADO -> " + orden);
+						}catch (Exception e) {
+							logger.error(e.getMessage(), e);
+						}
+						
 						
 					}
 				}catch (Exception e) {
