@@ -1,13 +1,29 @@
 package daryl.system.robot.variance;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"daryl.system"})
+@EnableJpaRepositories
+@EntityScan("daryl.system.model")
+@EnableJms
+@EnableTransactionManagement
 public class DarylSystemRobotVarianceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DarylSystemRobotVarianceApplication.class, args);
 	}
+	
+	@Bean
+    public Logger darylLogger() {
+        return LoggerFactory.getLogger("daryl");
+    }
 
 }

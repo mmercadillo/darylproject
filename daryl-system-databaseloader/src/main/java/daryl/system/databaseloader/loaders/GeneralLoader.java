@@ -28,10 +28,11 @@ public class GeneralLoader extends Loader {
 	@Autowired
 	protected IHistoricoRepository repository;
 
-	private static final String rutaFicheroHistorico60 = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\h\\XXXXXX_60.csv";
-	private static final String rutaFicheroHistorico240 = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\h\\XXXXXX_240.csv";
-	private static final String rutaFicheroHistorico1440 = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\h\\XXXXXX_1440.csv";
-	private static final String rutaFicheroHistorico10080 = "C:\\Users\\Admin\\Desktop\\DarylWorkspace\\Historicos\\h\\XXXXXX_10080.csv";
+	private static final String HISTORICO_BASE = "/Volumes/Macintosh HD/workspaces/HISTORICOS/";
+	private static final String rutaFicheroHistorico60 = HISTORICO_BASE + "XXXXXX_60.csv";
+	private static final String rutaFicheroHistorico240 = HISTORICO_BASE + "XXXXXX_240.csv";
+	private static final String rutaFicheroHistorico1440 = HISTORICO_BASE + "XXXXXX_1440.csv";
+	private static final String rutaFicheroHistorico10080 = HISTORICO_BASE + "XXXXXX_10080.csv";
 	
 	public void load(Timeframes timeframe) throws IOException, ParseException {
 		
