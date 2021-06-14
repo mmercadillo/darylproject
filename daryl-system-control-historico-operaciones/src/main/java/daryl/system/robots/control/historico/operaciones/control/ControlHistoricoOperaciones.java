@@ -227,7 +227,7 @@ public class ControlHistoricoOperaciones {
 					}
 		    		
 		    		//Media de tiempo en el mercado
-		    		double mediaTiempoEnMercado = (double)resumen.getTotalTiempoEnMercado() / (double)resumen.getNumOperaciones();
+		    		Long mediaTiempoEnMercado = resumen.getTotalTiempoEnMercado() / resumen.getNumOperaciones();
 		    		resumen.setMediaTiempoEnMercado(mediaTiempoEnMercado);
 		    		
 		    		
