@@ -3,6 +3,8 @@ package daryl.system.web.mvc.dto;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
+
 import daryl.system.comun.enums.Activo;
 import daryl.system.model.ResumenRobot;
 import lombok.Getter;
@@ -63,6 +65,11 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 	@Getter @Setter
 	private Double espmat;
 	
+	@Getter @Setter
+	private Long totalHorasEnMercado;
+	@Getter @Setter
+	private Long mediaHorasEnMercado;	
+	
 	
 	public static ResumenRobotDto getDto(ResumenRobot resumen) {
 		
@@ -80,6 +87,15 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 			try{resumenDto.setTotalGanancias(Math.round(resumen.getTotalGanancias()));}catch (Exception e) {}
 			try{resumenDto.setTotalPerdidas(Math.round(resumen.getTotalPerdidas()));}catch (Exception e) {}
 			try{resumenDto.setVersion(resumen.getVersion());}catch (Exception e) {}
+			try {
+				
+				Long horasEnMercado = resumen.getTotalTiempoEnMercado() / (1000 * 60 * 60);
+				Long mediaHorasEnMercado = resumen.getMediaTiempoEnMercado() / (1000 * 60 * 60);
+				
+				resumenDto.setTotalHorasEnMercado(horasEnMercado);
+				resumenDto.setMediaHorasEnMercado(mediaHorasEnMercado);
+				
+			}catch (Exception e) {}
 			/*resumenDto.setMes(resumen.getMes());}catch (Exception e) {}
 			resumenDto.setSemana(resumen.getSemana());}catch (Exception e) {}
 			resumenDto.setAnyo(resumen.getAnyo());}catch (Exception e) {}

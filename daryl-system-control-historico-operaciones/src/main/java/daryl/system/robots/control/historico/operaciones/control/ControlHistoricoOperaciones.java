@@ -153,11 +153,12 @@ public class ControlHistoricoOperaciones {
 
 				//Buscamos su lista de operaciones
 		    	List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), desde);
-				Long totalTiempoEnMercado = 0L;
+				
 		    	if(lista != null && lista.size() > 0) {
+		    		Long totalTiempoEnMercado = 0L;
 		    		for (HistoricoOperaciones hops : lista) {
 		    			resumen.setFUltimoCierre(hops.getFcierre());
-		    			resumen.setFUltimoCierre(hops.getFapertura());
+		    			resumen.setFUltimaApertura(hops.getFapertura());
 						
 		    			Long aperturaOp = config.getFechaHoraInMillis(hops.getFapertura());
 		    			Long cierreOp = config.getFechaHoraInMillis(hops.getFcierre());
@@ -226,8 +227,9 @@ public class ControlHistoricoOperaciones {
 						
 					}
 		    		
+		    		resumen.setTotalTiempoEnMercado(totalTiempoEnMercado);
 		    		//Media de tiempo en el mercado
-		    		Long mediaTiempoEnMercado = resumen.getTotalTiempoEnMercado() / resumen.getNumOperaciones();
+		    		Long mediaTiempoEnMercado = totalTiempoEnMercado / resumen.getNumOperaciones();
 		    		resumen.setMediaTiempoEnMercado(mediaTiempoEnMercado);
 		    		
 		    		
