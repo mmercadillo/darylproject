@@ -30,6 +30,10 @@ public class ConfigData {
 	public String getActualDateFormattedInString() {
 		return sdfFull.format(new Date());
 	}	
+
+	public Long getFechaHoraInMillis(String fechaCompleta) throws ParseException {	
+		return sdfFull.parse(fechaCompleta).getTime();
+	}
 	
 	public Long getFechaHoraInMillis(String fecha, String hora) throws ParseException {	
 		return sdfFull.parse(fecha + " " + hora).getTime();
