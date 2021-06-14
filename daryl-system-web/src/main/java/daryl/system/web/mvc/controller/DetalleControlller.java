@@ -44,9 +44,11 @@ public class DetalleControlller {
 		Orden orden =  ordenService.findByfBajaAndEstrategia(null, robot);
 		if(orden != null) {
 			
-			String imagen = "/static/assets/admin/layout/img/icon-img-down.png";
+			String imagen = "/static/assets/admin/layout/img/remove-icon-small.png";
 			if(orden.getTipoOrden() == TipoOrden.BUY) {
 				imagen = "/static/assets/admin/layout/img/icon-img-up.png";
+			}else if(orden.getTipoOrden() == TipoOrden.BUY) {
+				imagen = "/static/assets/admin/layout/img/icon-img-down.png";
 			}
 		    InputStream in = getClass().getResourceAsStream(imagen);
 		    response.setContentType(MediaType.IMAGE_JPEG_VALUE);
