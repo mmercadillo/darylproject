@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import daryl.system.comun.configuration.ConfigData;
 import daryl.system.model.HistoricoOperaciones;
-import daryl.system.model.HistoricoResumenRobot;
 import daryl.system.model.ResumenRobot;
 import daryl.system.model.Robot;
 import daryl.system.robots.control.historico.operaciones.repository.IHistoricoOperacionesRepository;
@@ -25,6 +25,9 @@ public class ControlHistoricoOperaciones {
 	@Autowired
 	Logger logger;
 
+	@Autowired
+	ConfigData config;
+	
 	@Autowired
 	IHistoricoOperacionesRepository historicoOperacionesRepository;
 	@Autowired
@@ -152,9 +155,17 @@ public class ControlHistoricoOperaciones {
 		    	List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), desde);
 				
 		    	if(lista != null && lista.size() > 0) {
+		    		Long totalTiempoEnMercado = 0L;
 		    		for (HistoricoOperaciones hops : lista) {
 		    			resumen.setFUltimoCierre(hops.getFcierre());
-						resumen.setUltimoTicket(hops.getId());
+		    			resumen.setFUltimaApertura(hops.getFapertura());
+						
+		    			Long aperturaOp = config.getFechaHoraInMillis(hops.getFapertura());
+		    			Long cierreOp = config.getFechaHoraInMillis(hops.getFcierre());
+		    			
+		    			totalTiempoEnMercado += (cierreOp - aperturaOp);
+		    			
+		    			resumen.setUltimoTicket(hops.getId());
 						resumen.setRobot(robot.getRobot());
 						resumen.setNumOperaciones(resumen.getNumOperaciones()+1);
 						resumen.setTipoActivo(robot.getActivo());
@@ -215,6 +226,13 @@ public class ControlHistoricoOperaciones {
 						}
 						
 					}
+		    		
+		    		resumen.setTotalTiempoEnMercado(totalTiempoEnMercado);
+		    		//Media de tiempo en el mercado
+		    		Long mediaTiempoEnMercado = totalTiempoEnMercado / resumen.getNumOperaciones();
+		    		resumen.setMediaTiempoEnMercado(mediaTiempoEnMercado);
+		    		
+		    		
 		    		logger.info("OPERACIONES ROBOT ACTUALIZADAS-> " + robot.getRobot());
 			    	resumenRobotRepository.save(resumen);
 			    	logger.info("OPERACIONES ROBOT GUARDADAS-> " + robot.getRobot());

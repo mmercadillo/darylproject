@@ -3,7 +3,10 @@ package daryl.system.web.mvc.dto;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
+
 import daryl.system.comun.enums.Activo;
+import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.ResumenRobot;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,10 +50,8 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 	@Getter @Setter
 	private Double difMaxMin = 0.0;
 	
-	private Integer status = 6;
 	@Getter @Setter
-	private Integer type = 1;
-	private String[] actions = null;
+	private TipoOrden status;
 	
 	@Getter @Setter
 	private Double pctOpsGanadoras;
@@ -62,6 +63,11 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 	private Double perdidaMediaPorOpPerdedora;
 	@Getter @Setter
 	private Double espmat;
+	
+	@Getter @Setter
+	private Long totalHorasEnMercado;
+	@Getter @Setter
+	private Long mediaHorasEnMercado;	
 	
 	
 	public static ResumenRobotDto getDto(ResumenRobot resumen) {
@@ -80,6 +86,15 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 			try{resumenDto.setTotalGanancias(Math.round(resumen.getTotalGanancias()));}catch (Exception e) {}
 			try{resumenDto.setTotalPerdidas(Math.round(resumen.getTotalPerdidas()));}catch (Exception e) {}
 			try{resumenDto.setVersion(resumen.getVersion());}catch (Exception e) {}
+			try {
+				
+				Long horasEnMercado = resumen.getTotalTiempoEnMercado() / (1000 * 60 * 60);
+				Long mediaHorasEnMercado = resumen.getMediaTiempoEnMercado() / (1000 * 60 * 60);
+				
+				resumenDto.setTotalHorasEnMercado(horasEnMercado);
+				resumenDto.setMediaHorasEnMercado(mediaHorasEnMercado);
+				
+			}catch (Exception e) {}
 			/*resumenDto.setMes(resumen.getMes());}catch (Exception e) {}
 			resumenDto.setSemana(resumen.getSemana());}catch (Exception e) {}
 			resumenDto.setAnyo(resumen.getAnyo());}catch (Exception e) {}
@@ -95,10 +110,6 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 			try{resumenDto.setPerdidaMediaPorOpPerdedora(resumen.getPerdidaMediaPorOpPerdedora());}catch (Exception e) {}
 			try{resumenDto.setEspmat(resumen.getEspmat());}catch (Exception e) {}
 			
-			try{
-				if(Math.round(resumen.getTotal()) >= 15) resumenDto.setType(1);
-				else resumenDto.setType(2);
-			}catch (Exception e) {}
 			
 			try{resumenDto.setMaximaPerdidaConsecutiva(resumen.getMaximaPerdidaConsecutiva());}catch (Exception e) {}
 			try{resumenDto.setMaximo(resumen.getMaximo());}catch (Exception e) {}

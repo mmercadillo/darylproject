@@ -232,6 +232,7 @@ License: You must have a valid license purchased only from themeforest(the above
 										<tr>
 											<th></th>
 											<th>ROBOT</th>
+											<th>Status</th>
 											<th>F. Ult. Act.</th>
 											<th>Total</th>
 											<th>Esp. Mat.</th>
@@ -248,6 +249,7 @@ License: You must have a valid license purchased only from themeforest(the above
 											<td>
 												<a th:href="@{'/robot/'+${resumen.robot}}" th:text="${resumen.robot}"></a>
 											</td>
+											<td><img th:src="@{'/status/' + ${resumen.robot}}" alt="N/A" /></td>
 											<td th:text="${resumen.fModificacion}"></td>
 											<td th:text="${#numbers.formatDecimal(resumen.total, 1, 'POINT', 2, 'COMMA')}"></td>
 											<td th:text="${#numbers.formatDecimal(resumen.espmat, 1, 'POINT', 2, 'COMMA')}"></td>

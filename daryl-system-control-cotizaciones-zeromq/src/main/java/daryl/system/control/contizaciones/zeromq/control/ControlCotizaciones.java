@@ -93,18 +93,22 @@ public class ControlCotizaciones extends Thread {
 							logger.info("SEÑAL ENVIADA AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
 						}
 						
+						
 						//Cerramos todas las operaciones de cada robot
-						try {
-							long millis = System.currentTimeMillis();
-							
-							Orden orden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
-							orden.setFecha(config.getFechaInString(millis));
-							orden.setHora(config.getHoraInString(millis));
-							orden.setTipoOrden(TipoOrden.CLOSE);
-							ordenRepository.save(orden);
-							logger.info("ORDEN CERRADA POR CIERRE DE MERCADO -> " + orden);
-						}catch (Exception e) {
-							logger.error(e.getMessage(), e);
+						//en caso de estar fuera de hora
+						if(config.checkFechaHoraOperaciones() == Boolean.FALSE) {
+							try {
+								long millis = System.currentTimeMillis();
+								
+								Orden orden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+								orden.setFecha(config.getFechaInString(millis));
+								orden.setHora(config.getHoraInString(millis));
+								orden.setTipoOrden(TipoOrden.CLOSE);
+								ordenRepository.save(orden);
+								logger.info("ORDEN CERRADA POR CIERRE DE MERCADO -> " + orden);
+							}catch (Exception e) {
+								logger.error(e.getMessage(), e);
+							}
 						}
 						
 						

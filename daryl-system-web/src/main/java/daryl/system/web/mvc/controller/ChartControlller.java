@@ -66,6 +66,8 @@ public class ChartControlller {
 
     }
 	
+	
+	
 	@GetMapping("/chart/{robot}/total")
     public void chartTotal(@PathVariable String robot, HttpServletResponse response) {
 

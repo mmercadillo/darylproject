@@ -47,6 +47,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 	      	.antMatchers(HttpMethod.POST, "/robots/cuenta/**").hasRole("USER")
 	      	.antMatchers("/login").permitAll() 
 	      	.antMatchers("/").permitAll()
+	      	.antMatchers("/status/**").permitAll()
 	      	.antMatchers("/dashboard").permitAll()
 	      	.antMatchers("/robots").permitAll()
 	      	.antMatchers("/robots/red").permitAll()

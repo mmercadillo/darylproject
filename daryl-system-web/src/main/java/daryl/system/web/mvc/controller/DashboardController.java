@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +14,9 @@ import daryl.system.model.ResumenRobot;
 import daryl.system.model.Robot;
 import daryl.system.model.RobotsCuenta;
 import daryl.system.web.mvc.dto.ResumenRobotDto;
+import daryl.system.web.mvc.dto.RobotCuentaDto;
+import daryl.system.web.mvc.dto.RobotsCuentaDto;
+import daryl.system.web.services.IOrdenService;
 import daryl.system.web.services.IResumenRobotService;
 import daryl.system.web.services.IRobotsCuentaService;
 import daryl.system.web.services.IRobotsService;
@@ -29,6 +30,8 @@ public class DashboardController {
 	IRobotsService robotsService;
 	@Autowired
 	IRobotsCuentaService robotsCuentaService;
+	@Autowired
+	IOrdenService ordenService;
 	
 	
 	@RequestMapping(path = {"/dashboard","/"}, method = {RequestMethod.POST, RequestMethod.GET})
@@ -38,6 +41,10 @@ public class DashboardController {
 		
 		//Card con los robots del darwin
 		List<RobotsCuenta> robotsDarwin = robotsCuentaService.findRobotsCuentaByCuenta("2100073282");
+		List<RobotCuentaDto> robotsDarwinDto = new ArrayList<RobotCuentaDto>();
+		for (RobotsCuenta robotCuenta : robotsDarwin) {
+			if(robotCuenta != null) robotsDarwinDto.add(RobotCuentaDto.getDto(robotCuenta));
+		}
 		view.addObject("robotsDarwin", robotsDarwin);
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
