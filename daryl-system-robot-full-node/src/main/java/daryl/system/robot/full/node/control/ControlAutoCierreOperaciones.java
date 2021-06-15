@@ -57,6 +57,8 @@ public class ControlAutoCierreOperaciones {
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
+			}else {
+				logger.info("NO SE DAN LAS CONDICIONES PARA CERRAR OPERACIONES=============");
 			}
     	}
 		
