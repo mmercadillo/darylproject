@@ -28,7 +28,6 @@ public class DarylSystemRobotFullNodeApplication {
 	
 	public static void main(String[] args) {
 		
-		
         SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemRobotFullNodeApplication.class);
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
