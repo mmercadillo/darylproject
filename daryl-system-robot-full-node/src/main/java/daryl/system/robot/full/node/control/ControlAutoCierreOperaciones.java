@@ -21,16 +21,13 @@ public class ControlAutoCierreOperaciones {
 
 	@Autowired
 	Logger logger;
-
 	@Autowired
 	ConfigData config;
-	
 	@Autowired
 	private IOrdenRepository ordenRepository;
 	@Autowired
 	private IRobotsRepository robotsRepository;
 
-	
 	//Ejecutamos cada 10 mins
     @Scheduled(fixedDelay = 360000, initialDelay = 1000)
     @Transactional

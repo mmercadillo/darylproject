@@ -54,6 +54,7 @@ public class Receiver {
 		List<Robot> robots = Arrays.asList(new Gson().fromJson(listaRobotsJson, Robot[].class));
 		
 		logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_FULL_NODE " + new Date().toLocaleString());		
+		logger.info("MENSAJE RECIBIDO POR CANAL -> CHNL_FULL_NODE " + listaRobotsJson);		
 		
 		Forecaster predictor = null;
 		

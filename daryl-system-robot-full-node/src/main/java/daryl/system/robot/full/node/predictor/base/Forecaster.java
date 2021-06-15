@@ -101,22 +101,31 @@ public abstract class Forecaster {
 	@Async("threadPoolTaskExecutor")
 	public void calculate(Robot bot) {
 		
-		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot);		
-		Double prediccion = calcularPrediccion(bot);
-		logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot + " Predicción -> " + prediccion);
-		
-		logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot);		
-		Orden orden = calcularOperacion(bot, prediccion, bot.getInverso());
-		logger.info("ORDEN CALCULADA -> Robot -> " + bot + " -> Orden -> " + orden);
-		
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		actualizarPrediccionBDs(bot, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot + " Predicciñon -> " + prediccion);
-		actualizarUltimaOrden(bot, orden, fechaHoraMillis);
-		logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot);
-		guardarNuevaOrden(orden, fechaHoraMillis);
-		logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot + " -> Orden -> " + orden);
+		if(bot.getRobotActivo() == Boolean.TRUE) {
+			
+			logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot);		
+			Double prediccion = calcularPrediccion(bot);
+			logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot + " Predicción -> " + prediccion);
+			
+			logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot);		
+			Orden orden = calcularOperacion(bot, prediccion, bot.getInverso());
+			logger.info("ORDEN CALCULADA -> Robot -> " + bot + " -> Orden -> " + orden);
+			
+			Long fechaHoraMillis = System.currentTimeMillis();
+			
+			actualizarPrediccionBDs(bot, orden.getTipoOrden(), prediccion, fechaHoraMillis);
+			logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot + " Predicciñon -> " + prediccion);
+			actualizarUltimaOrden(bot, orden, fechaHoraMillis);
+			logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot);
+			guardarNuevaOrden(orden, fechaHoraMillis);
+			logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot + " -> Orden -> " + orden);			
+			
+		}else {
+			
+			logger.info("NO SE CALCULA LA ORDEN PARA EL ROBOT -> " + bot + " -> NO ESTÁ ACTIVO ");			
+			
+		}
+
 
 	}
 
