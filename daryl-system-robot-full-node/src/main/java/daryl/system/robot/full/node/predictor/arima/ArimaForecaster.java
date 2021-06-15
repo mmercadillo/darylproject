@@ -21,7 +21,7 @@ import lombok.ToString;
 @ToString
 public class ArimaForecaster  extends Forecaster{
 	
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		

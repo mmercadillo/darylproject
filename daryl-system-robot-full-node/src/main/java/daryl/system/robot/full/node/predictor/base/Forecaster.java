@@ -2,6 +2,7 @@ package daryl.system.robot.full.node.predictor.base;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.TipoOrden;
@@ -99,6 +100,7 @@ public abstract class Forecaster {
 		}
 	}
 
+	@Async("threadPoolTaskExecutor")
 	public void calculate(Robot bot) {
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot);		
