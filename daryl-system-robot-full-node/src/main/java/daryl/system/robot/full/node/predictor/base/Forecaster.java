@@ -53,7 +53,6 @@ public abstract class Forecaster {
 		return orden;
 	}
 	
-	
 	private void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			
@@ -74,7 +73,6 @@ public abstract class Forecaster {
 		}
 	}
 	
-
 	private void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
 		try {
 
