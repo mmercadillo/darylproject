@@ -1,6 +1,5 @@
 package daryl.system.control.contizaciones.zeromq.control;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -92,7 +91,6 @@ public class ControlCotizaciones extends Thread {
 							sender.send(robot.getCanal().name(), new Gson().toJson(robot));
 							logger.info("SEÑAL ENVIADA AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
 						}
-						
 						
 						//Cerramos todas las operaciones de cada robot
 						//en caso de estar fuera de hora
@@ -189,25 +187,7 @@ public class ControlCotizaciones extends Thread {
 	}
 
 	
-	protected Boolean inTime() {
-		
-		Boolean inTime = Boolean.TRUE;
-		
-		Calendar c = Calendar.getInstance();
-		if(c.get(Calendar.DAY_OF_WEEK)  == Calendar.FRIDAY && c.get(Calendar.HOUR_OF_DAY) > 22) {
-			inTime = Boolean.FALSE;
-		}
-		if(c.get(Calendar.DAY_OF_WEEK)  == Calendar.SATURDAY || c.get(Calendar.DAY_OF_WEEK)  == Calendar.SUNDAY) {
-			inTime = Boolean.FALSE;
-		}
-		if(c.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
-			if(c.get(Calendar.HOUR_OF_DAY) <= 3 ) {
-				inTime = Boolean.FALSE;
-			}
-		}
-		
-		return inTime;
-	}
+
 
 
 }

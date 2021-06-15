@@ -47,7 +47,6 @@ public class Receiver {
 	@Autowired
 	private ConfigData config;
 	
-	
 	@JmsListener(destination = "CHNL_FULL_NODE")
 	public void receiveMessage(String listaRobotsJson) {
 		
@@ -62,6 +61,7 @@ public class Receiver {
 			
 			//Comprobamos que estamos dentro de hora y que el robot está activo
 			if(robot.getRobotActivo() == Boolean.TRUE && config.checkFechaHoraOperaciones() == Boolean.TRUE) {
+				
 				logger.info("CALCULANDO PREDICCIÓN PARA EL ROBOT -> " + robot.getRobot());
 				if(robot.getTipoRobot() == TipoRobot.ARIMA_A || robot.getTipoRobot() == TipoRobot.ARIMA_A_I) {
 					try{
@@ -209,6 +209,7 @@ public class Receiver {
 					}
 				}
 				logger.info("CALCULADA PREDICCIÓN PARA EL ROBOT -> " + robot.getRobot());
+				
 			}
 		}
 		
