@@ -66,7 +66,5 @@ public class ControlAutoCierreOperaciones {
     	logger.info("OPERACIONES CERRADAS AUTOMÁTICAMENTE=============");
     	
 	}
-	
-
 
 }
