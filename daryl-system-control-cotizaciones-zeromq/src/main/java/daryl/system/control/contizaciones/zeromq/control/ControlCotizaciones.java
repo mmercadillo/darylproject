@@ -93,7 +93,6 @@ public class ControlCotizaciones extends Thread {
 							logger.info("SEÑAL ENVIADA AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
 						}
 						
-						
 						//Cerramos todas las operaciones de cada robot
 						//en caso de estar fuera de hora
 						if(config.checkFechaHoraOperaciones() == Boolean.FALSE) {
@@ -110,7 +109,6 @@ public class ControlCotizaciones extends Thread {
 								logger.error(e.getMessage(), e);
 							}
 						}
-						
 						
 					}
 				}catch (Exception e) {
