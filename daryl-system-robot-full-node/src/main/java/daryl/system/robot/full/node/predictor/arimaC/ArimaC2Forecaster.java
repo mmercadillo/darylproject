@@ -1,4 +1,4 @@
-package daryl.system.robot.full.node.predictor.arima;
+package daryl.system.robot.full.node.predictor.arimaC;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

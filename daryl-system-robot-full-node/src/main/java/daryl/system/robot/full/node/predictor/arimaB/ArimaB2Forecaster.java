@@ -1,4 +1,4 @@
-package daryl.system.robot.full.node.predictor.arima;
+package daryl.system.robot.full.node.predictor.arimaB;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @ToString
-public class ArimaB3Forecaster  extends ArimaBForecaster{
+public class ArimaB2Forecaster  extends ArimaBForecaster{
 
 	@Override
 	protected Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
@@ -30,7 +30,7 @@ public class ArimaB3Forecaster  extends ArimaBForecaster{
 			
 		
 		//recuperamos la orden existente en TF 10080
-		String estrategia = "ARIMA_B_" + robot.getActivo() + "_1440";
+		String estrategia = "ARIMA_B_" + robot.getActivo() + "_10080";
 		Orden orden10080 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
 			
 		if(orden10080 != null) {
@@ -66,5 +66,4 @@ public class ArimaB3Forecaster  extends ArimaBForecaster{
 	}
 	
 
-	
 }

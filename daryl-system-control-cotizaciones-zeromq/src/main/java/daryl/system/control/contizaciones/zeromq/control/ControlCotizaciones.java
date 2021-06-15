@@ -93,6 +93,7 @@ public class ControlCotizaciones extends Thread {
 							logger.info("SEÑAL ENVIADA AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
 						}
 						
+						
 						//Cerramos todas las operaciones de cada robot
 						//en caso de estar fuera de hora
 						if(config.checkFechaHoraOperaciones() == Boolean.FALSE || robot.getRobotActivo() == Boolean.FALSE) {
@@ -100,17 +101,26 @@ public class ControlCotizaciones extends Thread {
 								long millis = System.currentTimeMillis();
 								
 								Orden orden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
-								orden.setFecha(config.getFechaInString(millis));
-								orden.setHora(config.getHoraInString(millis));
-								orden.setTipoOrden(TipoOrden.CLOSE);
-								ordenRepository.save(orden);
-								logger.info("ORDEN CERRADA POR CIERRE DE MERCADO -> " + orden);
+								if(orden != null) {
+									orden.setFecha(config.getFechaInString(millis));
+									orden.setHora(config.getHoraInString(millis));
+									orden.setTipoOrden(TipoOrden.CLOSE);
+									ordenRepository.save(orden);
+									logger.info("ORDEN CERRADA POR CIERRE DE MERCADO -> " + orden);
+								}else {
+									logger.info("NO EXISTE ORDEN PARA EL ROBOT -> " + robot);
+								}
+								
 							}catch (Exception e) {
 								logger.error(e.getMessage(), e);
 							}
 						}
-						
 					}
+					
+					//Enviamos el mensaje al nodo principal de control de los robots
+					sender.send("CHNL_FULL_NODE", new Gson().toJson(robots));
+					////////////////////////////////////////////////////////////////////////////////
+					
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
