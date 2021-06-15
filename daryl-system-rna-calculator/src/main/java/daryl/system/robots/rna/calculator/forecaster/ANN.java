@@ -12,7 +12,7 @@
 //
 //**********************************************************************
 
-package stockforecasting.ml;
+package daryl.system.robots.rna.calculator.forecaster;
 
 import static java.lang.Math.round;
 
