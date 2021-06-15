@@ -98,7 +98,7 @@ public abstract class Forecaster {
 		}
 	}
 
-	@Async("threadPoolTaskExecutor")
+	//@Async("threadPoolTaskExecutor")
 	public void calculate(Robot bot) {
 		
 		if(bot.getRobotActivo() == Boolean.TRUE) {

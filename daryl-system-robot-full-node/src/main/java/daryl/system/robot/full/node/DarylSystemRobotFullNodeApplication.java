@@ -39,16 +39,17 @@ public class DarylSystemRobotFullNodeApplication {
         return LoggerFactory.getLogger("daryl");
     }
 	
-	 @Bean(name = "threadPoolTaskExecutor")
-     public Executor getAsyncExecutor() {
-         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-         executor.setCorePoolSize(7);
-         executor.setMaxPoolSize(42);
-         executor.setQueueCapacity(11);
-         executor.setThreadNamePrefix("DarylSymtemProject-");
-         executor.initialize();
-         return executor;
-     }
-
+	/*
+	@Bean(name = "threadPoolTaskExecutor")
+    public Executor getAsyncExecutor() {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(7);
+        executor.setMaxPoolSize(42);
+        executor.setQueueCapacity(11);
+        executor.setThreadNamePrefix("DarylSymtemProject-");
+        executor.initialize();
+        return executor;
+    }
+	*/
 	
 }
