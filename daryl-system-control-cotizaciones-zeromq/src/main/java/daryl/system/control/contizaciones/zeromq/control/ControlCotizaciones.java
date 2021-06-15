@@ -95,7 +95,7 @@ public class ControlCotizaciones extends Thread {
 						
 						//Cerramos todas las operaciones de cada robot
 						//en caso de estar fuera de hora
-						if(config.checkFechaHoraOperaciones() == Boolean.FALSE) {
+						if(config.checkFechaHoraOperaciones() == Boolean.FALSE || robot.getRobotActivo() == Boolean.FALSE) {
 							try {
 								long millis = System.currentTimeMillis();
 								

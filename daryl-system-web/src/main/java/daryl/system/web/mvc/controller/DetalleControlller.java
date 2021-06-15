@@ -47,7 +47,7 @@ public class DetalleControlller {
 			String imagen = "/static/assets/admin/layout/img/remove-icon-small.png";
 			if(orden.getTipoOrden() == TipoOrden.BUY) {
 				imagen = "/static/assets/admin/layout/img/icon-img-up.png";
-			}else if(orden.getTipoOrden() == TipoOrden.BUY) {
+			}else if(orden.getTipoOrden() == TipoOrden.SELL) {
 				imagen = "/static/assets/admin/layout/img/icon-img-down.png";
 			}
 		    InputStream in = getClass().getResourceAsStream(imagen);
