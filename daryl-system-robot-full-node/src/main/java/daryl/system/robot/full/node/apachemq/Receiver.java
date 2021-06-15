@@ -59,114 +59,85 @@ public class Receiver {
 		for(Robot robot : robots) {
 			logger.info("CALCULANDO PREDICCIÓN PARA EL ROBOT -> " + robot.getRobot());
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_A || robot.getTipoRobot() == TipoRobot.ARIMA_A_I) {
-				
 				try{
 					predictor = applicationContext.getBean(ArimaForecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_A2 || robot.getTipoRobot() == TipoRobot.ARIMA_A2_I) {
-				
 				try{
 					predictor = applicationContext.getBean(Arima2Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_A3 || robot.getTipoRobot() == TipoRobot.ARIMA_A3_I) {
-				
 				try{
 					predictor = applicationContext.getBean(Arima3Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_B || robot.getTipoRobot() == TipoRobot.ARIMA_B_I) {
-				
 				try{
 					predictor = applicationContext.getBean(ArimaBForecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_B2 || robot.getTipoRobot() == TipoRobot.ARIMA_B2_I) {
-				
 				try{
 					predictor = applicationContext.getBean(ArimaB2Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_B3 || robot.getTipoRobot() == TipoRobot.ARIMA_B3_I) {
-				
 				try{
 					predictor = applicationContext.getBean(ArimaB3Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_C || robot.getTipoRobot() == TipoRobot.ARIMA_C_I) {
-				
 				try{
 					predictor = applicationContext.getBean(ArimaCForecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_C2 || robot.getTipoRobot() == TipoRobot.ARIMA_C2_I) {
-				
 				try{
 					predictor = applicationContext.getBean(ArimaC2Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_C3 || robot.getTipoRobot() == TipoRobot.ARIMA_C3_I) {
-				
 				try{
 					predictor = applicationContext.getBean(ArimaC3Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
 			if(robot.getTipoRobot() == TipoRobot.ARIMA_D || robot.getTipoRobot() == TipoRobot.ARIMA_D_I) {
-				
 				try{
 					predictor = applicationContext.getBean(ArimaDForecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-
 			if(robot.getTipoRobot() == TipoRobot.RNA || robot.getTipoRobot() == TipoRobot.RNA_I) {
 				
 				try{
@@ -174,85 +145,63 @@ public class Receiver {
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
-				}
-					
+				}	
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.VARIANCE || robot.getTipoRobot() == TipoRobot.VARIANCE_I) {
-				
 				try{
 					predictor = applicationContext.getBean(VarianceForecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.VARIANCE_2 || robot.getTipoRobot() == TipoRobot.VARIANCE_2_I) {
-				
 				try{
 					predictor = applicationContext.getBean(Variance2Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.VARIANCE_3 || robot.getTipoRobot() == TipoRobot.VARIANCE_3_I) {
-				
 				try{
 					predictor = applicationContext.getBean(Variance3Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.VARIANCE_B || robot.getTipoRobot() == TipoRobot.VARIANCE_B_I) {
-				
 				try{
 					predictor = applicationContext.getBean(VarianceBForecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-
 			if(robot.getTipoRobot() == TipoRobot.VARIANCE_B || robot.getTipoRobot() == TipoRobot.VARIANCE_B_I) {
-				
 				try{
 					predictor = applicationContext.getBean(VarianceBForecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.VARIANCE_B2 || robot.getTipoRobot() == TipoRobot.VARIANCE_B2_I) {
-				
 				try{
 					predictor = applicationContext.getBean(VarianceB2Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
-			
 			if(robot.getTipoRobot() == TipoRobot.VARIANCE_B3 || robot.getTipoRobot() == TipoRobot.VARIANCE_B3_I) {
-				
 				try{
 					predictor = applicationContext.getBean(VarianceB3Forecaster.class);
 					predictor.calculate(robot);
 				}catch (Exception e) {
 					logger.error(e.getMessage(), e);		
 				}
-					
 			}
 			logger.info("CALCULADA PREDICCIÓN PARA EL ROBOT -> " + robot.getRobot());
 			
