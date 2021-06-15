@@ -18,22 +18,22 @@ import daryl.system.comun.enums.TipoRobot;
 import daryl.system.model.Robot;
 import daryl.system.robot.full.node.predictor.arima.Arima2Forecaster;
 import daryl.system.robot.full.node.predictor.arima.Arima3Forecaster;
-import daryl.system.robot.full.node.predictor.arima.ArimaDForecaster;
 import daryl.system.robot.full.node.predictor.arima.ArimaForecaster;
-import daryl.system.robot.full.node.predictor.arima.RnaForecaster;
-import daryl.system.robot.full.node.predictor.arima.Variance2Forecaster;
-import daryl.system.robot.full.node.predictor.arima.Variance3Forecaster;
-import daryl.system.robot.full.node.predictor.arima.VarianceB2Forecaster;
-import daryl.system.robot.full.node.predictor.arima.VarianceB3Forecaster;
-import daryl.system.robot.full.node.predictor.arima.VarianceBForecaster;
-import daryl.system.robot.full.node.predictor.arima.VarianceForecaster;
 import daryl.system.robot.full.node.predictor.arimaB.ArimaB2Forecaster;
 import daryl.system.robot.full.node.predictor.arimaB.ArimaB3Forecaster;
 import daryl.system.robot.full.node.predictor.arimaB.ArimaBForecaster;
 import daryl.system.robot.full.node.predictor.arimaC.ArimaC2Forecaster;
 import daryl.system.robot.full.node.predictor.arimaC.ArimaC3Forecaster;
 import daryl.system.robot.full.node.predictor.arimaC.ArimaCForecaster;
+import daryl.system.robot.full.node.predictor.arimaD.ArimaDForecaster;
 import daryl.system.robot.full.node.predictor.base.Forecaster;
+import daryl.system.robot.full.node.predictor.rna.RnaForecaster;
+import daryl.system.robot.full.node.predictor.variance.Variance2Forecaster;
+import daryl.system.robot.full.node.predictor.variance.Variance3Forecaster;
+import daryl.system.robot.full.node.predictor.variance.VarianceForecaster;
+import daryl.system.robot.full.node.predictor.varianceB.VarianceB2Forecaster;
+import daryl.system.robot.full.node.predictor.varianceB.VarianceB3Forecaster;
+import daryl.system.robot.full.node.predictor.varianceB.VarianceBForecaster;
 
 @Component
 public class Receiver {

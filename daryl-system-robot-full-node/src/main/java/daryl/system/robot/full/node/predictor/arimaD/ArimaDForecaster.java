@@ -1,4 +1,4 @@
-package daryl.system.robot.full.node.predictor.arima;
+package daryl.system.robot.full.node.predictor.arimaD;
 
 import java.util.List;
 

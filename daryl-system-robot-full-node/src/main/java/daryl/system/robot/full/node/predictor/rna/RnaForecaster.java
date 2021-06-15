@@ -1,4 +1,4 @@
-package daryl.system.robot.full.node.predictor.arima;
+package daryl.system.robot.full.node.predictor.rna;
 
 import java.io.IOException;
 import java.util.ArrayList;
