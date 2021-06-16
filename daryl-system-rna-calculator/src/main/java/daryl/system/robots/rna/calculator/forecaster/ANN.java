@@ -18,19 +18,9 @@ import static java.lang.Math.round;
 
 import java.io.Serializable;
 import java.util.Random;
-/*
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-*/
+import lombok.Setter;
+
 public class ANN implements Serializable{
 
     private static final long serialVersionUID = 6673423048343986258L;
@@ -49,72 +39,52 @@ public class ANN implements Serializable{
     private double[][] WO_delta;
     
     private double newDelta = 0;
-    private int badEpoch = 1000;
+    private int badEpoch = 5000;
     private boolean badFact = false;
     
     //default values, can be changed with public setters
+    @Setter
     private double lrc = 0.2;
+    @Setter
     private double err = 0.2;
+    @Setter
     private double momentum = 0.9;
-    private int hidden_neurons = 10;
+    @Setter
+    private int hiddenNeurons = 10;
+    @Setter
     private double testing_ratio = 0.2;
+    @Setter
     private boolean details = false;
-    private boolean modify_values = false;
-    private double modify_rate = 0.01;
-    private double convergence_limit = 0;
-    
-    //private Chart myChart = new Chart("ANN", 1);
-    /*   
-    private JFreeChart chart;
-    private JFreeChart chart2;
-    private XYSeries series1;
-    private XYSeries series2;
-    private XYSeries series3;
-    private XYSeriesCollection dataset;
-    private XYSeriesCollection dataset2;
-    */
-    private double PosX = 0;
-    private double PosY = 0;
-    
-    /*
-    JFrame test_frame = new JFrame("Testing Results");
-    JTextArea textArea = new JTextArea();    
-     */  
+    @Setter
+    private boolean modifyValues = false;
+    @Setter
+    private double modifyRate = 0.01;
+    @Setter
+    private double convergenceLimit = 0;
+    @Setter
+    private boolean useSigmoid = Boolean.TRUE;
+    @Setter
+    private boolean useTanh = Boolean.TRUE;
+
     
     //***************************** Training **********************************           
     public double[][] train(double[][] input, double[][] target){
         
-        //myChart.SetInputs(3);
-        
-        //Test Frame settings
-        //test_frame.setSize(800, 300);
-        //test_frame.setVisible(true);
-        //test_frame.add(textArea);
-        
         if (input.length != target.length)
             System.out.println("Input and target must be of same length");
         else{
-            
-            //setChart();       
-            //DrawInputs(input);
-            
-//            for (int i=0; i<input.length; i++){
-//                for (int j=0; j<input[0].length; j++){
-//                    input[i][j] = sigmoid(input[i][j]);
-//                }
-//            }
-            
-            hidden = new double[hidden_neurons];
+
+            hidden = new double[hiddenNeurons];
             OUT = new double[target.length][target[0].length];
             error = new double[target[0].length];
 
             //randomize weights
-            WH = randomizeWeights(input[0].length,hidden_neurons,-1,1);
-            WO = randomizeWeights(hidden_neurons,target[0].length,-1,1);
+            WH = randomizeWeights(input[0].length,hiddenNeurons,-1,1);
+            WO = randomizeWeights(hiddenNeurons,target[0].length,-1,1);
             
             //These are initially set to 0
-            WH_delta = randomizeWeights(input[0].length,hidden_neurons,0,0);
-            WO_delta = randomizeWeights(hidden_neurons,target[0].length,0,0);
+            WH_delta = randomizeWeights(input[0].length,hiddenNeurons,0,0);
+            WO_delta = randomizeWeights(hiddenNeurons,target[0].length,0,0);
 
             shuffleArray(input, target);
             
@@ -123,13 +93,13 @@ public class ANN implements Serializable{
 
             
             //***********Begin training neural network
-            while (badEpoch > convergence_limit && counter < 5000){
+            while (badEpoch > convergenceLimit && counter < 5000){
                 if (details) System.out.println("\n******  Epoch Number: " + counter + " *********");
                 badEpoch = 0;
                 counter++;
-                if (modify_values){
-                    if (err < 0.3) err += modify_rate;
-                    if (momentum > 0.1) momentum -= modify_rate;
+                if (modifyValues){
+                    if (err < 0.3) err += modifyRate;
+                    if (momentum > 0.1) momentum -= modifyRate;
                 }
                 for (int count=0;count<n_training;count++){
                     badFact = false;
@@ -140,16 +110,13 @@ public class ANN implements Serializable{
                     OUT[count] = forwardPass(hidden, WO, true);
                                         
                     //computes error value and delta for each output neuron
-                    if (details) System.out.println("Vector: " + count);
+                    if (details) System.out.println("Vector: " + count + " de -> " + n_training);
                     for (int i=0;i<target[0].length;i++){
                         error[i] = (target[count][i] - OUT[count][i]);
                         delta[i] = OUT[count][i]*(1-OUT[count][i])*error[i];
                         if (Math.abs(error[i]) > err) badFact = true;
                         if (details){
-                            System.out.print("\tOUT: " + OUT[count][i] + "\t ");
-                            System.out.print("\tTarget: " + target[count][i] + "\t ");                    
-                            System.out.print("\tError: " + error[i] + "\t ");                    
-                            System.out.println("\tDelta: " + delta[i]);
+                            System.out.println("OUT: " + OUT[count][i] + " Target: " + target[count][i] + " Error: " + error[i] + " Delta: " + delta[i]);
                         }
                     }
 
@@ -170,6 +137,7 @@ public class ANN implements Serializable{
                     printWeights(WO);
                 }
                 //updateGraph();
+                //System.out.println("EPOCH: " + counter + " DE 5000");
             } 
             
             System.out.println("Number of epochs: "+counter);
@@ -266,10 +234,19 @@ public class ANN implements Serializable{
         }
         
         for(int n=0;n<out_vector.length;n++){
-            if (hidden)
-                out_vector[n] = sigmoid(out_vector[n]);
-            else
-                out_vector[n] = sigmoid(out_vector[n]);
+            if (hidden) {
+                if(useSigmoid == Boolean.TRUE) {
+                	out_vector[n] = sigmoid(out_vector[n]);
+                }else if(useTanh == Boolean.TRUE) {
+                	out_vector[n] = tanh(out_vector[n]);
+                }
+            }else {
+            	if(useSigmoid == Boolean.TRUE) {
+            		out_vector[n] = sigmoid(out_vector[n]);
+            	}else  if(useTanh == Boolean.TRUE) {
+            		out_vector[n] = tanh(out_vector[n]);
+            	}
+            }
         }
         return out_vector;
     }
@@ -328,113 +305,7 @@ public class ANN implements Serializable{
             System.out.println("");
         }
     }
-    
-    private String printArray(double[] d){
-        String s = "";
-        for (int i=0;i<d.length;i++){
-            s += d[i] + ",";
-        }
-        return s;
-    }
-    
-    
-    
-    //**************************** Chart Functions ***************************
-    /*
-    private void setChart(){
-        //Frame settings
-        JFrame myframe = new JFrame();
-        myframe.setTitle("Neural Net");
-        myframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        myframe.setLayout(new BorderLayout());
-        myframe.setSize(1200, 650);
-        myframe.setVisible(true);
 
-        //Chart settings and variables
-        series1 = new XYSeries("First");
-        dataset = new XYSeriesCollection();
-        dataset.addSeries(series1);
-        chart = createChart(dataset, "Bad Facts Over Time","Number of Epochs", "Bad Facts");
-        JPanel content = new JPanel(new BorderLayout());
-        ChartPanel chartPanel = new ChartPanel(chart);
-        content.add(chartPanel);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-        myframe.setContentPane(content);
 
-        //makes frame paint immediately
-        myframe.validate();
-    }
-    */
-    /*
-    private void DrawInputs(double[][] input){
-        
-        Chart myChart2 = new Chart("ANN Inputs", 2);
-        myChart2.SetInputs("S&P","NSDQ","Recession");
-
-        for (int i=0;i<input.length;i++){
-            myChart2.UpdateGraph(input[i][0]);
-        }
-             
-    }
-    */
-    /*
-    private JFreeChart createChart(final XYDataset dataset, String title, String xLabel, String yLabel) {
-        
-        // create the chart...
-        final JFreeChart chart = ChartFactory.createXYLineChart(
-            title,                      // chart title
-            xLabel,                     // x axis label
-            yLabel,                     // y axis label
-            dataset,                    // data
-            PlotOrientation.VERTICAL,
-            true,                     // include legend
-            true,                     // tooltips
-            false                     // urls
-        );
-        
-        return chart;
-    }
-    */
-    /*
-    private void updateGraph(){      
-            PosX++;
-            PosY = badEpoch;
-            series1.add(PosX, PosY);
-    }
-    */
-    //**************************** Public Setters ***************************
-
-    public void setLrc(double lrc) {
-        this.lrc = lrc;
-    }
-
-    public void setErr(double err) {
-        this.err = err;
-    }
-
-    public void setMomentum(double momentum) {
-        this.momentum = momentum;
-    }
-
-    public void setHiddenNeurons(int hidden_neurons) {
-        this.hidden_neurons = hidden_neurons;
-    }
-
-    public void setTestingRatio(double testing_ratio) {
-        this.testing_ratio = testing_ratio;
-    }
-    
-    public void details(boolean details) {
-        this.details = details;
-    }
-
-    public void modifyValues(boolean modify_values, double modify_rate) {
-        this.modify_values = modify_values;
-        this.modify_rate = modify_rate;
-    }
-
-    public void setConvergenceLimit(double convergence_limit) {
-        this.convergence_limit = convergence_limit;
-    }
     
 }

@@ -31,7 +31,7 @@ public class Variance3Forecaster  extends Forecaster{
 	private IVarianceConfigRepository varianceConfigRepository;
 
 	@Override
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
@@ -86,7 +86,7 @@ public class Variance3Forecaster  extends Forecaster{
 	
 	
 	@Override
-	protected Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
+	public Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
 		
 		long millis = System.currentTimeMillis();
 		Orden orden = new Orden();

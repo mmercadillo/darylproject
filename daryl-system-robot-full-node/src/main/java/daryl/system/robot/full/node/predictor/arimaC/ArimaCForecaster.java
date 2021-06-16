@@ -31,7 +31,7 @@ public class ArimaCForecaster  extends Forecaster{
 	private IArimaConfigRepository arimaConfigRepository;
 
 	@Override
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
@@ -86,7 +86,7 @@ public class ArimaCForecaster  extends Forecaster{
 	
 	}
 	
-	private ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
+	public ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
 
 		
 		double[] coefficentsAr = null;

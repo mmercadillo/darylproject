@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
-import daryl.system.robots.rna.calculator.forecaster.RnaForecasterGenerator;
+import daryl.system.robots.rna.calculator.forecaster.ANNForecasterGenerator;
 
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
@@ -51,7 +51,13 @@ public class DarylSystemRnaCalculatorApplication {
 		
 		
 		ExecutorService servicio = Executors.newFixedThreadPool(24);
+
+		ANNForecasterGenerator rfgGDAXI60 = context.getBean(ANNForecasterGenerator.class);
+		rfgGDAXI60.init("ANN_GDAXI_60", Activo.GDAXI, Timeframes.PERIOD_D1, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo);
+		servicio.submit(rfgGDAXI60);
 		
+		
+		/*
 		RnaForecasterGenerator rfgGDAXI60 = context.getBean(RnaForecasterGenerator.class);
 		rfgGDAXI60.init("RNA_GDAXI_60", Activo.GDAXI, Timeframes.PERIOD_H1, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo);
 		servicio.submit(rfgGDAXI60);
@@ -148,7 +154,7 @@ public class DarylSystemRnaCalculatorApplication {
 		RnaForecasterGenerator rfgWTI10080 = context.getBean(RnaForecasterGenerator.class);
 		rfgWTI10080.init("RNA_WTI_10080", Activo.XTIUSD, Timeframes.PERIOD_W1, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo);
 		servicio.submit(rfgWTI10080);
-		
+		*/
 		servicio.shutdown();
 		
 	}

@@ -32,7 +32,7 @@ public class ArimaDForecaster  extends Forecaster{
 	private IArimaConfigRepository arimaConfigRepository;
 	
 	@Override
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
@@ -93,7 +93,7 @@ public class ArimaDForecaster  extends Forecaster{
 	
 	}
 
-	private ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
+	public ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
 
 		
 		double[] coefficentsAr = null;
@@ -141,7 +141,7 @@ public class ArimaDForecaster  extends Forecaster{
 	}
 
 
-	private Double getPrediccionAnterior(List<Double> datosForecast, DefaultArimaProcess arimaProcess, ArimaConfig arimaConfig) {
+	public Double getPrediccionAnterior(List<Double> datosForecast, DefaultArimaProcess arimaProcess, ArimaConfig arimaConfig) {
 		
 		//Lista para prediccionAnterior
 		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);

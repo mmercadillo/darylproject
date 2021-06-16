@@ -33,7 +33,7 @@ public class ArimaD2Forecaster  extends Forecaster{
 	private IArimaConfigRepository arimaConfigRepository;
 	
 	@Override
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
@@ -94,7 +94,7 @@ public class ArimaD2Forecaster  extends Forecaster{
 	
 	}
 
-	private ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
+	public ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
 
 		
 		double[] coefficentsAr = null;
@@ -142,7 +142,7 @@ public class ArimaD2Forecaster  extends Forecaster{
 	}
 
 
-	private Double getPrediccionAnterior(List<Double> datosForecast, DefaultArimaProcess arimaProcess, ArimaConfig arimaConfig) {
+	public Double getPrediccionAnterior(List<Double> datosForecast, DefaultArimaProcess arimaProcess, ArimaConfig arimaConfig) {
 		
 		//Lista para prediccionAnterior
 		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
@@ -167,8 +167,8 @@ public class ArimaD2Forecaster  extends Forecaster{
 
 	}
 	
-	@Override
-	protected Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
+	
+	public Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
 		
 		long millis = System.currentTimeMillis();
 		Orden orden = new Orden();

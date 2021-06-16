@@ -60,7 +60,7 @@ public class Arima2Forecaster extends Forecaster{
 
 	
 	@Override
-	protected Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
+	public Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
 		
 		long millis = System.currentTimeMillis();
 		Orden orden = new Orden();

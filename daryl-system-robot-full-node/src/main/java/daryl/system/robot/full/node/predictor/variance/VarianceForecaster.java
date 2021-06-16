@@ -29,7 +29,7 @@ public class VarianceForecaster  extends Forecaster{
 	private IVarianceConfigRepository varianceConfigRepository;
 
 	@Override
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		

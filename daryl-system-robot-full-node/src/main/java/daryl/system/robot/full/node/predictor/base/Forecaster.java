@@ -26,9 +26,9 @@ public abstract class Forecaster {
 	@Autowired
 	protected IHistoricoRepository historicoRepository; 
 
-	protected abstract Double calcularPrediccion(Robot bot);
+	public abstract Double calcularPrediccion(Robot bot);
 	
-	protected Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
+	public Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
 		
 		long millis = System.currentTimeMillis();
 		Orden orden = new Orden();
@@ -53,7 +53,7 @@ public abstract class Forecaster {
 		return orden;
 	}
 	
-	private void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
+	public void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			
 			//Creamos el bean prediccion
@@ -73,7 +73,7 @@ public abstract class Forecaster {
 		}
 	}
 	
-	private void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
+	public void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
 		try {
 
 			Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
@@ -89,7 +89,7 @@ public abstract class Forecaster {
 		}
 	}
 	
-	private void guardarNuevaOrden(Orden orden, Long fechaHoraMillis) {
+	public void guardarNuevaOrden(Orden orden, Long fechaHoraMillis) {
 		try {
 			orden.setFAlta(fechaHoraMillis);
 			ordenRepository.save(orden);
@@ -98,7 +98,7 @@ public abstract class Forecaster {
 		}
 	}
 
-	//@Async("threadPoolTaskExecutor")
+	@Async
 	public void calculate(Robot bot) {
 		
 		if(bot.getRobotActivo() == Boolean.TRUE) {

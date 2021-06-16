@@ -32,7 +32,7 @@ public class RnaForecaster  extends Forecaster{
 	private IRnaConfigRepository rnaConfigRepository;
 
 	@Override
-	protected Double calcularPrediccion(Robot bot){
+	public Double calcularPrediccion(Robot bot){
 
 		Double prediccion = 0.0;
 		RnaConfig rnaConfig = getRnaConfig(bot);
@@ -85,7 +85,7 @@ public class RnaForecaster  extends Forecaster{
 	}
 	
 
-	private Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Double> datosForecast, MaxMinNormalizer darylNormalizer) {
+	public Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Double> datosForecast, MaxMinNormalizer darylNormalizer) {
 
 		List<Double> inputs = new ArrayList<Double>();
 			
@@ -119,7 +119,7 @@ public class RnaForecaster  extends Forecaster{
 	}
 	
 	
-	private NeuralNetwork rnaFromByteArray(byte[] byteArray) throws IOException, ClassNotFoundException {
+	public NeuralNetwork rnaFromByteArray(byte[] byteArray) throws IOException, ClassNotFoundException {
 		
 		NeuralNetwork rna = (NeuralNetwork)SerializationUtils.deserialize(byteArray);
 		return rna;
