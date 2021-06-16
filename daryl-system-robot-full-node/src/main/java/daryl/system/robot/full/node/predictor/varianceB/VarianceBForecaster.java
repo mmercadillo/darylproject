@@ -28,7 +28,7 @@ public class VarianceBForecaster  extends Forecaster{
 	private IVarianceConfigRepository varianceConfigRepository;
 
 	@Override
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
@@ -84,7 +84,7 @@ public class VarianceBForecaster  extends Forecaster{
 	}
 	
 
-	private Double getPrediccionAnterior(List<Double> datosForecast, VarianceConfig varianceConfig) throws Exception {
+	public Double getPrediccionAnterior(List<Double> datosForecast, VarianceConfig varianceConfig) throws Exception {
 		
 		//Lista para prediccionAnterior
 		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);

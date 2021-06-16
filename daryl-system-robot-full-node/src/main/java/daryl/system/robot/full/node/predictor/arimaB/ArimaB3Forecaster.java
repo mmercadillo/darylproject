@@ -23,7 +23,7 @@ import lombok.ToString;
 @ToString
 public class ArimaB3Forecaster  extends Forecaster{
 
-	private Integer getPrediccionAnterior(List<Double> datosForecast) {
+	public Integer getPrediccionAnterior(List<Double> datosForecast) {
 		
 		//Lista para prediccionAnterior
 		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
@@ -37,7 +37,7 @@ public class ArimaB3Forecaster  extends Forecaster{
 	}
 	
 	
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 
 		Double prediccion = 0.0;
@@ -76,7 +76,7 @@ public class ArimaB3Forecaster  extends Forecaster{
 
 	
 	@Override
-	protected Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
+	public Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
 		
 		long millis = System.currentTimeMillis();
 		Orden orden = new Orden();

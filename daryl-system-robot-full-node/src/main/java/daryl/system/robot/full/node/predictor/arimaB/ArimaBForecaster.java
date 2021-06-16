@@ -21,7 +21,7 @@ import lombok.ToString;
 @ToString
 public class ArimaBForecaster  extends Forecaster{
 
-	private Integer getPrediccionAnterior(List<Double> datosForecast) {
+	public Integer getPrediccionAnterior(List<Double> datosForecast) {
 		
 		//Lista para prediccionAnterior
 		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
@@ -35,7 +35,7 @@ public class ArimaBForecaster  extends Forecaster{
 	}
 	
 	
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 
 		Double prediccion = 0.0;

@@ -30,7 +30,7 @@ public class VarianceB2Forecaster  extends Forecaster{
 	private IVarianceConfigRepository varianceConfigRepository;
 
 	@Override
-	protected Double calcularPrediccion(Robot bot) {
+	public Double calcularPrediccion(Robot bot) {
 		
 		Double prediccion = 0.0;
 		
@@ -86,7 +86,7 @@ public class VarianceB2Forecaster  extends Forecaster{
 	}
 	
 
-	private Double getPrediccionAnterior(List<Double> datosForecast, VarianceConfig varianceConfig) throws Exception {
+	public Double getPrediccionAnterior(List<Double> datosForecast, VarianceConfig varianceConfig) throws Exception {
 		
 		//Lista para prediccionAnterior
 		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
@@ -109,7 +109,7 @@ public class VarianceB2Forecaster  extends Forecaster{
 	}
 	
 	@Override
-	protected Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
+	public Orden calcularOperacion(Robot robot, Double prediccion, Boolean inv) {
 		
 		long millis = System.currentTimeMillis();
 		Orden orden = new Orden();
