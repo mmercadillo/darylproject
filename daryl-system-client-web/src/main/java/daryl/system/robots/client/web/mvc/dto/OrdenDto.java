@@ -57,7 +57,8 @@ public class OrdenDto{
 									.replace("NDX", "ND")
 									.replace("WTI", "WT")
 									.replace("AUDCAD", "AC")
-									.replace("EURUSD", "EU");
+									.replace("EURUSD", "EU")
+									.replace("VARIANCE", "VAR");
 		return labComment;
 		
 	}
