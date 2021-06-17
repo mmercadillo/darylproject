@@ -59,7 +59,7 @@ public class DashboardController {
 		
 		
 		//Card con el top5 en resultado con tf 60
-		List<ResumenRobot> top560 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc("60", 5);
+		List<ResumenRobot> top560 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("60", 50L, 5);
 		List<ResumenRobotDto> resumenesTop560 = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top560) {
 			if(resumen != null) resumenesTop560.add(ResumenRobotDto.getDto(resumen));
@@ -68,7 +68,7 @@ public class DashboardController {
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//Card con el top5 en resultado con tf 240
-		List<ResumenRobot> top5240 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc("240", 5);
+		List<ResumenRobot> top5240 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("240", 25L, 5);
 		List<ResumenRobotDto> resumenesTop5240 = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top5240) {
 			if(resumen != null) resumenesTop5240.add(ResumenRobotDto.getDto(resumen));
@@ -77,7 +77,7 @@ public class DashboardController {
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//Card con el top5 en resultado con tf 1440
-		List<ResumenRobot> top51440 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc("1440", 5);
+		List<ResumenRobot> top51440 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("1440", 10L, 5);
 		List<ResumenRobotDto> resumenesTop51440 = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top51440) {
 			if(resumen != null) resumenesTop51440.add(ResumenRobotDto.getDto(resumen));
@@ -86,7 +86,7 @@ public class DashboardController {
 		////////////////////////////////////////////////////////////////////////////////////////////////////////	
 		
 		//Card con el top5 en resultado con tf 10080
-		List<ResumenRobot> top510080 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByTotalDesc("10080", 5);
+		List<ResumenRobot> top510080 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("10080", 4L, 5);
 		List<ResumenRobotDto> resumenesTop510080 = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top510080) {
 			if(resumen != null) resumenesTop510080.add(ResumenRobotDto.getDto(resumen));
@@ -107,7 +107,7 @@ public class DashboardController {
 		
 		
 		//Card con el top5 en esperanza matemática con tf 60
-		List<ResumenRobot> top5EspMat60 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("60",5);
+		List<ResumenRobot> top5EspMat60 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("60",50L, 5);
 		List<ResumenRobotDto> resumenesTop5EspMat60 = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top5EspMat60) {
 			if(resumen != null) resumenesTop5EspMat60.add(ResumenRobotDto.getDto(resumen));
@@ -116,7 +116,7 @@ public class DashboardController {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		//Card con el top5 en esperanza matemática con tf 240
-		List<ResumenRobot> top5EspMat240 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("240",5);
+		List<ResumenRobot> top5EspMat240 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("240", 25L, 5);
 		List<ResumenRobotDto> resumenesTop5EspMat240 = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top5EspMat240) {
 			if(resumen != null) resumenesTop5EspMat240.add(ResumenRobotDto.getDto(resumen));
@@ -125,7 +125,7 @@ public class DashboardController {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//Card con el top5 en esperanza matemática con tf 1440
-		List<ResumenRobot> top5EspMat1440 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("1440",5);
+		List<ResumenRobot> top5EspMat1440 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("1440", 10L, 5);
 		List<ResumenRobotDto> resumenesTop5EspMat1440 = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top5EspMat1440) {
 			if(resumen != null) resumenesTop5EspMat1440.add(ResumenRobotDto.getDto(resumen));
@@ -134,7 +134,7 @@ public class DashboardController {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//Card con el top5 en esperanza matemática con tf 10080
-		List<ResumenRobot> top5EspMat10080 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseOrderByEspmatDesc("10080",5);
+		List<ResumenRobot> top5EspMat10080 = resumenRobotService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("10080", 4L, 5);
 		List<ResumenRobotDto> resumenesTop5EspMat10080 = new ArrayList<ResumenRobotDto>();
 		for (ResumenRobot resumen : top5EspMat10080) {
 			if(resumen != null) resumenesTop5EspMat10080.add(ResumenRobotDto.getDto(resumen));
