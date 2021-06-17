@@ -2,7 +2,7 @@
 	<configuration>
 	 
 	    <property name="LOGS" value="C:/Users/Admin/Desktop/DarylSystemProject/logs" />
-	    <property name="APP" value="daryl-system-arima-c-calculator-close" />
+	    <property name="APP" value="daryl-system-rna-calculator" />
 
 	    <appender name="Console"
 	        class="ch.qos.logback.core.ConsoleAppender">
