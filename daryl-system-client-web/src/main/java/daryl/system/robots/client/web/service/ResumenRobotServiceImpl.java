@@ -32,12 +32,12 @@ public class ResumenRobotServiceImpl implements IResumenRobotService {
 	}
 	
 	@Transactional
-	public List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc(String timeframe, Integer numOperaciones, Integer num){
+	public List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc(String timeframe, Long numOperaciones, Integer num){
 		return repository.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc(timeframe, numOperaciones, PageRequest.of(0,  num));
 	}
 
 	@Transactional
-	public List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc(String timeframe, Integer numOperaciones, Integer num){
+	public List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc(String timeframe, Long numOperaciones, Integer num){
 		return repository.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc(timeframe, numOperaciones, PageRequest.of(0,  num));
 	}
 }

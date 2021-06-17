@@ -9,6 +9,6 @@ public interface IResumenRobotService {
 	List<ResumenRobot> findResumenRobotTopNumOrderByTotalDesc(Integer num);
 	ResumenRobot findResumenRobotByRobotOrderByTotalDesc(String robot);
 	
-	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc(String timeframe, Integer numOperaciones, Integer num);
-	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc(String timeframe, Integer numOperaciones, Integer num);
+	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc(String timeframe, Long numOperaciones, Integer num);
+	List<ResumenRobot> findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc(String timeframe, Long numOperaciones, Integer num);
 }

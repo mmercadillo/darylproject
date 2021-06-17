@@ -32,7 +32,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/em/tf60/{cta}")
     public List<OrdenDto> ordenesEmTf60(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("60", 50, 10);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("60", 50L, 10);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -58,7 +58,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/em/tf240/{cta}")
     public List<OrdenDto> ordenesEmTf240(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("240", 25, 10);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("240", 25L, 10);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -84,7 +84,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/em/tf1440/{cta}")
     public List<OrdenDto> ordenesEmTf1440(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("1440", 10, 5);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("1440", 10L, 5);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -110,7 +110,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/em/tf10080/{cta}")
     public List<OrdenDto> ordenesEmTf10080(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("10080", 4, 5);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByEspmatDesc("10080", 4L, 5);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -135,7 +135,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/total/tf60/{cta}")
     public List<OrdenDto> ordenesTotalTf60(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("60", 50, 10);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("60", 50L, 10);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -160,7 +160,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/total/tf240/{cta}")
     public List<OrdenDto> ordenesTotalTf240(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("240", 25, 10);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("240", 25L, 10);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -185,7 +185,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/total/tf1440/{cta}")
     public List<OrdenDto> ordenesTotalTf1440(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("1440", 10, 5);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("1440", 10L, 5);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		if(top5EspMat != null) {
@@ -210,7 +210,7 @@ public class OrdenesController2 {
 	@GetMapping("/mt/ordenes/total/tf10080/{cta}")
     public List<OrdenDto> ordenesTotalTf10080(@PathVariable String cta) {
 
-		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("10080", 4, 5);
+		List<ResumenRobot> top5EspMat = resumenService.findResumenRobotsByRobotContainingIgnoreCaseAndNumOperacionesGreaterThanEqualOrderByTotalDesc("10080", 4L, 5);
 		List<String> robots = new ArrayList<String>();
 		//Recuperamos la orden por robot
 		
