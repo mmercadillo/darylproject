@@ -73,16 +73,15 @@ public abstract class Forecaster {
 		}
 	}
 	
-	public void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
+	public void borrarUltimaOrden(Robot robot) {
 		try {
 
-			Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
-			if(ultimaOrden != null) {
-				ultimaOrden.setFBaja(fechaHoraMillis);
-				ordenRepository.delete(ultimaOrden);
+			Long orden = ordenRepository.deleteByRobot(robot.getRobot());
+			if(orden >= 1) {
+				logger.info("Orden eliminada del robot " + robot.getRobot());
 				
 			}else {
-				logger.info("No hay orden para {} para actualzar del robot", robot.getRobot());
+				logger.info("No hay orden para eliminar del robot " + robot.getRobot());
 			}
 		}catch (Exception e) {
 			logger.error("No se ha recuperado el valor de la última orden del robot: {}", robot.getRobot(), e);
@@ -115,7 +114,7 @@ public abstract class Forecaster {
 			
 			actualizarPrediccionBDs(bot, orden.getTipoOrden(), prediccion, fechaHoraMillis);
 			logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot + " Predicciñon -> " + prediccion);
-			actualizarUltimaOrden(bot, orden, fechaHoraMillis);
+			borrarUltimaOrden(bot);
 			logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot);
 			guardarNuevaOrden(orden, fechaHoraMillis);
 			logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot + " -> Orden -> " + orden);			
