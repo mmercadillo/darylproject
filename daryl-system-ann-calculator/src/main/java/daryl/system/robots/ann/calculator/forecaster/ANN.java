@@ -12,7 +12,7 @@
 //
 //**********************************************************************
 
-package daryl.system.robots.rna.calculator.forecaster;
+package daryl.system.robots.ann.calculator.forecaster;
 
 import static java.lang.Math.round;
 

@@ -1,4 +1,4 @@
-package daryl.system.robots.rna.calculator.repository;
+package daryl.system.robots.ann.calculator.repository;
 
 import java.util.List;
 

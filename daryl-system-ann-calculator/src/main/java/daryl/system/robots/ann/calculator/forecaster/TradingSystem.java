@@ -4,7 +4,7 @@
  * The first strategy is the algorithmic trading strategy, whilst the second is the ANN strategy.
  * 
  ******/
-package daryl.system.robots.rna.calculator.forecaster;
+package daryl.system.robots.ann.calculator.forecaster;
 
 import java.io.FileInputStream;
 import java.io.IOException;

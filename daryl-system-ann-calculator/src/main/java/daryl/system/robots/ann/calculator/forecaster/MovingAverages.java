@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package daryl.system.robots.rna.calculator.forecaster;
+package daryl.system.robots.ann.calculator.forecaster;
 
 public class MovingAverages {
                 

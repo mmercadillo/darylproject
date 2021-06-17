@@ -1,4 +1,4 @@
-package daryl.system.robots.rna.calculator.forecaster;
+package daryl.system.robots.ann.calculator.forecaster;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

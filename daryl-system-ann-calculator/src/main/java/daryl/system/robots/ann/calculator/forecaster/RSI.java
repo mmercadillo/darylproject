@@ -1,7 +1,7 @@
 
-package daryl.system.robots.rna.calculator.forecaster;
+package daryl.system.robots.ann.calculator.forecaster;
 
-import daryl.system.robots.rna.calculator.forecaster.TradingSystem.SIGNAL;
+import daryl.system.robots.ann.calculator.forecaster.TradingSystem.SIGNAL;
 
 
 public class RSI {

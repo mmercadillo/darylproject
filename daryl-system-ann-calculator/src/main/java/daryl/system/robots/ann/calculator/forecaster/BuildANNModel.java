@@ -1,7 +1,7 @@
 /*
  * Trains the ANN and stores the resulting model by serializing the object to a file.
  */
-package daryl.system.robots.rna.calculator.forecaster;
+package daryl.system.robots.ann.calculator.forecaster;
 
 public class BuildANNModel {
     

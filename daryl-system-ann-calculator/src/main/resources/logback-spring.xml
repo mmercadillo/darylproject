@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<configuration>
 	 
-	    <property name="LOGS" value="C:/Users/Admin/Desktop/DarylSystemProject/logs" />
-	    <property name="APP" value="daryl-system-rna-calculator" />
+	    <property name="LOGS" value="/Volumes/Macintosh HD/logs" />
+	    <property name="APP" value="daryl-system-ann-calculator" />
 
 	    <appender name="Console"
 	        class="ch.qos.logback.core.ConsoleAppender">

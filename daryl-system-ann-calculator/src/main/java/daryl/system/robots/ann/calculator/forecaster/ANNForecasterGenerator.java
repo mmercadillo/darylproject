@@ -1,4 +1,4 @@
-package daryl.system.robots.rna.calculator.forecaster;
+package daryl.system.robots.ann.calculator.forecaster;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
@@ -25,8 +26,8 @@ import daryl.system.comun.enums.Mode;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.AnnConfigCalcs;
 import daryl.system.model.historicos.Historico;
-import daryl.system.robots.rna.calculator.repository.IAnnConfigCalcsRepository;
-import daryl.system.robots.rna.calculator.repository.IHistoricoRepository;
+import daryl.system.robots.ann.calculator.repository.IAnnConfigCalcsRepository;
+import daryl.system.robots.ann.calculator.repository.IHistoricoRepository;
 
 
 @Component
@@ -108,7 +109,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
     
 	public  void loadData() {
 		
-		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo);
+		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo, PageRequest.of(0,  1000));
 		this.datosForecast = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + this.timeframe + "_" + this.tipoActivo, 1);
 		
 		this.darylNormalizer = new MaxMinNormalizer(this.datosForecast, Mode.CLOSE);
