@@ -2,6 +2,8 @@ package daryl.system.robot.full.node.predictor.base;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -75,6 +77,7 @@ public abstract class Forecaster {
 		}
 	}
 	
+	@Transactional
 	public void actualizarUltimaOrden(Robot robot, Long fechaHoraMillis) {
 		try {
 
@@ -83,6 +86,7 @@ public abstract class Forecaster {
 				
 				for(Orden orden : ordenes) {
 					ordenRepository.delete(orden);
+					logger.info("ORDEN BORRADA DEL robot " + robot.getRobot());
 				}
 				
 			}else {
@@ -102,7 +106,7 @@ public abstract class Forecaster {
 		}
 	}
 
-	//@Async
+	@Async
 	public void calculate(Robot bot) {
 		
 		if(bot.getRobotActivo() == Boolean.TRUE) {
