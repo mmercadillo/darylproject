@@ -102,7 +102,7 @@ public abstract class Forecaster {
 		}
 	}
 
-	@Async
+	//@Async
 	public void calculate(Robot bot) {
 		
 		if(bot.getRobotActivo() == Boolean.TRUE) {
