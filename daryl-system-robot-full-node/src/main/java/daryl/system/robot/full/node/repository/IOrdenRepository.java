@@ -14,4 +14,5 @@ public interface IOrdenRepository extends JpaRepository<Orden, Long> {
 	Orden findByfBajaAndTipoActivo(Long fBaja, String activo);
 	Orden findByfBajaAndTipoActivoAndEstrategia(Long fBaja, Activo activo, String estrategia);
 	List<Orden> findAllByOrderByRobotAsc();
+	Long deleteByRobot(String robot);
 }

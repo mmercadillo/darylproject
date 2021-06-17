@@ -43,6 +43,10 @@ public class AnnConfigCalcs implements Serializable{
 	@Getter @Setter
 	private String ficheroAnn;
 	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer neuronasEntrada;
+	
 	@Lob
     @Column(columnDefinition="BLOB")
 	@Getter @Setter
@@ -84,6 +88,10 @@ public class AnnConfigCalcs implements Serializable{
 	@Column(nullable = true)
 	@Getter @Setter
 	private Integer lastHiddenNeurons;
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastNeuronasEntrada;
 	
 	@Column(nullable = true)
 	@Getter @Setter

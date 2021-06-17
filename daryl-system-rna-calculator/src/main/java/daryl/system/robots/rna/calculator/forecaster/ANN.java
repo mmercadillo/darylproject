@@ -65,7 +65,6 @@ public class ANN implements Serializable{
     private boolean useSigmoid = Boolean.TRUE;
     @Setter
     private boolean useTanh = Boolean.TRUE;
-
     
     //***************************** Training **********************************           
     public double[][] train(double[][] input, double[][] target){

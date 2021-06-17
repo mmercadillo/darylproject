@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.aspectj.weaver.patterns.IfPointcut.IfTruePointcut;
 import org.neuroph.core.events.LearningEvent;
 import org.neuroph.nnet.learning.BackPropagation;
 import org.slf4j.Logger;
@@ -56,6 +57,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 	MaxMinNormalizer darylNormalizer;
 	
 	//Parámetros de configuracion RNA
+	private Integer maxNeuronasEntrada = 10;
 	private Integer maxHiddenNeurons = 30;
 	private Double minMomentum = 0.05;
 	private Double minLearningRate = 0.05;
@@ -133,14 +135,17 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 		int lastPasoMomentum = 0;
 		int lastHiddenNeurons = 1;
 		int lastTransferFunctionType = 0;
+		int lastNeuronasEntrada = 2;
 
 		Double accuracy = null;
+		Double resultado = null;
 		
 		//recuperamos la configuración existente
 		AnnConfigCalcs annConfig = annConfigCalcsRepository.findAnnConfigCalcsByRobot(robot);
 		
 		if(annConfig != null) {
 			
+			if(annConfig.getLastNeuronasEntrada() != null) lastNeuronasEntrada = annConfig.getLastNeuronasEntrada();
 			if(annConfig.getLastPasoLearnigRate() != null) lastPasoLearnigRate = annConfig.getLastPasoLearnigRate();
 			if(annConfig.getLastPasoMomentum() != null) lastPasoMomentum = annConfig.getLastPasoMomentum();
 			if(annConfig.getLastHiddenNeurons() != null && annConfig.getLastHiddenNeurons() >= 1) lastHiddenNeurons = annConfig.getLastHiddenNeurons();
@@ -152,7 +157,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 		}
 		
 		
-		//for(int fncTransf = lastTransferFunctionType; fncTransf < transferFunctionTypes.length; fncTransf++) {
+		for(int fncTransf = lastTransferFunctionType; fncTransf < transferFunctionTypes.length; fncTransf++) {
 			for(int pasoMomentum = lastPasoMomentum; pasoMomentum < 20; pasoMomentum++) {
 				double momentum = minMomentum + (pasoMomentum * 0.05);
 				
@@ -160,140 +165,168 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 					double learningRate = minLearningRate + (pasoLearningrate * 0.05);
 					
 					for(int hiddenNeurons = lastHiddenNeurons; hiddenNeurons <= maxHiddenNeurons; hiddenNeurons++) {
+						for(int neuronasEntrada = lastNeuronasEntrada; neuronasEntrada <= maxNeuronasEntrada; neuronasEntrada++) {
+							try {
+	
+								total_array = data.size();
+						        target_array = totalDatosLearn;
+						        test_array_size = totalDatosTest;
+						        
+						        DataFormat df = new DataFormat();
+						        MovingAverages ma = new MovingAverages();
+						        FischerTransform ft = new FischerTransform();
 						
-						try {
-
-							total_array = data.size();
-					        target_array = totalDatosLearn;
-					        test_array_size = totalDatosTest;
-					        
-					        DataFormat df = new DataFormat();
-					        MovingAverages ma = new MovingAverages();
-					        FischerTransform ft = new FischerTransform();
-					
-				               
-					        double[] movement = new double[target_array];
-					        double[][] input;
-					        double[][] target;
-							
-					
-					        double[] total_prices = data.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
-					        double[] training_prices = new double[target_array];
-					        double[] test_prices = new double[test_array_size];
-					        
-					        System.arraycopy(total_prices, 0, training_prices, 0, target_array);
-					        System.arraycopy(total_prices, target_array, test_prices, 0, test_array_size);
-					        
-					        
-					        double[] fisher = ft.convert(training_prices);
-					        double[] SP_avg = ma.SMA(fisher, neuronasEntrada);
-					        
-
-					        for (int i=1;i<SP_avg.length;i++){
-					            movement[i-1] = df.checkMovement(SP_avg[i-1], SP_avg[i]);  
-					        }
-					        movement[SP_avg.length-1] = 1;
-					        
-
-				            input = df.timeSeries(SP_avg,20);
-				            target = df.make2D(movement);
-
-				            input = df.cropArray(input,array_start,input.length);
-				            target = df.cropArray(target,array_start,target.length);
-					        
-				            
-				            
-					        ANN net = new ANN();
-					        net.setHiddenNeurons(hiddenNeurons);
-					        net.setErr(0.3);
-					        net.setLrc(learningRate);
-					        net.setMomentum(momentum);
-					        net.setConvergenceLimit(Math.round(input.length * this.pctTest));
-					        net.setModifyValues(false);
-					        net.setModifyRate(0.005);
-					        net.setDetails(false);
-					        //net.printInputs(input, target);
-					        net.train(input, target);   
-					        
-					        
-					        //***** Testing Simulation
-					        //Prepare data
-					        double test_result = 0;
-					        double[] test_fisher = ft.convert(test_prices);
-					        double[] test_SMA = ma.SMA(test_fisher, neuronasEntrada);
-					        double[][] test_values = df.timeSeries(test_SMA, 20);
-					        double[] test_movement = new double[test_array_size];
-					        for (int i=1;i<test_SMA.length;i++){
-					            test_movement[i-1] = df.checkMovement(test_SMA[i-1], test_SMA[i]);  
-					        }
-					        movement[test_SMA.length-1] = 1;
-					        target = df.make2D(test_movement);
-					        
-					        //Run Simulation
-					        for (int i=neuronasEntrada; i<test_values.length; i++){
-					            test_result += net.test(test_values[i], target[i]);
-					        }
-					        
-					        //Print results
-					        Double acc = ((test_array_size-test_result) / test_array_size) * 100;
-					        //System.out.println("ANN Accuracy: "+acc+"%");        
-			        
-							logger.info("Robot -> " + this.robot);
-							//logger.info("Función de transferencia -> " + transferFunctionTypes[fncTransf]);
-							logger.info("N. neuronas ocultas -> " + hiddenNeurons);
-							logger.info("Momentum -> " + momentum);
-							logger.info("Learning Rate -> " + learningRate);
-							logger.info("ACC -> " + acc);
-							logger.info("BEST ACC -> " + accuracy);
-							
-							beginTradingANN(net);
-							
-							
-					        System.out.println("===========================================================================================");
-							
-							
-							//Actualizamos los datos de RnaConfig
-							annConfig.setLastPasoLearnigRate(pasoLearningrate);
-							annConfig.setLastPasoMomentum(pasoMomentum);
-							annConfig.setLastHiddenNeurons(hiddenNeurons);
-							//annConfig.setLastTransferFunctionType(fncTransf);
-
-							Long fechaHoraMillis = System.currentTimeMillis();
-							if(accuracy == null || acc > accuracy) {
+					               
+						        double[] movement = new double[target_array];
+						        double[][] input;
+						        double[][] target;
 								
-								accuracy = acc;
-								logger.info("Guardamos la RNA con res -> " + acc);
-								//neuralNetwork.save(this.rutaRna + this.tipoActivo + "_" + this.timeframe.valor + "_new.rna");
+						
+						        double[] total_prices = data.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
+						        double[] training_prices = new double[target_array];
+						        double[] test_prices = new double[test_array_size];
+						        
+						        System.arraycopy(total_prices, 0, training_prices, 0, target_array);
+						        System.arraycopy(total_prices, target_array, test_prices, 0, test_array_size);
+						        
+						        
+						        double[] fisher = ft.convert(training_prices);
+						        double[] SP_avg = ma.SMA(fisher, neuronasEntrada);
+						        
+	
+						        for (int i=1;i<SP_avg.length;i++){
+						            movement[i-1] = df.checkMovement(SP_avg[i-1], SP_avg[i]);  
+						        }
+						        movement[SP_avg.length-1] = 1;
+						        
+	
+					            input = df.timeSeries(SP_avg,20);
+					            target = df.make2D(movement);
+	
+					            input = df.cropArray(input,array_start,input.length);
+					            target = df.cropArray(target,array_start,target.length);
+						        
+					            
+					            
+						        ANN net = new ANN();
+						        net.setHiddenNeurons(hiddenNeurons);
+						        net.setErr(0.3);
+						        net.setLrc(learningRate);
+						        net.setMomentum(momentum);
+						        net.setConvergenceLimit(Math.round(input.length * this.pctTest));
+						        net.setModifyValues(false);
+						        net.setModifyRate(0.005);
+						        net.setDetails(false);
+						        
+						        if(fncTransf == 0) {
+						        	net.setUseSigmoid(true);
+						        	net.setUseTanh(false);
+						        }else if(fncTransf == 1) {
+						        	net.setUseSigmoid(false);
+						        	net.setUseTanh(true);
+						        }
+						        
+						        //net.printInputs(input, target);
+						        net.train(input, target);   
+						        
+						        
+						        //***** Testing Simulation
+						        //Prepare data
+						        double test_result = 0;
+						        double[] test_fisher = ft.convert(test_prices);
+						        double[] test_SMA = ma.SMA(test_fisher, neuronasEntrada);
+						        double[][] test_values = df.timeSeries(test_SMA, 20);
+						        double[] test_movement = new double[test_array_size];
+						        for (int i=1;i<test_SMA.length;i++){
+						            test_movement[i-1] = df.checkMovement(test_SMA[i-1], test_SMA[i]);  
+						        }
+						        movement[test_SMA.length-1] = 1;
+						        target = df.make2D(test_movement);
+						        
+						        //Run Simulation
+						        for (int i=neuronasEntrada; i<test_values.length; i++){
+						            test_result += net.test(test_values[i], target[i]);
+						        }
+						        
+						        //Print results
+						        Double acc = ((test_array_size-test_result) / test_array_size) * 100;
+						        //System.out.println("ANN Accuracy: "+acc+"%");        
+				        
+								logger.info("Robot -> " + this.robot);
+								logger.info("Neuronas entrada -> " + neuronasEntrada);
+								logger.info("Función de transferencia -> " + transferFunctionTypes[fncTransf]);
+								logger.info("N. neuronas ocultas -> " + hiddenNeurons);
+								logger.info("Momentum -> " + momentum);
+								logger.info("Learning Rate -> " + learningRate);
+								logger.info("ACC -> " + acc);
+								logger.info("BEST ACC -> " + accuracy);
+								logger.info("BEST RESULTADO -> " + resultado);
 								
-								//Actualizamos la configuración
-								annConfig.setEstrategia(robot);
-								annConfig.setRobot(robot);
-								annConfig.setTipoActivo(tipoActivo);
-								annConfig.setFicheroAnn("ANN_" + this.tipoActivo + "_" + this.timeframe.valor + "_" + fechaHoraMillis + ".rna");
-								annConfig.setAccuracy(accuracy);
-								annConfig.setAnn(rnaToByteArray(net));
+								double res = beginTradingANN(net);
+								
+								
+						        System.out.println("===========================================================================================");
+								
+								
+								//Actualizamos los datos de RnaConfig
+								annConfig.setLastPasoLearnigRate(pasoLearningrate);
+								annConfig.setLastPasoMomentum(pasoMomentum);
+								annConfig.setLastHiddenNeurons(hiddenNeurons);
+								annConfig.setLastTransferFunctionType(fncTransf);
+								annConfig.setLastNeuronasEntrada(neuronasEntrada);
+	
+								boolean accUpdt = false;
+								if(accuracy == null || acc > accuracy) {
+									accuracy = acc;
+									accUpdt = true;
+								}
+								boolean resUpdt = false;
+								if(resultado == null || res > resultado) {
+									resultado = res;	
+									resUpdt = true;
+								}
+								
+								
+								Long fechaHoraMillis = System.currentTimeMillis();
+								if(/*accUpdt == true &&*/ resUpdt == true) {
 
-								annConfig.setFecha(config.getFechaInString(fechaHoraMillis));
-								annConfig.setFModificacion(fechaHoraMillis);
-								annConfig.setHora(config.getHoraInString(fechaHoraMillis));
+									logger.info("Guardamos la ANN con res -> " + acc);
+									//neuralNetwork.save(this.rutaRna + this.tipoActivo + "_" + this.timeframe.valor + "_new.rna");
+									
+									//Actualizamos la configuración
+									annConfig.setEstrategia(robot);
+									annConfig.setRobot(robot);
+									annConfig.setTipoActivo(tipoActivo);
+									annConfig.setFicheroAnn("ANN_" + this.tipoActivo + "_" + this.timeframe.valor + "_" + fechaHoraMillis + ".rna");
+									annConfig.setAccuracy(accuracy);
+									annConfig.setAnn(rnaToByteArray(net));
+									annConfig.setNeuronasEntrada(neuronasEntrada);
+									annConfig.setResultado(resultado);
+	
+									annConfig.setFecha(config.getFechaInString(fechaHoraMillis));
+									annConfig.setFModificacion(fechaHoraMillis);
+									annConfig.setHora(config.getHoraInString(fechaHoraMillis));
+									
+									logger.info("Nueva configuración ANN detectada");
+									
+								}
 								
+								annConfigCalcsRepository.save(annConfig);
+								//logger.info("Nueva configuración ANN guardada");
+								//logger.info("========================================================================================");
+								
+							}catch (Exception e) {
+								e.printStackTrace();
 							}
-							
-							//annConfigCalcsRepository.save(annConfig);
-							//logger.info("Nueva configuración ANN guardada");
-							//logger.info("========================================================================================");
-							
-						}catch (Exception e) {
-							e.printStackTrace();
 						}
-						
+						lastNeuronasEntrada = 2;	
 					}
 					lastHiddenNeurons = 1;
 				}
 				lastPasoLearnigRate = 0;
 			}
 			lastPasoMomentum = 0;
-		//}
+		}
 	}
 	
 	public byte[] rnaToByteArray(ANN ann){
@@ -311,7 +344,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 
 	}
 	
-    public void beginTradingANN(ANN net){
+    public double beginTradingANN(ANN net){
     	
     	double[] input = dataForForecast.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
     	
@@ -346,7 +379,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
         }
         
         System.out.println("RESULTADO -> " + resultado);
-
+        return resultado;
     }
 	
 	
