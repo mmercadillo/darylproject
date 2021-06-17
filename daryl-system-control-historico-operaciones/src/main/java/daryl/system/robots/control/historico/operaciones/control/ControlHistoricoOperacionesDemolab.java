@@ -31,10 +31,7 @@ public class ControlHistoricoOperacionesDemolab {
 	@Autowired
 	IResumenRobotDemolabRepository resumenRobotDemolabRepository;
 
-
-	
-	
-    @Scheduled(fixedDelay = 300000, initialDelay = 1000)
+	@Scheduled(fixedDelay = 300000, initialDelay = 1000)
     @Transactional
 	public void calcularMaxMinDD() {
     	
@@ -50,7 +47,7 @@ public class ControlHistoricoOperacionesDemolab {
     				double min = 0.0;
     				double difMaxMin = 0.0;
     				double res = 0.0;
-    				List<DemolabOps> lista = historicoOperacionesDemolabRepository.findListaByRobot(robot.name(), 0L);
+    				List<DemolabOps> lista = historicoOperacionesDemolabRepository.findListaByRobot(robot.name(), "2020.01.01 01:00:00");
     				if(lista != null && lista.size() > 0) {
     		    		for (DemolabOps hops : lista) {
 		    				
@@ -95,7 +92,7 @@ public class ControlHistoricoOperacionesDemolab {
     				
     				double maxRachaPerdedora = 0.0;
     				double perdidas = 0.0;
-    				List<DemolabOps> lista = historicoOperacionesDemolabRepository.findListaByRobot(robot.name(), 0L);
+    				List<DemolabOps> lista = historicoOperacionesDemolabRepository.findListaByRobot(robot.name(), "2020.01.01 01:00:00");
     				if(lista != null && lista.size() > 0) {
     		    		for (DemolabOps hops : lista) {
 
@@ -139,7 +136,7 @@ public class ControlHistoricoOperacionesDemolab {
 			try {
 				//Recuperamos la info del robot de la BD,s
 				ResumenRobotDemolab resumen = resumenRobotDemolabRepository.findResumenRobotDemolabByRobot(robot.name());
-				Long desde = 0L;
+				String desde = "2020.01.01 01:00:00";
 				if(resumen != null) {
 					
 					desde = resumen.getUltimoTicket();
@@ -154,7 +151,7 @@ public class ControlHistoricoOperacionesDemolab {
 		    	if(lista != null && lista.size() > 0) {
 		    		for (DemolabOps hops : lista) {
 		    			resumen.setFUltimoCierre(hops.getFcierre());
-						resumen.setUltimoTicket(hops.getId());
+						resumen.setUltimoTicket(hops.getFapertura());
 						resumen.setRobot(robot.name());
 						resumen.setNumOperaciones(resumen.getNumOperaciones()+1);
 						resumen.setVersion(resumen.getVersion());

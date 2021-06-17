@@ -12,8 +12,8 @@ import daryl.system.model.HistoricoOperaciones;
 @Repository
 public interface IHistoricoOperacionesDemolabRepository extends JpaRepository<HistoricoOperaciones, Long> {
 
-	@Query("SELECT ho FROM DemolabOps ho WHERE ho.comentario LIKE ?1% and ho.id > ?2 ORDER BY ho.id asc")
-	List<DemolabOps> findListaByRobot(String comentario, Long id);
+	@Query("SELECT ho FROM DemolabOps ho WHERE ho.comentario LIKE ?1% and ho.fapertura > ?2 ORDER BY ho.fapertura asc")
+	List<DemolabOps> findListaByRobot(String comentario, String fapertura);
 	
 	
 }

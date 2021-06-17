@@ -78,7 +78,7 @@ public class ControlHistoricoResumenes {
 				try {
 					//Recuperamos la info del robot de la BD,s
 					ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
-					Long desde = 0L;
+					String desde = "2020.01.01 01:00:00";
 					if(resumen != null) {
 						
 						//Creamos el Historico y lo guardamos
@@ -123,7 +123,7 @@ public class ControlHistoricoResumenes {
 				try {
 					//Recuperamos la info del robot de la BD,s
 					ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
-					Long desde = 0L;
+					String desde = "2020.01.01 01:00:00";
 					if(resumen != null) {
 						
 						//Creamos el Historico y lo guardamos
@@ -169,7 +169,7 @@ public class ControlHistoricoResumenes {
 				try {
 					//Recuperamos la info del robot de la BD,s
 					ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
-					Long desde = 0L;
+					String desde = "2020.01.01 01:00:00";
 					if(resumen != null) {
 						
 						//Creamos el Historico y lo guardamos
@@ -214,7 +214,7 @@ public class ControlHistoricoResumenes {
 				try {
 					//Recuperamos la info del robot de la BD,s
 					ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
-					Long desde = 0L;
+					String desde = "2020.01.01 01:00:00";
 					if(resumen != null) {
 						
 						//Creamos el Historico y lo guardamos

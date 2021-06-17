@@ -37,7 +37,8 @@ public class ControlHistoricoOperaciones {
 	@Autowired
 	IRobotsRepository robotRepository;
 
-    @Scheduled(fixedDelay = 600000, initialDelay = 1000)
+
+	@Scheduled(fixedDelay = 600000, initialDelay = 1000)
     @Transactional
 	public void calcularMaxMinDD() {
     	
@@ -53,7 +54,7 @@ public class ControlHistoricoOperaciones {
     				double min = 0.0;
     				double difMaxMin = 0.0;
     				double res = 0.0;
-    				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), 0L);
+    				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), "2020.01.01 01:00:00");
     				if(lista != null && lista.size() > 0) {
     		    		for (HistoricoOperaciones hops : lista) {
 		    				
@@ -99,7 +100,7 @@ public class ControlHistoricoOperaciones {
     				
     				double maxRachaPerdedora = 0.0;
     				double perdidas = 0.0;
-    				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), 0L);
+    				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), "2020.01.01 01:00:00");
     				if(lista != null && lista.size() > 0) {
     		    		for (HistoricoOperaciones hops : lista) {
 		    				if(perdidas < maxRachaPerdedora) {
@@ -142,7 +143,7 @@ public class ControlHistoricoOperaciones {
 			try {
 				//Recuperamos la info del robot de la BD,s
 				ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
-				Long desde = 0L;
+				String desde = "2020.01.01 01:00:00";
 				if(resumen != null) {
 					
 					desde = resumen.getUltimoTicket();
@@ -165,7 +166,7 @@ public class ControlHistoricoOperaciones {
 		    			
 		    			totalTiempoEnMercado += (cierreOp - aperturaOp);
 		    			
-		    			resumen.setUltimoTicket(hops.getId());
+		    			resumen.setUltimoTicket(hops.getFapertura());
 						resumen.setRobot(robot.getRobot());
 						resumen.setNumOperaciones(resumen.getNumOperaciones()+1);
 						resumen.setTipoActivo(robot.getActivo());

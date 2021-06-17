@@ -69,7 +69,7 @@ public class ResumenRobot implements Serializable{
 	
 	@Column(nullable = true)
 	@Getter @Setter
-	private Long ultimoTicket;
+	private String ultimoTicket;
 	
 	@Column(nullable = true)
 	@Getter @Setter
