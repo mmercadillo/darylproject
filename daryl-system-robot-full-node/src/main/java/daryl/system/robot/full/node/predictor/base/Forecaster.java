@@ -1,5 +1,7 @@
 package daryl.system.robot.full.node.predictor.base;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -73,15 +75,18 @@ public abstract class Forecaster {
 		}
 	}
 	
-	public void borrarUltimaOrden(Robot robot) {
+	public void actualizarUltimaOrden(Robot robot, Long fechaHoraMillis) {
 		try {
 
-			Long orden = ordenRepository.deleteByRobot(robot.getRobot());
-			if(orden >= 1) {
-				logger.info("Orden eliminada del robot " + robot.getRobot());
+			List<Orden> ordenes = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+			if(ordenes != null) {
+				
+				for(Orden orden : ordenes) {
+					ordenRepository.delete(orden);
+				}
 				
 			}else {
-				logger.info("No hay orden para eliminar del robot " + robot.getRobot());
+				logger.info("No hay orden para {} para actualzar del robot", robot.getRobot());
 			}
 		}catch (Exception e) {
 			logger.error("No se ha recuperado el valor de la última orden del robot: {}", robot.getRobot(), e);
@@ -114,7 +119,7 @@ public abstract class Forecaster {
 			
 			actualizarPrediccionBDs(bot, orden.getTipoOrden(), prediccion, fechaHoraMillis);
 			logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot + " Predicciñon -> " + prediccion);
-			borrarUltimaOrden(bot);
+			actualizarUltimaOrden(bot, fechaHoraMillis);
 			logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot);
 			guardarNuevaOrden(orden, fechaHoraMillis);
 			logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot + " -> Orden -> " + orden);			

@@ -40,13 +40,22 @@ public class ControlAutoCierreOperaciones {
 			//en caso de estar fuera de hora
 			if(config.checkFechaHoraOperaciones() == Boolean.FALSE || robot.getRobotActivo() == Boolean.FALSE) {
 				try {
+					long millis = System.currentTimeMillis();
 					
-					Long orden = ordenRepository.deleteByRobot(robot.getRobot());
+					List<Orden> ordenes = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
 					
-					if(orden >= 1) {
-						logger.info("ORDEN CERRADA POR CIERRE DE MERCADO -> " + robot.getRobot());
+					if(ordenes != null && ordenes.size() > 0) {
+						
+						for(Orden orden : ordenes) {
+							orden.setFecha(config.getFechaInString(millis));
+							orden.setHora(config.getHoraInString(millis));
+							orden.setTipoOrden(TipoOrden.CLOSE);
+							ordenRepository.save(orden);
+							logger.info("ORDEN CERRADA POR CIERRE DE MERCADO -> " + orden);
+						}
+						
 					}else {
-						logger.info("NO EXISTE ORDEN PARA EL ROBOT -> " + robot.getRobot());
+						logger.info("NO EXISTE ORDEN PARA EL ROBOT -> " + robot);
 					}
 					
 				}catch (Exception e) {

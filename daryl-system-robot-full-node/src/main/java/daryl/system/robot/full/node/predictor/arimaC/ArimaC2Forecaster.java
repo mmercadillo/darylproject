@@ -151,9 +151,10 @@ public class ArimaC2Forecaster  extends Forecaster{
 		
 		//recuperamos la orden existente en TF 10080
 		String estrategia = "ARIMA_C_" + robot.getActivo() + "_10080";
-		Orden orden10080 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
+		List<Orden> ordenes = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
 			
-		if(orden10080 != null) {
+		if(ordenes != null && ordenes.size() > 0) {
+			Orden orden10080 = ordenes.get(0);
 			if(orden10080.getTipoOrden() == TipoOrden.SELL) {
 				if(prediccion <= 0.0 && inv == Boolean.FALSE) {
 					orden.setTipoOrden(TipoOrden.SELL);

@@ -92,10 +92,11 @@ public class ArimaB3Forecaster  extends Forecaster{
 		
 		//recuperamos la orden existente en TF 10080
 		String estrategia = "ARIMA_B_" + robot.getActivo() + "_1440";
-		Orden orden10080 = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
+		List<Orden> ordenes = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), estrategia);
 			
-		if(orden10080 != null) {
-			if(orden10080.getTipoOrden() == TipoOrden.SELL) {
+		if(ordenes != null && ordenes.size() > 0) {
+			Orden orden1440 = ordenes.get(0);
+			if(orden1440.getTipoOrden() == TipoOrden.SELL) {
 				if(prediccion <= 0.0 && inv == Boolean.FALSE) {
 					orden.setTipoOrden(TipoOrden.SELL);
 				}else {
@@ -107,7 +108,7 @@ public class ArimaB3Forecaster  extends Forecaster{
 				}else {
 					//orden.setTipoOrden(TipoOrden.CLOSE);
 				}
-			}else if(orden10080.getTipoOrden() == TipoOrden.BUY) {
+			}else if(orden1440.getTipoOrden() == TipoOrden.BUY) {
 				if(prediccion >= 0.0 && inv == Boolean.FALSE) {
 					orden.setTipoOrden(TipoOrden.BUY);
 				}else {
