@@ -83,15 +83,16 @@ public abstract class Forecaster {
 		try {
 
 			List<Orden> ordenes = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+			
 			if(ordenes != null) {
-				
+				logger.info("ORDENES A BORRAR DEL robot " + robot.getRobot() + " - " + ordenes.size());
 				for(Orden orden : ordenes) {
 					ordenRepository.delete(orden);
 					logger.info("ORDEN BORRADA DEL robot " + robot.getRobot());
 				}
 				
 			}else {
-				logger.info("No hay orden para {} para actualzar del robot", robot.getRobot());
+				logger.info("No hay orden para actualizar del robot " + robot.getRobot());
 			}
 		}catch (Exception e) {
 			logger.error("No se ha recuperado el valor de la última orden del robot: {}", robot.getRobot(), e);
@@ -112,26 +113,26 @@ public abstract class Forecaster {
 		
 		if(bot.getRobotActivo() == Boolean.TRUE) {
 			
-			logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot);		
+			logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
 			Double prediccion = calcularPrediccion(bot);
-			logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot + " Predicción -> " + prediccion);
+			logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot.getRobot() + " Predicción -> " + prediccion);
 			
-			logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot);		
+			logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot.getRobot());		
 			Orden orden = calcularOperacion(bot, prediccion, bot.getInverso());
-			logger.info("ORDEN CALCULADA -> Robot -> " + bot + " -> Orden -> " + orden);
+			logger.info("ORDEN CALCULADA -> Robot -> " + bot.getRobot() + " -> Orden -> " + orden.getTipoOrden());
 			
 			Long fechaHoraMillis = System.currentTimeMillis();
 			
 			actualizarPrediccionBDs(bot, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-			logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot + " Predicciñon -> " + prediccion);
+			logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot.getRobot() + " Prediccion -> " + prediccion);
 			actualizarUltimaOrden(bot, fechaHoraMillis);
-			logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot);
+			logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot.getRobot());
 			guardarNuevaOrden(orden, fechaHoraMillis);
-			logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot + " -> Orden -> " + orden);			
+			logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot.getRobot() + " -> Orden -> " + orden.getTipoOrden());			
 			
 		}else {
 			
-			logger.info("NO SE CALCULA LA ORDEN PARA EL ROBOT -> " + bot + " -> NO ESTÁ ACTIVO ");			
+			logger.info("NO SE CALCULA LA ORDEN PARA EL ROBOT -> " + bot.getRobot() + " -> NO ESTÁ ACTIVO ");			
 			
 		}
 
