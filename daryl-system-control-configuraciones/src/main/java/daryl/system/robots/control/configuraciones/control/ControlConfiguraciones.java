@@ -183,37 +183,40 @@ public class ControlConfiguraciones {
 	public void controlAnnConfiguration() {
     	
     	System.out.println("ACTUALIZANDO CONFIG ANN");
-    	List<AnnConfig> configs = annConfigRepository.findAll();
-    	for(AnnConfig annConfig : configs) {
+    	
+    	
+    	List<AnnConfigCalcs> calcs = annConfigCalcsRepository.findAll();
+    	for(AnnConfigCalcs configCalc : calcs) {
     		
-    		AnnConfigCalcs calcs = annConfigCalcsRepository.findAnnConfigCalcsByRobot(annConfig.getRobot());
-    		if(calcs != null) {
-    			
-    			if(calcs.getResultado() > annConfig.getResultado()) {
-    				
-    				Long fechaHoraMillis = System.currentTimeMillis();
-    				//Mapeamos
-    				annConfig.setFicheroAnn(calcs.getFicheroAnn());
-    				annConfig.setLastHiddenNeurons(calcs.getLastHiddenNeurons());
-    				annConfig.setLastNeuronasEntrada(calcs.getLastNeuronasEntrada());
-    				annConfig.setLastPasoLearnigRate(calcs.getLastPasoLearnigRate());
-    				annConfig.setLastPasoMomentum(calcs.getLastPasoMomentum());
-    				annConfig.setLastTransferFunctionType(calcs.getLastTransferFunctionType());
-    				annConfig.setNeuronasEntrada(calcs.getNeuronasEntrada());
-    				annConfig.setResultado(calcs.getResultado());
-    				annConfig.setAnn(calcs.getAnn());
-    				
-    				annConfig.setFModificacion(fechaHoraMillis);
-    				annConfig.setFecha(config.getFechaInString(fechaHoraMillis));
-    				annConfig.setHora(config.getHoraInString(fechaHoraMillis));
-    				
-    				annConfigRepository.save(annConfig);
-    				
-    			}
-    			
-    		}
-    			
+    		AnnConfig configAnn = annConfigRepository.findAnnConfigByRobot(configCalc.getRobot());
+    		if(configAnn == null) configAnn = new AnnConfig();
+    		
+    		Long fechaHoraMillis = System.currentTimeMillis();
+    		if(configAnn.getResultado() == null || configCalc.getResultado() > configAnn.getResultado()) {
+				
+
+				//Mapeamos
+    			configAnn.setFicheroAnn(configCalc.getFicheroAnn());
+    			configAnn.setLastHiddenNeurons(configCalc.getLastHiddenNeurons());
+    			configAnn.setLastNeuronasEntrada(configCalc.getLastNeuronasEntrada());
+    			configAnn.setLastPasoLearnigRate(configCalc.getLastPasoLearnigRate());
+    			configAnn.setLastPasoMomentum(configCalc.getLastPasoMomentum());
+    			configAnn.setLastTransferFunctionType(configCalc.getLastTransferFunctionType());
+    			configAnn.setNeuronasEntrada(configCalc.getNeuronasEntrada());
+    			configAnn.setResultado(configCalc.getResultado());
+    			configAnn.setAnn(configCalc.getAnn());
+				
+    			configAnn.setFModificacion(fechaHoraMillis);
+				configAnn.setFecha(config.getFechaInString(fechaHoraMillis));
+				configAnn.setHora(config.getHoraInString(fechaHoraMillis));
+				
+				annConfigRepository.save(configAnn);
+				
+			}
+    		
+    		
     	}
+    	
     	System.out.println("ACTUALIZADA CONFIG RNA");
     	
     }
