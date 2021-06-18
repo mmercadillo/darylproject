@@ -155,6 +155,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 			if(annConfig.getLastHiddenNeurons() != null && annConfig.getLastHiddenNeurons() >= 1) lastHiddenNeurons = annConfig.getLastHiddenNeurons();
 			if(annConfig.getLastTransferFunctionType() != null) lastTransferFunctionType = annConfig.getLastTransferFunctionType();
 			if(annConfig.getAccuracy() != null) accuracy = annConfig.getAccuracy();
+			if(annConfig.getResultado() != null) resultado = annConfig.getResultado();
 			
 		}else {
 			annConfig = new AnnConfigCalcs();
