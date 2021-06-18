@@ -78,6 +78,7 @@ public class AnnForecaster  extends Forecaster{
 	        input = ma.SMA(input, 5);
 	        
 	        double[] annSignalTemp = net.run(input);
+	        logger.info("SIGNAL -> " +annSignalTemp[0]);
 	        long annSignal = Math.round(annSignalTemp[0]);
 	        
 	        if (annSignal == 0.0) {
@@ -88,7 +89,9 @@ public class AnnForecaster  extends Forecaster{
 	        	//Compramos
 	        	prediccion = 1.0;
 	        }
+	        
     	}catch (Exception e) {
+    		e.printStackTrace();
 		}
         return prediccion;
     }
