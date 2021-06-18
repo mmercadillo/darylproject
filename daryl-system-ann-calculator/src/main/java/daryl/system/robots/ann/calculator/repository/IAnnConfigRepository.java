@@ -5,12 +5,12 @@ package daryl.system.robots.ann.calculator.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import daryl.system.model.RnaConfigCalcs;
+import daryl.system.model.AnnConfig;
 
 
 @Repository
-public interface IRnaConfigCalcsRepository extends JpaRepository<RnaConfigCalcs, Long> {
+public interface IAnnConfigRepository extends JpaRepository<AnnConfig, Long> {
 
-	RnaConfigCalcs findRnaConfigCalcsByRobot(String robot);
+	AnnConfig findAnnConfigByRobot(String robot);
 
 }
