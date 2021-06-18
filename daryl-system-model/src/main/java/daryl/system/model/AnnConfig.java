@@ -48,6 +48,9 @@ public class AnnConfig implements Serializable{
 	@Getter @Setter
     private byte[] ann;
 
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer neuronasEntrada;
 	
 	@Column(nullable = true)
 	@Getter @Setter
@@ -64,6 +67,27 @@ public class AnnConfig implements Serializable{
 	@Column(nullable = false)
 	@Getter @Setter
 	private String hora;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastHiddenNeurons;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastNeuronasEntrada;
+	
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastTransferFunctionType;
+	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastPasoLearnigRate;
+
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer lastPasoMomentum;
 	
 	
 }

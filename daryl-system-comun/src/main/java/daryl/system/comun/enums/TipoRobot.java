@@ -19,6 +19,7 @@ public enum TipoRobot {
 	ARIMA_D3, ARIMA_D3_I,
 	
 	RNA, RNA_I,
+	ANN, ANN_I,
 	
 	VARIANCE, VARIANCE_I,
 	VARIANCE_2, VARIANCE_2_I,

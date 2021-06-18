@@ -10,12 +10,16 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.configuration.ConfigData;
+import daryl.system.model.AnnConfig;
+import daryl.system.model.AnnConfigCalcs;
 import daryl.system.model.ArimaConfig;
 import daryl.system.model.ArimaConfigCalcs;
 import daryl.system.model.RnaConfig;
 import daryl.system.model.RnaConfigCalcs;
 import daryl.system.model.VarianceConfig;
 import daryl.system.model.VarianceConfigCalcs;
+import daryl.system.robots.control.configuraciones.repository.IAnnConfigCalcsRepository;
+import daryl.system.robots.control.configuraciones.repository.IAnnConfigRepository;
 import daryl.system.robots.control.configuraciones.repository.IArimaConfigCalcsRepository;
 import daryl.system.robots.control.configuraciones.repository.IArimaConfigRepository;
 import daryl.system.robots.control.configuraciones.repository.IRnaConfigCalcsRepository;
@@ -44,6 +48,10 @@ public class ControlConfiguraciones {
 	IVarianceConfigCalcsRepository varianceConfigCalcsRepository;
 	@Autowired
 	IVarianceConfigRepository varianceConfigRepository;
+	@Autowired
+	IAnnConfigCalcsRepository annConfigCalcsRepository;
+	@Autowired
+	IAnnConfigRepository annConfigRepository;
 
     @Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
     @Transactional
@@ -159,6 +167,47 @@ public class ControlConfiguraciones {
     				rnaConfig.setHora(config.getHoraInString(fechaHoraMillis));
     				
     				rnaConfigRepository.save(rnaConfig);
+    				
+    			}
+    			
+    		}
+    			
+    	}
+    	System.out.println("ACTUALIZADA CONFIG RNA");
+    	
+    }
+    
+
+    @Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
+    @Transactional
+	public void controlAnnConfiguration() {
+    	
+    	System.out.println("ACTUALIZANDO CONFIG ANN");
+    	List<AnnConfig> configs = annConfigRepository.findAll();
+    	for(AnnConfig annConfig : configs) {
+    		
+    		AnnConfigCalcs calcs = annConfigCalcsRepository.findAnnConfigCalcsByRobot(annConfig.getRobot());
+    		if(calcs != null) {
+    			
+    			if(calcs.getResultado() > annConfig.getResultado()) {
+    				
+    				Long fechaHoraMillis = System.currentTimeMillis();
+    				//Mapeamos
+    				annConfig.setFicheroAnn(calcs.getFicheroAnn());
+    				annConfig.setLastHiddenNeurons(calcs.getLastHiddenNeurons());
+    				annConfig.setLastNeuronasEntrada(calcs.getLastNeuronasEntrada());
+    				annConfig.setLastPasoLearnigRate(calcs.getLastPasoLearnigRate());
+    				annConfig.setLastPasoMomentum(calcs.getLastPasoMomentum());
+    				annConfig.setLastTransferFunctionType(calcs.getLastTransferFunctionType());
+    				annConfig.setNeuronasEntrada(calcs.getNeuronasEntrada());
+    				annConfig.setResultado(calcs.getResultado());
+    				annConfig.setAnn(calcs.getAnn());
+    				
+    				annConfig.setFModificacion(fechaHoraMillis);
+    				annConfig.setFecha(config.getFechaInString(fechaHoraMillis));
+    				annConfig.setHora(config.getHoraInString(fechaHoraMillis));
+    				
+    				annConfigRepository.save(annConfig);
     				
     			}
     			
