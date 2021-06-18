@@ -18,10 +18,12 @@ import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.robots.ann.calculator.forecaster.ANNForecasterGenerator;
 
+/*
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EntityScan("daryl.system.model")
+*/
 public class DarylSystemAnnCalculatorApplication {
 
 

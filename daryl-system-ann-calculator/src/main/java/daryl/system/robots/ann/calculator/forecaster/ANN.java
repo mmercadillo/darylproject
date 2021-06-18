@@ -25,7 +25,6 @@ public class ANN implements Serializable{
 
     private static final long serialVersionUID = 6673423048343986258L;
     
-    private Random rand = new Random();
 
     private int counter = 0;    
     private double[] hidden;
@@ -44,13 +43,13 @@ public class ANN implements Serializable{
     
     //default values, can be changed with public setters
     @Setter
-    private double lrc = 0.2;
+    private double lrc;
     @Setter
     private double err = 0.2;
     @Setter
-    private double momentum = 0.9;
+    private double momentum;
     @Setter
-    private int hiddenNeurons = 10;
+    private int hiddenNeurons;
     @Setter
     private double testing_ratio = 0.2;
     @Setter
@@ -212,6 +211,7 @@ public class ANN implements Serializable{
     }
     
     private double[][] randomizeWeights(int i, int j, double min, double max){
+        Random rand = new Random();
         double[][] c = new double[i][j];
         for (int cnt1 = 0; cnt1<i; cnt1++){
             for (int cnt2 = 0; cnt2<j; cnt2++){
