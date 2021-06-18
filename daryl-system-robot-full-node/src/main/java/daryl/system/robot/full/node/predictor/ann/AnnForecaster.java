@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
 import org.ta4j.core.utils.BarSeriesUtils;
@@ -16,10 +19,11 @@ import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robot.full.node.predictor.base.Forecaster;
 import daryl.system.robot.full.node.repository.IAnnConfigRepository;
+import lombok.ToString;
 
-//@Component
-//@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-//@ToString
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@ToString
 public class AnnForecaster  extends Forecaster{
 
 	@Autowired
