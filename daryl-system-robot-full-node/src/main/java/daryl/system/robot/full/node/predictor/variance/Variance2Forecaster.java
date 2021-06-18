@@ -42,7 +42,6 @@ public class Variance2Forecaster  extends Forecaster{
 		List<Double> datos = darylNormalizer.getDatos();
 
 
-		
 		try {
 			
 			VarianceConfig varianceConfig = varianceConfigRepository.findVarianceConfigByRobot(bot.getVarianceConfig());
