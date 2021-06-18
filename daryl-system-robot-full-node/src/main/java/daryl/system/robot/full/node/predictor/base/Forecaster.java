@@ -57,7 +57,8 @@ public abstract class Forecaster {
 		return orden;
 	}
 	
-	public void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
+	@Transactional
+	public synchronized void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
 			
 			//Creamos el bean prediccion
@@ -78,7 +79,7 @@ public abstract class Forecaster {
 	}
 	
 	@Transactional
-	public void actualizarUltimaOrden(Robot robot, Long fechaHoraMillis) {
+	public synchronized void actualizarUltimaOrden(Robot robot, Long fechaHoraMillis) {
 		try {
 
 			List<Orden> ordenes = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
@@ -97,7 +98,7 @@ public abstract class Forecaster {
 		}
 	}
 	
-	public void guardarNuevaOrden(Orden orden, Long fechaHoraMillis) {
+	public synchronized void guardarNuevaOrden(Orden orden, Long fechaHoraMillis) {
 		try {
 			orden.setFAlta(fechaHoraMillis);
 			ordenRepository.save(orden);
