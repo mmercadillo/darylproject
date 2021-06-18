@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.TipoRobot;
 import daryl.system.model.Robot;
+import daryl.system.robot.full.node.predictor.ann.AnnForecaster;
 import daryl.system.robot.full.node.predictor.arima.Arima2Forecaster;
 import daryl.system.robot.full.node.predictor.arima.Arima3Forecaster;
 import daryl.system.robot.full.node.predictor.arima.ArimaForecaster;
@@ -148,6 +149,15 @@ public class Receiver {
 					
 					try{
 						predictor = applicationContext.getBean(RnaForecaster.class);
+						predictor.calculate(robot);
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}	
+				}
+				if(robot.getTipoRobot() == TipoRobot.ANN || robot.getTipoRobot() == TipoRobot.ANN_I) {
+					
+					try{
+						predictor = applicationContext.getBean(AnnForecaster.class);
 						predictor.calculate(robot);
 					}catch (Exception e) {
 						logger.error(e.getMessage(), e);		

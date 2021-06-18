@@ -75,17 +75,21 @@ public class Robot implements Serializable{
 	@Getter @Setter
 	@Column(nullable = true)
 	private String rnaConfig;
-	
+
 	@Getter @Setter
 	@Column(nullable = true)
-	private String ficheroRna;	
+	private String annConfig;
+	
+	//@Getter @Setter
+	//@Column(nullable = true)
+	//private String ficheroRna;	
 	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = true)
 	@Getter @Setter
 	private Mode mode;
 	
-	@Getter @Setter
-	@Column(nullable = true)
-	private Integer neuronasEntrada;
+	//@Getter @Setter
+	//@Column(nullable = true)
+	//private Integer neuronasEntrada;
 }
