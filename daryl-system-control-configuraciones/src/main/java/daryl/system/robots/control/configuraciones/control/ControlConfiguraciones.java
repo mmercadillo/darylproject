@@ -205,6 +205,8 @@ public class ControlConfiguraciones {
     			configAnn.setNeuronasEntrada(configCalc.getNeuronasEntrada());
     			configAnn.setResultado(configCalc.getResultado());
     			configAnn.setAnn(configCalc.getAnn());
+    			configAnn.setTipoActivo(configCalc.getTipoActivo());
+    			configAnn.setRobot(configCalc.getRobot());
 				
     			configAnn.setFModificacion(fechaHoraMillis);
 				configAnn.setFecha(config.getFechaInString(fechaHoraMillis));
