@@ -98,9 +98,9 @@
           	<properties>
 				<profile.name>dev</profile.name>
           	</properties>
-          	<activation>
+			<activation>
 				<activeByDefault>true</activeByDefault>
-			</activation>
+			</activation>    	
 		</profile>
 		<profile>
 			<id>tragsa</id>

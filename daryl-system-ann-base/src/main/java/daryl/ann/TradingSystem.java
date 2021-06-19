@@ -4,19 +4,24 @@
  * The first strategy is the algorithmic trading strategy, whilst the second is the ANN strategy.
  * 
  ******/
-package daryl.system.robot.full.node.predictor.ann;
+package daryl.ann;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class TradingSystem {
+public class TradingSystem implements Serializable{
     
-    DataFormat df = new DataFormat();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	DataFormat df = new DataFormat();
     MovingAverages ma = new MovingAverages();
     ANN net = null;
     
@@ -204,6 +209,7 @@ public class TradingSystem {
             System.arraycopy(input, (i-ann_window_size), ann_window, 0, ann_window_size);
             ann_window = ft_ann.convert(ann_window);
             ann_window = ma.SMA(ann_window, 5);
+            
             double[] annSignalTemp = net.run(ann_window);
             annSignal = Math.round(annSignalTemp[0]);
             

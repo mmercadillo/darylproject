@@ -9,13 +9,21 @@
 * This function accepts dynamic data, i.e. one input value at a time.
 *
  */
-package daryl.system.robot.full.node.predictor.ann;
+package daryl.ann;
 
-import daryl.system.robot.full.node.predictor.ann.TradingSystem.SIGNAL;
+import java.io.Serializable;
 
-public class FischerTransform {
+import daryl.ann.TradingSystem.SIGNAL;
+
+public class FischerTransform implements Serializable{
         
-    DataFormat df = new DataFormat();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	DataFormat df = new DataFormat();
 
     
     double buy_open = 0;
