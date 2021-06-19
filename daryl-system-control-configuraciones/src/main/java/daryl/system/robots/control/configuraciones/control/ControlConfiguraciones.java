@@ -140,39 +140,42 @@ public class ControlConfiguraciones {
 	public void controlRnaConfiguration() {
     	
     	System.out.println("ACTUALIZANDO CONFIG RNA");
-    	List<RnaConfig> configs = rnaConfigRepository.findAll();
-    	for(RnaConfig rnaConfig : configs) {
+    	
+    	List<RnaConfigCalcs> calcs = rnaConfigCalcsRepository.findAll();
+    	for(RnaConfigCalcs configCalc : calcs) {
     		
-    		RnaConfigCalcs calcs = rnaConfigCalcsRepository.findRnaConfigCalcsByRobot(rnaConfig.getRobot());
-    		if(calcs != null) {
-    			
-    			if(calcs.getResultado() > rnaConfig.getResultado()) {
-    				
-    				Long fechaHoraMillis = System.currentTimeMillis();
-    				//Mapeamos
-    				rnaConfig.setFicheroRna(calcs.getFicheroRna());
-    				rnaConfig.setLastBias(calcs.getLastBias());
-    				rnaConfig.setLastCapasOcultas(calcs.getLastCapasOcultas());
-    				rnaConfig.setLastHiddenNeurons(calcs.getLastHiddenNeurons());
-    				rnaConfig.setLastNeuronasEntrada(calcs.getLastNeuronasEntrada());
-    				rnaConfig.setLastPasoLearnigRate(calcs.getLastPasoLearnigRate());
-    				rnaConfig.setLastPasoMomentum(calcs.getLastPasoMomentum());
-    				rnaConfig.setLastTransferFunctionType(calcs.getLastTransferFunctionType());
-    				rnaConfig.setNeuronasEntrada(calcs.getNeuronasEntrada());
-    				rnaConfig.setResultado(calcs.getResultado());
-    				rnaConfig.setRna(calcs.getRna());
-    				
-    				rnaConfig.setFModificacion(fechaHoraMillis);
-    				rnaConfig.setFecha(config.getFechaInString(fechaHoraMillis));
-    				rnaConfig.setHora(config.getHoraInString(fechaHoraMillis));
-    				
-    				rnaConfigRepository.save(rnaConfig);
-    				
-    			}
-    			
-    		}
-    			
+    		RnaConfig configRna = rnaConfigRepository.findRnaConfigByRobot(configCalc.getRobot());
+    		if(configRna == null) configRna = new RnaConfig();
+    		
+    		Long fechaHoraMillis = System.currentTimeMillis();
+    		if(configRna.getResultado() == null || configCalc.getResultado() > configRna.getResultado()) {
+
+				//Mapeamos
+				configRna.setFicheroRna(configCalc.getFicheroRna());
+				configRna.setLastBias(configCalc.getLastBias());
+				configRna.setLastCapasOcultas(configCalc.getLastCapasOcultas());
+				configRna.setLastHiddenNeurons(configCalc.getLastHiddenNeurons());
+				configRna.setLastNeuronasEntrada(configCalc.getLastNeuronasEntrada());
+				configRna.setLastPasoLearnigRate(configCalc.getLastPasoLearnigRate());
+				configRna.setLastPasoMomentum(configCalc.getLastPasoMomentum());
+				configRna.setLastTransferFunctionType(configCalc.getLastTransferFunctionType());
+				configRna.setNeuronasEntrada(configCalc.getNeuronasEntrada());
+				configRna.setResultado(configCalc.getResultado());
+				configRna.setRna(configCalc.getRna());
+				
+				configRna.setFModificacion(fechaHoraMillis);
+				configRna.setFecha(config.getFechaInString(fechaHoraMillis));
+				configRna.setHora(config.getHoraInString(fechaHoraMillis));
+
+
+				
+				rnaConfigRepository.save(configRna);
+				
+			}
+    		
+    		
     	}
+    	
     	System.out.println("ACTUALIZADA CONFIG RNA");
     	
     }
@@ -219,7 +222,7 @@ public class ControlConfiguraciones {
     		
     	}
     	
-    	System.out.println("ACTUALIZADA CONFIG RNA");
+    	System.out.println("ACTUALIZADA CONFIG ANN");
     	
     }
 

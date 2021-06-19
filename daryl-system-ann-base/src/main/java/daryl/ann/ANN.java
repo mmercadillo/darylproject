@@ -1,18 +1,5 @@
-//**********************************************************************
-//Neural Network Toolbox
-//Created by Andrew Cachia
-//
-//To use, simply enter any 2D array as input, and another as the target, 
-//where each column contains multiple samples of a particular criteria, and each 
-//row contains the inputs to the network associated with the particular target.
-//
-//Input and target length (number of rows) must be equal.
-//
-//Default parameters may be changed using public setters.
-//
-//**********************************************************************
 
-package daryl.system.robots.ann.calculator.forecaster;
+package daryl.ann;
 
 import static java.lang.Math.round;
 
@@ -21,12 +8,18 @@ import java.util.Random;
 
 import lombok.Setter;
 
+
+
 public class ANN implements Serializable{
 
-    private static final long serialVersionUID = 6673423048343986258L;
+
     
 
-    private int counter = 0;    
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int counter = 0;    
     private double[] hidden;
     private double[][] OUT;
     private double[] error;
@@ -51,19 +44,19 @@ public class ANN implements Serializable{
     @Setter
     private int hiddenNeurons;
     @Setter
-    private double testing_ratio = 0.2;
+    private double testing_ratio;
     @Setter
-    private boolean details = false;
+    private boolean details;
     @Setter
-    private boolean modifyValues = false;
+    private boolean modifyValues;
     @Setter
-    private double modifyRate = 0.01;
+    private double modifyRate;
     @Setter
-    private double convergenceLimit = 0;
+    private double convergenceLimit;
     @Setter
-    private boolean useSigmoid = Boolean.TRUE;
+    private boolean useSigmoid;
     @Setter
-    private boolean useTanh = Boolean.TRUE;
+    private boolean useTanh;
     
     //***************************** Training **********************************           
     public double[][] train(double[][] input, double[][] target){

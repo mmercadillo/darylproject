@@ -24,6 +24,7 @@
 		<neuroph.version>2.98</neuroph.version>
 		<commons.lang3.version>3.11</commons.lang3.version>
 		<daryl.system.ta4j>1.0.7</daryl.system.ta4j>
+		<commons-lang3.version>3.11</commons-lang3.version>
 	</properties> 
 	<dependencies>
 		
@@ -93,7 +94,6 @@
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
-		    <version>${commons.lang3.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -132,7 +132,7 @@
           	<properties>
 				<profile.name>dev</profile.name>
           	</properties>
-			<activation>
+          	<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 		</profile>

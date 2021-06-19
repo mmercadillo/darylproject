@@ -20,6 +20,10 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
 import org.ta4j.core.utils.BarSeriesUtils;
 
+import daryl.ann.ANN;
+import daryl.ann.DataFormat;
+import daryl.ann.FischerTransform;
+import daryl.ann.MovingAverages;
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Mode;
@@ -139,7 +143,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 		int lastPasoMomentum = 0;
 		int lastHiddenNeurons = 1;
 		int lastTransferFunctionType = 0;
-		int lastNeuronasEntrada = 2;
+		int lastNeuronasEntrada = 5;
 
 		Double accuracy = null;
 		Double resultado = null;
@@ -216,6 +220,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 						        ANN net = new ANN();
 						        net.setHiddenNeurons(hiddenNeurons);
 						        net.setErr(0.3);
+						        net.setTesting_ratio(0.2);
 						        net.setLrc(learningRate);
 						        net.setMomentum(momentum);
 						        net.setConvergenceLimit(Math.round(input.length * this.pctTest));
@@ -324,7 +329,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 								e.printStackTrace();
 							}
 						}
-						lastNeuronasEntrada = 2;	
+						lastNeuronasEntrada = 5;	
 					}
 					lastHiddenNeurons = 1;
 				}

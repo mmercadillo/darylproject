@@ -1,12 +1,19 @@
 
-package daryl.system.robots.ann.calculator.forecaster;
+package daryl.ann;
 
-import daryl.system.robots.ann.calculator.forecaster.TradingSystem.SIGNAL;
+import java.io.Serializable;
+
+import daryl.ann.TradingSystem.SIGNAL;
 
 
-public class RSI {
+public class RSI implements Serializable{
     
-    DataFormat df = new DataFormat();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	DataFormat df = new DataFormat();
     //Chart chart = new Chart("RSI", 2);
     
     double[] up;

@@ -3,11 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package daryl.system.robots.ann.calculator.forecaster;
+package daryl.ann;
 
-public class MovingAverages {
+import java.io.Serializable;
+
+public class MovingAverages implements Serializable{
                 
-    public double[] SMA(double[] input, int window_size) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+
+
+	public double[] SMA(double[] input, int window_size) {
         double[] SMA = new double[input.length];
         double ans;
         System.arraycopy(input, 0, SMA, 0, window_size);

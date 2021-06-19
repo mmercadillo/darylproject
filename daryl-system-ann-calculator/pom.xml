@@ -24,6 +24,7 @@
 		<neuroph.version>2.98</neuroph.version>
 		<commons.lang3.version>3.11</commons.lang3.version>
 		<daryl.system.ta4j>1.0.7</daryl.system.ta4j>
+		<daryl.system.ann-base>1.0.7</daryl.system.ann-base>
 	</properties> 
 	<dependencies>
 		
@@ -43,7 +44,11 @@
 			<artifactId>model</artifactId>
 			<version>${daryl.system.model}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>daryl.system.robots</groupId>
+			<artifactId>ann-base</artifactId>
+			<version>${daryl.system.ann-base}</version>
+		</dependency>
 		
 		<!-- // -->
   		<dependency>
@@ -66,28 +71,6 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.neuroph</groupId>
-    		<artifactId>neuroph-core</artifactId>
-    		<version>${neuroph.version}</version>
-		</dependency>
-		<dependency>
-    		<groupId>com.github.neuroph</groupId>
-    		<artifactId>neuroph-imgrec</artifactId>
-    		<version>${neuroph.version}</version>
-		</dependency>
-		<dependency>
-    		<groupId>com.github.neuroph</groupId>
-    		<artifactId>neuroph-ocr</artifactId>
-    		<version>${neuroph.version}</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.github.neuroph/neuroph-contrib -->
-		<dependency>
-    		<groupId>com.github.neuroph</groupId>
-    		<artifactId>neuroph-contrib</artifactId>
-    		<version>${neuroph.version}</version>
 		</dependency>
 
 		<dependency>
@@ -134,7 +117,7 @@
           	</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
-			</activation>
+			</activation>          	
 		</profile>
 		<profile>
 			<id>tragsa</id>

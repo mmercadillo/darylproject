@@ -1,9 +1,10 @@
 package daryl.system.robots.ann.calculator.forecaster;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.List;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -14,12 +15,16 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
 import org.ta4j.core.utils.BarSeriesUtils;
 
+import daryl.ann.ANN;
+import daryl.ann.FischerTransform;
+import daryl.ann.MovingAverages;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Mode;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.AnnConfig;
-import daryl.system.model.Robot;
+import daryl.system.model.AnnConfigCalcs;
 import daryl.system.model.historicos.Historico;
+import daryl.system.robots.ann.calculator.repository.IAnnConfigCalcsRepository;
 import daryl.system.robots.ann.calculator.repository.IAnnConfigRepository;
 import daryl.system.robots.ann.calculator.repository.IHistoricoRepository;
 import lombok.ToString;
@@ -35,6 +40,7 @@ public class AnnForecasterTester  {
 
 	@Autowired
 	private IAnnConfigRepository annConfigRepository;
+
 	@Autowired
 	private IHistoricoRepository historicoRepository;
 
@@ -54,7 +60,7 @@ public class AnnForecasterTester  {
 			
 			if(ann != null) {		
 				
-				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(timeframe, activo, PageRequest.of(0,  annConfig.getNeuronasEntrada()));
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(timeframe, activo, PageRequest.of(0,  20));
 				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + timeframe + "_" + activo, activo.getMultiplicador());
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
@@ -111,9 +117,15 @@ public class AnnForecasterTester  {
 		
 	}
 	
+
 	public ANN annFromByteArray(byte[] byteArray) throws IOException, ClassNotFoundException {
 		
-		ANN ann = (ANN)SerializationUtils.deserialize(byteArray);
+		ByteArrayInputStream bais = new ByteArrayInputStream(byteArray);
+		ObjectInputStream ois = new ObjectInputStream(bais);
+		Object obj2 = ois.readObject();
+		
+		//Object obj = SerializationUtils.deserialize(byteArray);
+		ANN ann = (ANN)obj2;
 		return ann;
 	}
 

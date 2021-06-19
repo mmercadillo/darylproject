@@ -1,10 +1,16 @@
-package daryl.system.robots.ann.calculator.forecaster;
+package daryl.ann;
 
-import daryl.system.robots.ann.calculator.forecaster.TradingSystem.SIGNAL;
+import java.io.Serializable;
 
-public class MAIndicator {
+import daryl.ann.TradingSystem.SIGNAL;
+
+public class MAIndicator implements Serializable{
      
-    DataFormat df = new DataFormat();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	DataFormat df = new DataFormat();
     MovingAverages ma = new MovingAverages();
     //Chart chart_buy = new Chart("MA Buy", 3);
     //Chart chart_sell = new Chart("MA Sell", 4);

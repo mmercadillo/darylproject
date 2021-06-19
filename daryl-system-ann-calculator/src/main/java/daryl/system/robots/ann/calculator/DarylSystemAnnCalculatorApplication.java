@@ -17,13 +17,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.robots.ann.calculator.forecaster.ANNForecasterGenerator;
+import daryl.system.robots.ann.calculator.forecaster.AnnForecasterTester;
 
-/*
+
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EntityScan("daryl.system.model")
-*/
 public class DarylSystemAnnCalculatorApplication {
 
 
@@ -41,7 +41,20 @@ public class DarylSystemAnnCalculatorApplication {
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
-	    startForecaster(context);
+	    //startForecaster(context);
+	    startTester(context);
+	}
+	
+	private static void startTester(ConfigurableApplicationContext context) {
+		
+
+		AnnForecasterTester tester = context.getBean(AnnForecasterTester.class);
+		tester.calcularPrediccion("ANN_GDAXI_60", Timeframes.PERIOD_H1, Activo.GDAXI);
+		
+		
+
+
+		
 	}
 	
 	private static void startForecaster(ConfigurableApplicationContext context) {
@@ -57,7 +70,7 @@ public class DarylSystemAnnCalculatorApplication {
 		ANNForecasterGenerator rfgGDAXI60 = context.getBean(ANNForecasterGenerator.class);
 		rfgGDAXI60.init("ANN_GDAXI_60", Activo.GDAXI, Timeframes.PERIOD_H1, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo);
 		servicio.submit(rfgGDAXI60);
-		
+		/*
 		ANNForecasterGenerator rfgGDAXI240 = context.getBean(ANNForecasterGenerator.class);
 		rfgGDAXI240.init("ANN_GDAXI_240", Activo.GDAXI, Timeframes.PERIOD_H4, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo);
 		servicio.submit(rfgGDAXI240);
@@ -150,7 +163,7 @@ public class DarylSystemAnnCalculatorApplication {
 		ANNForecasterGenerator rfgWTI10080 = context.getBean(ANNForecasterGenerator.class);
 		rfgWTI10080.init("ANN_WTI_10080", Activo.XTIUSD, Timeframes.PERIOD_W1, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo);
 		servicio.submit(rfgWTI10080);
-		
+		*/
 		servicio.shutdown();
 		
 	}

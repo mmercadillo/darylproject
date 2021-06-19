@@ -1,13 +1,20 @@
-package daryl.system.robots.ann.calculator.forecaster;
+package daryl.ann;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 
 
-public class DataFormat {
+public class DataFormat implements Serializable{
        
-    public double[] fileToArray(String csvFile, int l){
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	public double[] fileToArray(String csvFile, int l){
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
