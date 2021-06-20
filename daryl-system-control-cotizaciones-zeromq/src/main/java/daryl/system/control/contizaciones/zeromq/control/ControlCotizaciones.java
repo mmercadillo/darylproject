@@ -87,9 +87,9 @@ public class ControlCotizaciones extends Thread {
 					for(Robot robot : robots) {
 						
 						if(robot.getRobotActivo() == Boolean.TRUE && config.checkFechaHoraOperaciones() == Boolean.TRUE) {
-							//logger.info("SE ENVIA SEÑAL AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
-							//sender.send(robot.getCanal().name(), new Gson().toJson(robot));
-							//logger.info("SEÑAL ENVIADA AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
+							logger.info("SE ENVIA SEÑAL AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
+							sender.send(robot.getCanal().name(), new Gson().toJson(robot));
+							logger.info("SEÑAL ENVIADA AL ROBOT " + robot.getRobot() + " TF= " + ctzcn.getTimeframe().name());
 						}
 						
 						//Cerramos todas las operaciones de cada robot
@@ -116,9 +116,9 @@ public class ControlCotizaciones extends Thread {
 					}
 					
 					//Enviamos el mensaje al nodo principal de control de los robots
-					logger.info("SE ENVIA SEÑAL AL CANAL CHNL_FULL_NODE " + robots + " TF= " + ctzcn.getTimeframe().name());
-					sender.send("CHNL_FULL_NODE", new Gson().toJson(robots));
-					logger.info("SEÑAL ENVIADA AL CANAL CHNL_FULL_NODE TF= " + ctzcn.getTimeframe().name());
+					//logger.info("SE ENVIA SEÑAL AL CANAL CHNL_FULL_NODE " + robots + " TF= " + ctzcn.getTimeframe().name());
+					//sender.send("CHNL_FULL_NODE", new Gson().toJson(robots));
+					//logger.info("SEÑAL ENVIADA AL CANAL CHNL_FULL_NODE TF= " + ctzcn.getTimeframe().name());
 					////////////////////////////////////////////////////////////////////////////////
 					
 				}catch (Exception e) {
