@@ -41,8 +41,8 @@ public class DarylSystemAnnCalculatorApplication {
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
-	    //startForecaster(context);
-	    startTester(context);
+	    startForecaster(context);
+	    //startTester(context);
 	}
 	
 	private static void startTester(ConfigurableApplicationContext context) {
@@ -70,7 +70,7 @@ public class DarylSystemAnnCalculatorApplication {
 		ANNForecasterGenerator rfgGDAXI60 = context.getBean(ANNForecasterGenerator.class);
 		rfgGDAXI60.init("ANN_GDAXI_60", Activo.GDAXI, Timeframes.PERIOD_H1, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo);
 		servicio.submit(rfgGDAXI60);
-		/*
+		
 		ANNForecasterGenerator rfgGDAXI240 = context.getBean(ANNForecasterGenerator.class);
 		rfgGDAXI240.init("ANN_GDAXI_240", Activo.GDAXI, Timeframes.PERIOD_H4, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo);
 		servicio.submit(rfgGDAXI240);
@@ -163,7 +163,7 @@ public class DarylSystemAnnCalculatorApplication {
 		ANNForecasterGenerator rfgWTI10080 = context.getBean(ANNForecasterGenerator.class);
 		rfgWTI10080.init("ANN_WTI_10080", Activo.XTIUSD, Timeframes.PERIOD_W1, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo);
 		servicio.submit(rfgWTI10080);
-		*/
+		
 		servicio.shutdown();
 		
 	}
