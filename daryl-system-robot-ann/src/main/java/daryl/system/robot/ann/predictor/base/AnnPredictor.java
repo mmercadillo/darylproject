@@ -107,7 +107,7 @@ public abstract class AnnPredictor {
     	
     	try {
 	    	double[] input = datos.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
-	    	
+	    	logger.info("INPUT -> " + input);
 	        FischerTransform ft_ann = new FischerTransform();
 	        MovingAverages ma = new MovingAverages();
 	        
