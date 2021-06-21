@@ -15,6 +15,6 @@ public interface IHistoricoRepository extends JpaRepository<Historico, Long> {
 
 	Historico findFirstByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes tf, Activo activo);
 	List<Historico> findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes tf, Activo activo);
-	List<Historico> findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes tf, Activo activo, Pageable page);
+	List<Historico> findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes tf, Activo activo, Pageable page);
 	
 }
