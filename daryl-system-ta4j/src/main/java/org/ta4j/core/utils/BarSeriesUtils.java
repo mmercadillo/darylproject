@@ -237,18 +237,21 @@ public final class BarSeriesUtils {
 		
 		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
 		for (Historico hist : historico) {
-			
-			Long millis = hist.getFechaHora();
-			
-			Instant instant = Instant.ofEpochMilli(millis);
-			ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-			
-			series.addBar(	barDateTime, 
-							hist.getApertura() * multiplicador, 
-							hist.getMaximo() * multiplicador, 
-							hist.getMinimo() * multiplicador, 
-							hist.getCierre() * multiplicador, 
-							hist.getVolumen() * multiplicador);
+			try {
+				Long millis = hist.getFechaHora();
+				
+				Instant instant = Instant.ofEpochMilli(millis);
+				ZonedDateTime barDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+				
+				series.addBar(	barDateTime, 
+								hist.getApertura() * multiplicador, 
+								hist.getMaximo() * multiplicador, 
+								hist.getMinimo() * multiplicador, 
+								hist.getCierre() * multiplicador, 
+								hist.getVolumen() * multiplicador);
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
 			
 		}
 		
