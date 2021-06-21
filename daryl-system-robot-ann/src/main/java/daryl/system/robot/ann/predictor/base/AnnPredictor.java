@@ -70,7 +70,7 @@ public abstract class AnnPredictor {
 			
 			if(ann != null) {		
 				
-				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo(), PageRequest.of(0,  20));
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(bot.getTimeframe(), bot.getActivo(), PageRequest.of(0,  20));
 				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
