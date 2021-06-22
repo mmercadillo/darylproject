@@ -10,6 +10,7 @@ import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.PageRequest;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
 import org.ta4j.core.utils.BarSeriesUtils;
@@ -63,7 +64,10 @@ public abstract class RnaPredictor {
 			
 			if(neuralNetwork != null) {		
 							
-				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+				//List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(bot.getTimeframe(), bot.getActivo(), PageRequest.of(0,  rnaConfig.getNeuronasEntrada()+1));
+				Collections.reverse(historico);
+				
 				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();

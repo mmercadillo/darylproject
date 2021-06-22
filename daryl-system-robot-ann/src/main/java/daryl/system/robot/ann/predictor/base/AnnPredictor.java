@@ -77,8 +77,8 @@ public abstract class AnnPredictor {
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
 				
-				
-				prediccion = prediccionANN(ann, datos);
+				//Cogemos los últimos equivalentes al número de neuronas de entrada
+				prediccion = prediccionANN(ann, datos.subList(datos.size()-annConfig.getNeuronasEntrada(), datos.size()));
 				
 				
 			}
