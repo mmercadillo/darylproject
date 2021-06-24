@@ -6,6 +6,7 @@ import static java.lang.Math.round;
 import java.io.Serializable;
 import java.util.Random;
 
+import lombok.Getter;
 import lombok.Setter;
 
 
@@ -35,28 +36,35 @@ public class ANN implements Serializable{
     private boolean badFact = false;
     
     //default values, can be changed with public setters
-    @Setter
+    @Setter @Getter
     private double lrc;
-    @Setter
+    @Setter @Getter
     private double err = 0.2;
-    @Setter
+    @Setter @Getter
     private double momentum;
-    @Setter
+    @Setter @Getter
     private int hiddenNeurons;
-    @Setter
+    @Setter @Getter
     private double testing_ratio;
-    @Setter
+    @Setter @Getter
     private boolean details;
-    @Setter
+    @Setter @Getter
     private boolean modifyValues;
-    @Setter
+    @Setter @Getter
     private double modifyRate;
-    @Setter
+    @Setter @Getter
     private double convergenceLimit;
-    @Setter
+    @Setter @Getter
     private boolean useSigmoid;
-    @Setter
+    @Setter @Getter
     private boolean useTanh;
+    
+    @Setter @Getter
+    private FischerTransform ft_ann;
+    @Setter @Getter
+    private MovingAverages ma;
+    
+    
     
     //***************************** Training **********************************           
     public double[][] train(double[][] input, double[][] target){

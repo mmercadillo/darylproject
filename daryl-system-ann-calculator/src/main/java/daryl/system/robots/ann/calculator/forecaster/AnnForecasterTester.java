@@ -3,6 +3,8 @@ package daryl.system.robots.ann.calculator.forecaster;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -44,9 +46,9 @@ public class AnnForecasterTester  {
 	@Autowired
 	private IHistoricoRepository historicoRepository;
 
-	public Double calcularPrediccion(String bot, Timeframes timeframe, Activo activo){
+	public void calcularPrediccion(String bot, Timeframes timeframe, Activo activo, Integer pagina){
 
-		Double prediccion = 0.0;
+		Double res = 0.0;
 		AnnConfig annConfig = getAnnConfig(bot);
 
 		if(annConfig != null) {
@@ -60,54 +62,74 @@ public class AnnForecasterTester  {
 			
 			if(ann != null) {		
 				
-				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(timeframe, activo, PageRequest.of(0,  20));
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(timeframe, activo, PageRequest.of(0, pagina));
+				
+				Collections.reverse(historico);
+				
 				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + timeframe + "_" + activo, activo.getMultiplicador());
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
-				
-
-				prediccion = prediccionANN(ann, datos);
+				datos = datos.subList(0, 120);
 				
 				
+				for(int i = 0; i < (datos.size() - (annConfig.getNeuronasEntrada() + 1)); i++) {
+					
+					List<Double> datosAux = datos.subList(i, i+annConfig.getNeuronasEntrada()+1);
+					
+					res += prediccionANN(ann, datosAux, annConfig.getNeuronasEntrada());
+					System.out.println("RESULTADO -> " + res);					
+				}
+				
+				System.out.println("TOTAL -> " + res);
 			}
 			
 		}
 		
-		
-        return prediccion;
 	
 	}
 	
-    private double prediccionANN(ANN net, List<Double> datos){
+    private double prediccionANN(ANN net, List<Double> datos, int neuronasEntrada){
     	
-    	double prediccion = 0.0;
+    	double[] input = datos.subList(0, datos.size()-1).stream().mapToDouble(dato -> dato.doubleValue()).toArray();
     	
-    	try {
-	    	double[] input = datos.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
-	    	
-	        FischerTransform ft_ann = new FischerTransform();
-	        MovingAverages ma = new MovingAverages();
-	        
-	        input = ft_ann.convert(input);
-	        input = ma.SMA(input, 5);
-	        
-	        double[] annSignalTemp = net.run(input);
-	        logger.info("SIGNAL -> " +annSignalTemp[0]);
-	        long annSignal = Math.round(annSignalTemp[0]);
-	        
-	        if (annSignal == 0.0) {
-	        	//Vendemos
-	        	prediccion = -1.0;
-	        }
-	        else if (annSignal == 1.0){
-	        	//Compramos
-	        	prediccion = 1.0;
-	        }
-	        
-    	}catch (Exception e) {
-    		e.printStackTrace();
-		}
-        return prediccion;
+    	FischerTransform ft_ann = net.getFt_ann();
+        MovingAverages ma = new MovingAverages();
+    	
+        double[] ann_window = new double[neuronasEntrada];
+        
+        double resultado = 0.0;
+        System.out.println("NEURONAS ENTRADA -> " + neuronasEntrada);
+        for (int i=neuronasEntrada; i<=input.length;i++){
+            try {
+	            //Place past 20 values in ann_window
+	            System.arraycopy(input, 0, ann_window, 0, neuronasEntrada);
+	            
+	            System.out.println("DATOS -> " + Arrays.toString(ann_window) + " - ESPERADO -> " + datos.get(datos.size()-1));
+	            
+	            ann_window = ft_ann.convert(ann_window);
+	            ann_window = ma.SMA(ann_window, neuronasEntrada);
+	            double[] annSignalTemp = net.run(ann_window);
+	            long annSignal = Math.round(annSignalTemp[0]);
+	            
+	            System.out.println("SIGNAL -> " + annSignalTemp[0]);
+	            
+	            if (annSignal == 0.0) {
+	            	//Vendemos
+	            	resultado += datos.get(datos.size()-2) - datos.get(datos.size()-1);
+	            	System.out.println("VENTA -> " + resultado);
+	            }
+	            else if (annSignal == 1.0){
+	            	//Compramos
+	            	resultado += datos.get(datos.size()-1) - datos.get(datos.size() - 2);
+	            	System.out.println("COMPRA -> " + resultado);
+	            }
+            }catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+        net.setFt_ann(ft_ann);
+        
+        return resultado;
     }
 	
 	

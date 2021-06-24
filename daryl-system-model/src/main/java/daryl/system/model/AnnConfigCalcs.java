@@ -47,6 +47,10 @@ public class AnnConfigCalcs implements Serializable{
 	@Getter @Setter
 	private Integer neuronasEntrada;
 	
+	@Column(nullable = true)
+	@Getter @Setter
+	private Integer pagina;
+	
 	@Lob
     @Column(columnDefinition="BLOB")
 	@Getter @Setter
@@ -57,7 +61,6 @@ public class AnnConfigCalcs implements Serializable{
 	@Getter @Setter
 	private Double resultado;
 
-	
 	@Column(nullable = true)
 	@Getter @Setter
 	private Double accuracy;

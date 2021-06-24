@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -83,12 +84,13 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 	int totalDatosLearn;
 	int totalDatosTest;
 	int totalDatosForecast;
+	int pagina;
 
 	private int multiplicador = 1;
 	public ANNForecasterGenerator() {
 	}
 	
-	public void init(String robot, Activo tipoActivo, Timeframes timeframe, int maxNeuronasEntrada, int maxCapasOcultas, int maxIteraciones, double errorMaximo) {
+	public void init(String robot, Activo tipoActivo, Timeframes timeframe, int maxNeuronasEntrada, int maxIteraciones, double errorMaximo, int pagina) {
 		
 		if(this.tipoActivo == Activo.EURUSD || this.tipoActivo == Activo.AUDCAD) this.multiplicador = 10000;
 		
@@ -97,12 +99,11 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 		this.tipoActivo = tipoActivo;
 		this.estrategia = robot;
 		this.timeframe = timeframe;
+		this.maxNeuronasEntrada = maxNeuronasEntrada;
+		this.pagina = pagina;
 
 		logger.info(this.robot + " Iniciado");
-		
-		logger.info("Cargando datos de -> " + this.robot);
-		loadData();
-		logger.info("Datos cargados de -> " + this.robot);
+
 	}
 
 	
@@ -110,15 +111,18 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
     int target_array;
     int test_array_size;
     int array_start = 25;
-    int neuronasEntrada = 5;
     
     List<Double> data;
     
-	public  void loadData() {
+	public  void loadData(int pagina) {
 		
-		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo, PageRequest.of(0,  1000));
-		this.datosForecast = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + this.timeframe + "_" + this.tipoActivo, this.multiplicador);
+		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(this.timeframe, this.tipoActivo, PageRequest.of(0, pagina));
 		
+		Collections.reverse(historico);
+		
+		this.datosForecast = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + this.timeframe + "_" + this.tipoActivo, this.multiplicador).getSubSeries(120, historico.size());
+		
+
 		this.darylNormalizer = new MaxMinNormalizer(this.datosForecast, Mode.CLOSE);
 		data = darylNormalizer.getDatos();
 		
@@ -144,6 +148,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 		int lastHiddenNeurons = 1;
 		int lastTransferFunctionType = 0;
 		int lastNeuronasEntrada = 5;
+		
 
 		Double accuracy = null;
 		Double resultado = null;
@@ -160,10 +165,17 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 			if(annConfig.getLastTransferFunctionType() != null) lastTransferFunctionType = annConfig.getLastTransferFunctionType();
 			if(annConfig.getAccuracy() != null) accuracy = annConfig.getAccuracy();
 			if(annConfig.getResultado() != null) resultado = annConfig.getResultado();
+			if(annConfig.getPagina() != null) pagina = annConfig.getPagina();
+			
 			
 		}else {
 			annConfig = new AnnConfigCalcs();
 		}
+		
+		
+		logger.info("Cargando datos de -> " + this.robot);
+		loadData(pagina);
+		logger.info("Datos cargados de -> " + this.robot);
 		
 		
 		for(int fncTransf = lastTransferFunctionType; fncTransf < transferFunctionTypes.length; fncTransf++) {
@@ -184,20 +196,17 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 						        DataFormat df = new DataFormat();
 						        MovingAverages ma = new MovingAverages();
 						        FischerTransform ft = new FischerTransform();
-						
-					               
+
 						        double[] movement = new double[target_array];
 						        double[][] input;
 						        double[][] target;
-								
-						
+
 						        double[] total_prices = data.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
 						        double[] training_prices = new double[target_array];
 						        double[] test_prices = new double[test_array_size];
 						        
 						        System.arraycopy(total_prices, 0, training_prices, 0, target_array);
 						        System.arraycopy(total_prices, target_array, test_prices, 0, test_array_size);
-						        
 						        
 						        double[] fisher = ft.convert(training_prices);
 						        double[] SP_avg = ma.SMA(fisher, neuronasEntrada);
@@ -207,16 +216,13 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 						            movement[i-1] = df.checkMovement(SP_avg[i-1], SP_avg[i]);  
 						        }
 						        movement[SP_avg.length-1] = 1;
-						        
-	
+
 					            input = df.timeSeries(SP_avg,20);
 					            target = df.make2D(movement);
 	
 					            input = df.cropArray(input,array_start,input.length);
 					            target = df.cropArray(target,array_start,target.length);
-						        
-					            
-					            
+
 						        ANN net = new ANN();
 						        net.setHiddenNeurons(hiddenNeurons);
 						        net.setErr(0.3);
@@ -227,6 +233,8 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 						        net.setModifyValues(false);
 						        net.setModifyRate(0.005);
 						        net.setDetails(false);
+						        net.setFt_ann(ft);
+						        net.setMa(ma);
 						        
 						        if(fncTransf == 0) {
 						        	net.setUseSigmoid(true);
@@ -238,7 +246,6 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 						        
 						        //net.printInputs(input, target);
 						        net.train(input, target);   
-						        
 						        
 						        //***** Testing Simulation
 						        //Prepare data
@@ -272,11 +279,9 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 								logger.info("BEST ACC -> " + accuracy);
 								logger.info("BEST RESULTADO -> " + resultado);
 								
-								double res = beginTradingANN(net);
-								
+								double res = beginTradingANN(net, neuronasEntrada);
 								
 						        System.out.println("===========================================================================================");
-								
 								
 								//Actualizamos los datos de RnaConfig
 								annConfig.setLastPasoLearnigRate(pasoLearningrate);
@@ -284,6 +289,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 								annConfig.setLastHiddenNeurons(hiddenNeurons);
 								annConfig.setLastTransferFunctionType(fncTransf);
 								annConfig.setLastNeuronasEntrada(neuronasEntrada);
+								annConfig.setPagina(this.pagina);
 	
 								boolean accUpdt = false;
 								if(accuracy == null || acc > accuracy) {
@@ -296,10 +302,9 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 									resUpdt = true;
 								}
 								
-								
 								Long fechaHoraMillis = System.currentTimeMillis();
 								if(/*accUpdt == true &&*/ resUpdt == true) {
-
+									
 									logger.info("Guardamos la ANN con res -> " + acc);
 									//neuralNetwork.save(this.rutaRna + this.tipoActivo + "_" + this.timeframe.valor + "_new.rna");
 									
@@ -354,26 +359,28 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 
 	}
 	
-    public double beginTradingANN(ANN net){
+    public double beginTradingANN(ANN net, int neuronasEntrada){
     	
     	double[] input = dataForForecast.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
     	
-        FischerTransform ft_ann = new FischerTransform();
-        MovingAverages ma = new MovingAverages();
+        FischerTransform ft_ann = net.getFt_ann();
+        MovingAverages ma = net.getMa();
     	
         double[] ann_window = new double[neuronasEntrada];
         
         double resultado = 0.0;
         
-
         for (int i=neuronasEntrada; i<input.length;i++){
             try {
 	            //Place past 20 values in ann_window
 	            System.arraycopy(input, (i-neuronasEntrada), ann_window, 0, neuronasEntrada);
+	            
 	            ann_window = ft_ann.convert(ann_window);
 	            ann_window = ma.SMA(ann_window, 5);
 	            double[] annSignalTemp = net.run(ann_window);
 	            long annSignal = Math.round(annSignalTemp[0]);
+	            
+	            //System.out.println("SIGNAL -> " + annSignalTemp[0]);
 	            
 	            if (annSignal == 0.0) {
 	            	//Vendemos

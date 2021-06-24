@@ -41,8 +41,8 @@ public class FischerTransform implements Serializable{
     final double upperbound = 0.1;
     final double lowerbound = -0.1;
 
-    double highest = 0;
-    double lowest = 0;
+    double highest = -1.0;
+    double lowest = -1.0;
     int fischer_size;
 
     SIGNAL returnSignal;
@@ -54,9 +54,9 @@ public class FischerTransform implements Serializable{
     public double[] convert(double[] input){
         double[] fischer = new double[input.length];
         for (int i=0; i<input.length;i++){
-            if (input[i] > highest)
+            if (input[i] > highest || highest == -1.0)
                 highest = input[i];
-            if (input[i] < lowest)
+            if (input[i] < lowest || lowest == -1.0)
                 lowest = input[i];
 
             returnSignal = SIGNAL.NONE;
