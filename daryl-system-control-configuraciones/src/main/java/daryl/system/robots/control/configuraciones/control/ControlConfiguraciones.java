@@ -53,7 +53,7 @@ public class ControlConfiguraciones {
 	@Autowired
 	IAnnConfigRepository annConfigRepository;
 
-    //@Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
+    @Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
     @Transactional
 	public void controlArimaCConfiguration() {
     	
@@ -93,7 +93,7 @@ public class ControlConfiguraciones {
     	
     }
     
-    //@Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
+    @Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
     @Transactional
 	public void controlVarianceConfiguration() {
     	
@@ -135,7 +135,7 @@ public class ControlConfiguraciones {
     	
     }
 
-    //@Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
+    @Scheduled(fixedDelay = 14400000, initialDelay = 1000)//cada 4 horas
     @Transactional
 	public void controlRnaConfiguration() {
     	
