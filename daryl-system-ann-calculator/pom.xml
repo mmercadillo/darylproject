@@ -117,13 +117,13 @@
           	</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
-			</activation>          	
+			</activation>	    	        	
 		</profile>
 		<profile>
 			<id>tragsa</id>
 			<properties>
 				<profile.name>tragsa</profile.name>
-			</properties>
+			</properties>	
 		</profile>
 		<profile>
 			<id>prod</id>

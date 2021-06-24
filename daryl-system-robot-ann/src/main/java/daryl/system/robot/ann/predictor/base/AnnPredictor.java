@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
@@ -27,7 +25,6 @@ import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.AnnConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
-import daryl.system.model.RnaConfig;
 import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
 import daryl.system.robot.ann.repository.IAnnConfigRepository;
@@ -40,7 +37,6 @@ public abstract class AnnPredictor {
 	@Autowired
 	protected Logger logger;
 
-
 	@Autowired
 	protected ConfigData config;
 		
@@ -50,7 +46,6 @@ public abstract class AnnPredictor {
 	protected IPrediccionRepository prediccionRepository;
 	@Autowired
 	private IAnnConfigRepository annConfigRepository;
-
 
 	@Autowired
 	private IHistoricoRepository historicoRepository; 
@@ -71,20 +66,31 @@ public abstract class AnnPredictor {
 			
 			if(ann != null) {		
 				
-				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(bot.getTimeframe(), bot.getActivo(), PageRequest.of(0,  20));
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(bot.getTimeframe(), bot.getActivo(), PageRequest.of(0,  annConfig.getNeuronasEntrada()));
 				Collections.reverse(historico);
 				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
 				
 				//Cogemos los últimos equivalentes al número de neuronas de entrada
-				prediccion = prediccionANN(ann, datos.subList(datos.size()-annConfig.getNeuronasEntrada(), datos.size()));
+				prediccion = prediccionANN(	ann, 
+											datos.subList(datos.size()-annConfig.getNeuronasEntrada(), datos.size()),
+											annConfig.getNeuronasEntrada());
+				
+				try {
+					
+					//Actualizamos la ann
+					annConfig.setAnn(annToByteArray(ann));
+					annConfigRepository.save(annConfig);
+					
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
 				
 				
 			}
 			
 		}
-		
 		
         return prediccion;
 	
@@ -101,7 +107,57 @@ public abstract class AnnPredictor {
 		ANN ann = (ANN)obj2;
 		return ann;
 	}
+	
+    private double prediccionANN(ANN net, List<Double> datos, int neuronasEntrada){
+    	
+    	double prediccion = 0.0;
+    	
+    	try {
 
+        	double[] input = datos.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
+        	
+            FischerTransform ft_ann = net.getFt_ann();
+            MovingAverages ma = new MovingAverages();
+        	
+            double[] ann_window = new double[neuronasEntrada];
+                        
+            //for (int i=neuronasEntrada; i<input.length;i++){
+                try {
+    	            //Place past 20 values in ann_window
+    	            System.arraycopy(input, 0, ann_window, 0, neuronasEntrada);
+    	            
+    	            ann_window = ft_ann.convert(ann_window);
+    	            ann_window = ma.SMA(ann_window, neuronasEntrada);
+    	            double[] annSignalTemp = net.run(ann_window);
+    	            long annSignal = Math.round(annSignalTemp[0]);
+    	            
+    	            if (annSignal == 0.0) {
+    	            	//Vendemos
+    	            	prediccion = -1.0;
+    	            }else if (annSignal == 1.0){
+    	            	//Compramos
+    	            	prediccion = 1.0;
+    	            }
+                }catch (Exception e) {
+    			}
+            //}           
+    		
+            net.setFt_ann(ft_ann);
+    	}catch (Exception e) {
+		}
+    	
+
+        return prediccion;
+    }
+    
+	public byte[] annToByteArray(ANN ann){
+		
+		byte[] bytesFromRna = SerializationUtils.serialize(ann);
+		return bytesFromRna;
+
+		
+	}
+    /*
     private double prediccionANN(ANN net, List<Double> datos){
     	
     	double prediccion = 0.0;
@@ -133,7 +189,7 @@ public abstract class AnnPredictor {
 		}
         return prediccion;
     }
-
+	*/
 	protected Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Double> datosForecast, MaxMinNormalizer darylNormalizer) {
 
 		List<Double> inputs = new ArrayList<Double>();
