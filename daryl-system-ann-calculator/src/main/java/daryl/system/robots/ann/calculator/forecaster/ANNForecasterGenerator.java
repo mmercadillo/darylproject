@@ -85,12 +85,13 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 	int totalDatosTest;
 	int totalDatosForecast;
 	int pagina;
+	int inicioSubSerie;
 
 	private int multiplicador = 1;
 	public ANNForecasterGenerator() {
 	}
 	
-	public void init(String robot, Activo tipoActivo, Timeframes timeframe, int maxNeuronasEntrada, int maxIteraciones, double errorMaximo, int pagina) {
+	public void init(String robot, Activo tipoActivo, Timeframes timeframe, int maxNeuronasEntrada, int maxIteraciones, double errorMaximo, int pagina, int inicioSubSerie) {
 		
 		if(this.tipoActivo == Activo.EURUSD || this.tipoActivo == Activo.AUDCAD) this.multiplicador = 10000;
 		
@@ -101,6 +102,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 		this.timeframe = timeframe;
 		this.maxNeuronasEntrada = maxNeuronasEntrada;
 		this.pagina = pagina;
+		this.inicioSubSerie = inicioSubSerie;
 
 		logger.info(this.robot + " Iniciado");
 
@@ -120,7 +122,7 @@ public class ANNForecasterGenerator implements Runnable/*, LearningEventListener
 		
 		Collections.reverse(historico);
 		
-		this.datosForecast = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + this.timeframe + "_" + this.tipoActivo, this.multiplicador).getSubSeries(120, historico.size());
+		this.datosForecast = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + this.timeframe + "_" + this.tipoActivo, this.multiplicador).getSubSeries(this.inicioSubSerie, historico.size());
 		
 
 		this.darylNormalizer = new MaxMinNormalizer(this.datosForecast, Mode.CLOSE);
