@@ -10,6 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import daryl.system.control.contizaciones.zeromq.control.ControlCotizaciones;
@@ -19,6 +20,7 @@ import daryl.system.control.contizaciones.zeromq.control.ControlCotizaciones;
 @EntityScan("daryl.system.model")
 @EnableJms
 @EnableTransactionManagement
+@EnableScheduling
 public class DarylSystemControlCotizacionesZeroMQApplication {
 
 	@Autowired
