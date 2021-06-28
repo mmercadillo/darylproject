@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
@@ -99,11 +101,13 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 	private List<Double> normalizeDataForLearning;
 	private List<Double> normalizeDataForTest;
 	private List<Double> normalizeDataForForecast;
+	
+	private int pagina = 500;
 
 	public RnaForecasterGenerator() {
 	}
 	
-	public void init(String robot, Activo tipoActivo, Timeframes timeframe, int maxNeuronasEntrada, int maxCapasOcultas, int maxIteraciones, double errorMaximo) {
+	public void init(String robot, Activo tipoActivo, Timeframes timeframe, int maxNeuronasEntrada, int maxCapasOcultas, int maxIteraciones, double errorMaximo, int pagina) {
 		
 		logger.info("Iniciando -> " + robot);
 		this.robot = robot;
@@ -117,16 +121,21 @@ public class RnaForecasterGenerator implements Runnable, LearningEventListener{
 		this.maxError = errorMaximo;
 		logger.info(this.robot + " Iniciado");
 		
+		this.pagina = pagina;
+		
 		logger.info("Cargando datos de -> " + this.robot);
 		loadData();
 		logger.info("Datos cargados de -> " + this.robot);
+		
+		
 	}
 
 	
 	
 	public  void loadData() {
 		
-		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.tipoActivo);
+		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(this.timeframe, this.tipoActivo, PageRequest.of(0, this.pagina));
+		Collections.reverse(historico);
 		this.datosForecast = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + this.timeframe + "_" + this.tipoActivo, 1);
 		
 		this.darylNormalizer = new MaxMinNormalizer(this.datosForecast, Mode.CLOSE);
