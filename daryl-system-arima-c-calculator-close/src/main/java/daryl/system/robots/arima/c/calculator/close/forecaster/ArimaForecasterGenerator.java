@@ -14,12 +14,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.dataset.Datos;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.model.ArimaConfigCalcs;
 import daryl.system.model.CombinacionArimaC;
-import daryl.system.model.historicos.Historico;
 import daryl.system.robots.arima.c.calculator.close.repository.IArimaConfigCalcsRepository;
 
 
