@@ -22,17 +22,14 @@ import org.ta4j.core.utils.BarSeriesUtils;
 
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
-import daryl.system.model.CombinacionArimaC;
 import daryl.system.model.historicos.Historico;
-import daryl.system.robots.arima.c.calculator.close.forecaster.ArimaForecasterGenerator;
-import daryl.system.robots.arima.c.calculator.close.repository.ICombinacionesArimaCRepository;
 import daryl.system.robots.arima.c.calculator.close.repository.IHistoricoRepository;
 
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EntityScan("daryl.system.model")
-public class DarylSystemArimaCCalculatoCloseApplication {
+public class DarylSystemRecurrentCalculatorApplication {
 
 	@Autowired
 	Logger logger;
@@ -40,7 +37,7 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 	
 	public static void main(String[] args) {
 		
-        SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemArimaCCalculatoCloseApplication.class);
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemRecurrentCalculatorApplication.class);
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
@@ -53,54 +50,20 @@ public class DarylSystemArimaCCalculatoCloseApplication {
         return LoggerFactory.getLogger("daryl");
     }
 
-
-	
-	static List<Double> histXAUUSD60 = null;
-	static List<Double> histXAUUSD240 = null;
-	static List<Double> histXAUUSD1440 = null;
-	static List<Double> histXAUUSD10080 = null;
-
-	static List<Double> histNDX60 = null;
-	static List<Double> histNDX240 = null;
-	static List<Double> histNDX1440 = null;
-	static List<Double> histNDX10080 = null;
-
-	static List<Double> histGDAXI60 = null;
-	static List<Double> histGDAXI240 = null;
-	static List<Double> histGDAXI1440 = null;
-	static List<Double> histGDAXI10080 = null;
-
-	static List<Double> histEURUSD60 = null;
-	static List<Double> histEURUSD240 = null;
-	static List<Double> histEURUSD1440 = null;
-	static List<Double> histEURUSD10080 = null;
-
-	static List<Double> histAUDCAD60 = null;
-	static List<Double> histAUDCAD240 = null;
-	static List<Double> histAUDCAD1440 = null;
-	static List<Double> histAUDCAD10080 = null;
-
-	static List<Double> histWTI60 = null;
-	static List<Double> histWTI240 = null;
-	static List<Double> histWTI1440 = null;
 	
 	static int pagina = 500;
 	
     private static void startForecaster(ConfigurableApplicationContext context) {
     	
-		ICombinacionesArimaCRepository combinacionesArimaCRepository = context.getBean(ICombinacionesArimaCRepository.class);
 		IHistoricoRepository historicoRepository = context.getBean(IHistoricoRepository.class);
 		 
-		List<CombinacionArimaC> combinacionesFile = combinacionesArimaCRepository.findAll();
 		//Collections.reverse(combinacionesFile);
+		
+    	ExecutorService servicio = Executors.newFixedThreadPool(25);
 
-		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.XAUUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
 		
-		BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.XAUUSD, 1);
-		histXAUUSD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de XAUUSD 60");
 		
+		/*
 		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.XAUUSD, PageRequest.of(0, pagina));
 		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.XAUUSD, 1);
@@ -119,24 +82,24 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 		histXAUUSD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de XAUUSD 10080");
 		
-    	ExecutorService servicio = Executors.newFixedThreadPool(25);
+
 
     	int maxDesviaciones = 10;
     	int inicio = 500;
 
-		ArimaForecasterGenerator afgXAUUSD_60 = context.getBean(ArimaForecasterGenerator.class);
+		RecurrentForecasterGenerator afgXAUUSD_60 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgXAUUSD_60.init("ARIMA_C_XAUUSD_60", "ARIMA_C_XAUUSD_60", Activo.XAUUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histXAUUSD60, combinacionesFile); // <-- here
 		servicio.submit(afgXAUUSD_60); 		
 		
-	    ArimaForecasterGenerator afgXAUUSD_240 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgXAUUSD_240 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgXAUUSD_240.init("ARIMA_C_XAUUSD_240", "ARIMA_C_XAUUSD_240", Activo.XAUUSD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histXAUUSD240, combinacionesFile); // <-- here
 		servicio.submit(afgXAUUSD_240);   
 		
-	    ArimaForecasterGenerator afgXAUUSD_1440 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgXAUUSD_1440 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgXAUUSD_1440.init("ARIMA_C_XAUUSD_1440", "ARIMA_C_XAUUSD_1440", Activo.XAUUSD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histXAUUSD1440, combinacionesFile); // <-- here
 		servicio.submit(afgXAUUSD_1440);	
 		
-    	ArimaForecasterGenerator afgXAUUSD_10080 = context.getBean(ArimaForecasterGenerator.class);
+    	RecurrentForecasterGenerator afgXAUUSD_10080 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgXAUUSD_10080.init("ARIMA_C_XAUUSD_10080", "ARIMA_C_XAUUSD_10080", Activo.XAUUSD, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histXAUUSD10080, combinacionesFile); // <-- here
 		servicio.submit(afgXAUUSD_10080);	
 	
@@ -166,19 +129,19 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 		System.out.println("Cargado historico de NDX 10080");
     	
     		
-	    ArimaForecasterGenerator afgNDX_60 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgNDX_60 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgNDX_60.init("ARIMA_C_NDX_60", "ARIMA_C_NDX_60", Activo.NDX, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histNDX60, combinacionesFile); // <-- here
 		servicio.submit(afgNDX_60);
 		
-	    ArimaForecasterGenerator afgNDX_240 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgNDX_240 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgNDX_240.init("ARIMA_C_NDX_240", "ARIMA_C_NDX_240", Activo.NDX, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histNDX240, combinacionesFile); // <-- here
 		servicio.submit(afgNDX_240);
 		
-	    ArimaForecasterGenerator afgNDX_1440 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgNDX_1440 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgNDX_1440.init("ARIMA_C_NDX_1440", "ARIMA_C_NDX_1440", Activo.NDX, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histNDX1440, combinacionesFile); // <-- here
 		servicio.submit(afgNDX_1440);	
 		
-	    ArimaForecasterGenerator afgNDX_10080 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgNDX_10080 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgNDX_10080.init("ARIMA_C_NDX_10080", "ARIMA_C_NDX_10080", Activo.NDX, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histNDX10080, combinacionesFile); // <-- here
 		servicio.submit(afgNDX_10080);	
     		
@@ -208,19 +171,19 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 		histGDAXI10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de GDAXI 10080");
     	
-	    ArimaForecasterGenerator afgGDAXI_60 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgGDAXI_60 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgGDAXI_60.init("ARIMA_C_GDAXI_60", "ARIMA_C_GDAXI_60", Activo.GDAXI, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histGDAXI60, combinacionesFile); // <-- here
 		servicio.submit(afgGDAXI_60);
 		
-	    ArimaForecasterGenerator afgGDAXI_240 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgGDAXI_240 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgGDAXI_240.init("ARIMA_C_GDAXI_240", "ARIMA_C_GDAXI_240", Activo.GDAXI, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histGDAXI240, combinacionesFile); // <-- here
 		servicio.submit(afgGDAXI_240);
 		
-	    ArimaForecasterGenerator afgGDAXI_1440 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgGDAXI_1440 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgGDAXI_1440.init("ARIMA_C_GDAXI_1440", "ARIMA_C_GDAXI_1440", Activo.GDAXI, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histGDAXI1440, combinacionesFile); // <-- here
 		servicio.submit(afgGDAXI_1440);	
 		
-	    ArimaForecasterGenerator afgGDAXI_10080 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgGDAXI_10080 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgGDAXI_10080.init("ARIMA_C_GDAXI_10080", "ARIMA_C_GDAXI_10080", Activo.GDAXI, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histGDAXI10080, combinacionesFile); // <-- here
 	    servicio.submit(afgGDAXI_10080);
 
@@ -243,15 +206,15 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 		histWTI1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de XTIUSD 1440");
 		    		
-	    ArimaForecasterGenerator afgWTI_60 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgWTI_60 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgWTI_60.init("ARIMA_C_WTI_60", "ARIMA_C_WTI_60", Activo.XTIUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histWTI60, combinacionesFile); // <-- here
 		servicio.submit(afgWTI_60);
 		
-	    ArimaForecasterGenerator afgWTI_240 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgWTI_240 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgWTI_240.init("ARIMA_C_WTI_240", "ARIMA_C_WTI_240", Activo.XTIUSD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histWTI240, combinacionesFile); // <-- here
 		servicio.submit(afgWTI_240);
 		
-	    ArimaForecasterGenerator afgWTI_1440 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgWTI_1440 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgWTI_1440.init("ARIMA_C_WTI_1440", "ARIMA_C_WTI_1440", Activo.XTIUSD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histWTI1440, combinacionesFile); // <-- here
 		servicio.submit(afgWTI_1440);	
     		
@@ -281,19 +244,19 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 		histEURUSD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de EURUSD 10080");
     	
-	    ArimaForecasterGenerator afgEURUSD_60 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgEURUSD_60 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgEURUSD_60.init("ARIMA_C_EURUSD_60", "ARIMA_C_EURUSD_60", Activo.EURUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histEURUSD60, combinacionesFile); // <-- here
 		servicio.submit(afgEURUSD_60);
 		
-	    ArimaForecasterGenerator afgEURUSD_240 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgEURUSD_240 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgEURUSD_240.init("ARIMA_C_EURUSD_240", "ARIMA_C_EURUSD_240", Activo.EURUSD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histEURUSD240, combinacionesFile); // <-- here
 		servicio.submit(afgEURUSD_240);
 		
-	    ArimaForecasterGenerator afgEURUSD_1440 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgEURUSD_1440 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgEURUSD_1440.init("ARIMA_C_EURUSD_1440", "ARIMA_C_EURUSD_1440", Activo.EURUSD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histEURUSD1440, combinacionesFile); // <-- here
 		servicio.submit(afgEURUSD_1440);
 		
-	    ArimaForecasterGenerator afgEURUSD_10080 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgEURUSD_10080 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgEURUSD_10080.init("ARIMA_C_EURUSD_10080", "ARIMA_C_EURUSD_10080", Activo.EURUSD, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histEURUSD10080, combinacionesFile); // <-- here
 		servicio.submit(afgEURUSD_10080);	
     		
@@ -323,22 +286,22 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 		histAUDCAD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de AUDCAD 10080");
     	    		
-	    ArimaForecasterGenerator afgAUDCAD_60 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgAUDCAD_60 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgAUDCAD_60.init("ARIMA_C_AUDCAD_60", "ARIMA_C_AUDCAD_60", Activo.AUDCAD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histAUDCAD60, combinacionesFile); // <-- here
 		servicio.submit(afgAUDCAD_60);
 		
-	    ArimaForecasterGenerator afgAUDCAD_240 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgAUDCAD_240 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgAUDCAD_240.init("ARIMA_C_AUDCAD_240", "ARIMA_C_AUDCAD_240", Activo.AUDCAD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histAUDCAD240, combinacionesFile); // <-- here
 		servicio.submit(afgAUDCAD_240);
 		
-	    ArimaForecasterGenerator afgAUDCAD_1440 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgAUDCAD_1440 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgAUDCAD_1440.init("ARIMA_C_AUDCAD_1440", "ARIMA_C_AUDCAD_1440", Activo.AUDCAD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histAUDCAD1440, combinacionesFile); // <-- here
 		servicio.submit(afgAUDCAD_1440);
 		
-	    ArimaForecasterGenerator afgAUDCAD_10080 = context.getBean(ArimaForecasterGenerator.class);
+	    RecurrentForecasterGenerator afgAUDCAD_10080 = context.getBean(RecurrentForecasterGenerator.class);
 	    afgAUDCAD_10080.init("ARIMA_C_AUDCAD_10080","ARIMA_C_AUDCAD_10080", Activo.AUDCAD, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histAUDCAD10080, combinacionesFile); // <-- here
 		servicio.submit(afgAUDCAD_10080);
-
+		 */
     	
     	servicio.shutdown();
     }

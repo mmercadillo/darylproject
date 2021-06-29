@@ -19,12 +19,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan("daryl.system.model")
 @EnableJms
 @EnableTransactionManagement
-public class DarylSystemRobotAnnApplication {
+public class DarylSystemRobotAnnBApplication {
 
 
 	public static void main(String[] args) {
 		
-        SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemRobotAnnApplication.class);
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(DarylSystemRobotAnnBApplication.class);
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
 	    

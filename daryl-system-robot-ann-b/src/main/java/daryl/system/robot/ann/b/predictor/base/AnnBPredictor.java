@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.espy.arima.ArimaForecaster;
+import org.espy.arima.DefaultArimaForecaster;
+import org.espy.arima.DefaultArimaProcess;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,7 @@ import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Mode;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.AnnConfig;
+import daryl.system.model.ArimaConfig;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
 import daryl.system.model.Robot;
@@ -32,7 +36,7 @@ import daryl.system.robot.ann.b.repository.IHistoricoRepository;
 import daryl.system.robot.ann.b.repository.IOrdenRepository;
 import daryl.system.robot.ann.b.repository.IPrediccionRepository;
 
-public abstract class AnnPredictor {
+public abstract class AnnBPredictor {
 
 	@Autowired
 	protected Logger logger;
@@ -50,6 +54,22 @@ public abstract class AnnPredictor {
 	@Autowired
 	private IHistoricoRepository historicoRepository; 
 
+	private Double getPrediccionAnterior(List<Double> datosForecast, AnnConfig annConfig, ANN ann) {
+		
+		//Lista para prediccionAnterior
+		List<Double> datosForecastAnterior = datosForecast.subList(0, datosForecast.size()-1);
+		
+		//Cogemos los últimos equivalentes al número de neuronas de entrada
+		double prediccionAnterior = prediccionANN(	ann, 
+									datosForecastAnterior,
+									annConfig.getNeuronasEntrada());
+		
+		logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
+		return prediccionAnterior;
+
+	}
+	
+	
 	protected Double calcularPrediccion(Robot bot) throws IOException {
 
 		Double prediccion = 0.0;
@@ -66,16 +86,24 @@ public abstract class AnnPredictor {
 			
 			if(ann != null) {		
 				
-				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(bot.getTimeframe(), bot.getActivo(), PageRequest.of(0,  annConfig.getNeuronasEntrada()));
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(bot.getTimeframe(), bot.getActivo(), PageRequest.of(0,  annConfig.getNeuronasEntrada() + 1));
 				Collections.reverse(historico);
 				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
 				
+				double prediccionAnterior = getPrediccionAnterior(datos, annConfig, ann);
+				
 				//Cogemos los últimos equivalentes al número de neuronas de entrada
-				prediccion = prediccionANN(	ann, 
-											datos.subList(datos.size()-annConfig.getNeuronasEntrada(), datos.size()),
+				double prediccionActual = prediccionANN(	ann, 
+											datos.subList(1, datos.size()),
 											annConfig.getNeuronasEntrada());
+				
+				if(prediccionAnterior > prediccionActual) {
+					prediccion = -1.0;
+				}else {
+					prediccion = 1.0;
+				}
 				
 				try {
 					
@@ -190,31 +218,7 @@ public abstract class AnnPredictor {
         return prediccion;
     }
 	*/
-	protected Double getPrediccionAnterior(int neuronasEntrada, Robot bot, NeuralNetwork neuralNetwork, List<Double> datosForecast, MaxMinNormalizer darylNormalizer) {
 
-		List<Double> inputs = new ArrayList<Double>();
-			
-		int index = 1;
-		do {
-			index++;
-			inputs.add(darylNormalizer.normData(datosForecast.get(datosForecast.size()-index)));	
-		}while(index < neuronasEntrada+1);
-		
-			
-		Collections.reverse(inputs);
-
-		
-		neuralNetwork.setInput(inputs.stream().mapToDouble(Double::doubleValue).toArray());
-		neuralNetwork.calculate();
-		
-        // get network output
-        double[] networkOutput = neuralNetwork.getOutput();
-        //double predicted = interpretOutput(networkOutput);
-        double prediccionAnterior =  darylNormalizer.denormData(networkOutput[0]);
-
-        logger.info("PREDICCIÓN ANTERIOR PARA EL ROBOT : {}", prediccionAnterior);
-        return prediccionAnterior;
-	}
 	
 	
 	private AnnConfig getAnnConfig(String robot) {

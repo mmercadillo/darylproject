@@ -308,28 +308,6 @@ public class ArimaForecasterGenerator implements Runnable{
 
     }
 
-	private List<Datos> toDatosList(List<Historico> historico){
-		
-		List<Datos> datos = new ArrayList<Datos>();
-		
-		for (Historico hist : historico) {
-			
-			Datos dato = Datos.builder().fecha(hist.getFecha())
-										.hora(hist.getHora())
-										.apertura(hist.getApertura())
-										.maximo(hist.getMaximo())
-										.minimo(hist.getMinimo())
-										.cierre(hist.getCierre())
-										.volumen(hist.getVolumen())
-										.build();
-			datos.add(dato);
-			
-		}
-		
-		return datos;
-		
-		
-	}
 
     private double[] getArrayDatos(int posInicio) {
     	

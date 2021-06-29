@@ -14,13 +14,13 @@ import com.google.gson.Gson;
 
 import daryl.system.comun.enums.Activo;
 import daryl.system.model.Robot;
-import daryl.system.robot.ann.b.predictor.AnnAudCad;
-import daryl.system.robot.ann.b.predictor.AnnEurUsd;
-import daryl.system.robot.ann.b.predictor.AnnGdaxi;
-import daryl.system.robot.ann.b.predictor.AnnNdx;
-import daryl.system.robot.ann.b.predictor.AnnWti;
-import daryl.system.robot.ann.b.predictor.AnnXauUsd;
-import daryl.system.robot.ann.b.predictor.base.AnnPredictor;
+import daryl.system.robot.ann.b.predictor.AnnBAudCad;
+import daryl.system.robot.ann.b.predictor.AnnBEurUsd;
+import daryl.system.robot.ann.b.predictor.AnnBGdaxi;
+import daryl.system.robot.ann.b.predictor.AnnBNdx;
+import daryl.system.robot.ann.b.predictor.AnnBWti;
+import daryl.system.robot.ann.b.predictor.AnnBXauUsd;
+import daryl.system.robot.ann.b.predictor.base.AnnBPredictor;
 
 @Component
 public class Receiver {
@@ -40,11 +40,11 @@ public class Receiver {
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 
-		AnnPredictor predictor = null;
+		AnnBPredictor predictor = null;
 		
 		if(robot.getActivo() == Activo.GDAXI) {
 			try{
-				predictor = applicationContext.getBean(AnnGdaxi.class);
+				predictor = applicationContext.getBean(AnnBGdaxi.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -52,7 +52,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.NDX) {
 			try{
-				predictor = applicationContext.getBean(AnnNdx.class);
+				predictor = applicationContext.getBean(AnnBNdx.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -60,7 +60,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.XAUUSD) {
 			try{
-				predictor = applicationContext.getBean(AnnXauUsd.class);
+				predictor = applicationContext.getBean(AnnBXauUsd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -68,7 +68,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.AUDCAD) {
 			try{
-				predictor = applicationContext.getBean(AnnAudCad.class);
+				predictor = applicationContext.getBean(AnnBAudCad.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -76,7 +76,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.XTIUSD) {
 			try{
-				predictor = applicationContext.getBean(AnnWti.class);
+				predictor = applicationContext.getBean(AnnBWti.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
@@ -84,7 +84,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.EURUSD) {
 			try{
-				predictor = applicationContext.getBean(AnnEurUsd.class);
+				predictor = applicationContext.getBean(AnnBEurUsd.class);
 				predictor.calculate(robot);
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
