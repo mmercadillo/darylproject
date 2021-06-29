@@ -11,19 +11,19 @@
   
   	<groupId>daryl.system.robots</groupId>
   	<artifactId>robot-ann-b</artifactId>
-  	<version>1.0.7</version>
+  	<version>1.1.0</version>
   	<name>daryl-system-robot-ann-b</name>
   	<description>Robot ANN B</description>
   
    	<properties>
 		<java.version>1.8</java.version>
-		<daryl.system.comun>1.0.7</daryl.system.comun>
-		<daryl.system.model>1.0.7</daryl.system.model>
-		<daryl.system.arima-base>1.0.7</daryl.system.arima-base>
+		<daryl.system.comun>1.1.0</daryl.system.comun>
+		<daryl.system.model>1.1.0</daryl.system.model>
+		<daryl.system.arima-base>1.1.0</daryl.system.arima-base>
 		<gson.version>2.8.6</gson.version>
 		<commons.lang3.version>3.11</commons.lang3.version>
-		<daryl.system.ta4j>1.0.7</daryl.system.ta4j>
-		<daryl.system.ann-base>1.0.7</daryl.system.ann-base>
+		<daryl.system.ta4j>1.1.0</daryl.system.ta4j>
+		<daryl.system.ann-base>1.1.0</daryl.system.ann-base>
 	</properties>  
   
   	<dependencies>

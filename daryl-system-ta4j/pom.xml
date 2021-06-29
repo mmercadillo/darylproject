@@ -12,14 +12,14 @@
   
   	<groupId>daryl.system</groupId>
   	<artifactId>ta4j</artifactId>
-  	<version>1.0.7</version>
+  	<version>1.1.0</version>
   	<name>daryl-system-ta4j</name>
   	<description>Libreria de analisi tecnico</description>
   
    	<properties>
 		<java.version>1.8</java.version>
-		<daryl.system.comun>1.0.7</daryl.system.comun>
-		<daryl.system.model>1.0.7</daryl.system.model>
+		<daryl.system.comun>1.1.0</daryl.system.comun>
+		<daryl.system.model>1.1.0</daryl.system.model>
 		<gson.version>2.8.6</gson.version>
 		<commons.lang3.version>3.11</commons.lang3.version>
 	</properties>  

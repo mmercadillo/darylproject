@@ -1,0 +1,159 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+  
+  	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.1.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+  
+  	<groupId>daryl.system.robots</groupId>
+  	<artifactId>arima-recurrent-calculator</artifactId>
+  	<version>1.1.0</version>
+  	<name>daryl-system-recurrent-calculator</name>
+  	<description>Cálculo de las combinaciones del sistema RECURRENT</description>
+  
+  	<properties>
+		<java.version>1.8</java.version>
+		<daryl.system.comun>1.1.0</daryl.system.comun>
+		<daryl.system.model>1.1.0</daryl.system.model>
+		<daryl.system.arima-base>1.1.0</daryl.system.arima-base>
+		<daryl.system.ta4j>1.1.0</daryl.system.ta4j>
+		<commons.lang3.version>3.11</commons.lang3.version>
+	</properties>  
+  
+  	<dependencies>
+  
+		<!-- Daryl System Dependencies -->
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>ta4j</artifactId>
+			<version>${daryl.system.ta4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>comun</artifactId>
+			<version>${daryl.system.comun}</version>
+		</dependency>
+		<dependency>
+			<groupId>daryl.system</groupId>
+			<artifactId>model</artifactId>
+			<version>${daryl.system.model}</version>
+		</dependency>
+		<!-- // -->
+  
+  		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.collections/collections-generic -->
+		<dependency>
+		    <groupId>net.sourceforge.collections</groupId>
+		    <artifactId>collections-generic</artifactId>
+		    <version>4.01</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    </dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-math3</artifactId>
+		    <version>3.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.opencsv</groupId>
+		    <artifactId>opencsv</artifactId>
+		    <version>5.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>net.finmath</groupId>
+		    <artifactId>finmath-lib</artifactId>
+		    <version>5.1.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.joda.time/joda-time-2.6 -->
+		<dependency>
+		    <groupId>org.joda.time</groupId>
+		    <artifactId>joda-time-2.6</artifactId>
+		    <version>2.6</version>
+		</dependency>
+
+
+		  
+  </dependencies>
+
+	<build>
+	
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/profiles/${profile.name}</directory>
+			</resource>
+		</resources>
+	
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<addResources>true</addResources>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>   
+  
+	<profiles>
+		<profile>
+			<id>dev</id>
+          	<properties>
+				<profile.name>dev</profile.name>
+          	</properties>
+          	<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>tragsa</id>
+			<properties>
+				<profile.name>tragsa</profile.name>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<profile.name>prod</profile.name>
+			</properties>
+		</profile>		
+		<profile>
+			<id>fuji</id>
+			<properties>
+				<profile.name>fuji</profile.name>
+			</properties>
+		</profile>	
+	</profiles>   
+  
+</project>
