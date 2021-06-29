@@ -1,5 +1,6 @@
 package daryl.system.robots.arima.c.calculator.close;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.ta4j.core.BarSeries;
@@ -82,6 +84,8 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 	static List<Double> histWTI240 = null;
 	static List<Double> histWTI1440 = null;
 	
+	static int pagina = 500;
+	
     private static void startForecaster(ConfigurableApplicationContext context) {
     	
 		ICombinacionesArimaCRepository combinacionesArimaCRepository = context.getBean(ICombinacionesArimaCRepository.class);
@@ -90,22 +94,27 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 		List<CombinacionArimaC> combinacionesFile = combinacionesArimaCRepository.findAll();
 		//Collections.reverse(combinacionesFile);
 
-		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H1, Activo.XAUUSD);
+		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.XAUUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
+		
 		BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.XAUUSD, 1);
 		histXAUUSD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de XAUUSD 60");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H4, Activo.XAUUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.XAUUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.XAUUSD, 1);
 		histXAUUSD240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de XAUUSD 240");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_D1, Activo.XAUUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.XAUUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.XAUUSD, 1);
 		histXAUUSD1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de XAUUSD 1440");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_W1, Activo.XAUUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.XAUUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.XAUUSD, 1);
 		histXAUUSD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de XAUUSD 10080");
@@ -133,22 +142,25 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 	
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H1, Activo.NDX);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.NDX, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.NDX, 1);
 		histNDX60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de NDX 60");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H4, Activo.NDX);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.NDX, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.NDX, 1);
 		histNDX240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de NDX 240");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_D1, Activo.NDX);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.NDX, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.NDX, 1);
 		histNDX1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de NDX 1440");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_W1, Activo.NDX);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.NDX, PageRequest.of(0, pagina));
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.NDX, 1);
 		histNDX10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de NDX 10080");
@@ -172,22 +184,26 @@ public class DarylSystemArimaCCalculatoCloseApplication {
     		
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	    	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H1, Activo.GDAXI);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.GDAXI, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.GDAXI, 1);
 		histGDAXI60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de GDAXI 60");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H4, Activo.GDAXI);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.GDAXI, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.GDAXI, 1);
 		histGDAXI240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de GDAXI 240");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_D1, Activo.GDAXI);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.GDAXI, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.GDAXI, 1);
 		histGDAXI1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de GDAXI 1440");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_W1, Activo.GDAXI);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.GDAXI, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.GDAXI, 1);
 		histGDAXI10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de GDAXI 10080");
@@ -209,17 +225,20 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 	    servicio.submit(afgGDAXI_10080);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H1, Activo.XTIUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.XTIUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.XTIUSD, 1);
 		histWTI60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de XTIUSD 60");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H4, Activo.XTIUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.XTIUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.XTIUSD, 1);
 		histWTI240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de XTIUSD 240");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_D1, Activo.XTIUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.XTIUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.XTIUSD, 1);
 		histWTI1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de XTIUSD 1440");
@@ -238,22 +257,26 @@ public class DarylSystemArimaCCalculatoCloseApplication {
     		
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H1, Activo.EURUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.EURUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.EURUSD, 1);
 		histEURUSD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de EURUSD 60");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H4, Activo.EURUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.EURUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.EURUSD, 1);
 		histEURUSD240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de EURUSD 240");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_D1, Activo.EURUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.EURUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.EURUSD, 1);
 		histEURUSD1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de EURUSD 1440");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_W1, Activo.EURUSD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.EURUSD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.EURUSD, 1);
 		histEURUSD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de EURUSD 10080");
@@ -276,22 +299,26 @@ public class DarylSystemArimaCCalculatoCloseApplication {
     		
     	
     	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H1, Activo.AUDCAD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.AUDCAD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.AUDCAD, 1);
 		histAUDCAD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de AUDCAD 60");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_H4, Activo.AUDCAD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.AUDCAD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.AUDCAD, 1);
 		histAUDCAD240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de AUDCAD 240");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_D1, Activo.AUDCAD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.AUDCAD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.AUDCAD, 1);
 		histAUDCAD1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de AUDCAD 1440");
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(Timeframes.PERIOD_W1, Activo.AUDCAD);
+		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.AUDCAD, PageRequest.of(0, pagina));
+		Collections.reverse(historico);
 		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.AUDCAD, 1);
 		histAUDCAD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 		System.out.println("Cargado historico de AUDCAD 10080");

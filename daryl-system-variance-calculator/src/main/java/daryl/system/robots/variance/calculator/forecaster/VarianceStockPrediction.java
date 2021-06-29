@@ -1,9 +1,7 @@
 package daryl.system.robots.variance.calculator.forecaster;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,9 +9,10 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseBarSeriesBuilder;
+import org.ta4j.core.utils.BarSeriesUtils;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
@@ -44,20 +43,22 @@ public class VarianceStockPrediction implements Runnable{
 	private Timeframes timeframe;
 	private int inicio = 0;
 	private List<Double> datos = null;
+	private int pagina = 500;
 
 	public VarianceStockPrediction() {
 	}
 	
-	public void init(Activo activo, Timeframes timeframe, String robot, int inicio) {
+	public void init(Activo activo, Timeframes timeframe, String robot, int inicio, int pagina) {
 		this.activo = activo;
 		this.timeframe = timeframe;
 		this.robot = robot;
 		this.estrategia = robot;
 		this.inicio = inicio;
+		this.pagina = pagina;
 	}
 	
 	
-	private static BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
+	/*private static BarSeries  generateBarList(List<Historico> historico, String name, int multiplicador){
 		
 		BarSeries series = new BaseBarSeriesBuilder().withName(name).build();
 		for (Historico hist : historico) {
@@ -79,7 +80,7 @@ public class VarianceStockPrediction implements Runnable{
 		return series;
 		
 		
-	}
+	}*/
 	
 	@Override
 	public void run() {
@@ -89,8 +90,9 @@ public class VarianceStockPrediction implements Runnable{
 	    	//Cargamos las cotizaciones
 	    	System.out.println("Cargando cotizaciones para: " + robot);
 			if(datos == null) {
-				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(this.timeframe, this.activo);
-				BarSeries serieParaCalculo = generateBarList(historico,  "BarSeries_" + this.timeframe + "_" + this.activo, 1);
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(this.timeframe, this.activo, PageRequest.of(0, this.pagina));
+				Collections.reverse(historico);
+				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + this.timeframe + "_" + this.activo, 1);
 				this.datos = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
 
 		    	
