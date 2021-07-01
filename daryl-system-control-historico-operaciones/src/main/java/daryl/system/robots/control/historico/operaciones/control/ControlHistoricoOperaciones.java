@@ -156,7 +156,7 @@ public class ControlHistoricoOperaciones {
 		    	List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), desde);
 				
 		    	if(lista != null && lista.size() > 0) {
-		    		Long totalTiempoEnMercado = 0L;
+		    		Double totalTiempoEnMercado = 0.0;
 		    		for (HistoricoOperaciones hops : lista) {
 		    			resumen.setFUltimoCierre(hops.getFcierre());
 		    			resumen.setFUltimaApertura(hops.getFapertura());
@@ -230,7 +230,7 @@ public class ControlHistoricoOperaciones {
 		    		
 		    		resumen.setTotalTiempoEnMercado(totalTiempoEnMercado);
 		    		//Media de tiempo en el mercado
-		    		Long mediaTiempoEnMercado = totalTiempoEnMercado / resumen.getNumOperaciones();
+		    		Double mediaTiempoEnMercado = totalTiempoEnMercado / resumen.getNumOperaciones();
 		    		resumen.setMediaTiempoEnMercado(mediaTiempoEnMercado);
 		    		
 		    		
