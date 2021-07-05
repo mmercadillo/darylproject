@@ -61,11 +61,11 @@ public class ResumenRobot implements Serializable{
 	
 	@Column(nullable = true)
 	@Getter @Setter
-	private Long totalTiempoEnMercado;
+	private Double totalTiempoEnMercado;
 	
 	@Column(nullable = true)
 	@Getter @Setter
-	private Long mediaTiempoEnMercado;	
+	private Double mediaTiempoEnMercado;	
 	
 	@Column(nullable = true)
 	@Getter @Setter

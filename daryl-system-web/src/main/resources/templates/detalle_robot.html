@@ -301,7 +301,7 @@ License: You must have a valid license purchased only from themeforest(the above
 							<i class="fa fa-comments"></i>
 						</div>
 						<div class="details">
-							<div class="number">[[${resumenRobot.totalHorasEnMercado}]]</div>
+							<div class="number">[[${#numbers.formatDecimal(resumenRobot.totalHorasEnMercado, 1, 'POINT', 2, 'COMMA')}]]</div>
 							<div class="desc">Horas en mercado</div>
 						</div>
 						<a class="more" href="javascript:;">
@@ -315,7 +315,7 @@ License: You must have a valid license purchased only from themeforest(the above
 							<i class="fa fa-comments"></i>
 						</div>
 						<div class="details">
-							<div class="number">[[${resumenRobot.mediaHorasEnMercado}]]</div>
+							<div class="number">[[${#numbers.formatDecimal(resumenRobot.mediaHorasEnMercado, 1, 'POINT', 2, 'COMMA')}]]</div>
 							<div class="desc">Media horas en mercado</div>
 						</div>
 						<a class="more" href="javascript:;">
