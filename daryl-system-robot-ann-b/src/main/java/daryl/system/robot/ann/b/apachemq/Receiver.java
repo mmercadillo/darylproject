@@ -34,7 +34,7 @@ public class Receiver {
 	@Autowired
 	private ApplicationContext applicationContext;
 	
-	@JmsListener(destination = "CHNL_ANN")
+	@JmsListener(destination = "CHNL_ANN_B")
 	public void receiveMessage(String robotJson) {
 		
 		Robot robot = new Gson().fromJson(robotJson, Robot.class);
