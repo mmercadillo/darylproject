@@ -11,15 +11,15 @@
   
  	<groupId>daryl.system.robots</groupId>
   	<artifactId>control-historico-operaciones</artifactId>
-  	<version>1.0.7</version>
+  	<version>1.1.1</version>
   	<name>daryl-system-control-historico-operaciones</name>
   	<description>Control del historico de operaciones, creando el resumen de cada robot</description>
   
    	<properties>
 		<java.version>1.8</java.version>
-		<daryl.system.comun>1.0.7</daryl.system.comun>
-		<daryl.system.model>1.0.7</daryl.system.model>
-		<daryl.system.arima-base>1.0.7</daryl.system.arima-base>
+		<daryl.system.comun>1.1.1</daryl.system.comun>
+		<daryl.system.model>1.1.1</daryl.system.model>
+		<daryl.system.arima-base>1.1.1</daryl.system.arima-base>
 	</properties>  
   
   	<dependencies>

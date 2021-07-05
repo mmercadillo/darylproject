@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-	<modelVersion>4.0.0</modelVersion>
+  
+  	<modelVersion>4.0.0</modelVersion>
   
     <parent>
 		<groupId>org.springframework.boot</groupId>
@@ -10,27 +10,36 @@
 	</parent>
   
   	<groupId>daryl.system.robots</groupId>
-  	<artifactId>robot-arima-b</artifactId>
+  	<artifactId>robot-ann-b</artifactId>
   	<version>1.1.1</version>
-  	<name>daryl-system-robot-aima-b</name>
-  	<description>Robot Arima B</description>
-
+  	<name>daryl-system-robot-ann-b</name>
+  	<description>Robot ANN B</description>
+  
    	<properties>
 		<java.version>1.8</java.version>
 		<daryl.system.comun>1.1.1</daryl.system.comun>
 		<daryl.system.model>1.1.1</daryl.system.model>
 		<daryl.system.arima-base>1.1.1</daryl.system.arima-base>
 		<gson.version>2.8.6</gson.version>
+		<commons.lang3.version>3.11</commons.lang3.version>
 		<daryl.system.ta4j>1.1.1</daryl.system.ta4j>
+		<daryl.system.ann-base>1.1.1</daryl.system.ann-base>
 	</properties>  
   
   	<dependencies>
+  	
+  			<dependency>
+			<groupId>daryl.system.robots</groupId>
+			<artifactId>ann-base</artifactId>
+			<version>${daryl.system.ann-base}</version>
+		</dependency>
+  	
 		<dependency>
 			<groupId>daryl.system</groupId>
 			<artifactId>ta4j</artifactId>
 			<version>${daryl.system.ta4j}</version>
-		</dependency>
-    	<dependency>
+		</dependency>      
+      	<dependency>
     		<groupId>com.google.code.gson</groupId>
     		<artifactId>gson</artifactId>
     		<version>${gson.version}</version>
@@ -46,7 +55,7 @@
 			<artifactId>model</artifactId>
 			<version>${daryl.system.model}</version>
 		</dependency>
-						<dependency>
+		<dependency>
 			<groupId>daryl.system.robots</groupId>
 			<artifactId>arima-base</artifactId>
 			<version>${daryl.system.arima-base}</version>
@@ -83,10 +92,18 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-broker</artifactId>
         </dependency>
-	</dependencies>
-
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>${commons.lang3.version}</version>
+		</dependency>
+        
+        
+  	</dependencies>
 
 	<build>
+	
 	
 		<resources>
 			<resource>
@@ -114,7 +131,7 @@
 			</plugin>
 		</plugins>
 	</build>   
-  
+
 	<profiles>
 		<profile>
 			<id>dev</id>
@@ -143,7 +160,6 @@
 				<profile.name>fuji</profile.name>
 			</properties>
 		</profile>	
-	</profiles>
-  
+	</profiles> 
   
 </project>

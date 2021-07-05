@@ -4,7 +4,7 @@
   
   	<groupId>daryl.system.robots</groupId>
   	<artifactId>ann-base</artifactId>
-  	<version>1.0.7</version>
+  	<version>1.1.1</version>
   	<name>daryl-system-ann-base</name>
   	<description>Cálculos base para el sistema Ann</description>
   
