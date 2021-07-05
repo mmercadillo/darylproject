@@ -65,9 +65,9 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 	private Double espmat;
 	
 	@Getter @Setter
-	private Long totalHorasEnMercado;
+	private Double totalHorasEnMercado;
 	@Getter @Setter
-	private Long mediaHorasEnMercado;	
+	private Double mediaHorasEnMercado;	
 	
 	
 	public static ResumenRobotDto getDto(ResumenRobot resumen) {
@@ -88,8 +88,8 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 			try{resumenDto.setVersion(resumen.getVersion());}catch (Exception e) {}
 			try {
 				
-				Long horasEnMercado = resumen.getTotalTiempoEnMercado() / (1000 * 60 * 60);
-				Long mediaHorasEnMercado = resumen.getMediaTiempoEnMercado() / (1000 * 60 * 60);
+				Double horasEnMercado = resumen.getTotalTiempoEnMercado() / (1000 * 60 * 60);
+				Double mediaHorasEnMercado = resumen.getMediaTiempoEnMercado() / (1000 * 60 * 60);
 				
 				resumenDto.setTotalHorasEnMercado(horasEnMercado);
 				resumenDto.setMediaHorasEnMercado(mediaHorasEnMercado);
