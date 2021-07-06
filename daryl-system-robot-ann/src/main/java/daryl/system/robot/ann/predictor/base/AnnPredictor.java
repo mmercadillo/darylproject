@@ -129,6 +129,8 @@ public abstract class AnnPredictor {
     	            ann_window = ft_ann.convert(ann_window);
     	            ann_window = ma.SMA(ann_window, neuronasEntrada);
     	            double[] annSignalTemp = net.run(ann_window);
+    	            
+    	            logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", annSignalTemp[0]);
     	            long annSignal = Math.round(annSignalTemp[0]);
     	            
     	            if (annSignal == 0.0) {
