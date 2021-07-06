@@ -98,7 +98,7 @@ public abstract class AnnBPredictor {
 				double prediccionActual = prediccionANN(	ann, 
 															datos.subList(1, datos.size()),
 															annConfig.getNeuronasEntrada());
-				
+				logger.info("PREDICCIÓN ACTUAL PARA EL ROBOT : {}", prediccionAnterior);
 				if(prediccionAnterior > prediccionActual) {
 					prediccion = -1.0;
 				}else {
@@ -159,6 +159,8 @@ public abstract class AnnBPredictor {
     	            double[] annSignalTemp = net.run(ann_window);
     	            long annSignal = Math.round(annSignalTemp[0]);
     	            
+    	            prediccion = annSignalTemp[0];
+    	            /*
     	            if (annSignal == 0.0) {
     	            	//Vendemos
     	            	prediccion = -1.0;
@@ -166,6 +168,7 @@ public abstract class AnnBPredictor {
     	            	//Compramos
     	            	prediccion = 1.0;
     	            }
+    	            */
                 }catch (Exception e) {
     			}
             //}           
