@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
 import org.ta4j.core.utils.BarSeriesUtils;
@@ -11,6 +12,7 @@ import org.ta4j.core.utils.BarSeriesUtils;
 import daryl.arima.gen.ARIMA;
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Mode;
+import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.model.Orden;
 import daryl.system.model.Prediccion;
@@ -36,12 +38,29 @@ public abstract class ArimaPredictor {
 	@Autowired
 	protected IHistoricoRepository historicoRepository; 
 
+	private int getPaginaByTimeframe(Timeframes timeframe) {
+		
+		int pagina = 1000;
+		if(timeframe == Timeframes.PERIOD_H1) {
+			pagina = 1000;
+		}else if(timeframe == Timeframes.PERIOD_H4) {
+			pagina = 750;
+		}else if(timeframe == Timeframes.PERIOD_D1) {
+			pagina = 500;
+		}else if(timeframe == Timeframes.PERIOD_W1) {
+			pagina = 250;
+		}
+		 
+		return pagina;
+	}
 
 	protected Double calcularPrediccion(Robot bot) {
 				
 		Double prediccion = 0.0;
 		
-		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+		
+		int pagina = getPaginaByTimeframe(bot.getTimeframe());
+		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(bot.getTimeframe(), bot.getActivo(), PageRequest.of(0,  pagina));
 		BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 		MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();

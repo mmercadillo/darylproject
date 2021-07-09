@@ -96,8 +96,8 @@ public abstract class AnnBPredictor {
 				
 				//Cogemos los últimos equivalentes al número de neuronas de entrada
 				double prediccionActual = prediccionANN(	ann, 
-											datos.subList(1, datos.size()),
-											annConfig.getNeuronasEntrada());
+															datos.subList(1, datos.size()),
+															annConfig.getNeuronasEntrada());
 				
 				if(prediccionAnterior > prediccionActual) {
 					prediccion = -1.0;

@@ -62,25 +62,9 @@ public abstract class ArimaC3Predictor {
 				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
-				
-				
+								
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 		        
-				/*
-		    	List<Double> aux = datos;
-		    	if(datos.size() > arimaConfig.getInicio()) {
-		    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());
-		    	}else {
-		    		
-		    	}*/
-		    	
-		    	//List<Double> aux = data.subList((data.size()-inicio), data.size())
-		    	/*
-		    	double[] observations = new double[aux.size()];
-		    	for(int i = 0; i < aux.size(); i++) {
-		    		observations[i] = aux.get(i).doubleValue();
-		    	}
-				*/
 		    	double[] observations = datos.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
 	
 		    	ArimaForecaster arimaForecaster = null;

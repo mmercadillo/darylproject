@@ -65,21 +65,7 @@ public abstract class ArimaCPredictor {
 				
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 		        
-				/*
-		    	List<Double> aux = datos;
-		    	if(datos.size() > arimaConfig.getInicio()) {
-		    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());
-		    	}else {
-		    		
-		    	}*/
-		    	
-		    	//List<Double> aux = data.subList((data.size()-inicio), data.size())
-		    	/*
-		    	double[] observations = new double[aux.size()];
-		    	for(int i = 0; i < aux.size(); i++) {
-		    		observations[i] = aux.get(i).doubleValue();
-		    	}
-				*/
+	
 		    	double[] observations = datos.stream().mapToDouble(dato -> dato.doubleValue()).toArray();
 		    	
 		    	ArimaForecaster arimaForecaster = null;

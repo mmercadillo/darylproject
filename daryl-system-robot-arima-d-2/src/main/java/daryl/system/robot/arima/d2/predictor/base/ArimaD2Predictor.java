@@ -8,6 +8,7 @@ import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
 import org.ta4j.core.utils.BarSeriesUtils;
@@ -58,7 +59,7 @@ public abstract class ArimaD2Predictor {
 				
 				DefaultArimaProcess arimaProcess = (DefaultArimaProcess)getArimaProcess(arimaConfig);
 				
-				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
+				List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(bot.getTimeframe(), bot.getActivo(), PageRequest.of(0,  arimaConfig.getInicio() + 1));
 				BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 				MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 				List<Double> datos = darylNormalizer.getDatos();
@@ -68,7 +69,7 @@ public abstract class ArimaD2Predictor {
 				
 		    	List<Double> aux = datos;
 		    	if(datos.size() > arimaConfig.getInicio()) {
-		    		aux = datos.subList((datos.size()-arimaConfig.getInicio()), datos.size());
+		    		aux = datos.subList(1, datos.size());
 		    	}else {
 		    		
 		    	}
