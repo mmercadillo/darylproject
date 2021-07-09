@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import daryl.system.model.HistoricoOperaciones;
 import daryl.system.web.mvc.dto.HistoricoParaChartDto;
 import daryl.system.web.services.IChartDataRobotService;
 
@@ -29,7 +30,9 @@ public class ChartControlller {
 	@GetMapping("/chart/{robot}/em")
     public void chartEspMat(@PathVariable String robot, HttpServletResponse response) {
 
-		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeEspMat(charDataRobotService.findListaParaChartByRobot(robot));
+		
+		final List<HistoricoOperaciones> hist = charDataRobotService.findListaParaChartByRobot(robot);
+		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeEspMat(hist);
 
 		if(historicoParaChartDto.size() > 0) {
 			historicoParaChartDto = historicoParaChartDto.subList(0, historicoParaChartDto.size());
@@ -71,7 +74,8 @@ public class ChartControlller {
 	@GetMapping("/chart/{robot}/total")
     public void chartTotal(@PathVariable String robot, HttpServletResponse response) {
 
-		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
+		List<HistoricoOperaciones> hist = charDataRobotService.findListaParaChartByRobot(robot);
+		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(hist);
 
 		
 		List<Double> periodos = new ArrayList<Double>();

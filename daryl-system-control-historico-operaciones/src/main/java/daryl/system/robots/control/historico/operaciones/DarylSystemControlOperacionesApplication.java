@@ -12,8 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import daryl.system.robots.control.historico.operaciones.control.ControlHistoricoOperacionesDemolab;
-
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
 @EntityScan("daryl.system.model")
@@ -31,6 +29,7 @@ public class DarylSystemControlOperacionesApplication {
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
 	    //ControlHistoricoOperacionesDemolab chodl = context.getBean(ControlHistoricoOperacionesDemolab.class);
+	    //ControlHistoricoOperaciones chodl = context.getBean(ControlHistoricoOperaciones.class);
 	    //chodl.run();
 	    
 	}

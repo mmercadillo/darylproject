@@ -12,7 +12,7 @@ import daryl.system.model.HistoricoOperaciones;
 @Repository
 public interface IChartDataRobotRepository extends JpaRepository<HistoricoOperaciones, Long> {
 	
-	@Query("SELECT ho FROM HistoricoOperaciones ho WHERE ho.comentario LIKE ?1% ORDER BY ho.id asc")
+	@Query("SELECT ho FROM HistoricoOperaciones ho WHERE ho.comentario LIKE ?1% ORDER BY ho.fcierre asc")
 	List<HistoricoOperaciones> findListaParaChartByRobot(String robot);
 	
 }

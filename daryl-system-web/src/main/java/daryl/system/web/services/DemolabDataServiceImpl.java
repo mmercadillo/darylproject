@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import daryl.system.model.DemolabOps;
-import daryl.system.model.HistoricoOperaciones;
-import daryl.system.web.repository.IChartDataRobotRepository;
 import daryl.system.web.repository.IDemolabDataRepository;
 
 @Service
@@ -20,12 +18,14 @@ public class DemolabDataServiceImpl implements IDemolabDataService {
 
 	@Transactional
 	public List<DemolabOps> findListaParaChartDemolabByRobot(String robot) {
-		return repository.findListaParaChartDemolabByRobot(robot);
+		final List<DemolabOps> test = repository.findListaParaChartDemolabByRobot(robot);
+		return test;
 	}
 
 	@Transactional
 	public List<DemolabOps> findAllByOrderByFcierre() {
-		return repository.findAllByOrderByFcierreAsc();
+		final List<DemolabOps> test = repository.findAllByOrderByFcierreAsc();
+		return test;
 	}
 	
 }
