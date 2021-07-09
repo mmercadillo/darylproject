@@ -40,7 +40,7 @@ public class DemolabParaChartDto{
 		if(historico != null && historico.size() > 0) {
 			for (DemolabOps hist : historico) {
 				if(!hist.getComentario().trim().equals("")) {
-					acumulado += Math.round(hist.getProfit());
+					acumulado += hist.getProfit();
 					datosParaChart.add(acumulado);
 				}
 			} 
@@ -52,7 +52,6 @@ public class DemolabParaChartDto{
 	public static List<Double> getDtoParaChartDeEspMat(List<DemolabOps> historico) {
 
 		List<Double> datosParaChart = new ArrayList<Double>();
-		Long acumulado = 0L;
 		Long opsWin = 0L;
 		Long opsLoss = 0L;
 		Long opsTotales = 0L;
@@ -104,7 +103,6 @@ public class DemolabParaChartDto{
 				
 			} 
 		}
-		double em = (pWin * gMedia) + (pLoss * pMedia);
 		return datosParaChart;
 		
 	}
