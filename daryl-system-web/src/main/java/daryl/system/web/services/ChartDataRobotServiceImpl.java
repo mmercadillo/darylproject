@@ -18,7 +18,9 @@ public class ChartDataRobotServiceImpl implements IChartDataRobotService {
 
 	@Transactional
 	public List<HistoricoOperaciones> findListaParaChartByRobot(String robot) {
-		return repository.findListaParaChartByRobot(robot);
+		
+		final List<HistoricoOperaciones> hist = repository.findListaParaChartByRobot(robot);
+		return hist;
 	}
 
 }

@@ -151,7 +151,7 @@ public class ControlHistoricoOperacionesDemolab {
 		    	if(lista != null && lista.size() > 0) {
 		    		for (DemolabOps hops : lista) {
 		    			resumen.setFUltimoCierre(hops.getFcierre());
-						resumen.setUltimoTicket(hops.getFapertura());
+						resumen.setUltimoTicket(hops.getFcierre());
 						resumen.setRobot(robot.name());
 						resumen.setNumOperaciones(resumen.getNumOperaciones()+1);
 						resumen.setVersion(resumen.getVersion());
@@ -179,16 +179,16 @@ public class ControlHistoricoOperacionesDemolab {
 								resumen.setPctOpsPerdedoras( (resumen.getNumOpsPerdedoras() * 100.0) / (resumen.getNumOperaciones()) );
 							}
 							if(resumen.getNumOpsGanadoras() != 0) {
-								resumen.setGananciaMediaPorOpGanadora(resumen.getTotalGanancias() / resumen.getNumOpsGanadoras());
+								resumen.setGananciaMediaPorOpGanadora(resumen.getTotalGanancias() / (double)resumen.getNumOpsGanadoras());
 							}
 							if(resumen.getNumOpsPerdedoras() != 0) {
-								resumen.setPerdidaMediaPorOpPerdedora(resumen.getTotalPerdidas() / resumen.getNumOpsPerdedoras());
+								resumen.setPerdidaMediaPorOpPerdedora(resumen.getTotalPerdidas() / (double)resumen.getNumOpsPerdedoras());
 							}
 						}catch (Exception e) {
 							// TODO: handle exception
 						}
 						
-						//C�lculo de la esperanza matem�tica
+						//Calculo de la esperanza matem�tica
 						try {
 							
 							double probWin = (double)resumen.getNumOpsGanadoras() / (double)resumen.getNumOperaciones();

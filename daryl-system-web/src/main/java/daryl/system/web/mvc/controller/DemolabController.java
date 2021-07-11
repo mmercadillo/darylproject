@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import daryl.system.comun.enums.DemolabRobot;
+import daryl.system.model.DemolabOps;
 import daryl.system.model.ResumenRobot;
 import daryl.system.model.ResumenRobotDemolab;
 import daryl.system.model.Robot;
@@ -126,7 +127,9 @@ public class DemolabController {
 		//EM60 - EM240 - EM1440 - EM10080
 		//T60 - T240 - T1440 - T10080
 		
-		List<Double> historicoParaChartDto = DemolabParaChartDto.getDtoParaChartDeTotales(demolabDataService.findListaParaChartDemolabByRobot(robot.toUpperCase()));
+		final List<DemolabOps> test = demolabDataService.findListaParaChartDemolabByRobot(robot.toUpperCase());
+		
+		List<Double> historicoParaChartDto = DemolabParaChartDto.getDtoParaChartDeTotales(test);
 		List<Double> periodos = new ArrayList<Double>();
 		for (int i = 0; i < historicoParaChartDto.size(); i++) {
 			periodos.add((double)i+1);
@@ -168,7 +171,8 @@ public class DemolabController {
 		//EM60 - EM240 - EM1440 - EM10080
 		//T60 - T240 - T1440 - T10080
 		
-		List<Double> historicoParaChartDto = DemolabParaChartDto.getDtoParaChartDeEspMat(demolabDataService.findListaParaChartDemolabByRobot(robot.toUpperCase()));
+		final List<DemolabOps> test = demolabDataService.findListaParaChartDemolabByRobot(robot.toUpperCase());
+		List<Double> historicoParaChartDto = DemolabParaChartDto.getDtoParaChartDeEspMat(test);
 
 		if(historicoParaChartDto.size() > 0) {
 			historicoParaChartDto = historicoParaChartDto.subList(0, historicoParaChartDto.size());
@@ -208,18 +212,22 @@ public class DemolabController {
 	@RequestMapping(path = "/demolab/chart", method = {RequestMethod.GET})
     public void chartCuenta(HttpServletResponse response) {
 		
-		//Nos traemos el historico de opraciones por robot
+		//Nos traemos el historico de operaciones por robot
 		//EM60 - EM240 - EM1440 - EM10080
 		//T60 - T240 - T1440 - T10080
 		
-		List<Double> historicoParaChartDto = DemolabParaChartDto.getDtoParaChartDeTotales(demolabDataService.findAllByOrderByFcierre());
+		final List<DemolabOps> test = demolabDataService.findAllByOrderByFcierre();
+		List<Double> historicoParaChartDto = DemolabParaChartDto.getDtoParaChartDeTotales(test);
 
 		if(historicoParaChartDto.size() > 0) {
-			historicoParaChartDto = historicoParaChartDto.subList(0, historicoParaChartDto.size());
+			//historicoParaChartDto = historicoParaChartDto.subList(0, historicoParaChartDto.size());
 			List<Double> periodos = new ArrayList<Double>();
+			double total = 0.0;
 			for (int i = 0; i < historicoParaChartDto.size(); i++) {
-				periodos.add((double)i+1);
+				periodos.add((double)i);
+				total += historicoParaChartDto.get(i);
 			}
+			System.out.println("TOTAL ======>>> " + total);
 			
 			// Create Chart
 			XYChart chart = new XYChartBuilder().width(1140)
