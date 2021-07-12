@@ -37,95 +37,140 @@ public class ControlHistoricoOperaciones {
 	@Autowired
 	IRobotsRepository robotRepository;
 
-
-	@Scheduled(fixedDelay = 600000, initialDelay = 1000)
-    @Transactional
-	public void calcularMaxMinDD() {
+	
+	//https://www.x-trader.net/articulos/sistemas-de-trading/z-score.html
+	public void calcularZScore(ResumenRobot resumen) {
     	
-    	List<Robot> robots = robotRepository.findAll();
-    	for (Robot robot : robots) {
-    		
-    		try {
-    			
-    			ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
-    			if(resumen != null) {
-    				
-    				double max = 0.0;
-    				double min = 0.0;
-    				double difMaxMin = 0.0;
-    				double res = 0.0;
-    				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), "2020.01.01 01:00:00");
-    				if(lista != null && lista.size() > 0) {
-    		    		for (HistoricoOperaciones hops : lista) {
-		    				
-    		    			res += hops.getProfit();
-    		    			if(res < min) {
-    		    				min = res;
-    		    			}
-    		    			if(res > max) {
-    		    				max = res;
-    		    			}
+		try {
+			
+			if(resumen != null) {
+				
+				//N es el número total de operaciones
+				//R es el número total de rachas en la serie. Por ejemplo, si tenemos una secuencia de series de operaciones de la forma +++ - - ++ - ++, 
+				//tendríamos que R es igual a 5 ya que tenemos 5 rachas (entendidas como cadena de operaciones ganadoras o perdedoras seguidas) en la serie de resultados.
+				//P = 2*W*L, donde W es el número total de operaciones positivas y L, el total de perdedoras.
 
-    		    			
-    		    		}
-    				}
 
-    				difMaxMin = max - min;
-    				
-    				resumen.setMaximo(max);
-    				resumen.setMinimo(min);
-    				resumen.setDifMaxMin(difMaxMin);
-			    	resumenRobotRepository.save(resumen);
-    			}
-    			
-    		}catch (Exception e) {
-    			
+				long numTotalOperaciones = resumen.getNumOperaciones();
+				long numTotalOpsGanadoras = resumen.getNumOpsGanadoras()==0?1:resumen.getNumOpsGanadoras();
+				long numTotalOpsPerdedoras = resumen.getNumOpsPerdedoras()==0?1:resumen.getNumOpsPerdedoras();
+				long P = 2 * numTotalOpsGanadoras * numTotalOpsPerdedoras;
+				
+				
+				long rachasGanadoras = 0;
+				long rachasPerdedoras = 0;
+				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(resumen.getRobot(), "2020.01.01 01:00:00");
+				
+				if(lista != null && lista.size() > 0) {
+					HistoricoOperaciones histAnterior = null;
+					for (HistoricoOperaciones hist : lista) {
+						if(histAnterior == null || (hist.getProfit() > 0 && histAnterior.getProfit() < 0)) {
+							rachasGanadoras++;
+						}
+						if(histAnterior == null || (hist.getProfit() < 0 && histAnterior.getProfit() > 0)) {
+							rachasPerdedoras++;
+						}
+						histAnterior = hist;
+					}
+					
+				}
+				
+				long numTotalRachas = rachasGanadoras + rachasPerdedoras;
+				if(numTotalOperaciones > 1) {
+					double divisor = Math.sqrt(  ((P * (P - numTotalOperaciones)) /  (numTotalOperaciones - 1)))  ;
+					if(divisor != 0) {
+						double zScore = ((numTotalOperaciones * (numTotalRachas - 0.5)) - P) / divisor;
+						resumen.setZScore(zScore);
+					}
+				}
+		    	//resumenRobotRepository.save(resumen);
 			}
+			
+		}catch (Exception e) {
+			logger.error("ERROR AL ACTUALIZAR Z-SCORE =============", e);
+		}
     		
-    	}
+
+    }
+	
+	
+	
+
+	//@Scheduled(fixedDelay = 600000, initialDelay = 1000)
+    //@Transactional
+	private void calcularMaxMinDD(ResumenRobot resumen) {
+    	
+		try {
+			
+			if(resumen != null) {
+				
+				double max = 0.0;
+				double min = 0.0;
+				double difMaxMin = 0.0;
+				double res = 0.0;
+				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(resumen.getRobot(), "2020.01.01 01:00:00");
+				if(lista != null && lista.size() > 0) {
+		    		for (HistoricoOperaciones hops : lista) {
+	    				
+		    			res += hops.getProfit();
+		    			if(res < min) {
+		    				min = res;
+		    			}
+		    			if(res > max) {
+		    				max = res;
+		    			}
+
+		    			
+		    		}
+				}
+
+				difMaxMin = max - min;
+				
+				resumen.setMaximo(max);
+				resumen.setMinimo(min);
+				resumen.setDifMaxMin(difMaxMin);
+		    	//resumenRobotRepository.save(resumen);
+			}
+			
+		}catch (Exception e) {
+			logger.error("ERROR AL ACTUALIZAR MAX DD =============", e);
+		}
+
     	
     }
 	
-    @Scheduled(fixedDelay = 600000, initialDelay = 1000)
-    @Transactional
-	public void calcularMaximaRachaPerdedora() {
-    	logger.info("ACTUALIZANDO MAXIMA RACHA PERDEDORA=============");
-    	List<Robot> robots = robotRepository.findAll();
-    	for (Robot robot : robots) {
-    		logger.info("ACTUALIZANDO MAXIMA RACHA PERDEDORA ROBOT -> " + robot.getRobot());
-    		try {
-    			
-    			ResumenRobot resumen = resumenRobotRepository.findResumenRobotByRobot(robot.getRobot());
-    			if(resumen != null) {
-    				
-    				double maxRachaPerdedora = 0.0;
-    				double perdidas = 0.0;
-    				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), "2020.01.01 01:00:00");
-    				if(lista != null && lista.size() > 0) {
-    		    		for (HistoricoOperaciones hops : lista) {
-		    				if(perdidas < maxRachaPerdedora) {
-		    					maxRachaPerdedora = perdidas;
-		    				}
-    		    			if(hops.getProfit() > 0) {
-    		    				perdidas = 0.0;
-    		    			}else {
-    		    				perdidas += hops.getProfit();
-    		    			}
-    		    			
-    		    		}
-    				}
-    				resumen.setMaximaPerdidaConsecutiva(maxRachaPerdedora);
-		    		logger.info("MAXIMA RACHA PERDEDORA ROBOT ACTUALIZADAS-> " + robot.getRobot());
-			    	resumenRobotRepository.save(resumen);
-			    	logger.info("MAXIMA RACHA PERDEDORA ROBOT GUARDADAS-> " + robot.getRobot());
-    			}
-    			
-    		}catch (Exception e) {
-    			logger.error("ERROR AL ACTUALIZAR MAXIMA RACHA PERDEDORA ACTUALIZADA=============", e);
+    //@Scheduled(fixedDelay = 600000, initialDelay = 1000)
+    //@Transactional
+	private void calcularMaximaRachaPerdedora(ResumenRobot resumen) {
+
+		try {
+
+			if(resumen != null) {
+				
+				double maxRachaPerdedora = 0.0;
+				double perdidas = 0.0;
+				List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(resumen.getRobot(), "2020.01.01 01:00:00");
+				if(lista != null && lista.size() > 0) {
+		    		for (HistoricoOperaciones hops : lista) {
+	    				if(perdidas < maxRachaPerdedora) {
+	    					maxRachaPerdedora = perdidas;
+	    				}
+		    			if(hops.getProfit() > 0) {
+		    				perdidas = 0.0;
+		    			}else {
+		    				perdidas += hops.getProfit();
+		    			}
+		    			
+		    		}
+				}
+				resumen.setMaximaPerdidaConsecutiva(maxRachaPerdedora);
+		    	//resumenRobotRepository.save(resumen);
 			}
-    		
-    	}
-    	logger.info("MAXIMA RACHA PERDEDORA ACTUALIZADA=============");
+			
+		}catch (Exception e) {
+			logger.error("ERROR AL ACTUALIZAR MAXIMA RACHA PERDEDORA ACTUALIZADA=============", e);
+		}
+
     	
 	}
 	
@@ -232,7 +277,17 @@ public class ControlHistoricoOperaciones {
 		    		//Media de tiempo en el mercado
 		    		Double mediaTiempoEnMercado = totalTiempoEnMercado / resumen.getNumOperaciones();
 		    		resumen.setMediaTiempoEnMercado(mediaTiempoEnMercado);
-		    		
+			    	
+			    	logger.info("CALCULO DE MAX RACHA PERDEDORA -> " + robot.getRobot());
+			    	calcularMaximaRachaPerdedora(resumen);
+			    	logger.info("MAX RACHA PERDEDORA CALCULADA -> " + robot.getRobot());
+			    	logger.info("CALCULO DE MAX DD -> " + robot.getRobot());
+			    	calcularMaxMinDD(resumen);
+			    	logger.info("MAX DD PERDEDORA CALCULADA -> " + robot.getRobot());
+			    	logger.info("CALCULO DE Z-SCORE -> " + robot.getRobot());
+			    	calcularZScore(resumen);
+			    	logger.info("Z-SCORE CALCULADO -> " + robot.getRobot());
+			    	
 		    		
 		    		logger.info("OPERACIONES ROBOT ACTUALIZADAS-> " + robot.getRobot());
 			    	resumenRobotRepository.save(resumen);

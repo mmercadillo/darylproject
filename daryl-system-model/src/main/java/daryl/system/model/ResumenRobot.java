@@ -137,5 +137,5 @@ public class ResumenRobot implements Serializable{
 	//Z-score
 	@Column(nullable = true)
 	@Getter @Setter
-	private Double zScore = 0.0;
+	private Double zScore;
 }
