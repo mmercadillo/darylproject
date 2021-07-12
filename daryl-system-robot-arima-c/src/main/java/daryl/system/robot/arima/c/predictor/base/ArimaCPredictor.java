@@ -96,6 +96,7 @@ public abstract class ArimaCPredictor {
 	        	}catch (Exception e) {
 	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 	        	}
+	        	
 			}else {
 				logger.info("No existe config para el robot: {}", bot.getRobot());
 			}
@@ -111,7 +112,6 @@ public abstract class ArimaCPredictor {
 
 	protected ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
 
-		
 		double[] coefficentsAr = null;
 		try {
 			
@@ -141,7 +141,6 @@ public abstract class ArimaCPredictor {
 			e.printStackTrace();
 		}
 
-		
     	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
         //if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
         if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
@@ -152,7 +151,6 @@ public abstract class ArimaCPredictor {
         arimaProcess.setShockVariation(arimaConfig.getShockVariation());
         
         return arimaProcess;
-		
 		
 	}
 	private void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
