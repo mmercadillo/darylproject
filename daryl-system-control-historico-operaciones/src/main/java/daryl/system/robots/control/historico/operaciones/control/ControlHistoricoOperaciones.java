@@ -198,7 +198,7 @@ public class ControlHistoricoOperaciones {
 				Calendar c = Calendar.getInstance();
 
 				//Buscamos su lista de operaciones
-		    	List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), desde);
+		    	final List<HistoricoOperaciones> lista = historicoOperacionesRepository.findListaByRobot(robot.getRobot(), desde);
 				
 		    	if(lista != null && lista.size() > 0) {
 		    		Double totalTiempoEnMercado = 0.0;
@@ -288,7 +288,6 @@ public class ControlHistoricoOperaciones {
 			    	calcularZScore(resumen);
 			    	logger.info("Z-SCORE CALCULADO -> " + robot.getRobot());
 			    	
-		    		
 		    		logger.info("OPERACIONES ROBOT ACTUALIZADAS-> " + robot.getRobot());
 			    	resumenRobotRepository.save(resumen);
 			    	logger.info("OPERACIONES ROBOT GUARDADAS-> " + robot.getRobot());
