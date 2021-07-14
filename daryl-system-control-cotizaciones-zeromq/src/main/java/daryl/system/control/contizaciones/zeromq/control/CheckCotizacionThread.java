@@ -36,7 +36,6 @@ public class CheckCotizacionThread extends Thread {
 	@Autowired
 	private Sender sender;
 
-
 	@Autowired
 	private IHistoricoRepository histRepository;	
 	@Autowired
@@ -63,7 +62,6 @@ public class CheckCotizacionThread extends Thread {
     	
 	}	
     
-	
 	private void checkCotizacion(String linea) throws Exception{
 		try {
 			Cotizacion ctzcn = Cotizacion.getCotizacionFromZeroMQ(linea);
@@ -157,7 +155,6 @@ public class CheckCotizacionThread extends Thread {
 			throw new Exception("No se ha podido actualizar el historico del activo " + ctzcn.getActivo());
 		}
 	}
-
 	
 	private Boolean checkNuevaCotizacion(Cotizacion cotizacion) throws Exception{
 		Boolean noExiste = Boolean.TRUE;
@@ -171,7 +168,6 @@ public class CheckCotizacionThread extends Thread {
 			if(ultimaCotizacionAlmacenada != null && HistoricosUtil.compararContizacionNueva(ultimaCotizacionAlmacenada, cotizacion) == Boolean.TRUE) {
 				noExiste = Boolean.FALSE;
 			}
-			
 	
 		}catch (Exception e) {
 			logger.error("ERROR AL COMPROBAR LA ÚLTIMA COTIZACIÓN ALMACENADA: {}", activo.name(), e);
@@ -180,9 +176,5 @@ public class CheckCotizacionThread extends Thread {
 		
 		return noExiste;
 	}
-
-	
-
-
 
 }
