@@ -1,48 +1,23 @@
 package daryl.system.control.contizaciones.zeromq.control;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
-import com.google.gson.Gson;
-
-import daryl.system.comun.configuration.ConfigData;
-import daryl.system.comun.enums.Activo;
-import daryl.system.comun.enums.Timeframes;
-import daryl.system.comun.enums.TipoOrden;
-import daryl.system.comun.exceptions.SistemaException;
-import daryl.system.control.contizaciones.zeromq.Sender;
-import daryl.system.control.contizaciones.zeromq.model.Cotizacion;
-import daryl.system.control.contizaciones.zeromq.model.HistoricosUtil;
-import daryl.system.control.contizaciones.zeromq.repository.IHistoricoRepository;
-import daryl.system.control.contizaciones.zeromq.repository.IOrdenRepository;
-import daryl.system.control.contizaciones.zeromq.repository.IRobotsRepository;
-import daryl.system.model.Orden;
-import daryl.system.model.Robot;
-import daryl.system.model.historicos.Historico;
-
 @Component
-public class ControlCotizaciones extends Thread {
+public class ControlCotizacionesThread extends Thread {
 
 	@Autowired
 	Logger logger;
-	
-	@Autowired
-	private ConfigData config;
-	@Autowired
-	private Sender sender;
 
-	@Autowired
-	private IHistoricoRepository histRepository;	
-	@Autowired
-	private IRobotsRepository robotsRepository;
-	@Autowired
-	private IOrdenRepository ordenRepository;
+	
+    @Autowired
+    private ApplicationContext applicationContext;
+	
 	
 	public void run() {
     	
@@ -55,11 +30,17 @@ public class ControlCotizaciones extends Thread {
             	// Block until a message is received
                 byte[] reply = socket.recv(0);
                 // Print the message
-                String cotizacionesRecibidas = new String(reply, ZMQ.CHARSET);
-                logger.info("DATOS RECIBIDOS -> " + cotizacionesRecibidas);
-               
-                checkCotizacion(cotizacionesRecibidas);
+                String cotizacionRecibida = new String(reply, ZMQ.CHARSET);
+                logger.info("DATOS RECIBIDOS -> " + cotizacionRecibida);
                 
+                try {
+                	CheckCotizacionThread cct = applicationContext.getBean(CheckCotizacionThread.class);
+                	cct.init(cotizacionRecibida);
+                	cct.start();
+                }catch (Exception e) {
+                	logger.error("ERROR EN EL PROCESO -> " + cotizacionRecibida);
+                	logger.error(e.getMessage(), e);
+				}
                 // Enviamos la respuesta al cliente python
                 String response = "Datos recibidos, gracias";
                 socket.send(response.getBytes(ZMQ.CHARSET), 0);
@@ -72,7 +53,7 @@ public class ControlCotizaciones extends Thread {
     	
 	}	
     
-	
+	/*
 	private void checkCotizacion(String linea) {
 		try {
 			Cotizacion ctzcn = Cotizacion.getCotizacionFromZeroMQ(linea);
@@ -187,7 +168,7 @@ public class ControlCotizaciones extends Thread {
 		
 		return noExiste;
 	}
-
+	*/
 	
 
 

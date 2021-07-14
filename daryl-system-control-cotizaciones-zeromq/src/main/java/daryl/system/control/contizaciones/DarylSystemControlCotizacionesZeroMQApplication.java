@@ -13,7 +13,7 @@ import org.springframework.jms.annotation.EnableJms;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import daryl.system.control.contizaciones.zeromq.control.ControlCotizaciones;
+import daryl.system.control.contizaciones.zeromq.control.ControlCotizacionesThread;
 
 @SpringBootApplication(scanBasePackages = {"daryl.system"})
 @EnableJpaRepositories
@@ -43,7 +43,7 @@ public class DarylSystemControlCotizacionesZeroMQApplication {
 	
     private static void startForecaster(ConfigurableApplicationContext context) {
    
-    	ControlCotizaciones controlCoticiones = context.getBean(ControlCotizaciones.class);
+    	ControlCotizacionesThread controlCoticiones = context.getBean(ControlCotizacionesThread.class);
     	controlCoticiones.start();
 
     }
