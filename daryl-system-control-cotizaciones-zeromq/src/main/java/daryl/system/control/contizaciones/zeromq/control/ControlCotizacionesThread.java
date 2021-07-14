@@ -13,11 +13,9 @@ public class ControlCotizacionesThread extends Thread {
 
 	@Autowired
 	Logger logger;
-
 	
     @Autowired
     private ApplicationContext applicationContext;
-	
 	
 	public void run() {
     	

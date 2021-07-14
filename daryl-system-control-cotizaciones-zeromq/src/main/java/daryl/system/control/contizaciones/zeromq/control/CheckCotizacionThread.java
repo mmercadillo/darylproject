@@ -14,7 +14,6 @@ import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
-import daryl.system.comun.exceptions.SistemaException;
 import daryl.system.control.contizaciones.zeromq.Sender;
 import daryl.system.control.contizaciones.zeromq.model.Cotizacion;
 import daryl.system.control.contizaciones.zeromq.model.HistoricosUtil;
