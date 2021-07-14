@@ -39,7 +39,7 @@ public class ControlHistoricoOperaciones {
 
 	
 	//https://www.x-trader.net/articulos/sistemas-de-trading/z-score.html
-	public void calcularZScore(ResumenRobot resumen) {
+	private void calcularZScore(ResumenRobot resumen) {
     	
 		try {
 			
@@ -205,13 +205,14 @@ public class ControlHistoricoOperaciones {
 		    		for (HistoricoOperaciones hops : lista) {
 		    			resumen.setFUltimoCierre(hops.getFcierre());
 		    			resumen.setFUltimaApertura(hops.getFapertura());
+		    			resumen.setUltimoTicket(hops.getFcierre());
 						
 		    			Long aperturaOp = config.getFechaHoraInMillis(hops.getFapertura());
 		    			Long cierreOp = config.getFechaHoraInMillis(hops.getFcierre());
 		    			
 		    			totalTiempoEnMercado += (cierreOp - aperturaOp);
 		    			
-		    			resumen.setUltimoTicket(hops.getFapertura());
+		    			
 						resumen.setRobot(robot.getRobot());
 						resumen.setNumOperaciones(resumen.getNumOperaciones()+1);
 						resumen.setTipoActivo(robot.getActivo());

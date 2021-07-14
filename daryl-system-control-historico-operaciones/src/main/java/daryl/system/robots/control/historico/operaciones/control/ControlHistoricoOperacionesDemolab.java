@@ -30,7 +30,7 @@ public class ControlHistoricoOperacionesDemolab {
 
 	//@Scheduled(fixedDelay = 300000, initialDelay = 1000)
     //@Transactional
-	public void calcularMaxMinDD(ResumenRobotDemolab resumen) {
+	private void calcularMaxMinDD(ResumenRobotDemolab resumen) {
 
     		try {
     			
