@@ -212,7 +212,6 @@ public class ControlHistoricoOperaciones {
 		    			
 		    			totalTiempoEnMercado += (cierreOp - aperturaOp);
 		    			
-		    			
 						resumen.setRobot(robot.getRobot());
 						resumen.setNumOperaciones(resumen.getNumOperaciones()+1);
 						resumen.setTipoActivo(robot.getActivo());
