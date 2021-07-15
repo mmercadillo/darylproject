@@ -108,7 +108,7 @@ public class ControlHistoricoOperacionesDemolab {
 	}
 	
 		
-    @Scheduled(fixedDelay = 300000, initialDelay = 1000)
+    //@Scheduled(fixedDelay = 300000, initialDelay = 1000)
     @Transactional
 	public void run() {
     	
