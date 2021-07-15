@@ -96,6 +96,7 @@ public abstract class ArimaCPredictor {
 	        	}catch (Exception e) {
 	        		logger.error("No se ha podido calcular la prediccion para el robot: {}", bot.getRobot(), e);
 	        	}
+	        	
 			}else {
 				logger.info("No existe config para el robot: {}", bot.getRobot());
 			}
@@ -111,7 +112,6 @@ public abstract class ArimaCPredictor {
 
 	protected ArimaProcess getArimaProcess(ArimaConfig arimaConfig) {
 
-		
 		double[] coefficentsAr = null;
 		try {
 			
@@ -141,7 +141,6 @@ public abstract class ArimaCPredictor {
 			e.printStackTrace();
 		}
 
-		
     	DefaultArimaProcess arimaProcess = new DefaultArimaProcess();
         //if(coefficentsMa != null) arimaProcess.setMaCoefficients(coefficentsMa);
         if(coefficentsAr != null) arimaProcess.setArCoefficients(coefficentsAr);
@@ -152,7 +151,6 @@ public abstract class ArimaCPredictor {
         arimaProcess.setShockVariation(arimaConfig.getShockVariation());
         
         return arimaProcess;
-		
 		
 	}
 	private void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
@@ -229,23 +227,23 @@ public abstract class ArimaCPredictor {
 
 	public void calculate(Robot bot) {
 		
-		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot);		
+		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
 		Double prediccion = calcularPrediccion(bot);
-		logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot + " Predicción -> " + prediccion);
+		logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot.getRobot() + " Predicción -> " + prediccion);
 		
 		
-		logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot);		
+		logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot.getRobot());		
 		Orden orden = calcularOperacion(bot, prediccion, bot.getInverso());
-		logger.info("ORDEN CALCULADA -> Robot -> " + bot + " -> Orden -> " + orden);
+		logger.info("ORDEN CALCULADA -> Robot -> " + bot.getRobot() + " -> Orden -> " + orden.getTipoOrden());
 		
 		Long fechaHoraMillis = System.currentTimeMillis();
 		
 		actualizarPrediccionBDs(bot, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot + " Predicciñon -> " + prediccion);
+		logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot.getRobot() + " Predicciñon -> " + prediccion);
 		actualizarUltimaOrden(bot, orden, fechaHoraMillis);
-		logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot);
+		logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot.getRobot());
 		guardarNuevaOrden(orden, fechaHoraMillis);
-		logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot + " -> Orden -> " + orden);
+		logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot.getRobot() + " -> Orden -> " + orden.getTipoOrden());
 	
 		
 	}

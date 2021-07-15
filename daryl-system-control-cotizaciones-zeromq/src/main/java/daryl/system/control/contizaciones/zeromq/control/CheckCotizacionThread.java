@@ -4,10 +4,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.zeromq.SocketType;
-import org.zeromq.ZContext;
-import org.zeromq.ZMQ;
 
 import com.google.gson.Gson;
 
@@ -15,7 +14,6 @@ import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
-import daryl.system.comun.exceptions.SistemaException;
 import daryl.system.control.contizaciones.zeromq.Sender;
 import daryl.system.control.contizaciones.zeromq.model.Cotizacion;
 import daryl.system.control.contizaciones.zeromq.model.HistoricosUtil;
@@ -27,7 +25,8 @@ import daryl.system.model.Robot;
 import daryl.system.model.historicos.Historico;
 
 @Component
-public class ControlCotizaciones extends Thread {
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class CheckCotizacionThread extends Thread {
 
 	@Autowired
 	Logger logger;
@@ -44,27 +43,18 @@ public class ControlCotizaciones extends Thread {
 	@Autowired
 	private IOrdenRepository ordenRepository;
 	
+	private String cotizacionRecibida;
+	
+	public void init(String cotizacionRecibida) {
+		this.cotizacionRecibida = cotizacionRecibida;
+	}
+	
 	public void run() {
     	
-		try (ZContext context = new ZContext()) {
-            // Socket to talk to clients
-            ZMQ.Socket socket = context.createSocket(SocketType.REP);
-            socket.bind("tcp://192.168.0.114:5559");
-            while (!Thread.currentThread().isInterrupted()) {
-                logger.info("ESPERANDO DATOS DE COTIZACIONES ...");
-            	// Block until a message is received
-                byte[] reply = socket.recv(0);
-                // Print the message
-                String cotizacionesRecibidas = new String(reply, ZMQ.CHARSET);
-                logger.info("DATOS RECIBIDOS -> " + cotizacionesRecibidas);
-               
-                checkCotizacion(cotizacionesRecibidas);
-                
-                // Enviamos la respuesta al cliente python
-                String response = "Datos recibidos, gracias";
-                socket.send(response.getBytes(ZMQ.CHARSET), 0);
-                
-            }
+		try{
+			logger.info("PROCESO CHECK COTIZACIÓN INICIADO -> " + this.cotizacionRecibida);
+			checkCotizacion(this.cotizacionRecibida);
+			logger.info("PROCESO CHECK COTIZACIÓN FINALIZADO -> " + this.cotizacionRecibida);
         }catch (Exception e) {
         	logger.error(e.getMessage(), e);
 		}finally {
@@ -72,8 +62,7 @@ public class ControlCotizaciones extends Thread {
     	
 	}	
     
-	
-	private void checkCotizacion(String linea) {
+	private void checkCotizacion(String linea) throws Exception{
 		try {
 			Cotizacion ctzcn = Cotizacion.getCotizacionFromZeroMQ(linea);
 			Boolean noExiste = checkNuevaCotizacion(ctzcn);
@@ -129,11 +118,12 @@ public class ControlCotizaciones extends Thread {
 			}
 		}catch (Exception e) {
 			logger.error(e.getMessage(), e);
+			throw e;
 		}
     	
 	}
 	
-	private void guardarCotizacion(Cotizacion ctzcn) throws SistemaException {
+	private void guardarCotizacion(Cotizacion ctzcn) throws Exception {
 		//Guardamos en la tabla correspondiente la nueva cotizaion
 		try {
 
@@ -155,18 +145,18 @@ public class ControlCotizaciones extends Thread {
 				histRepository.save(historico);
 				
 			}catch (Exception e) {
+				throw e;
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////////
 			
 
 		}catch (Exception e) {
 			logger.error("NO SE HA PODIDO ACTUALIZAR EL HISTORICO DEL ACTIVO: {}", ctzcn.getActivo(), e);
-			throw new SistemaException("No se ha podido actualizar el historico del activo " + ctzcn.getActivo());
+			throw new Exception("No se ha podido actualizar el historico del activo " + ctzcn.getActivo());
 		}
 	}
-
 	
-	protected Boolean checkNuevaCotizacion(Cotizacion cotizacion) throws SistemaException{
+	private Boolean checkNuevaCotizacion(Cotizacion cotizacion) throws Exception{
 		Boolean noExiste = Boolean.TRUE;
 		
 		Activo activo = cotizacion.getActivo();
@@ -178,18 +168,13 @@ public class ControlCotizaciones extends Thread {
 			if(ultimaCotizacionAlmacenada != null && HistoricosUtil.compararContizacionNueva(ultimaCotizacionAlmacenada, cotizacion) == Boolean.TRUE) {
 				noExiste = Boolean.FALSE;
 			}
-			
 	
 		}catch (Exception e) {
 			logger.error("ERROR AL COMPROBAR LA ÚLTIMA COTIZACIÓN ALMACENADA: {}", activo.name(), e);
-			throw new SistemaException("No se ha podido recuperar la cotizacion de Checking del activo " + activo.name(), e);
+			throw new Exception("No se ha podido recuperar la cotizacion de Checking del activo " + activo.name(), e);
 		}		
 		
 		return noExiste;
 	}
-
-	
-
-
 
 }

@@ -59,7 +59,6 @@ public class Cotizacion {
 	public static Cotizacion getCotizacionFromZeroMQ(String txtRecibido) {
 		
 		String[] datosRecibidos = txtRecibido.split(",");
-
 		
 		String activoRecibido = datosRecibidos[0];
 		String tfRecibido = datosRecibidos[1];
@@ -70,7 +69,6 @@ public class Cotizacion {
 		String minimoRecibido = datosRecibidos[6];
 		String cierreRecibido = datosRecibidos[7];
 		String volumenRecibido = datosRecibidos[8];
-		
 		
 		Cotizacion ctzcn = new Cotizacion();
 			ctzcn.setActivo(Activo.valueOf(activoRecibido));

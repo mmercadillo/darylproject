@@ -18,7 +18,7 @@ import daryl.system.robots.client.web.service.IResumenRobotService;
 import daryl.system.robots.client.web.service.IRobotsCuentaService;
 
 @RestController
-public class OrdenesController2 {
+public class OrdenesControllerDemolab {
 
 	@Autowired
 	IOrdenesService service;
@@ -49,9 +49,7 @@ public class OrdenesController2 {
 		}
 
         return ordenesDto;
-		
-		
-		//return ordenes;
+
     }
 	
 	
