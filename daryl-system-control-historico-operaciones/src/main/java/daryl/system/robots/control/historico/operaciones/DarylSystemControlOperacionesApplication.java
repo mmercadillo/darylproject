@@ -28,11 +28,9 @@ public class DarylSystemControlOperacionesApplication {
 	    builder.headless(false);
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
-	    //
 	    //ControlHistoricoOperacionesDemolab chodl = context.getBean(ControlHistoricoOperacionesDemolab.class);
 	    //ControlHistoricoOperaciones chodl = context.getBean(ControlHistoricoOperaciones.class);
 	    //chodl.run();
-	    //
 	    
 	}
 
