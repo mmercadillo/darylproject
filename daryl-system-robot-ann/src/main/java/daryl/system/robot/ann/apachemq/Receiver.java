@@ -91,7 +91,10 @@ public class Receiver {
 			public void run() {
 				
 				try {
+
+					logger.info("PROCESO CALCULO LANZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 					predictor.calculate(robot);
+					logger.info("PROCESO CALCULO FINALIZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
