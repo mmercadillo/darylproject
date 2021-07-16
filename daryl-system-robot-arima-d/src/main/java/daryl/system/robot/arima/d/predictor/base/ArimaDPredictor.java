@@ -1,5 +1,6 @@
 package daryl.system.robot.arima.d.predictor.base;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.espy.arima.ArimaForecaster;
@@ -254,7 +255,7 @@ public abstract class ArimaDPredictor {
 	}
 
 
-	public void calculate(Robot bot) {
+	public void calculate(Robot bot) throws IOException{
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
 		Double prediccion = calcularPrediccion(bot);

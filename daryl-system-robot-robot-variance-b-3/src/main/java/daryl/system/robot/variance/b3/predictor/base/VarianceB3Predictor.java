@@ -1,5 +1,6 @@
 package daryl.system.robot.variance.b3.predictor.base;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -217,7 +218,7 @@ public abstract class VarianceB3Predictor {
 	}
 
 
-	public void calculate(Robot bot) {
+	public void calculate(Robot bot) throws IOException{
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
 		Double prediccion = calcularPrediccion(bot);

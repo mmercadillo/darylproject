@@ -1,5 +1,7 @@
 package daryl.system.robot.arima.c3;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -43,7 +45,12 @@ public class DarylSystemRobotArimaC3Application {
 			bot.setTimeframe(Timeframes.PERIOD_H1);
 		
 		ArimaC3Gdaxi a = context.getBean(ArimaC3Gdaxi.class);
-			a.calculate(bot);
+			try {
+				a.calculate(bot);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
 		
 		

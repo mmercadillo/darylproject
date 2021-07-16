@@ -38,7 +38,7 @@ public class HistoricoParaChartDto{
 		Double acumulado = 0.0;
 		if(historico != null && historico.size() > 0) {
 			for (HistoricoOperaciones hist : historico) {
-				acumulado += Math.round(hist.getProfit());
+				acumulado += hist.getProfit();
 				datosParaChart.add(acumulado);
 			} 
 		}
