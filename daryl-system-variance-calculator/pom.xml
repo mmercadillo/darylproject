@@ -3,25 +3,21 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-  	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.1.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+	<parent>
+		<groupId>daryl</groupId>
+		<artifactId>system</artifactId>
+		<version>1.1.2</version>
 	</parent>
 	
 	<groupId>daryl.system.robots</groupId>
 	<artifactId>variance-calculator</artifactId>
-	<version>1.1.1</version>
+	<version>${revision}</version>
 	<name>daryl-system-variance-calculator</name>
 	<description>Cálculo de las combinaciones del sistema VARIANCE sobre el cierre</description>
   	
   	<properties>
-		<java.version>1.8</java.version>
-		<daryl.system.comun>1.1.1</daryl.system.comun>
-		<daryl.system.model>1.1.1</daryl.system.model>
-		<daryl.system.variance-base>1.1.1</daryl.system.variance-base>
-		<daryl.system.ta4j>1.1.1</daryl.system.ta4j>
+		<daryl.system.variance-base>1.1.2</daryl.system.variance-base>
+		<daryl.system.ta4j>1.1.2</daryl.system.ta4j>
 	</properties> 
 	
 	<dependencies>
@@ -30,17 +26,7 @@
 			<artifactId>ta4j</artifactId>
 			<version>${daryl.system.ta4j}</version>
 		</dependency>
-		<!-- Daryl System Dependencies -->
-		<dependency>
-			<groupId>daryl.system</groupId>
-			<artifactId>comun</artifactId>
-			<version>${daryl.system.comun}</version>
-		</dependency>
-		<dependency>
-			<groupId>daryl.system</groupId>
-			<artifactId>model</artifactId>
-			<version>${daryl.system.model}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>daryl.system.robots</groupId>
 			<artifactId>variance-base</artifactId>
@@ -53,22 +39,13 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
+
 		<dependency>
     		<groupId>gov.nist.math</groupId>
     		<artifactId>jama</artifactId>

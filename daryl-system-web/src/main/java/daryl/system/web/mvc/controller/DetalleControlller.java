@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import daryl.system.comun.enums.TipoOrden;
+import daryl.system.model.HistoricoOperaciones;
 import daryl.system.model.Orden;
 import daryl.system.model.ResumenRobot;
 import daryl.system.web.mvc.dto.HistoricoParaChartDto;
@@ -70,7 +71,9 @@ public class DetalleControlller {
 		
 		//Datos resumen del robot
 		view.addObject("bot", robot);
-		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(charDataRobotService.findListaParaChartByRobot(robot));
+		
+		final List<HistoricoOperaciones> test = charDataRobotService.findListaParaChartByRobot(robot.toUpperCase());
+		List<Double> historicoParaChartDto = HistoricoParaChartDto.getDtoParaChartDeTotales(test);
 		view.addObject("datosParaChart", historicoParaChartDto);
 		
 		ResumenRobot resumenRobot = detalleService.findResumenRobotByRobot(robot);

@@ -1,5 +1,6 @@
 package daryl.system.robot.arima.c.predictor.base;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -225,7 +226,7 @@ public abstract class ArimaCPredictor {
 	}
 
 
-	public void calculate(Robot bot) {
+	public void calculate(Robot bot) throws IOException{
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
 		Double prediccion = calcularPrediccion(bot);

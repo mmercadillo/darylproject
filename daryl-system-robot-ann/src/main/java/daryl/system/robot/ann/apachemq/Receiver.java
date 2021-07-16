@@ -58,7 +58,7 @@ public class Receiver {
 		}
 		if(robot.getActivo() == Activo.XAUUSD) {
 			try{
-				activo = AnnAudCad.class;
+				activo = AnnXauUsd.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}

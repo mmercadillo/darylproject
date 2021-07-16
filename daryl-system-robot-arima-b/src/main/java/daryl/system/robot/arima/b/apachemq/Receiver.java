@@ -1,6 +1,7 @@
 package daryl.system.robot.arima.b.apachemq;
 
 
+import java.io.IOException;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -33,65 +34,79 @@ public class Receiver {
 
 	@Autowired
 	private ApplicationContext applicationContext;
-
+	
+	
 	@JmsListener(destination = "CHNL_ARIMA_B")
 	public void receiveMessage(String robotJson) {
 		
 		
-		Robot robot = new Gson().fromJson(robotJson, Robot.class);
+		final Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 		
-		ArimaBPredictor predictor = null;
+		Class activo = null;
+		
 
 		if(robot.getActivo() == Activo.GDAXI) {
 			try{
-				predictor = applicationContext.getBean(ArimaBGdaxi.class);
-				predictor.calculate(robot);
+				activo = ArimaBGdaxi.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
 		if(robot.getActivo() == Activo.NDX) {
 			try{
-				predictor = applicationContext.getBean(ArimaBNdx.class);
-				predictor.calculate(robot);				
+				activo = ArimaBNdx.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
 		if(robot.getActivo() == Activo.XAUUSD) {
-			try{		
-				predictor = applicationContext.getBean(ArimaBXauUsd.class);
-				predictor.calculate(robot);		
+			try{
+				activo = ArimaBXauUsd.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
 		if(robot.getActivo() == Activo.AUDCAD) {
 			try{
-				predictor = applicationContext.getBean(ArimaBAudcad.class);
-				predictor.calculate(robot);
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-		}
-		if(robot.getActivo() == Activo.EURUSD) {
-			try{				
-				predictor = applicationContext.getBean(ArimaBEurusd.class);
-				predictor.calculate(robot);
+				activo = ArimaBAudcad.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
 		if(robot.getActivo() == Activo.XTIUSD) {
-			try{				
-				predictor = applicationContext.getBean(ArimaBXtiUsd.class);
-				predictor.calculate(robot);
+			try{
+				activo = ArimaBXtiUsd.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
-		
+		if(robot.getActivo() == Activo.EURUSD) {
+			try{
+				activo = ArimaBEurusd.class;
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+		}
+	
+		final ArimaBPredictor predictor = (ArimaBPredictor)applicationContext.getBean(activo);
+		(new Thread() {
+			
+			public void run() {
+				
+				try {
+
+					logger.info("PROCESO CALCULO LANZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+					predictor.calculate(robot);
+					logger.info("PROCESO CALCULO FINALIZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		}).start();
 	}
 
 }

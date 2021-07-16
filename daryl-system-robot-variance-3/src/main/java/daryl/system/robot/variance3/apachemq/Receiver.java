@@ -1,5 +1,6 @@
 package daryl.system.robot.variance3.apachemq;
 
+import java.io.IOException;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -17,8 +18,8 @@ import daryl.system.robot.variance3.predictor.Variance3Audcad;
 import daryl.system.robot.variance3.predictor.Variance3Eurusd;
 import daryl.system.robot.variance3.predictor.Variance3Gdaxi;
 import daryl.system.robot.variance3.predictor.Variance3Ndx;
-import daryl.system.robot.variance3.predictor.Variance3XtiUsd;
 import daryl.system.robot.variance3.predictor.Variance3XauUsd;
+import daryl.system.robot.variance3.predictor.Variance3XtiUsd;
 import daryl.system.robot.variance3.predictor.base.Variance3Predictor;
 
 @Component
@@ -36,60 +37,74 @@ public class Receiver {
 	@JmsListener(destination = "CHNL_VARIANCE_3")
 	public void receiveMessage(String robotJson) {
 		
-		Robot robot = new Gson().fromJson(robotJson, Robot.class);
+		final Robot robot = new Gson().fromJson(robotJson, Robot.class);
 		logger.info("MENSAJE RECIBIDO POR CANAL -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 
-		Variance3Predictor predictor = null;
+		Class activo = null;
+		
 		
 		if(robot.getActivo() == Activo.GDAXI) {
 			try{
-				predictor = applicationContext.getBean(Variance3Gdaxi.class);
-				predictor.calculate(robot);
+				activo = Variance3Gdaxi.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
 		if(robot.getActivo() == Activo.NDX) {
 			try{
-				predictor = applicationContext.getBean(Variance3Ndx.class);
-				predictor.calculate(robot);
+				activo = Variance3Ndx.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
 		if(robot.getActivo() == Activo.XAUUSD) {
 			try{
-				predictor = applicationContext.getBean(Variance3XauUsd.class);
-				predictor.calculate(robot);
+				activo = Variance3XauUsd.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
 		if(robot.getActivo() == Activo.AUDCAD) {
 			try{
-				predictor = applicationContext.getBean(Variance3Audcad.class);
-				predictor.calculate(robot);
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);		
-			}
-		}
-		if(robot.getActivo() == Activo.EURUSD) {
-			try{
-				predictor = applicationContext.getBean(Variance3Eurusd.class);
-				predictor.calculate(robot);
+				activo = Variance3Audcad.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
 		if(robot.getActivo() == Activo.XTIUSD) {
 			try{
-				predictor = applicationContext.getBean(Variance3XtiUsd.class);
-				predictor.calculate(robot);
+				activo = Variance3XtiUsd.class;
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);		
+			}
+		}
+		if(robot.getActivo() == Activo.EURUSD) {
+			try{
+				activo = Variance3Eurusd.class;
 			}catch (Exception e) {
 				logger.error(e.getMessage(), e);		
 			}
 		}
 
+		final Variance3Predictor predictor = (Variance3Predictor)applicationContext.getBean(activo);
+		(new Thread() {
+			
+			public void run() {
+				
+				try {
+
+					logger.info("PROCESO CALCULO LANZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+					predictor.calculate(robot);
+					logger.info("PROCESO CALCULO FINALIZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		}).start();
+		
 	}
 
 }
