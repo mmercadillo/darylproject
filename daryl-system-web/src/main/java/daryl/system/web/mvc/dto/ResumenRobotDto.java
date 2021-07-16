@@ -88,8 +88,8 @@ public class ResumenRobotDto implements Comparable<ResumenRobotDto>{
 			try{resumenDto.setVersion(resumen.getVersion());}catch (Exception e) {}
 			try {
 				
-				Double horasEnMercado = resumen.getTotalTiempoEnMercado() / (1000 * 60 * 60);
-				Double mediaHorasEnMercado = resumen.getMediaTiempoEnMercado() / (1000 * 60 * 60);
+				Double horasEnMercado = (double)resumen.getTotalTiempoEnMercado() / (1000 * 60 * 60);
+				Double mediaHorasEnMercado = (double)resumen.getMediaTiempoEnMercado() / (1000 * 60 * 60);
 				
 				resumenDto.setTotalHorasEnMercado(horasEnMercado);
 				resumenDto.setMediaHorasEnMercado(mediaHorasEnMercado);
