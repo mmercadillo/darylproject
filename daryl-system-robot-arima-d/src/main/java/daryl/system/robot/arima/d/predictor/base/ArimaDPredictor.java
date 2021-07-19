@@ -9,6 +9,9 @@ import org.espy.arima.DefaultArimaForecaster;
 import org.espy.arima.DefaultArimaProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.MaxMinNormalizer;
 import org.ta4j.core.utils.BarSeriesUtils;
@@ -26,6 +29,8 @@ import daryl.system.robot.arima.d.repository.IHistoricoRepository;
 import daryl.system.robot.arima.d.repository.IOrdenRepository;
 import daryl.system.robot.arima.d.repository.IPrediccionRepository;
 
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class ArimaDPredictor {
 
 
@@ -203,13 +208,13 @@ public abstract class ArimaDPredictor {
 		}
 	}
 	
-
-	private void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
+	private synchronized void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
 		try {
 
-			Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+			//Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+			Orden ultimaOrden = ordenRepository.findBytipoActivoAndEstrategia(robot.getActivo(), robot.getEstrategia());
 			if(ultimaOrden != null) {
-				ultimaOrden.setFBaja(fechaHoraMillis);
+				//ultimaOrden.setFBaja(fechaHoraMillis);
 				ordenRepository.delete(ultimaOrden);
 				
 			}else {

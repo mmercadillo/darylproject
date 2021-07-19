@@ -143,13 +143,13 @@ public abstract class VarianceB3Predictor {
 		}
 	}
 	
-
-	private void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
+	private synchronized void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
 		try {
 
-			Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+			//Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+			Orden ultimaOrden = ordenRepository.findBytipoActivoAndEstrategia(robot.getActivo(), robot.getEstrategia());
 			if(ultimaOrden != null) {
-				ultimaOrden.setFBaja(fechaHoraMillis);
+				//ultimaOrden.setFBaja(fechaHoraMillis);
 				ordenRepository.delete(ultimaOrden);
 				
 			}else {
