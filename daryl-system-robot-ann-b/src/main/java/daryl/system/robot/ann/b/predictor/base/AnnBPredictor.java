@@ -252,15 +252,17 @@ public abstract class AnnBPredictor {
 		}
 	}
 	
-
 	private synchronized void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
 		try {
 
 			//Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
-			Orden ultimaOrden = ordenRepository.findBytipoActivoAndEstrategia(robot.getActivo(), robot.getEstrategia());
-			if(ultimaOrden != null) {
+			List<Orden> ultimasOrdenes = ordenRepository.findAllBytipoActivoAndEstrategia(robot.getActivo(), robot.getEstrategia());
+			if(ultimasOrdenes != null && ultimasOrdenes.size() > 0) {
 				//ultimaOrden.setFBaja(fechaHoraMillis);
-				ordenRepository.delete(ultimaOrden);
+				for (Orden ord : ultimasOrdenes) {
+					ordenRepository.delete(ord);
+				}
+				
 				
 			}else {
 				logger.info("No hay orden para {} para actualzar del robot", robot.getRobot());
