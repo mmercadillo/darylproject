@@ -45,12 +45,14 @@ public class Receiver {
 	@PostConstruct
 	public void init() {
 		this.servicio = Executors.newFixedThreadPool(10);
+		logger.info("EXECUTOR CREADO -> " + this.getClass().getName());
 	}
 	
 	@PreDestroy
 	public void destroy() {
 		if(this.servicio != null) {
 			this.servicio.shutdown();
+			logger.info("EXECUTOR CERRADO -> " + this.getClass().getName());
 		}
 	}
 	
@@ -127,6 +129,7 @@ public class Receiver {
 		};
 		
 		servicio.submit(t);
+		logger.info("PROCESO AÑADIDO AL EXECUTOR -> Robot -> " + robot.getRobot());
 		
 	}
 
