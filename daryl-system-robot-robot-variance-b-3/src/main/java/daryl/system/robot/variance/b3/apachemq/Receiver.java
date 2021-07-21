@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -110,12 +111,12 @@ public class Receiver {
 		}
 
 		final VarianceB3Predictor predictor = (VarianceB3Predictor)applicationContext.getBean(activo);
-		Thread t = new Thread() {
-			
+		/*Thread t = new Thread() {
+		
 			public void run() {
 				
 				try {
-
+	
 					logger.info("PROCESO CALCULO LANZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
 					predictor.calculate(robot);
 					logger.info("PROCESO CALCULO FINALIZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
@@ -126,9 +127,20 @@ public class Receiver {
 				
 			}
 			
-		};
+		};*/
 		
-		servicio.submit(t);
+		Future future = servicio.submit(() -> {
+			
+			try {
+	
+				logger.info("PROCESO CALCULO LANZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+				predictor.calculate(robot);
+				logger.info("PROCESO CALCULO FINALIZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 		logger.info("PROCESO AÑADIDO AL EXECUTOR -> Robot -> " + robot.getRobot());
 	}
 
