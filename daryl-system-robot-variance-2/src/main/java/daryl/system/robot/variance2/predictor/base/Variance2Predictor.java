@@ -117,7 +117,7 @@ public abstract class Variance2Predictor {
 		}
 	}
 	
-	private synchronized void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
+	private void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
 		try {
 
 			//Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());

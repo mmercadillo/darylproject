@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
+import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
 import daryl.system.model.Robot;
 import daryl.system.robot.rna.predictor.RnaAudCad;
@@ -44,7 +45,7 @@ public class Receiver {
 	
 	@PostConstruct
 	public void init() {
-		this.servicio = Executors.newFixedThreadPool(10);
+		this.servicio = Executors.newFixedThreadPool(ConfigData.MAX_NUM_OF_THREADS);
 		logger.info("EXECUTOR CREADO -> " + this.getClass().getName());
 	}
 	

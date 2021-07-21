@@ -2,6 +2,11 @@ package daryl.system.robot.arima.a.apachemq;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +38,22 @@ public class Receiver {
 
 	@Autowired
 	private ApplicationContext applicationContext;
+	
+	private ExecutorService servicio;
+	
+	@PostConstruct
+	public void init() {
+		this.servicio = Executors.newFixedThreadPool(10);
+		logger.info("EXECUTOR CREADO -> " + this.getClass().getName());
+	}
+	
+	@PreDestroy
+	public void destroy() {
+		if(this.servicio != null) {
+			this.servicio.shutdown();
+			logger.info("EXECUTOR CERRADO -> " + this.getClass().getName());
+		}
+	}
 	
 	@JmsListener(destination = "CHNL_ARIMA_A")
 	public void receiveMessage(String robotJson) {
@@ -88,7 +109,7 @@ public class Receiver {
 		
 		final ArimaPredictor predictor = (ArimaPredictor)applicationContext.getBean(activo);
 		
-		(new Thread() {
+		Thread t = new Thread() {
 			
 			public void run() {
 				
@@ -104,7 +125,10 @@ public class Receiver {
 				
 			}
 			
-		}).start();
+		};
+		
+		servicio.submit(t);
+		logger.info("PROCESO AÑADIDO AL EXECUTOR -> Robot -> " + robot.getRobot());
 		
 	}
 

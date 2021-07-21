@@ -3,6 +3,11 @@ package daryl.system.robot.arima.b3.apachemq;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
+import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
 import daryl.system.model.Robot;
 import daryl.system.robot.arima.b3.predictor.ArimaB3Audcad;
@@ -34,6 +40,23 @@ public class Receiver {
 
 	@Autowired
 	private ApplicationContext applicationContext;
+
+	
+	private ExecutorService servicio;
+	
+	@PostConstruct
+	public void init() {
+		this.servicio = Executors.newFixedThreadPool(ConfigData.MAX_NUM_OF_THREADS);
+		logger.info("EXECUTOR CREADO -> " + this.getClass().getName());
+	}
+	
+	@PreDestroy
+	public void destroy() {
+		if(this.servicio != null) {
+			this.servicio.shutdown();
+			logger.info("EXECUTOR CERRADO -> " + this.getClass().getName());
+		}
+	}
 
 	@JmsListener(destination = "CHNL_ARIMA_B3")
 	public void receiveMessage(String robotJson) {
@@ -88,7 +111,7 @@ public class Receiver {
 			}
 		}
 		final ArimaB3Predictor predictor = (ArimaB3Predictor)applicationContext.getBean(activo);
-		(new Thread() {
+		Thread t = new Thread() {
 			
 			public void run() {
 				
@@ -104,7 +127,10 @@ public class Receiver {
 				
 			}
 			
-		}).start();
+		};
+		
+		servicio.submit(t);
+		logger.info("PROCESO AÑADIDO AL EXECUTOR -> Robot -> " + robot.getRobot());
 		
 	}
 
