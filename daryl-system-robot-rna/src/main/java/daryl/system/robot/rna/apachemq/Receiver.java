@@ -3,6 +3,11 @@ package daryl.system.robot.rna.apachemq;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +39,20 @@ public class Receiver {
 	
 	@Autowired
 	private ApplicationContext applicationContext;
+	
+	private ExecutorService servicio;
+	
+	@PostConstruct
+	public void init() {
+		this.servicio = Executors.newFixedThreadPool(10);
+	}
+	
+	@PreDestroy
+	public void destroy() {
+		if(this.servicio != null) {
+			this.servicio.shutdown();
+		}
+	}
 	
 	@JmsListener(destination = "CHNL_RNA")
 	public void receiveMessage(String robotJson) {
@@ -89,7 +108,7 @@ public class Receiver {
 		
 		final RnaPredictor predictor = (RnaPredictor)applicationContext.getBean(activo);
 		
-		(new Thread() {
+		Thread t = new Thread() {
 			
 			public void run() {
 				
@@ -105,9 +124,10 @@ public class Receiver {
 				
 			}
 			
-		}).start();
+		};
 		
-
+		servicio.submit(t);
+		
 	}
 
 }

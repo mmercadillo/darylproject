@@ -51,13 +51,10 @@ public abstract class Variance2Predictor {
 		
 		Double prediccion = 0.0;
 		
-		
 		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraAsc(bot.getTimeframe(), bot.getActivo());
 		BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + bot.getTimeframe() + "_" + bot.getActivo(), bot.getActivo().getMultiplicador());
 		MaxMinNormalizer darylNormalizer =  new MaxMinNormalizer(serieParaCalculo, Mode.CLOSE);
 		List<Double> datos = darylNormalizer.getDatos();
-
-
 		
 		try {
 			
@@ -71,7 +68,6 @@ public abstract class Variance2Predictor {
 				int m = varianceConfig.getLastM();
 				
 				try {
-	        		
 	        		
 	        		StockPredict stock = new StockPredict(datos, offset, n, alpha, beta, m);
 	        		double[] priceVariance = stock.getPriceVariance();
@@ -100,9 +96,6 @@ public abstract class Variance2Predictor {
 		return prediccion;
 		
 	}
-	
-
-
 	
 	private void actualizarPrediccionBDs(Robot robot, TipoOrden orden, Double prediccionCierre, Long fechaHoraMillis) {
 		try {
@@ -200,7 +193,6 @@ public abstract class Variance2Predictor {
 		return orden;
 	}
 
-
 	public void calculate(Robot bot) throws IOException{
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
@@ -223,6 +215,4 @@ public abstract class Variance2Predictor {
 		
 	}
 
-
-	
 }
