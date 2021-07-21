@@ -62,7 +62,7 @@ public class DarylSystemAnnCalculatorApplication {
 		int pagina = 500;
 		int inicioSubSerie = 0;
 		
-		ExecutorService servicio = Executors.newFixedThreadPool(24);
+		ExecutorService servicio = Executors.newFixedThreadPool(25);
 
 		ANNForecasterGenerator rfgGDAXI60 = context.getBean(ANNForecasterGenerator.class);
 		rfgGDAXI60.init("ANN_GDAXI_60", Activo.GDAXI, Timeframes.PERIOD_H1, maxNeuronasEntrada, maxIteraciones, errorMaximo, pagina, inicioSubSerie);

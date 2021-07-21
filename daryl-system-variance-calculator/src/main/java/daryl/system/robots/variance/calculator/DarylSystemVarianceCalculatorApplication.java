@@ -45,7 +45,7 @@ public class DarylSystemVarianceCalculatorApplication {
 		
 		int pagina = 500;
 		
-		ExecutorService servicio = Executors.newFixedThreadPool(30);
+		ExecutorService servicio = Executors.newFixedThreadPool(25);
 
 		//XAUUSD
 		VarianceStockPrediction cspXAUUSD60 = context.getBean(VarianceStockPrediction.class);
