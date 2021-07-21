@@ -51,7 +51,7 @@ public class DarylSystemRnaCalculatorApplication {
 		int pagina = 500;
 		
 		
-		ExecutorService servicio = Executors.newFixedThreadPool(24);
+		ExecutorService servicio = Executors.newFixedThreadPool(25);
 
 		RnaForecasterGenerator rfgGDAXI60 = context.getBean(RnaForecasterGenerator.class);
 		rfgGDAXI60.init("RNA_GDAXI_60", Activo.GDAXI, Timeframes.PERIOD_H1, maxNeuronasEntrada, maxCapasOcultas, maxIteraciones, errorMaximo, pagina);
