@@ -1,10 +1,11 @@
 package daryl.system.robot.variance.b.apachemq;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
+import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.robot.variance.b.predictor.VarianceBAudcad;
 import daryl.system.robot.variance.b.predictor.VarianceBEurusd;
@@ -28,10 +30,13 @@ import daryl.system.robot.variance.b.predictor.VarianceBNdx;
 import daryl.system.robot.variance.b.predictor.VarianceBWti;
 import daryl.system.robot.variance.b.predictor.VarianceBXauUsd;
 import daryl.system.robot.variance.b.predictor.base.VarianceBPredictor;
+import daryl.system.robot.variance.b.repository.IOrdenRepository;
 
 @Component
 public class Receiver {
 
+	private static final String CHANNEL = "CHNL_VARIANCE_B";
+	
 	@Autowired
 	Logger logger;
 	
@@ -40,7 +45,8 @@ public class Receiver {
 
 	@Autowired
 	private ApplicationContext applicationContext;
-	
+	@Autowired
+	private IOrdenRepository ordenRepository;
 	
 	private ExecutorService servicio;
 	
@@ -58,7 +64,111 @@ public class Receiver {
 		}
 	}
 
-	@JmsListener(destination = "CHNL_VARIANCE_B")
+	@JmsListener(destination = CHANNEL, concurrency = "4-8")
+	public void receiveFullMessage(String listaRobotsJson) {
+		
+		
+		ExecutorService servicio = Executors.newFixedThreadPool(ConfigData.MAX_NUM_OF_THREADS);
+		logger.info("EXECUTOR CREADO -> " + this.getClass().getName());
+		
+		final List<Robot> robots = Arrays.asList(new Gson().fromJson(listaRobotsJson, Robot[].class));
+		
+		
+		logger.info("MENSAJE RECIBIDO POR CANAL -> " + CHANNEL + " " + new Date().toLocaleString());		
+		logger.info("MENSAJE RECIBIDO POR CANAL -> " + CHANNEL + " " + listaRobotsJson);		
+		
+		for(Robot robot : robots) {
+			
+			if(robot.getRobotActivo() == Boolean.TRUE) {
+				Class activo = null;
+	
+				if(robot.getActivo() == Activo.GDAXI) {
+					try{
+						activo = VarianceBGdaxi.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.NDX) {
+					try{
+						activo = VarianceBNdx.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.XAUUSD) {
+					try{
+						activo = VarianceBXauUsd.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.AUDCAD) {
+					try{
+						activo = VarianceBAudcad.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.XTIUSD) {
+					try{
+						activo = VarianceBWti.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.EURUSD) {
+					try{
+						activo = VarianceBEurusd.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				
+				final VarianceBPredictor predictor = (VarianceBPredictor)applicationContext.getBean(activo);
+				
+				servicio.submit(() -> {
+					try {
+						logger.info("PROCESO CALCULO LANZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+						predictor.calculate(robot);
+						logger.info("PROCESO CALCULO FINALIZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+				
+				logger.info("PROCESO AÑADIDO AL EXECUTOR -> Robot -> " + robot.getRobot());
+			}else {
+				
+				//Borramos las órdenes del robot desactivado
+				logger.info("Robot -> " + robot.getRobot() + " DESACTIVADO - SE BORRAN SUS ÓRDENES SI EXIUSTEN");
+				try {
+
+					//Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+					List<Orden> ultimasOrdenes = ordenRepository.findAllBytipoActivoAndEstrategia(robot.getActivo(), robot.getEstrategia());
+					if(ultimasOrdenes != null && ultimasOrdenes.size() > 0) {
+						//ultimaOrden.setFBaja(fechaHoraMillis);
+						for (Orden ord : ultimasOrdenes) {
+							ordenRepository.delete(ord);
+						}
+						logger.info("Robot -> " + robot.getRobot() + " ÓRDENES BORRADAS ");
+						
+					}else {
+						logger.info("Robot -> " + robot.getRobot() + " NO EXISTEN ÓRDENES PARA BORRAR");
+					}
+				}catch (Exception e) {
+					logger.error("No se ha recuperado el valor de la última orden del robot: {}", robot.getRobot(), e);
+				}
+				
+				
+			}
+		}
+		
+		servicio.shutdown();
+		
+	}
+	/*
+	@JmsListener(destination = CHANNEL)
 	public void receiveMessage(String robotJson) {
 		
 		final Robot robot = new Gson().fromJson(robotJson, Robot.class);
@@ -112,24 +222,7 @@ public class Receiver {
 		}
 		
 		final VarianceBPredictor predictor = (VarianceBPredictor)applicationContext.getBean(activo);
-		/*Thread t = new Thread() {
-		
-			public void run() {
-				
-				try {
-	
-					logger.info("PROCESO CALCULO LANZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
-					predictor.calculate(robot);
-					logger.info("PROCESO CALCULO FINALIZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-			
-		};*/
-		
+
 		Future future = servicio.submit(() -> {
 			
 			try {
@@ -148,5 +241,5 @@ public class Receiver {
 		
 
 	}
-
+	*/
 }
