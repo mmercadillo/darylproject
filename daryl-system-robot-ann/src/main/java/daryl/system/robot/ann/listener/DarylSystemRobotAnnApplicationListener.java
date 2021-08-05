@@ -17,7 +17,6 @@ public class DarylSystemRobotAnnApplicationListener implements ApplicationListen
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		
-		
 		//Cargamos las colecciones correspondientes
 		
 		
