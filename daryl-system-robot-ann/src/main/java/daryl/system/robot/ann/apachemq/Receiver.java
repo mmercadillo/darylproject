@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -41,8 +40,8 @@ public class Receiver {
 	@Autowired
 	Logger logger;
 	
-	@Autowired
-	JmsListenerContainerFactory<?> factory;
+	//@Autowired
+	//JmsListenerContainerFactory<?> factory;
 	
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -67,7 +66,6 @@ public class Receiver {
 
 	@JmsListener(destination = CHANNEL, concurrency = "4-8")
 	public void receiveFullMessage(String listaRobotsJson) {
-		
 		
 		ExecutorService servicio = Executors.newFixedThreadPool(ConfigData.MAX_NUM_OF_THREADS);
 		logger.info("EXECUTOR CREADO -> " + this.getClass().getName());

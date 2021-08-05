@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -40,8 +39,8 @@ public class Receiver {
 	@Autowired
 	Logger logger;
 	
-	@Autowired
-	JmsListenerContainerFactory<?> factory;
+	//@Autowired
+	//JmsListenerContainerFactory<?> factory;
 
 	@Autowired
 	private ApplicationContext applicationContext;

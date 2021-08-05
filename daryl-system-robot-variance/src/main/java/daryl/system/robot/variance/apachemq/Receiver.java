@@ -40,8 +40,8 @@ public class Receiver {
 	@Autowired
 	Logger logger;
 	
-	@Autowired
-	JmsListenerContainerFactory<?> factory;
+	//@Autowired
+	//JmsListenerContainerFactory<?> factory;y;
 
 	@Autowired
 	private ApplicationContext applicationContext;
