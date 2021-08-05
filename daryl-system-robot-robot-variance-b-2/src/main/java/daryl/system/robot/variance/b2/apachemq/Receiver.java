@@ -1,10 +1,11 @@
 package daryl.system.robot.variance.b2.apachemq;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
+import daryl.system.model.Orden;
 import daryl.system.model.Robot;
 import daryl.system.robot.variance.b2.predictor.VarianceB2Audcad;
 import daryl.system.robot.variance.b2.predictor.VarianceB2Eurusd;
@@ -28,36 +30,145 @@ import daryl.system.robot.variance.b2.predictor.VarianceB2Ndx;
 import daryl.system.robot.variance.b2.predictor.VarianceB2XauUsd;
 import daryl.system.robot.variance.b2.predictor.VarianceB2XtiUsd;
 import daryl.system.robot.variance.b2.predictor.base.VarianceB2Predictor;
+import daryl.system.robot.variance.b2.repository.IOrdenRepository;
 
 @Component
 public class Receiver {
 
+	private static final String CHANNEL = "CHNL_VARIANCE_B2";
+	
 	@Autowired
 	Logger logger;
 	
-	@Autowired
-	JmsListenerContainerFactory<?> factory;
+	//@Autowired
+	//JmsListenerContainerFactory<?> factory;
 
 	@Autowired
 	private ApplicationContext applicationContext;
+	@Autowired
+	private IOrdenRepository ordenRepository;
 	
-	private ExecutorService servicio;
+	//private ExecutorService servicio;
 	
 	@PostConstruct
 	public void init() {
-		this.servicio = Executors.newFixedThreadPool(ConfigData.MAX_NUM_OF_THREADS);
-		logger.info("EXECUTOR CREADO -> " + this.getClass().getName());
+		//this.servicio = Executors.newFixedThreadPool(ConfigData.MAX_NUM_OF_THREADS);
+		//logger.info("EXECUTOR CREADO -> " + this.getClass().getName());
 	}
 	
 	@PreDestroy
 	public void destroy() {
-		if(this.servicio != null) {
+		/*if(this.servicio != null) {
 			this.servicio.shutdown();
 			logger.info("EXECUTOR CERRADO -> " + this.getClass().getName());
+		}*/
+	}
+	
+	@JmsListener(destination = CHANNEL, concurrency = "4-8")
+	public void receiveFullMessage(String listaRobotsJson) {
+		
+		
+		ExecutorService servicio = Executors.newFixedThreadPool(ConfigData.MAX_NUM_OF_THREADS);
+		logger.info("EXECUTOR CREADO -> " + this.getClass().getName());
+		
+		final List<Robot> robots = Arrays.asList(new Gson().fromJson(listaRobotsJson, Robot[].class));
+		
+		
+		logger.info("MENSAJE RECIBIDO POR CANAL -> " + CHANNEL + " " + new Date().toLocaleString());		
+		logger.info("MENSAJE RECIBIDO POR CANAL -> " + CHANNEL + " " + listaRobotsJson);		
+		
+		for(Robot robot : robots) {
+			
+			if(robot.getRobotActivo() == Boolean.TRUE) {
+				Class activo = null;
+				
+				if(robot.getActivo() == Activo.GDAXI) {
+					try{
+						activo = VarianceB2Gdaxi.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.NDX) {
+					try{
+						activo = VarianceB2Ndx.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.XAUUSD) {
+					try{
+						activo = VarianceB2XauUsd.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.AUDCAD) {
+					try{
+						activo = VarianceB2Audcad.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.XTIUSD) {
+					try{
+						activo = VarianceB2XtiUsd.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				if(robot.getActivo() == Activo.EURUSD) {
+					try{
+						activo = VarianceB2Eurusd.class;
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);		
+					}
+				}
+				final VarianceB2Predictor predictor = (VarianceB2Predictor)applicationContext.getBean(activo);
+				
+				servicio.submit(() -> {
+					try {
+						logger.info("PROCESO CALCULO LANZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+						predictor.calculate(robot);
+						logger.info("PROCESO CALCULO FINALIZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+				
+				logger.info("PROCESO AÑADIDO AL EXECUTOR -> Robot -> " + robot.getRobot());
+			}else {
+				
+				//Borramos las órdenes del robot desactivado
+				logger.info("Robot -> " + robot.getRobot() + " DESACTIVADO - SE BORRAN SUS ÓRDENES SI EXIUSTEN");
+				try {
+
+					//Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+					List<Orden> ultimasOrdenes = ordenRepository.findAllBytipoActivoAndEstrategia(robot.getActivo(), robot.getEstrategia());
+					if(ultimasOrdenes != null && ultimasOrdenes.size() > 0) {
+						//ultimaOrden.setFBaja(fechaHoraMillis);
+						for (Orden ord : ultimasOrdenes) {
+							ordenRepository.delete(ord);
+						}
+						logger.info("Robot -> " + robot.getRobot() + " ÓRDENES BORRADAS ");
+						
+					}else {
+						logger.info("Robot -> " + robot.getRobot() + " NO EXISTEN ÓRDENES PARA BORRAR");
+					}
+				}catch (Exception e) {
+					logger.error("No se ha recuperado el valor de la última orden del robot: {}", robot.getRobot(), e);
+				}
+				
+				
+			}
 		}
+		
+		servicio.shutdown();
+		
 	}
 
-	@JmsListener(destination = "CHNL_VARIANCE_B2")
+	/*
+	@JmsListener(destination = CHANNEL)
 	public void receiveMessage(String robotJson) {
 		
 		final Robot robot = new Gson().fromJson(robotJson, Robot.class);
@@ -110,23 +221,7 @@ public class Receiver {
 			}
 		}
 		final VarianceB2Predictor predictor = (VarianceB2Predictor)applicationContext.getBean(activo);
-		/*Thread t = new Thread() {
-			
-			public void run() {
-				
-				try {
-	
-					logger.info("PROCESO CALCULO LANZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
-					predictor.calculate(robot);
-					logger.info("PROCESO CALCULO FINALIZADO -> " + robot.getCanal() + " -> Robot -> " + robot.getRobot() + " - " + new Date().toLocaleString());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-			
-		};*/
+
 		
 		Future future = servicio.submit(() -> {
 			
@@ -143,5 +238,5 @@ public class Receiver {
 		logger.info("PROCESO AÑADIDO AL EXECUTOR -> Robot -> " + robot.getRobot());
 
 	}
-
+	*/
 }

@@ -1,5 +1,7 @@
 package daryl.system.control.contizaciones.zeromq.control;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,6 +14,7 @@ import com.google.gson.Gson;
 
 import daryl.system.comun.configuration.ConfigData;
 import daryl.system.comun.enums.Activo;
+import daryl.system.comun.enums.CanalAmq;
 import daryl.system.comun.enums.Timeframes;
 import daryl.system.comun.enums.TipoOrden;
 import daryl.system.control.contizaciones.zeromq.Sender;
@@ -61,7 +64,49 @@ public class CheckCotizacionThread extends Thread {
 		}
     	
 	}	
-    
+	
+	private void checkCotizacion(String linea) throws Exception{
+		try {
+			Cotizacion ctzcn = Cotizacion.getCotizacionFromZeroMQ(linea);
+			Boolean noExiste = checkNuevaCotizacion(ctzcn);
+			if(noExiste == Boolean.TRUE) {
+				logger.info("GUARDAMOS NUEVA COTIZACIÓN -> " + linea);
+				guardarCotizacion(ctzcn);
+				logger.info("NUEVA COTIZACIÓN GUARDADA");
+				
+				
+				if(config.checkFechaHoraOperaciones() == Boolean.TRUE) {
+					try {
+	
+						List<CanalAmq> canales = Arrays.asList(CanalAmq.values());
+						for(CanalAmq canal : canales) {
+							
+							List<Robot> robots = robotsRepository.findRobotsByActivoAndTimeframeAndCanal(ctzcn.getActivo(), ctzcn.getTimeframe(), canal);	
+							
+							//Enviamos el mensaje al nodo principal de control de los robots
+							logger.info("SE ENVIA SEÑAL AL CANAL= " + canal + " TF= " + ctzcn.getTimeframe().name() + " ROBOTS= " + robots);
+							sender.send(canal.name(), new Gson().toJson(robots));
+							logger.info("SEÑAL ENVIADA AL CANAL= " + canal + " TF= " + ctzcn.getTimeframe().name() + " ROBOTS= " + robots);
+							////////////////////////////////////////////////////////////////////////////////
+							
+						}
+					}catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+
+			}else {
+				logger.info("LA COTIZACIÓN YA EXISTE-> " + linea);
+			}
+		}catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+    	
+	}
+	
+	
+	/*
 	private void checkCotizacion(String linea) throws Exception{
 		try {
 			Cotizacion ctzcn = Cotizacion.getCotizacionFromZeroMQ(linea);
@@ -73,6 +118,7 @@ public class CheckCotizacionThread extends Thread {
 				try {
 
 					List<Robot> robots = robotsRepository.findRobotsByActivoAndTimeframe(ctzcn.getActivo(), ctzcn.getTimeframe());
+					
 					for(Robot robot : robots) {
 						
 						if(robot.getRobotActivo() == Boolean.TRUE && config.checkFechaHoraOperaciones() == Boolean.TRUE) {
@@ -122,6 +168,7 @@ public class CheckCotizacionThread extends Thread {
 		}
     	
 	}
+	*/
 	
 	private void guardarCotizacion(Cotizacion ctzcn) throws Exception {
 		//Guardamos en la tabla correspondiente la nueva cotizaion
