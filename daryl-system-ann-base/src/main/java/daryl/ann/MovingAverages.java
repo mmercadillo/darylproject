@@ -14,9 +14,6 @@ public class MovingAverages implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-
-
-
 	public double[] SMA(double[] input, int window_size) {
         double[] SMA = new double[input.length];
         double ans;
