@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.espy.arima.ArimaForecaster;
 import org.espy.arima.ArimaProcess;
 import org.espy.arima.DefaultArimaForecaster;
@@ -233,7 +235,7 @@ public abstract class ArimaCPredictor {
 		return orden;
 	}
 
-
+	@Transactional
 	public void calculate(Robot bot) throws IOException{
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		

@@ -3,6 +3,8 @@ package daryl.system.robot.arima.d2.predictor.base;
 import java.io.IOException;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.espy.arima.ArimaForecaster;
 import org.espy.arima.ArimaProcess;
 import org.espy.arima.DefaultArimaForecaster;
@@ -288,7 +290,7 @@ public abstract class ArimaD2Predictor {
 		return orden;
 	}
 
-
+	@Transactional
 	public void calculate(Robot bot) throws IOException{
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
