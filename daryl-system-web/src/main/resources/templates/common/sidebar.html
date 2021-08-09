@@ -42,6 +42,12 @@
 								Demo Lab 
 							</a>
 						</li>
+						<li th:class="${vsActive == true ? 'active' : ''}">
+							<a th:href="@{/vs}">
+								<i class="icon-user"></i>
+								Comparador
+							</a>
+						</li>
 						<!--/*
 						<li th:class="${detalleRobotBacktestActive == true ? 'active' : ''}">
 							<a th:href="@{/backtest/RNA_AUDCAD_60}">
