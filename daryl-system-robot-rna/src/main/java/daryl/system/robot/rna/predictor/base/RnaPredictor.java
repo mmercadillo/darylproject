@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.neuroph.core.NeuralNetwork;
 import org.slf4j.Logger;
@@ -224,7 +226,7 @@ public abstract class RnaPredictor {
 		return orden;
 	}
 
-
+	@Transactional
 	public void calculate(Robot bot) throws IOException {
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		

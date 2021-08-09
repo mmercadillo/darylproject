@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.util.Collections;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -306,7 +308,7 @@ public abstract class AnnBPredictor {
 		return orden;
 	}
 
-
+	@Transactional
 	public void calculate(Robot bot) throws IOException {
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		

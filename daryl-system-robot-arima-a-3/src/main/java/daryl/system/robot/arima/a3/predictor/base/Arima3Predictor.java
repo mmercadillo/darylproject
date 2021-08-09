@@ -3,6 +3,8 @@ package daryl.system.robot.arima.a3.predictor.base;
 import java.io.IOException;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -177,7 +179,7 @@ public abstract class Arima3Predictor {
 		return orden;
 	}
 
-
+	@Transactional
 	public void calculate(Robot bot) throws IOException{
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
