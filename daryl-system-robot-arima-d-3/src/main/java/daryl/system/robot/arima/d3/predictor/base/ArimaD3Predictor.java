@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.espy.arima.ArimaForecaster;
 import org.espy.arima.ArimaProcess;
@@ -286,7 +287,7 @@ public abstract class ArimaD3Predictor {
 		return orden;
 	}
 
-	@Transactional
+	@Transactional(value = TxType.REQUIRES_NEW)
 	public void calculate(Robot bot) throws IOException{
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
