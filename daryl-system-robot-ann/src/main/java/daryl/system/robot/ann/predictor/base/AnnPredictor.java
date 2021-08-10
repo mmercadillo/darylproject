@@ -311,7 +311,7 @@ public abstract class AnnPredictor {
 		return orden;
 	}
 
-	@Transactional(value = TxType.REQUIRES_NEW)
+	@Transactional
 	public void calculate(Robot bot) throws IOException {
 		
 		if(bot.getRobotActivo() == Boolean.TRUE) {
