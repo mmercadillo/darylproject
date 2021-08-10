@@ -21,7 +21,7 @@ public class ConfigData {
 	
 	public static final String HORA_CIERRE_OPS = "21:30:00";
 	
-	public static final Integer MAX_NUM_OF_THREADS = 15;
+	public static final Integer MAX_NUM_OF_THREADS = 5;
 	
 	
 	//private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
