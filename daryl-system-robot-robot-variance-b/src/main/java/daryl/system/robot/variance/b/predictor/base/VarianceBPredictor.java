@@ -202,7 +202,7 @@ public abstract class VarianceBPredictor {
 		return orden;
 	}
 
-	@Transactional(value = TxType.REQUIRES_NEW)
+	@Transactional
 	public void calculate(Robot bot) throws IOException{
 		
 		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
