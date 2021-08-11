@@ -31,7 +31,7 @@ public class DarylSystemAnnCalculatorApplication {
 	Logger logger;
 	
 	@Bean
-    public Logger darylLogger() {
+    public Logger logger() {
         return LoggerFactory.getLogger("daryl");
     }
 	

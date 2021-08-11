@@ -1,5 +1,8 @@
 package daryl.system.control.contizaciones.zeromq.control;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -7,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
+
+import daryl.system.comun.configuration.ConfigData;
 
 @Component
 public class ControlCotizacionesThread extends Thread {
@@ -19,6 +24,10 @@ public class ControlCotizacionesThread extends Thread {
 	
 	public void run() {
     	
+		ExecutorService servicio = Executors.newFixedThreadPool(ConfigData.MAX_NUM_OF_THREADS);
+		logger.info("EXECUTOR CREADO -> " + this.getClass().getName());
+		
+		
 		try (ZContext context = new ZContext()) {
             // Socket to talk to clients
             ZMQ.Socket socket = context.createSocket(SocketType.REP);
@@ -34,7 +43,9 @@ public class ControlCotizacionesThread extends Thread {
                 try {
                 	CheckCotizacionThread cct = applicationContext.getBean(CheckCotizacionThread.class);
                 	cct.init(cotizacionRecibida);
-                	cct.start();
+                	//cct.start();
+                	servicio.submit(cct);
+                
                 }catch (Exception e) {
                 	logger.error("ERROR EN EL PROCESO -> " + cotizacionRecibida);
                 	logger.error(e.getMessage(), e);
@@ -47,6 +58,7 @@ public class ControlCotizacionesThread extends Thread {
         }catch (Exception e) {
         	logger.error(e.getMessage(), e);
 		}finally {
+			servicio.shutdown();
 		}
     	
 	}	
