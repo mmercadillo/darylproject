@@ -43,8 +43,8 @@ public class ControlCotizacionesThread extends Thread {
                 try {
                 	CheckCotizacionThread cct = applicationContext.getBean(CheckCotizacionThread.class);
                 	cct.init(cotizacionRecibida);
-                	//cct.start();
-                	servicio.submit(cct);
+                	cct.run();
+                	//servicio.submit(cct);
                 
                 }catch (Exception e) {
                 	logger.error("ERROR EN EL PROCESO -> " + cotizacionRecibida);
