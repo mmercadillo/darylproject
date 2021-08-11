@@ -151,7 +151,39 @@ public abstract class VarianceB2Predictor {
 		}
 	}
 	
-	private void actualizarUltimaOrden(Robot robot, Orden orden, Long fechaHoraMillis) {
+	private void actualizarUltimaOrden(Robot robot, Orden nuevaOrden, Long fechaHoraMillis) {
+		
+		try {
+			long millis = System.currentTimeMillis();
+			
+			Orden ordenGuardada = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
+			
+			if(ordenGuardada != null && ordenGuardada.getTipoOrden() != nuevaOrden.getTipoOrden()) {
+				
+				logger.info("ACTUALIZAMOS LA ORDEN PARA EL ROBOT " + robot.getRobot());
+				ordenGuardada.setFecha(config.getFechaInString(millis));
+				ordenGuardada.setHora(config.getHoraInString(millis));
+				ordenGuardada.setTipoOrden(nuevaOrden.getTipoOrden());
+				ordenGuardada.setFAlta(nuevaOrden.getFAlta());
+				ordenRepository.save(ordenGuardada);
+				logger.info("ORDEN PARA EL ROBOT " + robot.getRobot() + " ACTUALIZADA -> " + ordenGuardada.getTipoOrden());
+				
+			}else if(ordenGuardada == null){
+				
+				logger.info("NO EXISTE ORDEN PARA EL ROBOT " + robot.getRobot() + " DAMOS DE ALTA UNA NUEVA -> " + nuevaOrden.getTipoOrden());
+				
+				ordenRepository.save(nuevaOrden);
+				
+				logger.info("ORDEN PARA EL ROBOT " + robot.getRobot() + " DADA DE ALTA -> " + nuevaOrden.getTipoOrden());
+			}else {
+				logger.info("NO ES NECESARIO ACTUALIZAR LA ORDEN PARA EL ROBOT " + robot.getRobot());
+			}
+			
+		}catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		/*
 		try {
 
 			//Orden ultimaOrden = ordenRepository.findByfBajaAndTipoActivoAndEstrategia(null, robot.getActivo(), robot.getEstrategia());
@@ -169,6 +201,7 @@ public abstract class VarianceB2Predictor {
 		}catch (Exception e) {
 			logger.error("No se ha recuperado el valor de la última orden del robot: {}", robot.getRobot(), e);
 		}
+		*/
 	}
 	
 	private void guardarNuevaOrden(Orden orden, Long fechaHoraMillis) {
@@ -229,26 +262,28 @@ public abstract class VarianceB2Predictor {
 	}
 
 	@Transactional
-	public void calculate(Robot bot) throws IOException{
+	public void calculate(Robot bot) throws IOException {
 		
-		logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
-		Double prediccion = calcularPrediccion(bot);
-		logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot.getRobot() + " Predicción -> " + prediccion);
-		
-		logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot.getRobot());		
-		Orden orden = calcularOperacion(bot, prediccion, bot.getInverso());
-		logger.info("ORDEN CALCULADA -> Robot -> " + bot.getRobot() + " -> Orden -> " + orden.getTipoOrden());
-		
-		Long fechaHoraMillis = System.currentTimeMillis();
-		
-		actualizarPrediccionBDs(bot, orden.getTipoOrden(), prediccion, fechaHoraMillis);
-		logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot.getRobot() + " Predicciñon -> " + prediccion);
-		actualizarUltimaOrden(bot, orden, fechaHoraMillis);
-		logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot.getRobot());
-		guardarNuevaOrden(orden, fechaHoraMillis);
-		logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot.getRobot() + " -> Orden -> " + orden.getTipoOrden());
-
-		
+		if(bot.getRobotActivo() == Boolean.TRUE) {
+			
+			logger.info("SE CALCULA LA PREDICCIÓN -> Robot -> " + bot.getRobot());		
+			Double prediccion = calcularPrediccion(bot);
+			logger.info("PREDICCIÓN CALCULADA -> Robot -> " + bot.getRobot() + " Predicción -> " + prediccion);
+			
+			logger.info("SE CALCULA LA ORDEN -> Robot -> " + bot.getRobot());		
+			Orden orden = calcularOperacion(bot, prediccion, bot.getInverso());
+			logger.info("ORDEN CALCULADA -> Robot -> " + bot.getRobot() + " -> Orden -> " + orden.getTipoOrden());
+			
+			Long fechaHoraMillis = System.currentTimeMillis();
+			
+			//actualizarPrediccionBDs(bot, orden.getTipoOrden(), prediccion, fechaHoraMillis);
+			logger.info("PREDICCIÓN ACTUALZIDA -> Robot -> " + bot.getRobot() + " Predicciñon -> " + prediccion);
+			actualizarUltimaOrden(bot, orden, fechaHoraMillis);
+			//logger.info("ORDEN ANTERIOR ELIMINADA -> Robot -> " + bot.getRobot());
+			//guardarNuevaOrden(orden, fechaHoraMillis);
+			//logger.info("NUEVA ORDEN GUARDADA -> Robot -> " + bot.getRobot() + " -> Orden -> " + orden.getTipoOrden());
+			
+		}
 	}
 
 
