@@ -18,6 +18,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import daryl.system.comun.enums.Timeframes;
+import daryl.system.databaseloader.loaders.BackupHistoricoLoader;
 import daryl.system.databaseloader.loaders.CombinacionesLoader;
 import daryl.system.databaseloader.loaders.GeneralLoader;
 import daryl.system.databaseloader.util.Combinaciones;
@@ -46,7 +47,7 @@ public class DarylSystemDatabaseLoaderApplication {
 	    ConfigurableApplicationContext context = builder.run(args);
 	    
 
-	    loadGeneral(context);
+	    loadBackUpHistorico(context);
 
 	    //loadAudCad(context);
 	    //loadEurUsd(context);
@@ -103,8 +104,8 @@ public class DarylSystemDatabaseLoaderApplication {
 	}
 
 
-	static void loadGeneral(ApplicationContext context) {
-	    GeneralLoader loader = context.getBean(GeneralLoader.class);
+	static void loadBackUpHistorico(ApplicationContext context) {
+	    BackupHistoricoLoader loader = context.getBean(BackupHistoricoLoader.class);
 	    try {
 	    	loader.load(Timeframes.PERIOD_H1);
 	    	loader.load(Timeframes.PERIOD_H4);
