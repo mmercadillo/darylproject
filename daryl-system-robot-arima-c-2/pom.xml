@@ -111,6 +111,12 @@
 			<properties>
 				<profile.name>fuji</profile.name>
 			</properties>
+		</profile>
+		<profile>
+			<id>calculator</id>
+			<properties>
+				<profile.name>calculator</profile.name>
+			</properties>
 		</profile>	
 	</profiles>
   
