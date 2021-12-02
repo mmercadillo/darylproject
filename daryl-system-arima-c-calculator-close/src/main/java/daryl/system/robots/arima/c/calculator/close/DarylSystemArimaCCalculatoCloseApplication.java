@@ -86,6 +86,11 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 	
 	static int pagina = 500;
 	
+	private static final Boolean ACTIVE_60 = Boolean.FALSE;
+	private static final Boolean ACTIVE_240 = Boolean.FALSE;
+	private static final Boolean ACTIVE_1440 = Boolean.TRUE;
+	private static final Boolean ACTIVE_10080 = Boolean.TRUE;
+	
     private static void startForecaster(ConfigurableApplicationContext context) {
     	
 		ICombinacionesArimaCRepository combinacionesArimaCRepository = context.getBean(ICombinacionesArimaCRepository.class);
@@ -93,253 +98,278 @@ public class DarylSystemArimaCCalculatoCloseApplication {
 		 
 		List<CombinacionArimaC> combinacionesFile = combinacionesArimaCRepository.findAll();
 		//Collections.reverse(combinacionesFile);
-
-		List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.XAUUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
 		
-		BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.XAUUSD, 1);
-		histXAUUSD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de XAUUSD 60");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.XAUUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.XAUUSD, 1);
-		histXAUUSD240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de XAUUSD 240");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.XAUUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.XAUUSD, 1);
-		histXAUUSD1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de XAUUSD 1440");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.XAUUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.XAUUSD, 1);
-		histXAUUSD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de XAUUSD 10080");
 		
     	ExecutorService servicio = Executors.newFixedThreadPool(25);
 
     	int maxDesviaciones = 10;
     	int inicio = 500;
 
-		ArimaForecasterGenerator afgXAUUSD_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgXAUUSD_60.init("ARIMA_C_XAUUSD_60", "ARIMA_C_XAUUSD_60", Activo.XAUUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histXAUUSD60, combinacionesFile); // <-- here
-		servicio.submit(afgXAUUSD_60); 		
+		if(DarylSystemArimaCCalculatoCloseApplication.ACTIVE_60 == Boolean.TRUE) {
+			
+			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.XAUUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			
+			BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.XAUUSD, 1);
+			histXAUUSD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de XAUUSD 60");
+			
+			ArimaForecasterGenerator afgXAUUSD_60 = context.getBean(ArimaForecasterGenerator.class);
+		    afgXAUUSD_60.init("ARIMA_C_XAUUSD_60", "ARIMA_C_XAUUSD_60", Activo.XAUUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histXAUUSD60, combinacionesFile); // <-- here
+			servicio.submit(afgXAUUSD_60); 	
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.NDX, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.NDX, 1);
+			histNDX60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de NDX 60");
+			
+		    ArimaForecasterGenerator afgNDX_60 = context.getBean(ArimaForecasterGenerator.class);
+		    afgNDX_60.init("ARIMA_C_NDX_60", "ARIMA_C_NDX_60", Activo.NDX, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histNDX60, combinacionesFile); // <-- here
+			servicio.submit(afgNDX_60);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.GDAXI, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.GDAXI, 1);
+			histGDAXI60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de GDAXI 60");
+			
+		    ArimaForecasterGenerator afgGDAXI_60 = context.getBean(ArimaForecasterGenerator.class);
+		    afgGDAXI_60.init("ARIMA_C_GDAXI_60", "ARIMA_C_GDAXI_60", Activo.GDAXI, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histGDAXI60, combinacionesFile); // <-- here
+			servicio.submit(afgGDAXI_60);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.XTIUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.XTIUSD, 1);
+			histWTI60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de XTIUSD 60");
+			
+		    ArimaForecasterGenerator afgWTI_60 = context.getBean(ArimaForecasterGenerator.class);
+		    afgWTI_60.init("ARIMA_C_WTI_60", "ARIMA_C_WTI_60", Activo.XTIUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histWTI60, combinacionesFile); // <-- here
+			servicio.submit(afgWTI_60);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.EURUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.EURUSD, 1);
+			histEURUSD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de EURUSD 60");
+			
+		    ArimaForecasterGenerator afgEURUSD_60 = context.getBean(ArimaForecasterGenerator.class);
+		    afgEURUSD_60.init("ARIMA_C_EURUSD_60", "ARIMA_C_EURUSD_60", Activo.EURUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histEURUSD60, combinacionesFile); // <-- here
+			servicio.submit(afgEURUSD_60);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.AUDCAD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.AUDCAD, 1);
+			histAUDCAD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de AUDCAD 60");
+			
+		    ArimaForecasterGenerator afgAUDCAD_60 = context.getBean(ArimaForecasterGenerator.class);
+		    afgAUDCAD_60.init("ARIMA_C_AUDCAD_60", "ARIMA_C_AUDCAD_60", Activo.AUDCAD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histAUDCAD60, combinacionesFile); // <-- here
+			servicio.submit(afgAUDCAD_60);
+			
+		}
 		
-	    ArimaForecasterGenerator afgXAUUSD_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgXAUUSD_240.init("ARIMA_C_XAUUSD_240", "ARIMA_C_XAUUSD_240", Activo.XAUUSD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histXAUUSD240, combinacionesFile); // <-- here
-		servicio.submit(afgXAUUSD_240);   
+		if(DarylSystemArimaCCalculatoCloseApplication.ACTIVE_240 == Boolean.TRUE) {
+			
+			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.XAUUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.XAUUSD, 1);
+			histXAUUSD240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de XAUUSD 240");
+			
+		    ArimaForecasterGenerator afgXAUUSD_240 = context.getBean(ArimaForecasterGenerator.class);
+		    afgXAUUSD_240.init("ARIMA_C_XAUUSD_240", "ARIMA_C_XAUUSD_240", Activo.XAUUSD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histXAUUSD240, combinacionesFile); // <-- here
+			servicio.submit(afgXAUUSD_240);  
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.NDX, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.NDX, 1);
+			histNDX240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de NDX 240");
+			
+		    ArimaForecasterGenerator afgNDX_240 = context.getBean(ArimaForecasterGenerator.class);
+		    afgNDX_240.init("ARIMA_C_NDX_240", "ARIMA_C_NDX_240", Activo.NDX, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histNDX240, combinacionesFile); // <-- here
+			servicio.submit(afgNDX_240);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.GDAXI, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.GDAXI, 1);
+			histGDAXI240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de GDAXI 240");
+			
+		    ArimaForecasterGenerator afgGDAXI_240 = context.getBean(ArimaForecasterGenerator.class);
+		    afgGDAXI_240.init("ARIMA_C_GDAXI_240", "ARIMA_C_GDAXI_240", Activo.GDAXI, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histGDAXI240, combinacionesFile); // <-- here
+			servicio.submit(afgGDAXI_240);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.XTIUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.XTIUSD, 1);
+			histWTI240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de XTIUSD 240");
+			
+		    ArimaForecasterGenerator afgWTI_240 = context.getBean(ArimaForecasterGenerator.class);
+		    afgWTI_240.init("ARIMA_C_WTI_240", "ARIMA_C_WTI_240", Activo.XTIUSD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histWTI240, combinacionesFile); // <-- here
+			servicio.submit(afgWTI_240);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.EURUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.EURUSD, 1);
+			histEURUSD240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de EURUSD 240");
+			
+		    ArimaForecasterGenerator afgEURUSD_240 = context.getBean(ArimaForecasterGenerator.class);
+		    afgEURUSD_240.init("ARIMA_C_EURUSD_240", "ARIMA_C_EURUSD_240", Activo.EURUSD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histEURUSD240, combinacionesFile); // <-- here
+			servicio.submit(afgEURUSD_240);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.AUDCAD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.AUDCAD, 1);
+			histAUDCAD240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de AUDCAD 240");
+			
+		    ArimaForecasterGenerator afgAUDCAD_240 = context.getBean(ArimaForecasterGenerator.class);
+		    afgAUDCAD_240.init("ARIMA_C_AUDCAD_240", "ARIMA_C_AUDCAD_240", Activo.AUDCAD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histAUDCAD240, combinacionesFile); // <-- here
+			servicio.submit(afgAUDCAD_240);
+			
+			
+		}
 		
-	    ArimaForecasterGenerator afgXAUUSD_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgXAUUSD_1440.init("ARIMA_C_XAUUSD_1440", "ARIMA_C_XAUUSD_1440", Activo.XAUUSD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histXAUUSD1440, combinacionesFile); // <-- here
-		servicio.submit(afgXAUUSD_1440);	
+		if(DarylSystemArimaCCalculatoCloseApplication.ACTIVE_1440 == Boolean.TRUE) {
+			
+			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.XAUUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.XAUUSD, 1);
+			histXAUUSD1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de XAUUSD 1440");
+			
+		    ArimaForecasterGenerator afgXAUUSD_1440 = context.getBean(ArimaForecasterGenerator.class);
+		    afgXAUUSD_1440.init("ARIMA_C_XAUUSD_1440", "ARIMA_C_XAUUSD_1440", Activo.XAUUSD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histXAUUSD1440, combinacionesFile); // <-- here
+			servicio.submit(afgXAUUSD_1440);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.NDX, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.NDX, 1);
+			histNDX1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de NDX 1440");
+			
+		    ArimaForecasterGenerator afgNDX_1440 = context.getBean(ArimaForecasterGenerator.class);
+		    afgNDX_1440.init("ARIMA_C_NDX_1440", "ARIMA_C_NDX_1440", Activo.NDX, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histNDX1440, combinacionesFile); // <-- here
+			servicio.submit(afgNDX_1440);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.GDAXI, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.GDAXI, 1);
+			histGDAXI1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de GDAXI 1440");
+			
+		    ArimaForecasterGenerator afgGDAXI_1440 = context.getBean(ArimaForecasterGenerator.class);
+		    afgGDAXI_1440.init("ARIMA_C_GDAXI_1440", "ARIMA_C_GDAXI_1440", Activo.GDAXI, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histGDAXI1440, combinacionesFile); // <-- here
+			servicio.submit(afgGDAXI_1440);	
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.XTIUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.XTIUSD, 1);
+			histWTI1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de XTIUSD 1440");
+			
+		    ArimaForecasterGenerator afgWTI_1440 = context.getBean(ArimaForecasterGenerator.class);
+		    afgWTI_1440.init("ARIMA_C_WTI_1440", "ARIMA_C_WTI_1440", Activo.XTIUSD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histWTI1440, combinacionesFile); // <-- here
+			servicio.submit(afgWTI_1440);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.EURUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.EURUSD, 1);
+			histEURUSD1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de EURUSD 1440");
+			
+		    ArimaForecasterGenerator afgEURUSD_1440 = context.getBean(ArimaForecasterGenerator.class);
+		    afgEURUSD_1440.init("ARIMA_C_EURUSD_1440", "ARIMA_C_EURUSD_1440", Activo.EURUSD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histEURUSD1440, combinacionesFile); // <-- here
+			servicio.submit(afgEURUSD_1440);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.AUDCAD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.AUDCAD, 1);
+			histAUDCAD1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de AUDCAD 1440");
+			
+		    ArimaForecasterGenerator afgAUDCAD_1440 = context.getBean(ArimaForecasterGenerator.class);
+		    afgAUDCAD_1440.init("ARIMA_C_AUDCAD_1440", "ARIMA_C_AUDCAD_1440", Activo.AUDCAD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histAUDCAD1440, combinacionesFile); // <-- here
+			servicio.submit(afgAUDCAD_1440);
+			
+		}
 		
-    	ArimaForecasterGenerator afgXAUUSD_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    afgXAUUSD_10080.init("ARIMA_C_XAUUSD_10080", "ARIMA_C_XAUUSD_10080", Activo.XAUUSD, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histXAUUSD10080, combinacionesFile); // <-- here
-		servicio.submit(afgXAUUSD_10080);	
-	
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.NDX, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.NDX, 1);
-		histNDX60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de NDX 60");
+		if(DarylSystemArimaCCalculatoCloseApplication.ACTIVE_10080 == Boolean.TRUE) {
 		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.NDX, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.NDX, 1);
-		histNDX240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de NDX 240");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.NDX, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.NDX, 1);
-		histNDX1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de NDX 1440");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.NDX, PageRequest.of(0, pagina));
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.NDX, 1);
-		histNDX10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de NDX 10080");
-    	
-    		
-	    ArimaForecasterGenerator afgNDX_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgNDX_60.init("ARIMA_C_NDX_60", "ARIMA_C_NDX_60", Activo.NDX, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histNDX60, combinacionesFile); // <-- here
-		servicio.submit(afgNDX_60);
-		
-	    ArimaForecasterGenerator afgNDX_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgNDX_240.init("ARIMA_C_NDX_240", "ARIMA_C_NDX_240", Activo.NDX, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histNDX240, combinacionesFile); // <-- here
-		servicio.submit(afgNDX_240);
-		
-	    ArimaForecasterGenerator afgNDX_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgNDX_1440.init("ARIMA_C_NDX_1440", "ARIMA_C_NDX_1440", Activo.NDX, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histNDX1440, combinacionesFile); // <-- here
-		servicio.submit(afgNDX_1440);	
-		
-	    ArimaForecasterGenerator afgNDX_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    afgNDX_10080.init("ARIMA_C_NDX_10080", "ARIMA_C_NDX_10080", Activo.NDX, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histNDX10080, combinacionesFile); // <-- here
-		servicio.submit(afgNDX_10080);	
-    		
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	    	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.GDAXI, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.GDAXI, 1);
-		histGDAXI60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de GDAXI 60");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.GDAXI, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.GDAXI, 1);
-		histGDAXI240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de GDAXI 240");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.GDAXI, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.GDAXI, 1);
-		histGDAXI1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de GDAXI 1440");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.GDAXI, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.GDAXI, 1);
-		histGDAXI10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de GDAXI 10080");
-    	
-	    ArimaForecasterGenerator afgGDAXI_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgGDAXI_60.init("ARIMA_C_GDAXI_60", "ARIMA_C_GDAXI_60", Activo.GDAXI, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histGDAXI60, combinacionesFile); // <-- here
-		servicio.submit(afgGDAXI_60);
-		
-	    ArimaForecasterGenerator afgGDAXI_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgGDAXI_240.init("ARIMA_C_GDAXI_240", "ARIMA_C_GDAXI_240", Activo.GDAXI, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histGDAXI240, combinacionesFile); // <-- here
-		servicio.submit(afgGDAXI_240);
-		
-	    ArimaForecasterGenerator afgGDAXI_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgGDAXI_1440.init("ARIMA_C_GDAXI_1440", "ARIMA_C_GDAXI_1440", Activo.GDAXI, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histGDAXI1440, combinacionesFile); // <-- here
-		servicio.submit(afgGDAXI_1440);	
-		
-	    ArimaForecasterGenerator afgGDAXI_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    afgGDAXI_10080.init("ARIMA_C_GDAXI_10080", "ARIMA_C_GDAXI_10080", Activo.GDAXI, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histGDAXI10080, combinacionesFile); // <-- here
-	    servicio.submit(afgGDAXI_10080);
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.XTIUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.XTIUSD, 1);
-		histWTI60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de XTIUSD 60");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.XTIUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.XTIUSD, 1);
-		histWTI240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de XTIUSD 240");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.XTIUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.XTIUSD, 1);
-		histWTI1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de XTIUSD 1440");
-		    		
-	    ArimaForecasterGenerator afgWTI_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgWTI_60.init("ARIMA_C_WTI_60", "ARIMA_C_WTI_60", Activo.XTIUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histWTI60, combinacionesFile); // <-- here
-		servicio.submit(afgWTI_60);
-		
-	    ArimaForecasterGenerator afgWTI_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgWTI_240.init("ARIMA_C_WTI_240", "ARIMA_C_WTI_240", Activo.XTIUSD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histWTI240, combinacionesFile); // <-- here
-		servicio.submit(afgWTI_240);
-		
-	    ArimaForecasterGenerator afgWTI_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgWTI_1440.init("ARIMA_C_WTI_1440", "ARIMA_C_WTI_1440", Activo.XTIUSD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histWTI1440, combinacionesFile); // <-- here
-		servicio.submit(afgWTI_1440);	
-    		
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.EURUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.EURUSD, 1);
-		histEURUSD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de EURUSD 60");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.EURUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.EURUSD, 1);
-		histEURUSD240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de EURUSD 240");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.EURUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.EURUSD, 1);
-		histEURUSD1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de EURUSD 1440");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.EURUSD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.EURUSD, 1);
-		histEURUSD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de EURUSD 10080");
-    	
-	    ArimaForecasterGenerator afgEURUSD_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgEURUSD_60.init("ARIMA_C_EURUSD_60", "ARIMA_C_EURUSD_60", Activo.EURUSD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histEURUSD60, combinacionesFile); // <-- here
-		servicio.submit(afgEURUSD_60);
-		
-	    ArimaForecasterGenerator afgEURUSD_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgEURUSD_240.init("ARIMA_C_EURUSD_240", "ARIMA_C_EURUSD_240", Activo.EURUSD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histEURUSD240, combinacionesFile); // <-- here
-		servicio.submit(afgEURUSD_240);
-		
-	    ArimaForecasterGenerator afgEURUSD_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgEURUSD_1440.init("ARIMA_C_EURUSD_1440", "ARIMA_C_EURUSD_1440", Activo.EURUSD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histEURUSD1440, combinacionesFile); // <-- here
-		servicio.submit(afgEURUSD_1440);
-		
-	    ArimaForecasterGenerator afgEURUSD_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    afgEURUSD_10080.init("ARIMA_C_EURUSD_10080", "ARIMA_C_EURUSD_10080", Activo.EURUSD, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histEURUSD10080, combinacionesFile); // <-- here
-		servicio.submit(afgEURUSD_10080);	
-    		
-    	
-    	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H1, Activo.AUDCAD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H1 + "_" + Activo.AUDCAD, 1);
-		histAUDCAD60 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de AUDCAD 60");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_H4, Activo.AUDCAD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_H4 + "_" + Activo.AUDCAD, 1);
-		histAUDCAD240 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de AUDCAD 240");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_D1, Activo.AUDCAD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.AUDCAD, 1);
-		histAUDCAD1440 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de AUDCAD 1440");
-		
-		historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.AUDCAD, PageRequest.of(0, pagina));
-		Collections.reverse(historico);
-		serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.AUDCAD, 1);
-		histAUDCAD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
-		System.out.println("Cargado historico de AUDCAD 10080");
-    	    		
-	    ArimaForecasterGenerator afgAUDCAD_60 = context.getBean(ArimaForecasterGenerator.class);
-	    afgAUDCAD_60.init("ARIMA_C_AUDCAD_60", "ARIMA_C_AUDCAD_60", Activo.AUDCAD, Timeframes.PERIOD_H1, maxDesviaciones, inicio, histAUDCAD60, combinacionesFile); // <-- here
-		servicio.submit(afgAUDCAD_60);
-		
-	    ArimaForecasterGenerator afgAUDCAD_240 = context.getBean(ArimaForecasterGenerator.class);
-	    afgAUDCAD_240.init("ARIMA_C_AUDCAD_240", "ARIMA_C_AUDCAD_240", Activo.AUDCAD, Timeframes.PERIOD_H4, maxDesviaciones, inicio, histAUDCAD240, combinacionesFile); // <-- here
-		servicio.submit(afgAUDCAD_240);
-		
-	    ArimaForecasterGenerator afgAUDCAD_1440 = context.getBean(ArimaForecasterGenerator.class);
-	    afgAUDCAD_1440.init("ARIMA_C_AUDCAD_1440", "ARIMA_C_AUDCAD_1440", Activo.AUDCAD, Timeframes.PERIOD_D1, maxDesviaciones, inicio, histAUDCAD1440, combinacionesFile); // <-- here
-		servicio.submit(afgAUDCAD_1440);
-		
-	    ArimaForecasterGenerator afgAUDCAD_10080 = context.getBean(ArimaForecasterGenerator.class);
-	    afgAUDCAD_10080.init("ARIMA_C_AUDCAD_10080","ARIMA_C_AUDCAD_10080", Activo.AUDCAD, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histAUDCAD10080, combinacionesFile); // <-- here
-		servicio.submit(afgAUDCAD_10080);
-
-    	
+			List<Historico> historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.XAUUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			BarSeries serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.XAUUSD, 1);
+			histXAUUSD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de XAUUSD 10080");
+			
+	    	ArimaForecasterGenerator afgXAUUSD_10080 = context.getBean(ArimaForecasterGenerator.class);
+		    afgXAUUSD_10080.init("ARIMA_C_XAUUSD_10080", "ARIMA_C_XAUUSD_10080", Activo.XAUUSD, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histXAUUSD10080, combinacionesFile); // <-- here
+			servicio.submit(afgXAUUSD_10080);
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.NDX, PageRequest.of(0, pagina));
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.NDX, 1);
+			histNDX10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de NDX 10080");
+			
+		    ArimaForecasterGenerator afgNDX_10080 = context.getBean(ArimaForecasterGenerator.class);
+		    afgNDX_10080.init("ARIMA_C_NDX_10080", "ARIMA_C_NDX_10080", Activo.NDX, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histNDX10080, combinacionesFile); // <-- here
+			servicio.submit(afgNDX_10080);	
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.GDAXI, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.GDAXI, 1);
+			histGDAXI10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de GDAXI 10080");
+			
+		    ArimaForecasterGenerator afgGDAXI_10080 = context.getBean(ArimaForecasterGenerator.class);
+		    afgGDAXI_10080.init("ARIMA_C_GDAXI_10080", "ARIMA_C_GDAXI_10080", Activo.GDAXI, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histGDAXI10080, combinacionesFile); // <-- here
+		    servicio.submit(afgGDAXI_10080);
+		    
+		    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.EURUSD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_D1 + "_" + Activo.EURUSD, 1);
+			histEURUSD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de EURUSD 10080");
+			
+		    ArimaForecasterGenerator afgEURUSD_10080 = context.getBean(ArimaForecasterGenerator.class);
+		    afgEURUSD_10080.init("ARIMA_C_EURUSD_10080", "ARIMA_C_EURUSD_10080", Activo.EURUSD, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histEURUSD10080, combinacionesFile); // <-- here
+			servicio.submit(afgEURUSD_10080);	
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+			historico = historicoRepository.findAllByTimeframeAndActivoOrderByFechaHoraDesc(Timeframes.PERIOD_W1, Activo.AUDCAD, PageRequest.of(0, pagina));
+			Collections.reverse(historico);
+			serieParaCalculo = BarSeriesUtils.generateBarListFromHistorico(historico,  "BarSeries_" + Timeframes.PERIOD_W1 + "_" + Activo.AUDCAD, 1);
+			histAUDCAD10080 = serieParaCalculo.getBarData().stream().map(bar -> bar.getClosePrice().doubleValue()).map(Double::new).collect(Collectors.toList());
+			System.out.println("Cargado historico de AUDCAD 10080");
+			
+		    ArimaForecasterGenerator afgAUDCAD_10080 = context.getBean(ArimaForecasterGenerator.class);
+		    afgAUDCAD_10080.init("ARIMA_C_AUDCAD_10080","ARIMA_C_AUDCAD_10080", Activo.AUDCAD, Timeframes.PERIOD_W1, maxDesviaciones, inicio, histAUDCAD10080, combinacionesFile); // <-- here
+			servicio.submit(afgAUDCAD_10080);
+			
+		}
     	servicio.shutdown();
     }
 	
