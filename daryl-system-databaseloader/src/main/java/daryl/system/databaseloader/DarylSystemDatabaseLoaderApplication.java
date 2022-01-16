@@ -107,8 +107,8 @@ public class DarylSystemDatabaseLoaderApplication {
 	static void loadBackUpHistorico(ApplicationContext context) {
 	    BackupHistoricoLoader loader = context.getBean(BackupHistoricoLoader.class);
 	    try {
-	    	loader.load(Timeframes.PERIOD_H1);
-	    	loader.load(Timeframes.PERIOD_H4);
+	    	//loader.load(Timeframes.PERIOD_H1);
+	    	//loader.load(Timeframes.PERIOD_H4);
 			loader.load(Timeframes.PERIOD_D1);
 			loader.load(Timeframes.PERIOD_W1);
 		} catch (IOException e) {
